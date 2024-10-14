@@ -1,7 +1,6 @@
 'use client'
 import Link from 'next/link'
 import toast, { Toaster } from 'react-hot-toast';
-import 'react-toastify/dist/ReactToastify.css'
 
 export default function Home() {
   return (
