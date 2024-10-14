@@ -1,8 +1,7 @@
 // 'use client'
 import localFont from "next/font/local";
 import "./globals.css";
-import { SessionProvider } from "next-auth/react"
-import {AuthProvider} from '../app/components/Providers'
+import {AuthProvider} from './components/providers'
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
