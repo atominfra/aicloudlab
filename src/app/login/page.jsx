@@ -15,8 +15,11 @@ import { styled } from '@mui/system';
 import Image from 'next/image'
 import Link from 'next/link'
 
-const GradientBackground = styled(Box)({
-  background: 'radial-gradient(circle, #111827 0%, #3d578d 84%, #111827 100%)',
+const BackgroundImage = styled(Box)({
+  backgroundImage: 'url(https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728928735/dgjdxenss7ghprlroxhm.png)', 
+  backgroundSize: 'cover', 
+  backgroundPosition: 'center', 
+  backgroundRepeat: 'no-repeat', 
   minHeight: '100vh',
   display: 'flex',
   alignItems: 'center',
@@ -55,7 +58,7 @@ export default function Login() {
   }
 
   return (
-    <GradientBackground>
+    <BackgroundImage>
       <Container>
         <div className='flex font-poppins gap-4 justify-between'>
           <div   className='flex w-[40vw]'>
@@ -66,8 +69,8 @@ export default function Login() {
               height={1000}
               className='w-[14rem]'
               alt="AI Cloud Lab Logo" />
-              <Typography  className='text-center text-2xl font-light font-poppins'>
-                Seamless AI <span className='font-semibold'>development </span>, 
+              <Typography  className='text-center text-2xl font-light font-poppins '>
+                Seamless AI <span className='font-semibold'>development, </span> 
                 <span className='font-semibold'>deployment </span>
                  and  
                  <span className='font-semibold'> monitoring </span>
@@ -76,14 +79,11 @@ export default function Login() {
             </Box>
           </div>
           <div   className='  w-[30vw] '>
-          <Typography  className='text-center text-3xl'>
+          <Typography  className='text-center text-3xl pb-4'>
                 Welcome to <span className='font-bold '>AI Cloud Lab!</span>
               </Typography>
             <form component="form" onSubmit={handleSubmit} className='flex flex-col justify-center items-center gap-4'>
               
-              <Typography className='text-center text-xl font-poppins'>
-                Login to continue
-              </Typography>
               <TextField
                 margin="normal"
                 required
@@ -180,6 +180,6 @@ export default function Login() {
           </div>
         </div>
       </Container>
-    </GradientBackground>
+    </BackgroundImage>
   )
 }
