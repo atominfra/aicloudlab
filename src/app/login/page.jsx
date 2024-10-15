@@ -16,7 +16,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 const BackgroundImage = styled(Box)({
-  backgroundImage: 'url(https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728928735/dgjdxenss7ghprlroxhm.png)', 
+  backgroundColor:'#111827',
   backgroundSize: 'cover', 
   backgroundPosition: 'center', 
   backgroundRepeat: 'no-repeat', 
@@ -34,7 +34,7 @@ export default function Login() {
     e.preventDefault()
     try {
       const result = await signIn('credentials', {
-        username,
+        email,
         password,
         redirect: false,
         callbackUrl: '/dashboard'
@@ -60,7 +60,7 @@ export default function Login() {
   return (
     <BackgroundImage>
       <Container>
-        <div className='flex font-poppins gap-4 justify-between'>
+        <div className='flex font-poppins gap-4 justify-between '>
           <div   className='flex w-[40vw]'>
             <Box className='flex flex-col justify-center items-center gap-4'>
               <Image 
