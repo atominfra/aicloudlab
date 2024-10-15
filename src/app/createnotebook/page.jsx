@@ -4,6 +4,8 @@ import { Button, Typography, Box, TextField, Select, MenuItem } from '@mui/mater
 import Image from 'next/image';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+// import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { RiArrowDropDownLine } from "react-icons/ri";
 
 export default function CreateNotebook() {
   const router = useRouter();
@@ -52,17 +54,17 @@ export default function CreateNotebook() {
       </Box>
 
       <Box className="">
-        <Typography variant="h6" className="font-semibold bg-yellow-400 text-gray-900 rounded-full w-8 h-8 flex items-center justify-center">
+        <Typography variant="h6" className="font-semibold bg-yellow-400 text-gray-900 rounded-full w-8 h-8 flex items-center justify-center ">
           K
         </Typography>
       </Box></Box>
       
       <Box className="w-full max-w-md">
-        <Typography variant="h4" className="text-white mb-6 text-center">
+        <Typography variant="h4" className="text-white mb-6 text-center font-poppins">
           Creating a new notebook
         </Typography>
         
-        <Box component="form" onSubmit={handleSubmit} className="space-y-4">
+        <Box component="form" onSubmit={handleSubmit} className="flex flex-col  gap-4">
           <TextField
             fullWidth
             label="Name"
@@ -71,11 +73,12 @@ export default function CreateNotebook() {
             onChange={handleChange}
             variant="outlined"
             InputProps={{
-              className: 'bg-gray-800 text-white'
+              className: 'bg-gray-800 text-white '
             }}
             InputLabelProps={{
               sx: {
                 color: 'white',
+                fontFamily: 'poppins',
                 '&.Mui-focused': { color: 'white' }
               }
             }}
@@ -99,6 +102,7 @@ export default function CreateNotebook() {
             }}
             InputLabelProps={{
               sx: {
+                fontFamily: 'poppins',
                 color: 'white',
                 '&.Mui-focused': { color: 'white' }
               }
@@ -118,7 +122,10 @@ export default function CreateNotebook() {
             onChange={handleChange}
             displayEmpty
             variant="outlined"
-            className="bg-gray-800 text-white"
+            className="bg-gray-800 text-white font-poppins"
+            IconComponent={(props) => (
+              <RiArrowDropDownLine {...props} style={{ color: 'white', fontSize: '30px' }} />
+            )}
             sx={{
               '& .MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
               '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
@@ -138,7 +145,10 @@ export default function CreateNotebook() {
             onChange={handleChange}
             displayEmpty
             variant="outlined"
-            className="bg-gray-800 text-white"
+            className="bg-gray-800 text-white font-poppins"
+            IconComponent={(props) => (
+              <RiArrowDropDownLine {...props} style={{ color: 'white', fontSize: '30px' }} />
+            )}
             sx={{
               '& .MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
               '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: 'white' },
@@ -155,7 +165,7 @@ export default function CreateNotebook() {
             type="submit"
             fullWidth
             variant="contained"
-            className="bg-blue-600 hover:bg-blue-700 mt-4"
+            className="bg-[#1976D2] text-white text-base w-full font-semibold font-poppins rounded-lg p-3 mt-4"
             onClick={handleCreateClick}
           >
             Create Notebook

@@ -5,7 +5,7 @@ import ComingSoonPage from '../app/components/comingSoon'
 import { redirect } from 'next/navigation';
 export default function Home() {
 
-  redirect('/login');
+  redirect('/dashboard');
   return (
     <div className="">
       {/* <ComingSoonPage/> */}

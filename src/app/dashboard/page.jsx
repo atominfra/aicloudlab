@@ -7,9 +7,9 @@ import NotebookItem from "../../app/components/NotebookItem";
 import { useRouter } from 'next/navigation';
 
 const sampleNotebooks = [
-  { id: 1, name: 'Machine Learning Basics', version: '1.1.2', isActive:'true' },
-  { id: 2, name: 'Deep Learning', version: '1.1.8', isActive:'true' },
-  { id: 3, name: 'Data Science', version: '1.1.3', isActive:'false' }
+  { id: 1, name: 'Machine Learning Basics', version: 'Python 1.1.2', isActive:'true' },
+  { id: 2, name: 'Deep Learning', version: 'Python 1.1.8', isActive:'true' },
+  { id: 3, name: 'Data Science', version: 'Python 1.1.3', isActive:'false' }
 ];
 
 async function fetchNotebooks() {
@@ -64,7 +64,7 @@ export default function NotebooksPage() {
       <Box className=" w-full text-end">
         <Button
           variant="contained"
-          className="bg-blue-600 hover:bg-blue-700"
+          className="bg-[#1976D2] text-white text-base  font-semibold font-poppins shadow-md hover:shadow-md hover:shadow-black shadow-black rounded-lg"
           onClick={handleCreateClick}
         >
           + Create

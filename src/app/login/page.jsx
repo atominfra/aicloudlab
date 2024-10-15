@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import toast, { Toaster } from 'react-hot-toast'
 
@@ -31,32 +31,36 @@ export default function Login() {
   const router = useRouter()
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      const result = await signIn('credentials', {
-        email,
-        password,
-        redirect: false,
-        callbackUrl: '/dashboard'
-      })
+    redirect('/dashboard')
+    // e.preventDefault()
+    // try {
+    //   const result = await signIn('credentials', {
+    //     email,
+    //     password,
+    //     redirect: false,
+    //     callbackUrl: '/dashboard'
+    //   })
 
-      if (result?.ok) {
-        console.log('Successfully signed in')
-        toast.success('Successfully signed in!')
+    //   if (result?.ok) {
+    //     console.log('Successfully signed in')
+    //     toast.success('Successfully signed in!')
         
-        setTimeout(() => {
-          router.push(result.url || '/dashboard')
-        }, 1500)
-      } else {
-        console.log('Sign in failed. Please check your credentials')
-        toast.error('Sign in failed. Please check your credentials.')
-      }
-    } catch (error) {
-      console.error('Authentication error:', error)
-      toast.error('An unexpected error occurred. Please try again.')
-    }
+    //     setTimeout(() => {
+    //       router.push(result.url || '/dashboard')
+    //     }, 1500)
+    //   } else {
+    //     console.log('Sign in failed. Please check your credentials')
+    //     toast.error('Sign in failed. Please check your credentials.')
+    //   }
+    // } catch (error) {
+    //   console.error('Authentication error:', error)
+    //   toast.error('An unexpected error occurred. Please try again.')
+    // }
   }
 
+  function handleclicklogin(){
+    redirect('/dashboard')
+  }
   return (
     <BackgroundImage>
       <Container>
@@ -73,16 +77,18 @@ export default function Login() {
                 Seamless AI <span className='font-semibold'>development, </span> 
                 <span className='font-semibold'>deployment </span>
                  and  
-                 <span className='font-semibold'> monitoring </span>
+                 <span className='font-semibold font-poppins'> monitoring </span>
                   in Cloud all through one interface!
               </Typography>
             </Box>
           </div>
           <div   className='  w-[30vw] '>
-          <Typography  className='text-center text-3xl pb-4'>
+          <Typography  className='text-center text-3xl pb-4 font-poppins'>
                 Welcome to <span className='font-bold '>AI Cloud Lab!</span>
               </Typography>
-            <form component="form" onSubmit={handleSubmit} className='flex flex-col justify-center items-center gap-4'>
+            <form component="form" 
+            // onSubmit={handleSubmit}
+             className='flex flex-col justify-center items-center gap-4'>
               
               <TextField
                 margin="normal"
@@ -159,23 +165,27 @@ export default function Login() {
                     },
                   },
                 }}
-                className="bg-transparent"
+                className="bg-transparent mb-6"
 />
 
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                className=' bg-white text-black w-[10rem]'
+                className=' bg-[#1976D2] text-white w-full text-base  font-semibold font-poppins p-3'
+                onClick={handleclicklogin}
               >
                 Login
               </Button>
-              <Box textAlign="center">
-                <Link href="#" variant="body2" color="inherit">
-                  New here? 
-                  <span className='text-blue-400 '> Sign up</span>
-                </Link>
-              </Box>
+              <Typography className='font-poppins'>OR</Typography>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                className=' bg-[#1976D2] text-white text-base w-full font-semibold font-poppins  p-3'
+              >
+                Sign up for new account
+              </Button>
             </form>
           </div>
         </div>
