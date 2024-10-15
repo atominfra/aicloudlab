@@ -14,7 +14,7 @@ import {
 import { styled } from '@mui/system';
 import Image from 'next/image'
 import Link from 'next/link'
-
+import ThemeSwitch from '@/app/components/ThemeSwitch'
 const BackgroundImage = styled(Box)({
   backgroundImage: 'url(https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728928735/dgjdxenss7ghprlroxhm.png)', 
   backgroundSize: 'cover', 
@@ -58,7 +58,8 @@ export default function Login() {
   }
 
   return (
-    <BackgroundImage>
+    <Box className=" h-screen w-screen flex flex-col justify-center items-center bg-white dark:bg-gray-900 text-black dark:text-white ">
+          <ThemeSwitch/>
       <Container>
         <div className='flex font-poppins gap-4 justify-between'>
           <div   className='flex w-[40vw]'>
@@ -180,6 +181,6 @@ export default function Login() {
           </div>
         </div>
       </Container>
-    </BackgroundImage>
+    </Box>
   )
 }
