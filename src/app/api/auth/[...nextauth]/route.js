@@ -6,14 +6,14 @@ const handler = NextAuth({
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        username: { label: 'Username', type: 'text' },
+        email: { label: 'email', type: 'text' },
         password: { label: 'Password', type: 'password' }
       },
       async authorize(credentials) {
         // Here you would usually make a request to your backend API
         // to verify the credentials and get the user data
         // For this example, we'll use a mock user
-        if (credentials.username === 'user' && credentials.password === 'password') {
+        if (credentials. email === 'user' && credentials.password === 'password') {
           return { id: 1, name: 'User' }
         }
         console.log('control here')

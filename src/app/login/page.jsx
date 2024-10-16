@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { redirect, useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import toast, { Toaster } from 'react-hot-toast'
 
@@ -14,9 +14,9 @@ import {
 import { styled } from '@mui/system';
 import Image from 'next/image'
 import Link from 'next/link'
-
+import ThemeSwitch from '@/app/components/ThemeSwitch'
 const BackgroundImage = styled(Box)({
-  backgroundImage: 'url(https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728928735/dgjdxenss7ghprlroxhm.png)', 
+  backgroundColor:'#111827',
   backgroundSize: 'cover', 
   backgroundPosition: 'center', 
   backgroundRepeat: 'no-repeat', 
@@ -31,36 +31,40 @@ export default function Login() {
   const router = useRouter()
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      const result = await signIn('credentials', {
-        username,
-        password,
-        redirect: false,
-        callbackUrl: '/dashboard'
-      })
+    redirect('/dashboard')
+    // e.preventDefault()
+    // try {
+    //   const result = await signIn('credentials', {
+    //     email,
+    //     password,
+    //     redirect: false,
+    //     callbackUrl: '/dashboard'
+    //   })
 
-      if (result?.ok) {
-        console.log('Successfully signed in')
-        toast.success('Successfully signed in!')
+    //   if (result?.ok) {
+    //     console.log('Successfully signed in')
+    //     toast.success('Successfully signed in!')
         
-        setTimeout(() => {
-          router.push(result.url || '/dashboard')
-        }, 1500)
-      } else {
-        console.log('Sign in failed. Please check your credentials')
-        toast.error('Sign in failed. Please check your credentials.')
-      }
-    } catch (error) {
-      console.error('Authentication error:', error)
-      toast.error('An unexpected error occurred. Please try again.')
-    }
+    //     setTimeout(() => {
+    //       router.push(result.url || '/dashboard')
+    //     }, 1500)
+    //   } else {
+    //     console.log('Sign in failed. Please check your credentials')
+    //     toast.error('Sign in failed. Please check your credentials.')
+    //   }
+    // } catch (error) {
+    //   console.error('Authentication error:', error)
+    //   toast.error('An unexpected error occurred. Please try again.')
+    // }
   }
 
+  function handleclicklogin(){
+    redirect('/dashboard')
+  }
   return (
-    <BackgroundImage>
+    <Box className=" h-screen w-screen flex flex-col justify-center items-center bg-white dark:bg-gray-900 text-black dark:text-white ">
       <Container>
-        <div className='flex font-poppins gap-4 justify-between'>
+        <div className='flex font-poppins gap-4 justify-between '>
           <div   className='flex w-[40vw]'>
             <Box className='flex flex-col justify-center items-center gap-4'>
               <Image 
@@ -73,16 +77,18 @@ export default function Login() {
                 Seamless AI <span className='font-semibold'>development, </span> 
                 <span className='font-semibold'>deployment </span>
                  and  
-                 <span className='font-semibold'> monitoring </span>
+                 <span className='font-semibold font-poppins'> monitoring </span>
                   in Cloud all through one interface!
               </Typography>
             </Box>
           </div>
           <div   className='  w-[30vw] '>
-          <Typography  className='text-center text-3xl pb-4'>
+          <Typography  className='text-center text-3xl pb-4 font-poppins'>
                 Welcome to <span className='font-bold '>AI Cloud Lab!</span>
               </Typography>
-            <form component="form" onSubmit={handleSubmit} className='flex flex-col justify-center items-center gap-4'>
+            <form component="form" 
+            // onSubmit={handleSubmit}
+             className='flex flex-col justify-center items-center gap-4'>
               
               <TextField
                 margin="normal"
@@ -159,27 +165,31 @@ export default function Login() {
                     },
                   },
                 }}
-                className="bg-transparent"
+                className="bg-transparent mb-6"
 />
 
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                className=' bg-white text-black w-[10rem]'
+                className=' bg-[#1976D2] text-white w-full text-base  font-semibold font-poppins p-3'
+                onClick={handleclicklogin}
               >
                 Login
               </Button>
-              <Box textAlign="center">
-                <Link href="#" variant="body2" color="inherit">
-                  New here? 
-                  <span className='text-blue-400 '> Sign up</span>
-                </Link>
-              </Box>
+              <Typography className='font-poppins'>OR</Typography>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                className=' bg-[#1976D2] text-white text-base w-full font-semibold font-poppins  p-3'
+              >
+                Sign up for new account
+              </Button>
             </form>
           </div>
         </div>
       </Container>
-    </BackgroundImage>
+    </Box>
   )
 }

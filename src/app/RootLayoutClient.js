@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import NotSupported from './components/notSupported';
-import { CircularProgress } from '@mui/material';
+import LoadingPage from './components/loadingPage';
 
 export default function RootLayoutClient({ children }) {
   const [isSupported, setIsSupported] = useState(false);
@@ -27,19 +27,7 @@ export default function RootLayoutClient({ children }) {
 
   if (isLoading) {
     return (
-      <div style={{ 
-        width: '100vw', 
-        height: '100vh', 
-        backgroundImage: 'url(https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728928735/dgjdxenss7ghprlroxhm.png)', // Replace with your image path
-        backgroundSize: 'cover', 
-        backgroundPosition: 'center', 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        color: 'white' 
-      }}>
-        <CircularProgress color='white' />
-      </div>
+      <LoadingPage/>
     );
   }
 
