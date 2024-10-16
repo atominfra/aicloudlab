@@ -3,9 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { Button, Typography, Box, CircularProgress } from '@mui/material';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import ThemeSwitch from '../components/ThemeSwitch';
-import Navbar from '../components/navbar';
-import NotebookItem from '../../app/components/NotebookItem';
+import ThemeSwitch from '../../components/ThemeSwitch';
+import Navbar from '../../components/navbar';
+import NotebookItem from '../../components/NotebookItem';
 
 const sampleNotebooks = [
   { id: 1, name: 'Machine Learning Basics', version: 'Python 1.1.2', isActive: 'true' },

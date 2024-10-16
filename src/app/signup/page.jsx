@@ -14,7 +14,7 @@ import {
 import { styled } from '@mui/system';
 import Image from 'next/image'
 import Link from 'next/link'
-import ThemeSwitch from '@/app/components/ThemeSwitch'
+import ThemeSwitch from '@/components/ThemeSwitch'
 
 const BackgroundImage = styled(Box)({
   backgroundColor:'#111827',

@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 // import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { RiArrowDropDownLine } from "react-icons/ri";
-import Navbar from '../components/navbar';
+import Navbar from '../../components/navbar';
 import { useTheme } from 'next-themes';
 
 export default function CreateNotebook() {

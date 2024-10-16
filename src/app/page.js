@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import toast, { Toaster } from 'react-hot-toast';
-import ComingSoonPage from '../app/components/comingSoon'
+import ComingSoonPage from '../components/comingSoon'
 import { redirect } from 'next/navigation';
 export default function Home() {
 

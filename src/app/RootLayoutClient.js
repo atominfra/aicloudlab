@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import NotSupported from './components/notSupported';
-import LoadingPage from './components/loadingPage';
+import NotSupported from '../components/notSupported';
+import LoadingPage from '../components/loadingPage';
 
 export default function RootLayoutClient({ children }) {
   const [isSupported, setIsSupported] = useState(false);
