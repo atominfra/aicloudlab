@@ -5,6 +5,8 @@ import Image from 'next/image';
 import book from "../../assets/book.png";
 import NotebookItem from "../../app/components/NotebookItem";
 import { useRouter } from 'next/navigation';
+import ThemeSwitch from '../components/ThemeSwitch';
+import Navbar from '../components/navbar';
 
 const sampleNotebooks = [
   { id: 1, name: 'Machine Learning Basics', version: 'Python 1.1.2', isActive:'true' },
@@ -45,22 +47,8 @@ export default function NotebooksPage() {
     router.push('/createnotebook');
   };
   return (
-    <Box className="flex flex-col items-center gap-8 min-h-screen bg-gray-900 text-white p-6">
-      <Box className=" w-full p-4 flex justify-between">
-        <Box className=" flex items-center">
-        <Image 
-        src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728900185/cloud-lab-high-resolution-logo-grayscale-transparent_ba6qdw.png" 
-        width={1000}
-        height={1000}
-        className=' w-20 h-16'
-        alt="AI Cloud Lab Logo" />
-      </Box>
-
-      <Box className="">
-        <Typography variant="h6" className="font-semibold bg-yellow-400 text-gray-900 rounded-full w-8 h-8 flex items-center justify-center">
-          K
-        </Typography>
-      </Box></Box>
+    <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-black dark:text-white p-6">
+      <Navbar/>
       <Box className=" w-full text-end">
         <Button
           variant="contained"

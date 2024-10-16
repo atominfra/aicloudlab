@@ -27,19 +27,10 @@ export default function RootLayoutClient({ children }) {
 
   if (isLoading) {
     return (
-      <div style={{ 
-        width: '100vw', 
-        height: '100vh', 
-        backgroundColor: '#1f2937', // Replace with your image path
-        backgroundSize: 'cover', 
-        backgroundPosition: 'center', 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        color: 'white' 
-      }}>
-        <CircularProgress color='white' />
+      <div className="w-screen h-screen bg-gray-800 bg-cover bg-center flex justify-center items-center text-white">
+        <CircularProgress color="inherit" />
       </div>
+
     );
   }
 

@@ -63,7 +63,6 @@ export default function Login() {
   }
   return (
     <Box className=" h-screen w-screen flex flex-col justify-center items-center bg-white dark:bg-gray-900 text-black dark:text-white ">
-          <ThemeSwitch/>
       <Container>
         <div className='flex font-poppins gap-4 justify-between '>
           <div   className='flex w-[40vw]'>
