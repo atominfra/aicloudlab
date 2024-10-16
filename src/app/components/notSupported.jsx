@@ -19,7 +19,7 @@ const NotSupported = () => {
         className="w-20 h-16 mb-6"
         alt="AI Cloud Lab Logo"
       />
-      <p>This application is not supported on mobile or tablet devices. Please use a desktop to access the application.</p>
+      <p className='font-poppins'>This application is not supported on mobile or tablet devices. Please use a desktop to access the application.</p>
     </div>
   );
 };
