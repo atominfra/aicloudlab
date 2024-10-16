@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import NotSupported from './components/notSupported';
-import { CircularProgress } from '@mui/material';
+import LoadingPage from './components/loadingPage';
 
 export default function RootLayoutClient({ children }) {
   const [isSupported, setIsSupported] = useState(false);
@@ -27,10 +27,7 @@ export default function RootLayoutClient({ children }) {
 
   if (isLoading) {
     return (
-      <div className="w-screen h-screen bg-gray-800 bg-cover bg-center flex justify-center items-center text-white">
-        <CircularProgress color="inherit" />
-      </div>
-
+      <LoadingPage/>
     );
   }
 
