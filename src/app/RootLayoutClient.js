@@ -30,7 +30,7 @@ export default function RootLayoutClient({ children }) {
       <div style={{ 
         width: '100vw', 
         height: '100vh', 
-        backgroundImage: 'url(https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728928735/dgjdxenss7ghprlroxhm.png)', // Replace with your image path
+        backgroundColor: '#1f2937', // Replace with your image path
         backgroundSize: 'cover', 
         backgroundPosition: 'center', 
         display: 'flex', 

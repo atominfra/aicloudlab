@@ -7,7 +7,7 @@ const NotSupported = () => {
       justifyContent: 'center',
       alignItems: 'center',
       minHeight: '100vh',
-      backgroundImage: 'url(https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728928735/dgjdxenss7ghprlroxhm.png)', 
+      // backgroundImage: 'url(https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728928735/dgjdxenss7ghprlroxhm.png)', 
       backgroundSize: 'cover', 
       backgroundPosition: 'center', 
       backgroundColor: '#111827', 
