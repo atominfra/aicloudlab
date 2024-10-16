@@ -62,7 +62,7 @@ export default function CreateNotebook() {
             onChange={handleChange}
             variant="outlined"
             InputProps={{
-              className: 'bg-white dark:bg-gray-800 text-black dark:text-white '
+              className: 'bg-white dark:bg-gray-800 text-black dark:text-white rounded-[10px]'
             }}
             InputLabelProps={{
               sx: {
@@ -87,7 +87,7 @@ export default function CreateNotebook() {
             onChange={handleChange}
             variant="outlined"
             InputProps={{
-              className: 'bg-white dark:bg-gray-800 text-black dark:text-white '
+              className: 'bg-white dark:bg-gray-800 text-black dark:text-white rounded-[10px]'
             }}
             InputLabelProps={{
               sx: {
@@ -111,7 +111,7 @@ export default function CreateNotebook() {
             onChange={handleChange}
             displayEmpty
             variant="outlined"
-            className="bg-white dark:bg-gray-800 text-black dark:text-white font-poppins"
+            className="bg-white dark:bg-gray-800 text-black dark:text-white font-poppins rounded-[10px]"
             IconComponent={(props) => (
               <RiArrowDropDownLine {...props} style={{ color: 'white', fontSize: '30px' }} />
             )}
@@ -134,7 +134,7 @@ export default function CreateNotebook() {
             onChange={handleChange}
             displayEmpty
             variant="outlined"
-            className="bg-white dark:bg-gray-800 text-black dark:text-white font-poppins"
+            className="bg-white dark:bg-gray-800 text-black dark:text-white font-poppins rounded-[10px]"
             IconComponent={(props) => (
               <RiArrowDropDownLine {...props} style={{ color: 'white', fontSize: '30px' }} />
             )}
@@ -154,7 +154,7 @@ export default function CreateNotebook() {
             type="submit"
             fullWidth
             variant="contained"
-            className="bg-[#1976D2] text-white text-base font-semibold font-poppins shadow-md hover:shadow-md dark:hover:shadow-black dark:shadow-black rounded-lg"
+            className="bg-[#1976D2] text-white text-base font-semibold font-poppins shadow-md hover:shadow-md dark:hover:shadow-black dark:shadow-black  rounded-[10px] mt-4 p-3"
             onClick={handleCreateClick}
           >
             Create Notebook
