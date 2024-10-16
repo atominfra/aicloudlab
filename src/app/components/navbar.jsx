@@ -11,7 +11,7 @@ export default function Navbar() {
     <Box className=" w-full p-4 flex justify-between select-none">
         <Box className=" flex items-center">
         <Image 
-        src={resolvedTheme === 'dark' ? 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728900185/cloud-lab-high-resolution-logo-grayscale-transparent_ba6qdw.png' : 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1729070176/cln14b1469_p3ymed.png'}
+        src={resolvedTheme === 'dark' ? 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728900185/cloud-lab-high-resolution-logo-grayscale-transparent_ba6qdw.png' : 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1729071166/Untitled_design_15_nnjw9y.png'}
         width={1000}
         height={1000}
         className=' w-20 h-16'
