@@ -3,12 +3,11 @@ import { useState } from 'react'
 import { redirect, useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import toast, { Toaster } from 'react-hot-toast'
-
+import Button from "@/components/ui/button"
 import { 
   Box, 
   Typography, 
   TextField, 
-  Button, 
   Container, 
 } from '@mui/material';
 import { styled } from '@mui/system';
@@ -70,18 +69,18 @@ export default function Login() {
     // redirect('/signup')
   }
   return (
-    <Box className=" h-screen w-screen flex flex-col justify-center items-center bg-white dark:bg-gray-900 text-black dark:text-white ">
+    <Box className=" h-screen w-screen flex flex-col justify-center items-center bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
       <Container>
         <div className='flex font-poppins gap-4 justify-between '>
-          <div   className='flex w-[40vw]'>
-            <Box className='flex flex-col justify-center items-center gap-4'>
+          <div   className='flex w-[35vw]'>
+            <Box className='flex flex-col justify-center items-center gap-8'>
               <Image 
-              src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728900185/cloud-lab-high-resolution-logo-grayscale-transparent_ba6qdw.png" 
-              width={1000}
+        src={resolvedTheme === 'dark' ? 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728900185/cloud-lab-high-resolution-logo-grayscale-transparent_ba6qdw.png' : 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1729071166/Untitled_design_15_nnjw9y.png'}
+        width={1000}
               height={1000}
-              className='w-[14rem]'
+              className='w-[12rem]'
               alt="AI Cloud Lab Logo" />
-              <Typography  className='text-center text-2xl font-light font-poppins '>
+              <Typography  className='text-center text-xl font-light font-poppins '>
                 Seamless AI <span className='font-semibold'>development, </span> 
                 <span className='font-semibold'>deployment </span>
                  and  
@@ -110,7 +109,7 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 variant="outlined"
                 InputProps={{
-                  className: 'bg-white dark:bg-gray-800 text-black dark:text-white rounded-[10px]'
+                  className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
                 }}
                 InputLabelProps={{
                   sx: {
@@ -140,7 +139,7 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 variant="outlined"
                 InputProps={{
-                  className: 'bg-white dark:bg-gray-800 text-black dark:text-white rounded-[10px]'
+                  className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
                 }}
                 InputLabelProps={{
                   sx: {
@@ -158,24 +157,16 @@ export default function Login() {
                 }}
               />
 
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                className=' bg-[#1976D2] text-white w-full text-base  font-semibold font-poppins p-3 mt-6 rounded-[10px]'
-                onClick={handleclicklogin}
-              >
-                Login
-              </Button>
-              <Typography className='font-poppins'>OR</Typography>
-              <Button
-              onClick={handleclickSignup}
-                fullWidth
-                variant="contained"
-                className=' bg-[#1976D2] text-white text-base w-full font-semibold font-poppins rounded-[10px]  p-3'
-              >
-                Sign up for new account
-              </Button>
+              <Box className="w-full flex flex-col gap-4 mt-6"> 
+                <Button text={'Login'} onclickhandler={handleclicklogin} customCss='w-full'/>
+                {/* <Typography className='font-poppins'>OR</Typography> */}
+                <div  className='text-[#111827] w-full flex items-center'>
+                    <hr style={{ flex: 1, border: 'none', borderTop: '1px solid black' }} />
+                    <Typography className='font-poppins mx-1' >OR</Typography>
+                    <hr style={{ flex: 1, border: 'none', borderTop: '1px solid black' }} />
+                </div>
+                <Button text={'Sign up for new account'} onclickhandler={handleclickSignup} customCss='w-full'/>
+              </Box>
             </div>
           </div>
         </div>

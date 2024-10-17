@@ -27,7 +27,7 @@
 
 //   return <div className="relative w-16 h-8 flex items-center bg-white dark:bg-gray-900  cursor-pointer rounded-full p-1"
 //   onClick={()=>setrDarkMode(!darkmode)}>
-//     <FaMoon className="text-black dark:text-white" size={18}/>
+//     <FaMoon className="text-[#111827] dark:text-white" size={18}/>
 //   </div>
 
 // }

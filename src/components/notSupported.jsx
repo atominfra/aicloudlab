@@ -7,7 +7,7 @@ const NotSupported = () => {
 
   return (
     <div 
-      className="flex flex-col justify-center items-center min-h-screen bg-white dark:bg-gray-800 text-black dark:text-white text-center text-lg p-8"
+      className="flex flex-col justify-center items-center min-h-screen bg-white dark:bg-gray-800 text-[#111827] dark:text-white text-center text-lg p-8"
       style={{ backgroundSize: 'cover', backgroundPosition: 'center' }}
     >
       <Image

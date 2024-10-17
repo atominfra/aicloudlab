@@ -8,7 +8,6 @@ import {
   Box, 
   Typography, 
   TextField, 
-  Button, 
   Container, 
 } from '@mui/material';
 import { styled } from '@mui/system';
@@ -17,7 +16,7 @@ import Link from 'next/link'
 import ThemeSwitch from '@/components/ThemeSwitch'
 import { useTheme } from 'next-themes'
 import Navbar from '@/components/navbar'
-
+import Button from "@/components/ui/button"
 const BackgroundImage = styled(Box)({
   backgroundColor:'#111827',
   backgroundSize: 'cover', 
@@ -42,25 +41,25 @@ export default function Login() {
   }
 
   return (
-      // <Box className='bg-white dark:bg-gray-900 text-black dark:text-white'>
+      // <Box className='bg-white dark:bg-gray-900 text-[#111827] dark:text-white'>
       // <Navbar/>
-    <Box className=" h-screen w-screen flex flex-col justify-center items-center bg-white dark:bg-gray-900 text-black dark:text-white ">
+    <Box className=" h-screen w-screen flex flex-col justify-center items-center bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
       <Container>
         <div className='flex font-poppins gap-4 justify-between '>
-          <div className='flex w-[40vw]'>
-            <Box className='flex flex-col justify-center items-center gap-4'>
+        <div   className='flex w-[35vw]'>
+            <Box className='flex flex-col justify-center items-center gap-8'>
               <Image 
-                src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728900185/cloud-lab-high-resolution-logo-grayscale-transparent_ba6qdw.png" 
-                width={1000}
-                height={1000}
-                className='w-[14rem]'
-                alt="AI Cloud Lab Logo" 
-              />
-              <Typography className='text-center text-2xl font-light font-poppins'>
+        src={resolvedTheme === 'dark' ? 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728900185/cloud-lab-high-resolution-logo-grayscale-transparent_ba6qdw.png' : 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1729071166/Untitled_design_15_nnjw9y.png'}
+        width={1000}
+              height={1000}
+              className='w-[12rem]'
+              alt="AI Cloud Lab Logo" />
+              <Typography  className='text-center text-xl font-light font-poppins '>
                 Seamless AI <span className='font-semibold'>development, </span> 
                 <span className='font-semibold'>deployment </span>
-                and <span className='font-semibold'>monitoring</span> 
-                in Cloud all through one interface!
+                 and  
+                 <span className='font-semibold font-poppins'> monitoring </span>
+                  in Cloud all through one interface!
               </Typography>
             </Box>
           </div>
@@ -79,7 +78,7 @@ export default function Login() {
                 onChange={(e) => setFullName(e.target.value)}
                 variant="outlined"
                 InputProps={{
-                  className: 'bg-white dark:bg-gray-800 text-black dark:text-white rounded-[10px]'
+                  className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
                 }}
                 InputLabelProps={{
                   sx: {
@@ -106,7 +105,7 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 variant="outlined"
                 InputProps={{
-                  className: 'bg-white dark:bg-gray-800 text-black dark:text-white rounded-[10px]'
+                  className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
                 }}
                 InputLabelProps={{
                   sx: {
@@ -133,7 +132,7 @@ export default function Login() {
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 variant="outlined"
                 InputProps={{
-                  className: 'bg-white dark:bg-gray-800 text-black dark:text-white rounded-[10px]'
+                  className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
                 }}
                 InputLabelProps={{
                   sx: {
@@ -162,7 +161,7 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 variant="outlined"
                 InputProps={{
-                  className: 'bg-white dark:bg-gray-800 text-black dark:text-white rounded-[10px]'
+                  className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
                 }}
                 InputLabelProps={{
                   sx: {
@@ -190,7 +189,7 @@ export default function Login() {
                 onChange={(e) => setReEnterPassword(e.target.value)}
                 variant="outlined"
                 InputProps={{
-                  className: 'bg-white dark:bg-gray-800 text-black dark:text-white rounded-[10px]'
+                  className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
                 }}
                 InputLabelProps={{
                   sx: {
@@ -207,16 +206,8 @@ export default function Login() {
                   }
                 }}
               />
+              <Button text={'Sign up'} onclickhandler={handleclickSignup} customCss='w-full'/>
 
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                className='bg-[#1976D2] text-white w-full text-base  font-semibold font-poppins p-3 mt-6 rounded-[10px]'
-                onClick={handleclickSignup}
-              >
-                Sign up
-              </Button>
             </form>
           </div>
         </div>

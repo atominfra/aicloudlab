@@ -10,7 +10,7 @@ export default function page() {
         {/* <Navbar/> */}
       <Box className="w-full max-w-4xl">
         {/* Header Section */}
-        <div className="flex justify-between items-center pb-6 border-b border-gray-600">
+        <div className="flex justify-between items-center pb-6 border-b border-[#111827]">
           <div className="flex items-center gap-2">
             <Image
               src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728900185/cloud-lab-high-resolution-logo-grayscale-transparent_ba6qdw.png"
@@ -42,11 +42,11 @@ export default function page() {
             <Typography variant="h5" className="mt-8 font-medium font-poppins">
               Packages
             </Typography>
-            <Box className="border border-gray-600 rounded-md p-4 mt-2 space-y-2">
-              <li className="w-full bg-transparent border border-gray-600 rounded-md px-3 py-2 text-white font-poppins">
+            <Box className="border -[#111827] rounded-md p-4 mt-2 space-y-2">
+              <li className="w-full bg-transparent border -[#111827] rounded-md px-3 py-2 text-white font-poppins">
                 Package 1 package 1 name...
               </li>
-              <li className="w-full bg-transparent border border-gray-600 rounded-md px-3 py-2 text-white font-poppins">
+              <li className="w-full bg-transparent border -[#111827] rounded-md px-3 py-2 text-white font-poppins">
                 Package 2 package 2 name...
               </li>
               {/* Add more list items as needed */}
@@ -55,7 +55,7 @@ export default function page() {
 
           {/* Resource Usage */}
           <div className="w-full md:w-1/3 mt-6 md:mt-0">
-            <Box className="border border-gray-600 rounded-md p-4 space-y-4">
+            <Box className="border -[#111827] rounded-md p-4 space-y-4">
               <Box className="flex justify-between">
                 <Typography variant="body2">STORAGE</Typography>
                 <Typography variant="body2">7.8 GB/10 GB</Typography>
@@ -85,6 +85,7 @@ export default function page() {
 
         {/* Delete Notebook Button */}
         <div className="mt-6">
+          
           <Button
             variant="contained"
             color="error"

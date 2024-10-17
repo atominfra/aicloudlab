@@ -6,9 +6,9 @@ const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
     const [notebooks, setNotebooks] = useState([
-      { id: 1, name: 'Machine Learning Basics', version: 'Python 1.1.2', isActive: true },
-      { id: 2, name: 'Deep Learning', version: 'Python 1.1.8', isActive: true },
-      { id: 3, name: 'Data Science', version: 'Python 1.1.3', isActive: true }
+      { id: 1, name: 'Machine Learning  Basics', version: 'Python 3.6', isActive: true , status:'stopped'},
+      { id: 2, name: 'Deep Learning', version: 'Python 3.7', isActive: false, status:'running' },
+      { id: 3, name: 'Data Science', version: 'Python 3.8', isActive: true, status:'stopped' }
     ]);
 
     return (
