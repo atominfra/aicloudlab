@@ -15,6 +15,8 @@ import { styled } from '@mui/system';
 import Image from 'next/image'
 import Link from 'next/link'
 import ThemeSwitch from '@/components/ThemeSwitch'
+import { useTheme } from 'next-themes'
+import Navbar from '@/components/navbar'
 
 const BackgroundImage = styled(Box)({
   backgroundColor:'#111827',
@@ -33,12 +35,15 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [reEnterPassword, setReEnterPassword] = useState('');
   const router = useRouter()
+  const { resolvedTheme } = useTheme();
 
   const handleclickSignup = async (e) => {
-    redirect('/dashboard')
+    router.push('/dashboard')
   }
 
   return (
+      // <Box className='bg-white dark:bg-gray-900 text-black dark:text-white'>
+      // <Navbar/>
     <Box className=" h-screen w-screen flex flex-col justify-center items-center bg-white dark:bg-gray-900 text-black dark:text-white ">
       <Container>
         <div className='flex font-poppins gap-4 justify-between '>
@@ -60,7 +65,7 @@ export default function Login() {
             </Box>
           </div>
           <div className='w-[30vw]'>
-            <Typography className='text-center text-3xl pb-6 font-poppins'>
+            <Typography className='text-center text-3xl mb-10 font-poppins'>
               Welcome to <span className='font-bold'>AI Cloud Lab!</span>
             </Typography>
             <form className='flex flex-col justify-center items-center gap-4'>
@@ -74,30 +79,22 @@ export default function Login() {
                 onChange={(e) => setFullName(e.target.value)}
                 variant="outlined"
                 InputProps={{
-                  style: { color: 'white' },
+                  className: 'bg-white dark:bg-gray-800 text-black dark:text-white rounded-[10px]'
                 }}
                 InputLabelProps={{
                   sx: {
-                    color: 'white',
-                    '&.Mui-focused': {
-                      color: 'white',
-                    },
-                  },
+                    color: resolvedTheme === "dark"?'white':'black',
+                    fontFamily: 'poppins',
+                    '&.Mui-focused': { color: resolvedTheme === "dark"?'white':'black' }
+                  }
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: 'white',
-                    },
-                    '&:hover fieldset': {
-                      borderColor: 'white',
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: 'white',
-                    },
-                  },
+                    '& fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' },
+                    '&:hover fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' },
+                    '&.Mui-focused fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' }
+                  }
                 }}
-                className="bg-transparent"
               />
               <TextField
                 required
@@ -109,30 +106,22 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 variant="outlined"
                 InputProps={{
-                  style: { color: 'white' },
+                  className: 'bg-white dark:bg-gray-800 text-black dark:text-white rounded-[10px]'
                 }}
                 InputLabelProps={{
                   sx: {
-                    color: 'white',
-                    '&.Mui-focused': {
-                      color: 'white',
-                    },
-                  },
+                    color: resolvedTheme === "dark"?'white':'black',
+                    fontFamily: 'poppins',
+                    '&.Mui-focused': { color: resolvedTheme === "dark"?'white':'black' }
+                  }
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: 'white',
-                    },
-                    '&:hover fieldset': {
-                      borderColor: 'white',
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: 'white',
-                    },
-                  },
+                    '& fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' },
+                    '&:hover fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' },
+                    '&.Mui-focused fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' }
+                  }
                 }}
-                className="bg-transparent"
               />
               <TextField
                 required
@@ -144,30 +133,22 @@ export default function Login() {
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 variant="outlined"
                 InputProps={{
-                  style: { color: 'white' },
+                  className: 'bg-white dark:bg-gray-800 text-black dark:text-white rounded-[10px]'
                 }}
                 InputLabelProps={{
                   sx: {
-                    color: 'white',
-                    '&.Mui-focused': {
-                      color: 'white',
-                    },
-                  },
+                    color: resolvedTheme === "dark"?'white':'black',
+                    fontFamily: 'poppins',
+                    '&.Mui-focused': { color: resolvedTheme === "dark"?'white':'black' }
+                  }
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: 'white',
-                    },
-                    '&:hover fieldset': {
-                      borderColor: 'white',
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: 'white',
-                    },
-                  },
+                    '& fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' },
+                    '&:hover fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' },
+                    '&.Mui-focused fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' }
+                  }
                 }}
-                className="bg-transparent"
               />
               <TextField
                 required
@@ -181,30 +162,22 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 variant="outlined"
                 InputProps={{
-                  style: { color: 'white' },
+                  className: 'bg-white dark:bg-gray-800 text-black dark:text-white rounded-[10px]'
                 }}
                 InputLabelProps={{
                   sx: {
-                    color: 'white',
-                    '&.Mui-focused': {
-                      color: 'white',
-                    },
-                  },
+                    color: resolvedTheme === "dark"?'white':'black',
+                    fontFamily: 'poppins',
+                    '&.Mui-focused': { color: resolvedTheme === "dark"?'white':'black' }
+                  }
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: 'white',
-                    },
-                    '&:hover fieldset': {
-                      borderColor: 'white',
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: 'white',
-                    },
-                  },
+                    '& fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' },
+                    '&:hover fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' },
+                    '&.Mui-focused fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' }
+                  }
                 }}
-                className="bg-transparent"
               />
               <TextField
                 required
@@ -217,37 +190,29 @@ export default function Login() {
                 onChange={(e) => setReEnterPassword(e.target.value)}
                 variant="outlined"
                 InputProps={{
-                  style: { color: 'white' },
+                  className: 'bg-white dark:bg-gray-800 text-black dark:text-white rounded-[10px]'
                 }}
                 InputLabelProps={{
                   sx: {
-                    color: 'white',
-                    '&.Mui-focused': {
-                      color: 'white',
-                    },
-                  },
+                    color: resolvedTheme === "dark"?'white':'black',
+                    fontFamily: 'poppins',
+                    '&.Mui-focused': { color: resolvedTheme === "dark"?'white':'black' }
+                  }
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: 'white',
-                    },
-                    '&:hover fieldset': {
-                      borderColor: 'white',
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: 'white',
-                    },
-                  },
+                    '& fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' },
+                    '&:hover fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' },
+                    '&.Mui-focused fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' }
+                  }
                 }}
-                className="bg-transparent mb-6"
               />
 
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                className='bg-[#1976D2] text-white w-full text-base font-semibold font-poppins p-3'
+                className='bg-[#1976D2] text-white w-full text-base  font-semibold font-poppins p-3 mt-6 rounded-[10px]'
                 onClick={handleclickSignup}
               >
                 Sign up
@@ -257,5 +222,6 @@ export default function Login() {
         </div>
       </Container>
     </Box>
+      // </Box>
   )
 }

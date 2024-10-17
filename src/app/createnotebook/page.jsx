@@ -8,9 +8,11 @@ import { useRouter } from 'next/navigation';
 import { RiArrowDropDownLine } from "react-icons/ri";
 import Navbar from '../../components/navbar';
 import { useTheme } from 'next-themes';
+import { useGlobalContext } from '@/context/GlobalContext';
 
 export default function CreateNotebook() {
   const router = useRouter();
+  const { notebooks, setNotebooks } = useGlobalContext();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -26,22 +28,45 @@ export default function CreateNotebook() {
       [name]: value
     });
   };
+
+
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const newNotebook = {
+      id: Date.now(),
+      name: formData.name,
+      version: formData.pythonVersion,
+      packages:formData.packages,
+      isActive: 'true'
+    };
+
+    setNotebooks(notebooks=>[...notebooks,newNotebook])
+
+    notebooks.push(newNotebook);
+    router.push({
+      pathname: '/dashboard',
+    });
+  };
+
   const handleCreateClick = () => {
     router.push('/dashboard');
   };
-  const handleSubmit = async (event) => {
-    event.preventDefault();
 
-    try {
-      // Replace with the actual API endpoint
-      const response = await axios.post('/api/notebooks', formData);
-      console.log('Notebook created:', response.data);
-      // Add success handling, such as showing a message or redirecting
-    } catch (error) {
-      console.error('Error creating notebook:', error);
-      // Add error handling, such as showing an error message
-    }
-  };
+  // const handleSubmit = async (event) => {
+  //   event.preventDefault();
+
+  //   try {
+  //     // Replace with the actual API endpoint
+  //     const response = await axios.post('/api/notebooks', formData);
+  //     console.log('Notebook created:', response.data);
+  //     // Add success handling, such as showing a message or redirecting
+  //   } catch (error) {
+  //     console.error('Error creating notebook:', error);
+  //     // Add error handling, such as showing an error message
+  //   }
+  // };
   const { resolvedTheme } = useTheme();
 
   return (
