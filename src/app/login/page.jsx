@@ -3,18 +3,18 @@ import { useState } from 'react'
 import { redirect, useRouter } from 'next/navigation'
 import { signIn } from 'next-auth/react'
 import toast, { Toaster } from 'react-hot-toast'
-
+import Button from "@/components/ui/button"
 import { 
   Box, 
   Typography, 
   TextField, 
-  Button, 
   Container, 
 } from '@mui/material';
 import { styled } from '@mui/system';
 import Image from 'next/image'
 import Link from 'next/link'
-import ThemeSwitch from '@/app/components/ThemeSwitch'
+import ThemeSwitch from '@/components/ThemeSwitch'
+import { useTheme } from 'next-themes'
 const BackgroundImage = styled(Box)({
   backgroundColor:'#111827',
   backgroundSize: 'cover', 
@@ -29,6 +29,7 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter()
+  const { resolvedTheme } = useTheme();
 
   const handleSubmit = async (e) => {
     redirect('/dashboard')
@@ -57,23 +58,29 @@ export default function Login() {
     //   toast.error('An unexpected error occurred. Please try again.')
     // }
   }
-
+  
   function handleclicklogin(){
-    redirect('/dashboard')
+    console.log("login clicked")
+    router.push('/dashboard');
+    // redirect('/dashboard')
+  }
+  function handleclickSignup(){
+    router.push('/signup');
+    // redirect('/signup')
   }
   return (
-    <Box className=" h-screen w-screen flex flex-col justify-center items-center bg-white dark:bg-gray-900 text-black dark:text-white ">
+    <Box className=" h-screen w-screen flex flex-col justify-center items-center bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
       <Container>
         <div className='flex font-poppins gap-4 justify-between '>
-          <div   className='flex w-[40vw]'>
-            <Box className='flex flex-col justify-center items-center gap-4'>
+          <div   className='flex w-[35vw]'>
+            <Box className='flex flex-col justify-center items-center gap-8'>
               <Image 
-              src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728900185/cloud-lab-high-resolution-logo-grayscale-transparent_ba6qdw.png" 
-              width={1000}
+        src={resolvedTheme === 'dark' ? 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728900185/cloud-lab-high-resolution-logo-grayscale-transparent_ba6qdw.png' : 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1729071166/Untitled_design_15_nnjw9y.png'}
+        width={1000}
               height={1000}
-              className='w-[14rem]'
+              className='w-[12rem]'
               alt="AI Cloud Lab Logo" />
-              <Typography  className='text-center text-2xl font-light font-poppins '>
+              <Typography  className='text-center text-xl font-light font-poppins '>
                 Seamless AI <span className='font-semibold'>development, </span> 
                 <span className='font-semibold'>deployment </span>
                  and  
@@ -83,15 +90,14 @@ export default function Login() {
             </Box>
           </div>
           <div   className='  w-[30vw] '>
-          <Typography  className='text-center text-3xl pb-4 font-poppins'>
+          <Typography  className='text-center text-3xl mb-10 font-poppins'>
                 Welcome to <span className='font-bold '>AI Cloud Lab!</span>
               </Typography>
-            <form component="form" 
+            <div component="form" 
             // onSubmit={handleSubmit}
              className='flex flex-col justify-center items-center gap-4'>
               
               <TextField
-                margin="normal"
                 required
                 fullWidth
                 id="email"
@@ -103,34 +109,25 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 variant="outlined"
                 InputProps={{
-                  style: { color: 'white' }, // Text color when typing
+                  className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
                 }}
                 InputLabelProps={{
                   sx: {
-                    color: 'white', // Initial label color
-                    '&.Mui-focused': {
-                      color: 'white', // Label color when focused
-                    },
-                  },
+                    color: resolvedTheme === "dark"?'white':'black',
+                    fontFamily: 'poppins',
+                    '&.Mui-focused': { color: resolvedTheme === "dark"?'white':'black' }
+                  }
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: 'white', // Default border color
-                    },
-                    '&:hover fieldset': {
-                      borderColor: 'white', // Border color on hover
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: 'white', // Border color when focused
-                    },
-                  },
+                    '& fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' },
+                    '&:hover fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' },
+                    '&.Mui-focused fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' }
+                  }
                 }}
-                className="bg-transparent"
               />
 
               <TextField
-                margin="normal"
                 required
                 fullWidth
                 name="password"
@@ -142,51 +139,35 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 variant="outlined"
                 InputProps={{
-                  style: { color: 'white' }, // Text color when typing
+                  className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
                 }}
                 InputLabelProps={{
                   sx: {
-                    color: 'white', // Initial label color
-                    '&.Mui-focused': {
-                      color: 'white', // Label color when focused
-                    },
-                  },
+                    color: resolvedTheme === "dark"?'white':'black',
+                    fontFamily: 'poppins',
+                    '&.Mui-focused': { color: resolvedTheme === "dark"?'white':'black' }
+                  }
                 }}
                 sx={{
                   '& .MuiOutlinedInput-root': {
-                    '& fieldset': {
-                      borderColor: 'white', // Default border color
-                    },
-                    '&:hover fieldset': {
-                      borderColor: 'white', // Border color on hover
-                    },
-                    '&.Mui-focused fieldset': {
-                      borderColor: 'white', // Border color when focused
-                    },
-                  },
+                    '& fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' },
+                    '&:hover fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' },
+                    '&.Mui-focused fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' }
+                  }
                 }}
-                className="bg-transparent mb-6"
-/>
+              />
 
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                className=' bg-[#1976D2] text-white w-full text-base  font-semibold font-poppins p-3'
-                onClick={handleclicklogin}
-              >
-                Login
-              </Button>
-              <Typography className='font-poppins'>OR</Typography>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                className=' bg-[#1976D2] text-white text-base w-full font-semibold font-poppins  p-3'
-              >
-                Sign up for new account
-              </Button>
-            </form>
+              <Box className="w-full flex flex-col gap-4 mt-6"> 
+                <Button text={'Login'} onclickhandler={handleclicklogin} customCss='w-full'/>
+                {/* <Typography className='font-poppins'>OR</Typography> */}
+                <div  className='text-[#111827] w-full flex items-center'>
+                    <hr style={{ flex: 1, border: 'none', borderTop: '1px solid black' }} />
+                    <Typography className='font-poppins mx-1' >OR</Typography>
+                    <hr style={{ flex: 1, border: 'none', borderTop: '1px solid black' }} />
+                </div>
+                <Button text={'Sign up for new account'} onclickhandler={handleclickSignup} customCss='w-full'/>
+              </Box>
+            </div>
           </div>
         </div>
       </Container>

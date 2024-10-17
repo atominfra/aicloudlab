@@ -1,16 +1,7 @@
-'use client'
-import Link from 'next/link'
-import toast, { Toaster } from 'react-hot-toast';
-import ComingSoonPage from '../app/components/comingSoon'
+'use server'
 import { redirect } from 'next/navigation';
-export default function Home() {
 
-  redirect('/dashboard');
-  return (
-    <div className="">
-      {/* <ComingSoonPage/> */}
-      <Toaster />
-    </div>
-  )
+export default async function Home() {
+  redirect('/login'); // Server-side redirect happens here
+  return null; // Return null since the component won't render
 }
-

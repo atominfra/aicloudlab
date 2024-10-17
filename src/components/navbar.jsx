@@ -20,7 +20,7 @@ export default function Navbar() {
 
       <Box className="flex gap-8 items-center">
       <ThemeSwitch/>
-      <div className="flex items-center justify-center w-8 h-8 rounded-full border-2"
+      <div className="flex items-center justify-center w-8 h-8 rounded-full border-2 border-[#111827]"
       style={{
         borderColor: resolvedTheme === 'dark' ? 'white' : 'black',
         backgroundColor: resolvedTheme === 'dark' ? '#1f2937' : '#f9f9f9'

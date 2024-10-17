@@ -27,7 +27,7 @@
       "**/*.ts",
       "**/*.tsx",
       ".next/types/**/*.ts",
-      "src/app/components/research-components/ProjectModal.tsx"
+      "src/components/research-components/ProjectModal.tsx"
   ],
   "exclude": ["node_modules"]
 }
