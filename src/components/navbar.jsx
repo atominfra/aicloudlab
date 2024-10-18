@@ -22,7 +22,9 @@ export default function Navbar() {
 
       <Box className="flex gap-8 items-center">
       <ThemeSwitch/>
+      <Link href={'/profile'}>
       <PiUserCircleFill size={45}  />
+      </Link>
       </Box>
       </Box>
   )

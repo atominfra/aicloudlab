@@ -10,9 +10,10 @@ export const GlobalProvider = ({ children }) => {
       { id: 2, name: 'Deep Learning', version: 'Python 3.7', isActive: false, status:'running' },
       { id: 3, name: 'Data Science', version: 'Python 3.8', isActive: true, status:'stopped' }
     ]);
+    const [user , setUser] = useState({})
 
     return (
-        <GlobalContext.Provider value={{ notebooks, setNotebooks }}>
+        <GlobalContext.Provider value={{ notebooks, setNotebooks, user , setUser }}>
             {children}
         </GlobalContext.Provider>
     );

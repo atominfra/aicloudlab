@@ -1,58 +1,112 @@
 'use client'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react';
 import { 
   Box, 
   Typography, 
   TextField, 
-  Container, 
+  Container,
 } from '@mui/material';
-import Image from 'next/image'
-import { useTheme } from 'next-themes'
-import CustomButton from "@/components/ui/button"
+import Image from 'next/image';
+import { useTheme } from 'next-themes';
+import CustomButton from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
+import toast, { Toaster } from 'react-hot-toast';
 
-export default function Login() {
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [password, setPassword] = useState('');
-  const [reEnterPassword, setReEnterPassword] = useState('');
-  const router = useRouter()
+export default function Signup() {
+  const router = useRouter();
   const { resolvedTheme } = useTheme();
-  const [isClient, setIsClient] = useState(false);
+  
+  // Form state
+  const [formData, setFormData] = useState({
+    full_name: '',
+    email: '',
+    phone: '',
+    password: '',
+    reEnterPassword: '',
+  });
+  
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.full_name) newErrors.full_name = 'Full name is required';
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
+      newErrors.email = 'Invalid email address';
+    }
+    if (!formData.phone) newErrors.phone = 'Phone number is required';
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 8) {
+      newErrors.password = 'Password must be at least 8 characters';
+    }
+    if (!formData.reEnterPassword) {
+      newErrors.reEnterPassword = 'Please confirm your password';
+    } else if (formData.reEnterPassword !== formData.password) {
+      newErrors.reEnterPassword = 'Passwords do not match';
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e) => {
+    const { reEnterPassword, ...data } = formData;
+console.log("data",reEnterPassword,data)
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/signup`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const responseData = await response.json();
+
+      if (response.ok) {
+        localStorage.setItem('access_token', responseData.access_token);
+        toast.success('Signup successful!');
+        router.push('/dashboard');
+      } else {
+        toast.error(responseData.message || 'Signup failed');
+      }
+    } catch (error) {
+      toast.error('An error occurred. Please try again.',error);
+    }
+  };
+
   useEffect(() => {
-    console.log("isClient",isClient)
-    setIsClient(true);
-  }, []);
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-  const handleclickSignup = async () => {
-    router.push('/dashboard')
-  }
-useEffect(()=>{
-  console.log("resolvedTheme",resolvedTheme)
-},[resolvedTheme])
+    console.log("resolvedTheme", resolvedTheme);
+  }, [resolvedTheme]);
+
   return (
-      // <Box className='bg-white dark:bg-gray-900 text-[#111827] dark:text-white'>
-      // <Navbar/>
-    <Box className=" h-screen w-screen flex flex-col justify-center items-center bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
+    <Box className="h-screen w-screen flex flex-col justify-center items-center bg-white dark:bg-gray-900 text-[#111827] dark:text-white">
       <Container>
-        <div className='flex font-poppins gap-4 justify-between '>
-        <div   className='flex w-[35vw]'>
+        <div className='flex font-poppins gap-4 justify-between'>
+          <div className='flex w-[35vw]'>
             <Box className='flex flex-col justify-center items-center gap-8'>
               <Image 
-        src={resolvedTheme === 'dark' ? 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728900185/cloud-lab-high-resolution-logo-grayscale-transparent_ba6qdw.png' : 'https://res.cloudinary.com/dsfu8suwl/image/upload/v1729192530/cloud-lab-high-resolution-logo-grayscale-transparent_1_-_Edited_a4pbfi.webp'}
-        width={1000}
-              height={1000}
-              className='w-[10rem]'
-              alt="AI Cloud Lab Logo" />
-              <Typography  className='text-center text-xl font-light font-poppins '>
+                src={resolvedTheme === 'dark' ? 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728900185/cloud-lab-high-resolution-logo-grayscale-transparent_ba6qdw.png' : 'https://res.cloudinary.com/dsfu8suwl/image/upload/v1729192530/cloud-lab-high-resolution-logo-grayscale-transparent_1_-_Edited_a4pbfi.webp'}
+                width={1000}
+                height={1000}
+                className='w-[10rem]'
+                alt="AI Cloud Lab Logo" 
+              />
+              <Typography className='text-center text-xl font-light font-poppins'>
                 Seamless AI <span className='font-semibold'>development, </span> 
                 <span className='font-semibold'>deployment </span>
-                 and  
-                 <span className='font-semibold font-poppins'> monitoring </span>
-                  in Cloud all through one interface!
+                and  
+                <span className='font-semibold font-poppins'> monitoring </span>
+                in Cloud all through one interface!
               </Typography>
             </Box>
           </div>
@@ -60,16 +114,15 @@ useEffect(()=>{
             <Typography className='text-center text-3xl mb-10 font-poppins'>
               Welcome to <span className='font-bold'>AI Cloud Lab!</span>
             </Typography>
-            <form className='flex flex-col justify-center items-center gap-4'>
+            <form onSubmit={handleSubmit} className='flex flex-col justify-center items-center gap-4'>
               <TextField
-                required
+                name="full_name"
                 fullWidth
-                id="fullName"
                 label="Full Name"
-                name="fullName"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                variant="outlined"
+                value={formData.full_name}
+                onChange={handleChange}
+                error={!!errors.full_name}
+                helperText={errors.full_name}
                 InputProps={{
                   className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
                 }}
@@ -89,14 +142,13 @@ useEffect(()=>{
                 }}
               />
               <TextField
-                required
-                fullWidth
-                id="email"
-                label="Email"
                 name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                variant="outlined"
+                fullWidth
+                label="Email"
+                value={formData.email}
+                onChange={handleChange}
+                error={!!errors.email}
+                helperText={errors.email}
                 InputProps={{
                   className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
                 }}
@@ -116,14 +168,13 @@ useEffect(()=>{
                 }}
               />
               <TextField
-                required
+                name="phone"
                 fullWidth
-                id="phoneNumber"
                 label="Phone number"
-                name="phoneNumber"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-                variant="outlined"
+                value={formData.phone}
+                onChange={handleChange}
+                error={!!errors.phone}
+                helperText={errors.phone}
                 InputProps={{
                   className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
                 }}
@@ -143,16 +194,14 @@ useEffect(()=>{
                 }}
               />
               <TextField
-                required
-                fullWidth
-                id="password"
-                label="Password"
                 name="password"
+                fullWidth
                 type="password"
-                autoComplete="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                variant="outlined"
+                label="Password"
+                value={formData.password}
+                onChange={handleChange}
+                error={!!errors.password}
+                helperText={errors.password}
                 InputProps={{
                   className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
                 }}
@@ -172,15 +221,14 @@ useEffect(()=>{
                 }}
               />
               <TextField
-                required
-                fullWidth
                 name="reEnterPassword"
-                label="Re-Enter Password"
+                fullWidth
                 type="password"
-                id="reEnterPassword"
-                value={reEnterPassword}
-                onChange={(e) => setReEnterPassword(e.target.value)}
-                variant="outlined"
+                label="Re-Enter Password"
+                value={formData.reEnterPassword}
+                onChange={handleChange}
+                error={!!errors.reEnterPassword}
+                helperText={errors.reEnterPassword}
                 InputProps={{
                   className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
                 }}
@@ -199,13 +247,13 @@ useEffect(()=>{
                   }
                 }}
               />
-              <CustomButton text={'Sign up'} onclickhandler={handleclickSignup} customCss='w-full mt-6'/>
-
+              <Typography className="text-red-600">Error logging in </Typography>
+              <CustomButton text={'Sign up'} onclickhandler={handleSubmit} customCss='w-full mt-6'/>
             </form>
           </div>
         </div>
       </Container>
+      <Toaster position="top-center" reverseOrder={false} />
     </Box>
-      // </Box>
-  )
+  );
 }
