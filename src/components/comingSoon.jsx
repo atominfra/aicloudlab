@@ -4,6 +4,7 @@ const ComingSoonPage = () => {
   const [daysLeft, setDaysLeft] = useState(30);
 
   useEffect(() => {
+    console.log(daysLeft)
     const timer = setInterval(() => {
       setDaysLeft((prevDays) => (prevDays > 0 ? prevDays - 1 : 0));
     }, 86400000); // 24 hours in milliseconds
