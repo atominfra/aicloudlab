@@ -1,7 +1,7 @@
 import { Button } from '@mui/material'
 import React from 'react'
 
-export default function button({text,onclickhandler,customCss}) {
+export default function CustomButton({text,onclickhandler,customCss}) {
   return (
     <Button
       variant="contained"

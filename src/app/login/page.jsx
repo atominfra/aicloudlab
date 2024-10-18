@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import Button from "@/components/ui/button"
+import CustomButton from "@/components/ui/button"
 import { 
   Box, 
   Typography, 
@@ -117,14 +117,14 @@ export default function Login() {
               />
 
               <Box className="w-full flex flex-col gap-4 mt-6"> 
-                <Button text={'Login'} onclickhandler={handleclicklogin} customCss='w-full'/>
+                <CustomButton text={'Login'} onclickhandler={handleclicklogin} customCss='w-full'/>
                 {/* <Typography className='font-poppins'>OR</Typography> */}
                 <div  className='text-[#111827] w-full flex items-center'>
                     <hr style={{ flex: 1, border: 'none', borderTop: '1px solid black' }} />
                     <Typography className='font-poppins mx-1' >OR</Typography>
                     <hr style={{ flex: 1, border: 'none', borderTop: '1px solid black' }} />
                 </div>
-                <Button text={'Sign up for new account'} onclickhandler={handleclickSignup} customCss='w-full'/>
+                <CustomButton text={'Sign up for new account'} onclickhandler={handleclickSignup} customCss='w-full'/>
               </Box>
             </div>
           </div>

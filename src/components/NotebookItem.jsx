@@ -46,6 +46,7 @@ export default function NotebookItem({ name, version, status }) {
           className=" dark:hover:text-yellow-500 font-poppins text-[#111827] dark:text-white underline capitalize"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
+          href='/notebook'
         >
           Go to notebook
         </Button>

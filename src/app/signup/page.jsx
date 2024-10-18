@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import Image from 'next/image'
 import { useTheme } from 'next-themes'
-import Button from "@/components/ui/button"
+import CustomButton from "@/components/ui/button"
 import { useRouter } from 'next/navigation';
 
 export default function Login() {
@@ -199,7 +199,7 @@ useEffect(()=>{
                   }
                 }}
               />
-              <Button text={'Sign up'} onclickhandler={handleclickSignup} customCss='w-full mt-6'/>
+              <CustomButton text={'Sign up'} onclickhandler={handleclickSignup} customCss='w-full mt-6'/>
 
             </form>
           </div>

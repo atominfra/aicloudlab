@@ -7,7 +7,7 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import Navbar from '../../components/navbar';
 import { useTheme } from 'next-themes';
 import { useGlobalContext } from '@/context/GlobalContext';
-import Button from '@/components/ui/button';
+import CustomButton from '@/components/ui/button';
 export default function CreateNotebook() {
   const router = useRouter();
   const { notebooks, setNotebooks } = useGlobalContext();
@@ -159,7 +159,7 @@ export default function CreateNotebook() {
             <MenuItem value="scikit-learn">Scikit-Learn</MenuItem>
             <MenuItem value="matplotlib">Matplotlib</MenuItem>
           </Select>
-        <Button text={'Create Notebook'} onclickhandler={handleCreateClick} customCss={'mt-6'}/>
+        <CustomButton text={'Create Notebook'} onclickhandler={handleCreateClick} customCss={'mt-6'}/>
         </Box>
       </Box>
       
