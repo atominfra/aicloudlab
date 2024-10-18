@@ -199,11 +199,7 @@ useEffect(()=>{
                   }
                 }}
               />
-<<<<<<< HEAD
-              <Button text={'Sign up'} onclickhandler={handleclickSignup} customCss='w-full'/>
-=======
               <Button text={'Sign up'} onclickhandler={handleclickSignup} customCss='w-full mt-6'/>
->>>>>>> fix/tailwind
 
             </form>
           </div>
