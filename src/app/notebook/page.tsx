@@ -1,7 +1,6 @@
 import { Box, Typography, Button } from '@mui/material';
 import Link from 'next/link';
 import Image from 'next/image';
-import Navbar from '@/components/navbar';
 import { FaExternalLinkAlt } from "react-icons/fa";
 
 export default function page() {

@@ -1,6 +1,6 @@
 'use client';
-import React, { useState } from 'react';
-import {  Typography, Box, CircularProgress } from '@mui/material';
+import React from 'react';
+import {  Typography, Box } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/navbar';
 import NotebookItem from '@/components/NotebookItem';
@@ -9,7 +9,7 @@ import Button from "@/components/ui/button"
 
 export default function NotebooksPage() {
   const router = useRouter();
-  const { notebooks, setNotebooks } = useGlobalContext();
+  const { notebooks } = useGlobalContext();
 
   const handleCreateClick = () => {
     router.push('/create',);

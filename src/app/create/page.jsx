@@ -1,8 +1,6 @@
 'use client';
 import React, { useState } from 'react';
 import { Typography, Box, TextField, Select, MenuItem } from '@mui/material';
-import Image from 'next/image';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 // import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { RiArrowDropDownLine } from "react-icons/ri";

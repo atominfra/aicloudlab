@@ -7,12 +7,12 @@ import { MdSettings } from "react-icons/md";
 
 export default function NotebookItem({ name, version, status }) {
   const [isHovered, setIsHovered] = useState(false);
-  // console.log("name", name, version, isActive);
+  console.log("isHovered", isHovered);
 
-  const statusColors = {
-    stopped:"#FF6F00",
-    running:"#1EFF4F"
-  }
+  // const statusColors = {
+  //   stopped:"#FF6F00",
+  //   running:"#1EFF4F"
+  // }
   
   return (
     <Box className="flex items-center justify-between bg-white dark:bg-gray-800 text-[#111827] dark:text-white p-4 rounded-lg mb-2 w-[90%] border-2 border-[#111827] dark:border-0">

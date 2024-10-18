@@ -1,8 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { redirect, useRouter } from 'next/navigation'
-import { signIn } from 'next-auth/react'
-import toast, { Toaster } from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
 import Button from "@/components/ui/button"
 import { 
   Box, 
@@ -10,20 +8,8 @@ import {
   TextField, 
   Container, 
 } from '@mui/material';
-import { styled } from '@mui/system';
 import Image from 'next/image'
-import Link from 'next/link'
-import ThemeSwitch from '@/components/ThemeSwitch'
 import { useTheme } from 'next-themes'
-const BackgroundImage = styled(Box)({
-  backgroundColor:'#111827',
-  backgroundSize: 'cover', 
-  backgroundPosition: 'center', 
-  backgroundRepeat: 'no-repeat', 
-  minHeight: '100vh',
-  display: 'flex',
-  alignItems: 'center',
-});
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -31,33 +17,6 @@ export default function Login() {
   const router = useRouter()
   const { resolvedTheme } = useTheme();
 
-  const handleSubmit = async (e) => {
-    redirect('/dashboard')
-    // e.preventDefault()
-    // try {
-    //   const result = await signIn('credentials', {
-    //     email,
-    //     password,
-    //     redirect: false,
-    //     callbackUrl: '/dashboard'
-    //   })
-
-    //   if (result?.ok) {
-    //     console.log('Successfully signed in')
-    //     toast.success('Successfully signed in!')
-        
-    //     setTimeout(() => {
-    //       router.push(result.url || '/dashboard')
-    //     }, 1500)
-    //   } else {
-    //     console.log('Sign in failed. Please check your credentials')
-    //     toast.error('Sign in failed. Please check your credentials.')
-    //   }
-    // } catch (error) {
-    //   console.error('Authentication error:', error)
-    //   toast.error('An unexpected error occurred. Please try again.')
-    // }
-  }
   
   function handleclicklogin(){
     console.log("login clicked")
@@ -75,7 +34,7 @@ export default function Login() {
           <div   className='flex w-[35vw]'>
             <Box className='flex flex-col justify-center items-center gap-8'>
               <Image 
-        src={resolvedTheme === 'dark' ? 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728900185/cloud-lab-high-resolution-logo-grayscale-transparent_ba6qdw.png' : 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1729071166/Untitled_design_15_nnjw9y.png'}
+        src={resolvedTheme === 'dark' ? 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728900185/cloud-lab-high-resolution-logo-grayscale-transparent_ba6qdw.png' : 'https://res.cloudinary.com/dsfu8suwl/image/upload/v1729192530/cloud-lab-high-resolution-logo-grayscale-transparent_1_-_Edited_a4pbfi.webp'}
         width={1000}
               height={1000}
               className='w-[12rem]'

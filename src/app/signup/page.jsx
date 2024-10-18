@@ -1,31 +1,15 @@
 'use client'
-import { useState } from 'react'
-import { redirect, useRouter } from 'next/navigation'
-import { signIn } from 'next-auth/react'
-import toast, { Toaster } from 'react-hot-toast'
-
+import { useState, useEffect } from 'react'
 import { 
   Box, 
   Typography, 
   TextField, 
   Container, 
 } from '@mui/material';
-import { styled } from '@mui/system';
 import Image from 'next/image'
-import Link from 'next/link'
-import ThemeSwitch from '@/components/ThemeSwitch'
 import { useTheme } from 'next-themes'
-import Navbar from '@/components/navbar'
 import Button from "@/components/ui/button"
-const BackgroundImage = styled(Box)({
-  backgroundColor:'#111827',
-  backgroundSize: 'cover', 
-  backgroundPosition: 'center', 
-  backgroundRepeat: 'no-repeat', 
-  minHeight: '100vh',
-  display: 'flex',
-  alignItems: 'center',
-});
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
   const [fullName, setFullName] = useState('');
@@ -35,11 +19,20 @@ export default function Login() {
   const [reEnterPassword, setReEnterPassword] = useState('');
   const router = useRouter()
   const { resolvedTheme } = useTheme();
-
-  const handleclickSignup = async (e) => {
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    console.log("isClient",isClient)
+    setIsClient(true);
+  }, []);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  const handleclickSignup = async () => {
     router.push('/dashboard')
   }
-
+useEffect(()=>{
+  console.log("resolvedTheme",resolvedTheme)
+},[resolvedTheme])
   return (
       // <Box className='bg-white dark:bg-gray-900 text-[#111827] dark:text-white'>
       // <Navbar/>
@@ -49,10 +42,10 @@ export default function Login() {
         <div   className='flex w-[35vw]'>
             <Box className='flex flex-col justify-center items-center gap-8'>
               <Image 
-        src={resolvedTheme === 'dark' ? 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728900185/cloud-lab-high-resolution-logo-grayscale-transparent_ba6qdw.png' : 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1729071166/Untitled_design_15_nnjw9y.png'}
+        src={resolvedTheme === 'dark' ? 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728900185/cloud-lab-high-resolution-logo-grayscale-transparent_ba6qdw.png' : 'https://res.cloudinary.com/dsfu8suwl/image/upload/v1729192530/cloud-lab-high-resolution-logo-grayscale-transparent_1_-_Edited_a4pbfi.webp'}
         width={1000}
               height={1000}
-              className='w-[12rem]'
+              className='w-[10rem]'
               alt="AI Cloud Lab Logo" />
               <Typography  className='text-center text-xl font-light font-poppins '>
                 Seamless AI <span className='font-semibold'>development, </span> 
@@ -206,7 +199,11 @@ export default function Login() {
                   }
                 }}
               />
+<<<<<<< HEAD
               <Button text={'Sign up'} onclickhandler={handleclickSignup} customCss='w-full'/>
+=======
+              <Button text={'Sign up'} onclickhandler={handleclickSignup} customCss='w-full mt-6'/>
+>>>>>>> fix/tailwind
 
             </form>
           </div>

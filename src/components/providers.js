@@ -4,7 +4,7 @@ import { ThemeProvider } from "next-themes";
 
  export const AuthProvider = ({ children }) => {
     return <>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
          <SessionProvider>{children}</SessionProvider>
       </ThemeProvider>
 </>
