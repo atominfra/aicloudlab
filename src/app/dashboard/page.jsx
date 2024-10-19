@@ -68,6 +68,7 @@ export default function NotebooksPage() {
               key={notebook?.id} 
               name={notebook?.name} 
               version={notebook?.python_version} 
+              notebook_url={notebook?.notebook_url}
               status={''} 
             />
           ))}
