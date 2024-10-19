@@ -65,9 +65,9 @@ export default function NotebooksPage() {
         <Box className="w-full mt-6 flex justify-center items-center flex-col px-6">
           {notebooks.map(({ notebook, status }) => (
             <NotebookItem 
-              key={notebook.id} 
-              name={notebook.name} 
-              version={notebook.python_version} 
+              key={notebook?.id} 
+              name={notebook?.name} 
+              version={notebook?.python_version} 
               status={status} 
             />
           ))}
