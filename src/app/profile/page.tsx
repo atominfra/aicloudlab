@@ -163,13 +163,13 @@ export default function ProfilePage() {
               }}
             />
           </Box>
-          <Button
+          {/* <Button
             endIcon={<RiPencilFill className='dark:hover:text-yellow-500 text-xl ' />}
             className=" dark:hover:text-yellow-500 font-poppins text-[#111827] dark:text-white  capitalize border-2 border-black"
             onClick={handleSubmit}
           >
             Reset Password
-        </Button>
+        </Button> */}
           <Box className="pt-4">
             <Button
               variant="contained"

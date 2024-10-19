@@ -26,6 +26,7 @@ export default function Signup() {
   });
   
   const [errors, setErrors] = useState({});
+  const [loginError, setLoginError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,7 +63,7 @@ console.log("data",reEnterPassword,data)
     if (!validateForm()) return;
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/signup`, {
+      const response = await fetch(`${process.env.NEXT_API_BASE_URL}/user/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -247,7 +248,6 @@ console.log("data",reEnterPassword,data)
                   }
                 }}
               />
-              <Typography className="text-red-600">Error logging in </Typography>
               <CustomButton text={'Sign up'} onclickhandler={handleSubmit} customCss='w-full mt-6'/>
             </form>
           </div>

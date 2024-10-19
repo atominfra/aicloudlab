@@ -13,8 +13,7 @@ import { useTheme } from 'next-themes'
 import { useGlobalContext } from '@/context/GlobalContext';
 
 export default function Login() {
-  const [identifier, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+
   const [errors, setErrors] = useState({});
   const [loginError, setLoginError] = useState('');
   const [formData, setFormData] = useState({
@@ -24,7 +23,7 @@ export default function Login() {
 
   const router = useRouter()
   const { resolvedTheme } = useTheme();
-  const { user , setUser } = useGlobalContext();
+  const {  setUser } = useGlobalContext();
 
   // Validate the form data
   const validateForm = () => {
@@ -48,34 +47,37 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
+  
     if (!validateForm()) {
       return;
     }
-
+  
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_URL}/user/login`, {
+      const response = await fetch(`${process.env.NEXT_API_BASE_URL}/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
-
+  
+      const responseData = await response.json(); 
+  
       if (response.ok) {
-        console.log("Login successful",response);
-        setUser(response.data.user);
-        localStorage.setItem('access_token', response.data.access_token);
+        console.log("Login successful", responseData);
+        setUser(responseData.data.user);
+        localStorage.setItem('access_token', responseData.data.access_token);
         router.push('/dashboard');
       } else {
-        const errorData = await response.json();
-        console.error("Login failed", errorData);
-        setLoginError(errorData || 'An unexpected error occurred. Please try again.');
+        console.error("Login failed", responseData);
+        setLoginError(responseData.message || 'An unexpected error occurred. Please try again.');
       }
     } catch (error) {
       console.error("Error during login", error);
+      setLoginError('An unexpected error occurred. Please try again.'); // Set error message for catch block
     }
   };
+  
 
   return (
     <Box className="h-screen w-screen flex flex-col justify-center items-center bg-white dark:bg-gray-900 text-[#111827] dark:text-white">

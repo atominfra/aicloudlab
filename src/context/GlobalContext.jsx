@@ -5,11 +5,7 @@ import React, { createContext, useState, useContext } from 'react';
 const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
-    const [notebooks, setNotebooks] = useState([
-      { id: 1, name: 'Machine Learning  Basics', version: 'Python 3.6', isActive: true , status:'stopped'},
-      { id: 2, name: 'Deep Learning', version: 'Python 3.7', isActive: false, status:'running' },
-      { id: 3, name: 'Data Science', version: 'Python 3.8', isActive: true, status:'stopped' }
-    ]);
+    const [notebooks, setNotebooks] = useState([]);
     const [user , setUser] = useState({})
 
     return (
