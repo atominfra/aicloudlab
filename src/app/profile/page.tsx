@@ -22,7 +22,7 @@ export default function ProfilePage() {
   });
 
   // Handle input change
-  const handleChange = (e:any) => {
+  const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
