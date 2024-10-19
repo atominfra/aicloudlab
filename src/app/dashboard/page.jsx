@@ -63,12 +63,12 @@ export default function NotebooksPage() {
         </Typography>
       ) : notebooks.length > 0 ? (
         <Box className="w-full mt-6 flex justify-center items-center flex-col px-6">
-          {notebooks.map(({ notebook, status }) => (
+          {notebooks.map((notebook) => (
             <NotebookItem 
               key={notebook?.id} 
               name={notebook?.name} 
               version={notebook?.python_version} 
-              status={status} 
+              status={''} 
             />
           ))}
         </Box>
