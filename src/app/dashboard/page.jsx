@@ -21,7 +21,7 @@ export default function NotebooksPage() {
     // Fetch notebooks from the API
     const fetchNotebooks = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_API_BASE_URL}/notebook`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/notebook`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

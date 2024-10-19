@@ -42,7 +42,7 @@ export default function CreateNotebook() {
     };
 
     try {
-      const response = await fetch(`${process.env.NEXT_API_BASE_URL}/notebook/create`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/notebook/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

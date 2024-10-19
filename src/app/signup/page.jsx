@@ -63,7 +63,7 @@ console.log("data",reEnterPassword,data)
     if (!validateForm()) return;
 
     try {
-      const response = await fetch(`${process.env.NEXT_API_BASE_URL}/user/signup`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
