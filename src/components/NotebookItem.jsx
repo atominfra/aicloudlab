@@ -5,7 +5,7 @@ import { GoLinkExternal } from "react-icons/go";
 import { IoMdPause } from "react-icons/io";
 import { MdSettings } from "react-icons/md";
 
-export default function NotebookItem({ name, version, status, notebook_url }) {
+export default function NotebookItem({ name, python_verson, status, notebook_url }) {
   const [isHovered, setIsHovered] = useState(false);
   console.log("isHovered", isHovered);
 
@@ -29,7 +29,7 @@ export default function NotebookItem({ name, version, status, notebook_url }) {
           {status}
         </Typography>
         <Typography variant="body2" className="text-[#111827] dark:text-white  font-poppins ">
-          Python {version}
+          Python {python_verson}
         </Typography>
       {/* </Box> */}
       <Box className="flex items-center justify-evenly font-poppins gap-10 w-[34%]">
@@ -49,6 +49,7 @@ export default function NotebookItem({ name, version, status, notebook_url }) {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
           href={notebook_url}
+          target='_blank'
         >
           Go to notebook
         </Button>

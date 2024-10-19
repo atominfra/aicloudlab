@@ -67,7 +67,7 @@ export default function NotebooksPage() {
             <NotebookItem 
               key={notebook?.id} 
               name={notebook?.name} 
-              version={notebook?.python_version} 
+              python_verson={notebook?.python_verson} 
               notebook_url={notebook?.notebook_url}
               status={''} 
             />
