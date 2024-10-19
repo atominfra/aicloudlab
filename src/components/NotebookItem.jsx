@@ -5,7 +5,7 @@ import { GoLinkExternal } from "react-icons/go";
 import { IoMdPause } from "react-icons/io";
 import { MdSettings } from "react-icons/md";
 
-export default function NotebookItem({ name, version, status }) {
+export default function NotebookItem({ name, version, status, notebook_url }) {
   const [isHovered, setIsHovered] = useState(false);
   console.log("isHovered", isHovered);
 
