@@ -75,6 +75,7 @@ console.log("data",reEnterPassword,data)
 
       if (response.ok) {
         localStorage.setItem('access_token', responseData.access_token);
+        localStorage.setItem('user', responseData.data.user);
         toast.success('Signup successful!');
         router.push('/dashboard');
       } else {

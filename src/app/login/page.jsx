@@ -11,6 +11,7 @@ import {
 import Image from 'next/image'
 import { useTheme } from 'next-themes'
 import { useGlobalContext } from '@/context/GlobalContext';
+import { stringify } from 'querystring';
 
 export default function Login() {
 
@@ -65,7 +66,7 @@ export default function Login() {
   
       if (response.ok) {
         console.log("Login successful", responseData);
-        setUser(responseData.data.user);
+        localStorage.setItem('user', JSON.stringify(responseData.data.user)); 
         localStorage.setItem('access_token', responseData.data.access_token);
         router.push('/dashboard');
       } else {
