@@ -5,7 +5,7 @@ import { GoLinkExternal } from "react-icons/go";
 import { IoMdPause } from "react-icons/io";
 import { MdSettings } from "react-icons/md";
 
-export default function NotebookItem({ name, version, status }) {
+export default function NotebookItem({ name, python_verson, status, notebook_url }) {
   const [isHovered, setIsHovered] = useState(false);
   console.log("isHovered", isHovered);
 
@@ -29,7 +29,7 @@ export default function NotebookItem({ name, version, status }) {
           {status}
         </Typography>
         <Typography variant="body2" className="text-[#111827] dark:text-white  font-poppins ">
-          Python {version}
+          Python {python_verson}
         </Typography>
       {/* </Box> */}
       <Box className="flex items-center justify-evenly font-poppins gap-10 w-[34%]">

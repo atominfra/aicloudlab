@@ -43,29 +43,10 @@ export default function ProfilePage() {
       [name]: value,
     });
   };
-
-  // Handle form submission
-  const handleSubmit = async () => {
-    try {
-      const response = await fetch('/api/user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to submit form');
-      }
-
-      alert('User details updated successfully');
-    } catch (error) {
-      console.error('Error submitting form:', error);
-      alert('An error occurred while updating user details');
-    }
-  };
-
+  const handleLogout = ()=>{
+    localStorage.clear()
+    window.location.href = "/"
+  }
   return (
     <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white">
       <Navbar />
@@ -86,7 +67,8 @@ export default function ProfilePage() {
               variant="contained"
               color="error"
               fullWidth
-              className="bg-red-500 hover:bg-red-600 text-white"
+              className="bg-red-500 hover:bg-red-600 text-white w-[200px] text-center rounded-[10px]"
+              onClick={handleLogout}
             >
               Log Out
             </Button>

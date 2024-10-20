@@ -74,15 +74,16 @@ console.log("data",reEnterPassword,data)
       const responseData = await response.json();
 
       if (response.ok) {
-        localStorage.setItem('access_token', responseData.access_token);
-        localStorage.setItem('user', responseData.data.user);
-        toast.success('Signup successful!');
-        router.push('/dashboard');
+        localStorage.setItem('user', JSON.stringify(responseData.data.user)); 
+        localStorage.setItem('access_token', responseData.data.access_token);
+        window.location.href = '/dashboard' 
       } else {
         toast.error(responseData.message || 'Signup failed');
+        setLoginError(responseData.message || 'An unexpected error occurred. Please try again.');
       }
     } catch (error) {
-      toast.error('An error occurred. Please try again.',error);
+      console.error("Signup failed", error);
+      setLoginError( 'An unexpected error occurred. Please try again.');
     }
   };
 
@@ -97,7 +98,7 @@ console.log("data",reEnterPassword,data)
           <div className='flex w-[35vw]'>
             <Box className='flex flex-col justify-center items-center gap-8'>
               <Image 
-                src={resolvedTheme === 'dark' ? 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728900185/cloud-lab-high-resolution-logo-grayscale-transparent_ba6qdw.png' : 'https://res.cloudinary.com/dsfu8suwl/image/upload/v1729192530/cloud-lab-high-resolution-logo-grayscale-transparent_1_-_Edited_a4pbfi.webp'}
+                src='https://res.cloudinary.com/dy8hx2xrj/image/upload/v1729418783/cloud-lab-high-resolution-logo-grayscale-transparent_1_-_Edited_2_sogohi.webp'
                 width={1000}
                 height={1000}
                 className='w-[10rem]'
@@ -249,7 +250,16 @@ console.log("data",reEnterPassword,data)
                   }
                 }}
               />
-              <CustomButton text={'Sign up'} onclickhandler={handleSubmit} customCss='w-full mt-6'/>
+               {loginError && <Typography className="text-red-600">{loginError}</Typography>} 
+              <Box className="w-full flex flex-col gap-4 mt-6">
+              <CustomButton text={'Sign up'} onclickhandler={handleSubmit} customCss='w-full '/>
+                <div className='text-[#111827] w-full flex items-center'>
+                  <hr style={{ flex: 1, border: 'none', borderTop: '1px solid black' }} />
+                  <Typography className='font-poppins mx-1'>OR</Typography>
+                  <hr style={{ flex: 1, border: 'none', borderTop: '1px solid black' }} />
+                </div>
+                <CustomButton text={'Log in'} onclickhandler={() => window.location.href='/login'} customCss='w-full'/>
+              </Box>
             </form>
           </div>
         </div>

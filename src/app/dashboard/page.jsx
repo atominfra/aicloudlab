@@ -14,7 +14,7 @@ export default function NotebooksPage() {
   const [loading, setLoading] = useState(true);
 
   const handleCreateClick = () => {
-    router.push('/create');
+    window.location.href = '/create'
   };
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export default function NotebooksPage() {
     };
 
     fetchNotebooks();
-  }, []);
+  }, [notebooks]);
 
   return (
     <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white">
