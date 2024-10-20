@@ -9,7 +9,7 @@ export default function ProtectedRoute({ children }) {
 
   useEffect(() => {
     if (status === 'loading') return // Do nothing while loading
-    if (!session) router.push('/login')
+    if (!session) window.location.href='/login'
   }, [session, status, router])
 
   if (status === 'loading') {

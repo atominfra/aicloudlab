@@ -14,7 +14,7 @@ export default function NotebooksPage() {
   const [loading, setLoading] = useState(true);
 
   const handleCreateClick = () => {
-    router.push('/create');
+    window.location.href = '/create'
   };
 
   useEffect(() => {
