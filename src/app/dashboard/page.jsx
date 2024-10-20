@@ -6,11 +6,13 @@ import Navbar from '@/components/navbar';
 import NotebookItem from '@/components/NotebookItem';
 import CustomButton from "@/components/ui/button";
 import { useGlobalContext } from '@/context/GlobalContext';
-
+import Image from 'next/image'
+import notebook from '@/assets/notebook.svg'
+import { CircularProgress } from '../../../node_modules/@mui/material/index';
 
 export default function NotebooksPage() {
   const router = useRouter();
-  const { notebooks, setNotebooks } = useGlobalContext();
+  const {notebooks, setNotebooks } = useGlobalContext();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -80,15 +82,18 @@ export default function NotebooksPage() {
 
       <Box className="w-[90%] text-end px-6 flex justify-between">
         <Typography variant="h4" className="font-bold font-poppins">
-          Notebook
+          Notebooks
         </Typography>
         <CustomButton text={'+ Create'} onclickhandler={handleCreateClick} />
       </Box>
 
       {loading ? (
-        <Typography variant="body1" className="text-gray-400 mb-4 px-6">
+        <Box className='flex justify-center items-center h-[60vh] w-full'>
+        {/* <Typography variant="body1" className="text-gray-400 mb-4 px-6 ">
           Loading...
-        </Typography>
+        </Typography> */}
+        <CircularProgress color="inherit" />
+        </Box>
       ) : notebooks.length > 0 ? (
         <Box className="w-full mt-6 flex justify-center items-center flex-col px-6">
           {notebooks.map((notebook) => (
@@ -103,9 +108,18 @@ export default function NotebooksPage() {
           ))}
         </Box>
       ) : (
+        
+        <Box className='flex flex-col gap-2 justify-center items-center h-[60vh] w-full'>
+          <Image 
+        src={notebook}
+        width={1000}  
+        height={1000}
+        className=' w-[100px] h-[100px]'
+        alt="AI Cloud Lab Logo" />
         <Typography variant="body1" className="text-gray-400 mb-4 px-6">
           No notebooks yet.
         </Typography>
+        </Box>
       )}
     </Box>
   );

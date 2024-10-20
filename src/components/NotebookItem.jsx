@@ -56,7 +56,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
           disabled={loading}
         >
           {loading ? (
-            <span>Loading...</span> 
+            <CircularProgress color="inherit" /> 
           ) : isRunning ? (
             <IoMdPause className='dark:hover:text-yellow-500 text-2xl text-[#111827] dark:text-white' />
           ) : (
