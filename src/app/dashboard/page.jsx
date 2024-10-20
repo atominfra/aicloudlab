@@ -44,7 +44,7 @@ export default function NotebooksPage() {
     };
 
     fetchNotebooks();
-  }, [notebooks]);
+  }, []);
 
   return (
     <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white">
@@ -63,11 +63,12 @@ export default function NotebooksPage() {
         </Typography>
       ) : notebooks.length > 0 ? (
         <Box className="w-full mt-6 flex justify-center items-center flex-col px-6">
-          {notebooks.map(({ notebook, status }) => (
+          {notebooks.map((notebook) => (
             <NotebookItem 
-              key={notebook.id} 
-              name={notebook.name} 
-              version={notebook.python_version} 
+              key={notebook?.id} 
+              name={notebook?.name} 
+              version={notebook?.python_verson} 
+              notebook_url={notebook?.notebook_url}
               status={status} 
             />
           ))}
