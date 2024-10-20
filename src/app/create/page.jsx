@@ -7,8 +7,9 @@ import Navbar from '../../components/navbar';
 import { useTheme } from 'next-themes';
 import { useGlobalContext } from '@/context/GlobalContext';
 import CustomButton from '@/components/ui/button';
+import withAuth from '@/components/withAuth';
 
-export default function CreateNotebook() {
+const CreateNotebook = () => {
   const router = useRouter();
   const { notebooks, setNotebooks } = useGlobalContext();
   const [formData, setFormData] = useState({
@@ -213,3 +214,4 @@ export default function CreateNotebook() {
 }
 
 
+export default withAuth(CreateNotebook)

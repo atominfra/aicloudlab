@@ -8,9 +8,10 @@ import CustomButton from "@/components/ui/button";
 import { useGlobalContext } from '@/context/GlobalContext';
 import Image from 'next/image'
 import notebook from '@/assets/notebook.svg'
-import { CircularProgress } from '../../../node_modules/@mui/material/index';
+import CircularProgress from '@mui/material/CircularProgress';
+import withAuth from '@/components/withAuth';
 
-export default function NotebooksPage() {
+const NotebooksPage = () => {
   const router = useRouter();
   const {notebooks, setNotebooks } = useGlobalContext();
   const [error, setError] = useState(null);
@@ -98,6 +99,7 @@ export default function NotebooksPage() {
         <Box className="w-full mt-6 flex justify-center items-center flex-col px-6">
           {notebooks.map((notebook) => (
             <NotebookItem 
+              key={notebook?.id}
               id={notebook?.id} 
               name={notebook?.name} 
               version={notebook?.python_verson} 
@@ -124,3 +126,6 @@ export default function NotebooksPage() {
     </Box>
   );
 }
+
+
+export default withAuth(NotebooksPage)

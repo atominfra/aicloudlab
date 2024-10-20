@@ -6,7 +6,7 @@ import { MdSettings } from "react-icons/md";
 import Link from 'next/link';
 import { FaPlay } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-
+import CircularProgress from '@mui/material/CircularProgress';
 export default function NotebookItem({ id, name, version, status, notebook_url, onOperation }) {
   const [isHovered, setIsHovered] = useState(false);
   const [loading, setLoading] = useState(false);

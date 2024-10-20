@@ -8,6 +8,7 @@ import {
 import { PiUserCircleFill } from "react-icons/pi";
 import Navbar from '@/components/navbar';
 import { useTheme } from 'next-themes';
+import withAuth from '@/components/withAuth';
 
 interface User {
   full_name: string;
@@ -15,7 +16,7 @@ interface User {
   phone: string;
 }
 
-export default function ProfilePage() {
+const ProfilePage = () => {
   const { resolvedTheme } = useTheme();
   
   const [user, setUser] = useState<User | null>(null); 
@@ -78,3 +79,6 @@ export default function ProfilePage() {
     </Box>
   );
 }
+
+
+export default withAuth(ProfilePage)

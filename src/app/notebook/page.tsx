@@ -4,8 +4,9 @@ import Link from 'next/link';
 import { FaExternalLinkAlt } from "react-icons/fa";
 import Navbar from '@/components/navbar';
 import CustomButton from '@/components/ui/button';
+import withAuth from '@/components/withAuth';
 
-export default function page() {
+const Notebook =() => {
   return (
     <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
         <Navbar/>
@@ -102,3 +103,6 @@ export default function page() {
     </Box>
   );
 }
+
+
+export default withAuth(Notebook)
