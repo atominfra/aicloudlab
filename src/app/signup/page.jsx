@@ -82,8 +82,8 @@ console.log("data",reEnterPassword,data)
         setLoginError(responseData.message || 'An unexpected error occurred. Please try again.');
       }
     } catch (error) {
-      console.error("Signup failed", responseData);
-      setLoginError(responseData.message || 'An unexpected error occurred. Please try again.');
+      console.error("Signup failed", error);
+      setLoginError( 'An unexpected error occurred. Please try again.');
     }
   };
 
