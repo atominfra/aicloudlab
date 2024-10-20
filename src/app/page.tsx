@@ -14,10 +14,10 @@ const Home: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (auth !== '') {
-      window.location.href = '/login';
-    } else {
+    if (auth && auth !== '') {
       window.location.href = '/dashboard';
+    } else {
+      window.location.href = '/login';
     }
   }, [auth]);
 
