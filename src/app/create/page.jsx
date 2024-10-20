@@ -62,7 +62,7 @@ export default function CreateNotebook() {
         };
 
         setNotebooks(prev => [...prev, newNotebook]);
-        router.push('/dashboard');
+        window.location.href='/dashboard'
       } else {
         const errorData = await response.json();
         setError(errorData.detail || 'Failed to create notebook');

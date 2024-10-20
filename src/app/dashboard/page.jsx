@@ -14,7 +14,7 @@ export default function NotebooksPage() {
   const [loading, setLoading] = useState(true);
 
   const handleCreateClick = () => {
-    router.push('/create');
+    window.location.href = '/create'
   };
 
   useEffect(() => {
@@ -63,13 +63,12 @@ export default function NotebooksPage() {
         </Typography>
       ) : notebooks.length > 0 ? (
         <Box className="w-full mt-6 flex justify-center items-center flex-col px-6">
-          {notebooks.map((notebook) => (
+          {notebooks.map(({ notebook, status }) => (
             <NotebookItem 
-              key={notebook?.id} 
-              name={notebook?.name} 
-              python_verson={notebook?.python_verson} 
-              notebook_url={notebook?.notebook_url}
-              status={''} 
+              key={notebook.id} 
+              name={notebook.name} 
+              version={notebook.python_version} 
+              status={status} 
             />
           ))}
         </Box>

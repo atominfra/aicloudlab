@@ -68,7 +68,7 @@ export default function Login() {
         console.log("Login successful", responseData);
         localStorage.setItem('user', JSON.stringify(responseData.data.user)); 
         localStorage.setItem('access_token', responseData.data.access_token);
-        router.push('/dashboard');
+        window.location.href = '/dashboard' 
       } else {
         console.error("Login failed", responseData);
         setLoginError(responseData.message || 'An unexpected error occurred. Please try again.');
@@ -87,7 +87,7 @@ export default function Login() {
           <div className='flex w-[35vw]'>
             <Box className='flex flex-col justify-center items-center gap-8'>
               <Image
-                src={resolvedTheme === 'dark' ? 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1728900185/cloud-lab-high-resolution-logo-grayscale-transparent_ba6qdw.png' : 'https://res.cloudinary.com/dsfu8suwl/image/upload/v1729192530/cloud-lab-high-resolution-logo-grayscale-transparent_1_-_Edited_a4pbfi.webp'}
+                src='https://res.cloudinary.com/dy8hx2xrj/image/upload/v1729418783/cloud-lab-high-resolution-logo-grayscale-transparent_1_-_Edited_2_sogohi.webp'
                 width={1000}
                 height={1000}
                 className='w-[12rem]'
@@ -175,7 +175,7 @@ export default function Login() {
                   <Typography className='font-poppins mx-1'>OR</Typography>
                   <hr style={{ flex: 1, border: 'none', borderTop: '1px solid black' }} />
                 </div>
-                <CustomButton text={'Sign up for new account'} onclickhandler={() => router.push('/signup')} customCss='w-full'/>
+                <CustomButton text={'Sign up for new account'} onclickhandler={() => window.location.href='/signup'} customCss='w-full'/>
               </Box>
             </form>
           </div>
