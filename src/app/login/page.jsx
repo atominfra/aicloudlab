@@ -11,7 +11,6 @@ import {
 import Image from 'next/image'
 import { useTheme } from 'next-themes'
 import { useGlobalContext } from '@/context/GlobalContext';
-import { stringify } from 'querystring';
 
 export default function Login() {
 
