@@ -35,6 +35,12 @@ const CreateNotebook = () => {
     setError(null);
     setIsSubmitting(true);
 
+    if (formData.name.includes('_')) {
+      setError('Name cannot contain an underscore (_).');
+      setIsSubmitting(false);
+      return;
+    }
+
     const payload = {
       name: formData.name,
       python_version: formData.pythonVersion,
@@ -193,7 +199,11 @@ const CreateNotebook = () => {
             <MenuItem value="matplotlib">Matplotlib</MenuItem>
           </Select>
           </ButtonBase>
-
+          {error && (
+            <Typography variant="body1" className="text-red-500 mt-4 text-center" >
+              {error}
+            </Typography>
+          )}
           <CustomButton 
             text={'Create Notebook'} 
             customCss={'mt-6'} 
@@ -202,11 +212,7 @@ const CreateNotebook = () => {
             disabled={isSubmitting || !formData.name}
           />
 
-          {error && (
-            <Typography variant="body1" className="text-red-500 mt-4">
-              {error}
-            </Typography>
-          )}
+          
         </Box>
       </Box>
     </Box>
