@@ -91,34 +91,37 @@ const CreateNotebook = () => {
         </Typography>
         
         <Box component="form" onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <ButtonBase title='Name'>
-            <TextField
-              fullWidth
-              label="Name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              variant="outlined"
-              required
-              InputProps={{
-                className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
-              }}
-              InputLabelProps={{
-                sx: {
-                  color: resolvedTheme === "dark" ? 'white' : 'black',
-                  fontFamily: 'poppins',
-                  '&.Mui-focused': { color: resolvedTheme === "dark" ? 'white' : 'black' }
-                }
-              }}
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  '& fieldset': { borderColor: resolvedTheme === "dark" ? 'white' : 'black' },
-                  '&:hover fieldset': { borderColor: resolvedTheme === "dark" ? 'white' : 'black' },
-                  '&.Mui-focused fieldset': { borderColor: resolvedTheme === "dark" ? 'white' : 'black' }
-                }
-              }}
-            />
-          </ButtonBase>
+        <ButtonBase title='Name'>
+          <TextField
+            fullWidth
+            label="Name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            variant="outlined"
+            required
+            error={formData.name.includes('_')}  // Mark field as error if name contains underscore
+            helperText={formData.name.includes('_') ? 'Name cannot contain an underscore (_).' : ''} // Show error message directly on TextField
+            InputProps={{
+              className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
+            }}
+            InputLabelProps={{
+              sx: {
+                color: resolvedTheme === "dark" ? 'white' : 'black',
+                fontFamily: 'poppins',
+                '&.Mui-focused': { color: resolvedTheme === "dark" ? 'white' : 'black' }
+              }
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': { borderColor: resolvedTheme === "dark" ? 'white' : 'black' },
+                '&:hover fieldset': { borderColor: resolvedTheme === "dark" ? 'white' : 'black' },
+                '&.Mui-focused fieldset': { borderColor: resolvedTheme === "dark" ? 'white' : 'black' }
+              }
+            }}
+          />
+        </ButtonBase>   
+
           <ButtonBase title= 'Coming Soon'>
           <TextField
           disabled
@@ -199,17 +202,12 @@ const CreateNotebook = () => {
             <MenuItem value="matplotlib">Matplotlib</MenuItem>
           </Select>
           </ButtonBase>
-          {error && (
-            <Typography variant="body1" className="text-red-500 mt-4 text-center" >
-              {error}
-            </Typography>
-          )}
           <CustomButton 
             text={'Create Notebook'} 
             customCss={'mt-6'} 
             onclickhandler={handleSubmit}
             type="submit" 
-            disabled={isSubmitting || !formData.name}
+            disabled={isSubmitting }
           />
 
           
