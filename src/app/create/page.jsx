@@ -207,7 +207,6 @@ const CreateNotebook = () => {
             customCss={'mt-6'} 
             onclickhandler={handleSubmit}
             type="submit" 
-            disabled={isSubmitting }
           />
 
           
