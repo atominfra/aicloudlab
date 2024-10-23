@@ -15,6 +15,9 @@ const geistMono = localFont({
 export const metadata = {
   title: "AI Cloud Lab",
   description: "Seamless AI development, deployment and monitoring in Cloud all through one interface!",
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({
@@ -25,6 +28,7 @@ export default function RootLayout({
   
   return (
     <html lang="en" suppressHydrationWarning>
+          <link rel="icon" href="/favicon.ico" />
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}
       >
