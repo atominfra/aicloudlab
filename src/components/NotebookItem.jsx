@@ -127,8 +127,8 @@ export default function NotebookItem({
             class="block"
             className=" p-8 bg-white shadow-xl rounded-2xl item-center"
           >
-            <p className="pr-10 pb-4 font-bold">You are deleting '{name}'</p>
-            <p className="pb-4 ">If you're sure, type '{name}' to confirm.</p>
+            <p className="pr-10 pb-4 font-bold">You are deleting &apos;{name}&apos;</p>
+            <p className="pb-4 ">If you&apos;re sure, type &apos;{name}&apos; to confirm.</p>
             <form onSubmit={handleSubmit}>
               <TextField
                 fullWidth
