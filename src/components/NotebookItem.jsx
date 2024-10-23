@@ -7,7 +7,8 @@ import Link from "next/link";
 import { FaPlay } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import CircularProgress from "@mui/material/CircularProgress";
-import dialog from '@/components/dialog';
+import Modal from '@mui/material/Modal';
+
 export default function NotebookItem({
   id,
   name,
@@ -19,6 +20,11 @@ export default function NotebookItem({
   const [isHovered, setIsHovered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isRunning, setIsRunning] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   // isRunning =
   useEffect(() => {
     setIsRunning(status);
@@ -77,12 +83,34 @@ export default function NotebookItem({
         </ButtonBase>
         <button
           title="Delete"
-          className="text-red-600 hover:text-white hover:ease-in duration-100 font-bold min-w-0 border border-2 border-red-600 px-2 py-2 rounded-2xl hover:bg-red-600" data-open-modal>
+          className="text-red-600 hover:text-white hover:ease-in duration-100 font-bold min-w-0 border border-2 border-red-600 px-2 py-2 rounded-2xl hover:bg-red-600" 
+          onClick={handleOpen}
+          >
           {/* <MdDelete className='dark:hover:text-yellow-500 text-2xl text-[#111827] dark:text-white' /> */}{" "}
           Delete
         </button>
         
-        <dialog data-modal>
+        <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+         <div class="block" className=" p-8 bg-white shadow-xl rounded-2xl item-center">
+          <p className="pr-10 pb-4 font-bold">You are deleting '{name}'</p>
+          <p className="pb-4 ">If you're sure, type '{name}' to confirm.</p>
+          <form onsubmit="return validateForm();">
+          <input className="border border-2 border-[#111827] rounded-xl px-2 py-2 w-full" type="text" id="yourInputId"/>
+          <div className=" text-red-600 p-2" id="errorMessage">Incorrect</div> 
+          <div  class="block" className="space-x-8 p-4 pl-0">
+          <button onClick={handleClose} className="text-[#111827] hover:ease-in duration-100 font-bold min-w-0 px-8 py-1.5 rounded-xl border border-2 border-[#111827]">No, cancel.</button>
+          <button type="submit"className="text-white bg-red-600 hover:ease-in duration-100 font-bold min-w-0 px-2 py-2 rounded-xl"
+          onClick={() => onOperation(id, 'delete')}> Delete Notebook</button>
+          </div>
+          </form>
+          </div>
+      </Modal>
+        {/* <dialog data-modal>
           <div class="block" className=" p-8 bg-white shadow-xl rounded-2xl item-center">
           <p className="pr-10 pb-4 font-bold">You are deleting '{name}'</p>
           <p className="pb-4 ">If you're sure, type '{name}' to confirm.</p>
@@ -96,7 +124,7 @@ export default function NotebookItem({
           </div>
           </form>
           </div>
-        </dialog>
+        </dialog> */}
 
         <ButtonBase
           title="Coming Soon"
