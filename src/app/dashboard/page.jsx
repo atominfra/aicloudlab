@@ -76,7 +76,6 @@ const NotebooksPage = () => {
   useEffect(() => {
     fetchNotebooks();
   }, []);
-
   return (
     <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white">
       <Navbar />
