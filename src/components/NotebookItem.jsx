@@ -108,6 +108,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
 
         <Modal
           open={open}
+          onClose={handleClose}
           aria-labelledby="modal-modal-title"
           aria-describedby="modal-modal-description"
           className="w-full h-full justify-items-center content-center"
@@ -116,8 +117,8 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
             class="block"
             className=" p-8 bg-white shadow-xl rounded-2xl item-center"
           >
-            <p className="pr-10 pb-4 font-bold">You are deleting &apos;{name}&apos;</p>
-            <p className="pb-4 ">If you&apos;re sure, type &apos;{name}&apos; to confirm.</p>
+            <p className="pr-10 pb-4 font-bold text-[#111827]">You are deleting &apos;{name}&apos;</p>
+            <p className="pb-4 text-[#111827]">Type &apos;{name}&apos; to confirm.</p>
             <form onSubmit={handleSubmit}>
               <TextField
                 fullWidth
