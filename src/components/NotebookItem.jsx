@@ -97,13 +97,13 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
           )}
         </ButtonBase>
 
-        <Button
+        <button
           title="Delete"
-          className="text-red-600 hover:text-white font-semibold border-2 border-red-600 px-2 py-2 rounded-2xl hover:bg-red-600"
+          className="text-red-600 hover:text-white font-semibold border border-2 border-red-600 px-2 py-2 rounded-2xl hover:bg-red-600"
           onClick={handleOpen}
-        >``
+        >
           Delete
-        </Button>
+        </button>
 
         <Modal
           open={open}
@@ -116,12 +116,13 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
             class="block"
             className=" p-8 bg-white shadow-xl rounded-2xl item-center"
           >
-            <p className="pr-10 pb-2 font-bold text-[#111827] text-lg">You are deleting &apos;{name}&apos;</p>
-            <p className="pb-4 text-[#111827] font-poppins font-light	text-md">Type &apos;{name}&apos; to confirm.</p>
+            <p className="pr-10 pb-2 font-bold text-[#111827] text-lg"> Delete {name}</p>
+            <p className="pb-4 text-[#111827] font-poppins font-light	text-md">To confirm, type  
+            &apos;{name}&apos; in the box below.</p>
             <form onSubmit={handleSubmit}>
               <TextField
                 fullWidth
-                label="Confirm Name"
+                label=""
                 value={inputValue}
                 onChange={handleInputChange}
                 variant="outlined"
