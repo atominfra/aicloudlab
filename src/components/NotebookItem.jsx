@@ -99,7 +99,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
 
         <button
           title="Delete"
-          className="text-red-600 hover:text-white hover:ease-in duration-100 font-bold min-w-0 border border-2 border-red-600 px-2 py-2 rounded-2xl hover:bg-red-600"
+          className="text-red-600 hover:text-white hover:ease-in duration-100 font-bold border border-2 border-red-600 px-2 py-2 rounded-2xl hover:bg-red-600"
           onClick={handleOpen}
         >
           {/* <MdDelete className='dark:hover:text-yellow-500 text-2xl text-[#111827] dark:text-white' /> */}{" "}
@@ -159,7 +159,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
                 </button>
                 <button
                   type="submit"
-                  className="text-white bg-red-600 hover:ease-in duration-100 font-bold min-w-0 px-2 py-2 rounded-xl"
+                  className="text-white bg-red-600 hover:ease-in duration-100 font-bold px-2 py-2 rounded-xl"
                 >
                   Delete Notebook
                 </button>
