@@ -117,7 +117,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
             class="block"
             className=" p-8 bg-white shadow-xl rounded-2xl item-center"
           >
-            <p className="pr-10 pb-4 font-bold text-[#111827]">You are deleting &apos;{name}&apos;</p>
+            <p className="pr-10 pb-2 font-bold text-[#111827] text-lg">You are deleting &apos;{name}&apos;</p>
             <p className="pb-4 text-[#111827]">Type &apos;{name}&apos; to confirm.</p>
             <form onSubmit={handleSubmit}>
               <TextField
@@ -155,7 +155,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
                   onClick={handleClose}
                   className="text-[#111827] hover:ease-in duration-100 font-bold min-w-0 px-8 py-1.5 rounded-xl border border-2 border-[#111827]"
                 >
-                  No, cancel.
+                  Cancel
                 </button>
                 <button
                   type="submit"
