@@ -1,7 +1,7 @@
 'use client';
 import React, { useEffect, useState } from 'react';
 import { Typography, Box } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import {useRouter} from 'next/navigation';
 import Navbar from '@/components/navbar';
 import NotebookItem from '@/components/NotebookItem';
 import CustomButton from "@/components/ui/button";
@@ -16,9 +16,10 @@ const NotebooksPage = () => {
   const {notebooks, setNotebooks } = useGlobalContext();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-
+``
   const handleCreateClick = () => {
-    window.location.href = '/create'
+    // window.location.href = '/create'
+    router.push('/create')
   };
   const fetchNotebooks = async () => {
     try {
@@ -124,7 +125,7 @@ const NotebooksPage = () => {
         </Box>
       )}
     </Box>
-  );
+  )
 }
 
 

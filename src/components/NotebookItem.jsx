@@ -97,14 +97,13 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
           )}
         </ButtonBase>
 
-        <button
+        <Button
           title="Delete"
-          className="text-red-600 hover:text-white hover:ease-in duration-100 font-bold border border-2 border-red-600 px-2 py-2 rounded-2xl hover:bg-red-600"
+          className="text-red-600 hover:text-white font-semibold border-2 border-red-600 px-2 py-2 rounded-2xl hover:bg-red-600"
           onClick={handleOpen}
-        >
-          {/* <MdDelete className='dark:hover:text-yellow-500 text-2xl text-[#111827] dark:text-white' /> */}{" "}
+        >``
           Delete
-        </button>
+        </Button>
 
         <Modal
           open={open}
@@ -118,7 +117,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
             className=" p-8 bg-white shadow-xl rounded-2xl item-center"
           >
             <p className="pr-10 pb-2 font-bold text-[#111827] text-lg">You are deleting &apos;{name}&apos;</p>
-            <p className="pb-4 text-[#111827]">Type &apos;{name}&apos; to confirm.</p>
+            <p className="pb-4 text-[#111827] font-poppins font-light	text-md">Type &apos;{name}&apos; to confirm.</p>
             <form onSubmit={handleSubmit}>
               <TextField
                 fullWidth
@@ -150,20 +149,20 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
                   },
                 }}
               />
-              <div className="block space-x-8 p-4 pl-0">
-                <button
+              <Box className="flex justify-center items-centers justify-between pt-4">
+                <Button
                   onClick={handleClose}
                   className="text-[#111827] hover:ease-in duration-100 font-bold min-w-0 px-8 py-1.5 rounded-xl border border-2 border-[#111827]"
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
                   type="submit"
                   className="text-white bg-red-600 hover:ease-in duration-100 font-bold px-2 py-2 rounded-xl"
                 >
                   Delete Notebook
-                </button>
-              </div>
+                </Button>
+              </Box>
             </form>
           </div>
         </Modal>
