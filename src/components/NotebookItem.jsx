@@ -158,8 +158,9 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
                   Cancel
                 </Button>
                 <Button
+                  disabled={isError}
                   type="submit"
-                  className="text-white bg-red-600 hover:ease-in duration-100 font-bold px-2 py-2 rounded-xl"
+                  className={` hover:ease-in duration-100 font-bold px-2 py-2 rounded-xl ${isError ? ' bg-[#eef2f5] text-[#ec797a]' : 'text-white bg-red-600'}`}
                 >
                   Delete Notebook
                 </Button>
