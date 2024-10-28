@@ -46,7 +46,10 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
 
   // isRunning = 
   useEffect(()=>{
-    setIsRunning(status)
+    if(status === 'running')
+    setIsRunning(true)
+  else
+    setIsRunning(false)
   },[])
   
   const handleToggle = async () => {

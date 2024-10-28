@@ -13,7 +13,7 @@ import withAuth from '@/components/withAuth';
 
 const NotebooksPage = () => {
   const router = useRouter();
-  const {notebooks, setNotebooks } = useGlobalContext();
+  const {notebooks, setNotebooks} = useGlobalContext();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -72,6 +72,7 @@ const NotebooksPage = () => {
     } catch (error) {
       setError(error?.message);
     }
+    fetchNotebooks();
   };
   useEffect(() => {
     fetchNotebooks();
@@ -105,7 +106,7 @@ const NotebooksPage = () => {
               version={notebook?.python_verson} 
               notebook_url={notebook?.notebook_url}
               onOperation={handleOperationRequest}
-              status={status} 
+              status={notebook?.status} 
             />
           ))}
         </Box>

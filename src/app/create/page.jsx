@@ -65,7 +65,7 @@ const CreateNotebook = () => {
           name: formData.name,
           version: formData.pythonVersion,
           packages: formData.packages,
-          status: 'running'
+          status: 'stop'
         };
 
         setNotebooks(prev => [...prev, newNotebook]);
