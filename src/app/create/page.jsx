@@ -35,8 +35,8 @@ const CreateNotebook = () => {
     setError(null);
     setIsSubmitting(true);
 
-    if (formData.name.includes('_')) {
-      setError('Name cannot contain an underscore (_).');
+    if (formData.name.includes('_') || formData.name.includes(' ')) {
+      setError('Name cannot contain an underscore (_) or spaces.');
       setIsSubmitting(false);
       return;
     }
@@ -100,8 +100,9 @@ const CreateNotebook = () => {
             onChange={handleChange}
             variant="outlined"
             required
-            error={formData.name.includes('_')}  // Mark field as error if name contains underscore
-            helperText={formData.name.includes('_') ? 'Name cannot contain an underscore (_).' : ''} // Show error message directly on TextField
+            error={formData.name.includes('_') || formData.name.includes(' ')}
+              helperText={(formData.name.includes('_') || formData.name.includes(' ')) ? 'Name cannot contain an underscore (_) or spaces.' : ''}
+
             InputProps={{
               className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
             }}
