@@ -32,7 +32,7 @@ const NotebooksPage = () => {
 
       if (response.ok) {
         const responseData = await response.json();
-        setNotebooks(responseData.data.notebooks); 
+        setNotebooks(responseData.data); 
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Failed to fetch notebooks');

@@ -39,18 +39,18 @@ export default function Signup() {
     if (!formData.email) {
       newErrors.email = 'Email is required';
     } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(formData.email)) {
-      newErrors.email = 'Invalid email address';
+      newErrors.email = 'Invalid E-mail address';
     }
     if (!formData.phone) newErrors.phone = 'Phone number is required';
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
+      newErrors.password = 'Passwords should be atleast 8 letters long.';
     }
     if (!formData.reEnterPassword) {
       newErrors.reEnterPassword = 'Please confirm your password';
     } else if (formData.reEnterPassword !== formData.password) {
-      newErrors.reEnterPassword = 'Passwords do not match';
+      newErrors.reEnterPassword = 'Entered Passwords do not match';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
