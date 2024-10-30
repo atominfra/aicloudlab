@@ -41,12 +41,15 @@ const CreateNotebook = () => {
       return;
     }
 
-    const payload = {
+    let payload = {
       name: formData.name,
       python_version: formData.pythonVersion,
-      packages: formData.packages.split(',').map(pkg => pkg.trim()),
-      github_url: formData.githubURL || ''
+      packages: formData.packages.split(',').map(pkg => pkg.trim())
     };
+
+    if(formData.githubURL && formData.githubURL !== '') {
+      payload = {...payload, github_url: formData.githubURL}
+    }
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/notebook/create`, {
