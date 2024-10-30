@@ -46,7 +46,10 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
 
   // isRunning = 
   useEffect(()=>{
-    setIsRunning(status)
+    if(status === 'running')
+    setIsRunning(true)
+  else
+    setIsRunning(false)
   },[])
   
   const handleToggle = async () => {
@@ -99,7 +102,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
 
         <button
           title="Delete"
-          className="text-red-600 hover:text-white font-semibold border border-2 border-red-600 px-2 py-2 rounded-2xl hover:bg-red-600"
+          className="text-red-600 hover:text-white hover:ease-in duration-100 font-bold border border-2 border-red-600 px-2 py-2 rounded-2xl hover:bg-red-600"
           onClick={handleOpen}
         >
           Delete
@@ -116,13 +119,12 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
             class="block"
             className=" p-8 bg-white shadow-xl rounded-2xl item-center"
           >
-            <p className="pr-10 pb-2 font-bold text-[#111827] text-lg"> Delete {name}</p>
-            <p className="pb-4 text-[#111827] font-poppins font-light	text-md">To confirm, type  
-            &apos;{name}&apos; in the box below.</p>
+            <p className="pr-10 pb-4 font-bold text-[#111827]">You are deleting &apos;{name}&apos;</p>
+            <p className="pb-4 text-[#111827]">Type &apos;{name}&apos; to confirm.</p>
             <form onSubmit={handleSubmit}>
               <TextField
                 fullWidth
-                label=""
+                label="Confirm Name"
                 value={inputValue}
                 onChange={handleInputChange}
                 variant="outlined"
@@ -150,21 +152,21 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
                   },
                 }}
               />
-              <Box className="flex justify-center items-centers justify-between pt-4">
-                <Button
+              <div className="block space-x-8 p-4 pl-0">
+                <button
                   onClick={handleClose}
                   className="text-[#111827] hover:ease-in duration-100 font-bold min-w-0 px-8 py-1.5 rounded-xl border border-2 border-[#111827]"
                 >
-                  Cancel
-                </Button>
-                <Button
-                  disabled={isError}
+                  No, cancel.
+                </button>
+                <button
                   type="submit"
-                  className={` hover:ease-in duration-100 font-bold px-2 py-2 rounded-xl ${isError ? ' bg-[#eef2f5] text-[#ec797a]' : 'text-white bg-red-600'}`}
+                  className="text-white bg-red-600 hover:ease-in duration-100 font-bold px-2 py-2 rounded-xl"
                 >
                   Delete Notebook
-                </Button>
-              </Box>
+                </button>
+              </div>
+
             </form>
           </div>
         </Modal>

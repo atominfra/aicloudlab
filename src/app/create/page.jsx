@@ -36,17 +36,20 @@ const CreateNotebook = () => {
     setIsSubmitting(true);
 
     if (formData.name.includes('_') || formData.name.includes(' ')) {
-      setError('Name cannot contain an underscore (_).');
+      setError('Name cannot contain an underscore (_) or spaces.');
       setIsSubmitting(false);
       return;
     }
 
-    const payload = {
+    let payload = {
       name: formData.name,
       python_version: formData.pythonVersion,
-      packages: formData.packages.split(',').map(pkg => pkg.trim()),
-      github_url: formData.githubURL || ''
+      packages: formData.packages.split(',').map(pkg => pkg.trim())
     };
+
+    if(formData.githubURL && formData.githubURL !== '') {
+      payload = {...payload, github_url: formData.githubURL}
+    }
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/notebook/create`, {
@@ -65,7 +68,7 @@ const CreateNotebook = () => {
           name: formData.name,
           version: formData.pythonVersion,
           packages: formData.packages,
-          status: 'running'
+          status: 'stop'
         };
 
         setNotebooks(prev => [...prev, newNotebook]);
@@ -100,12 +103,8 @@ const CreateNotebook = () => {
             onChange={handleChange}
             variant="outlined"
             required
-            error={formData.name.includes('_') || formData.name.includes(' ')}  // Mark field as error if name contains underscore
-            helperText={formData.name.includes('_')
-              ? 'Name cannot contain an underscore (_).' 
-              : formData.name.includes(' ')
-              ? 'Name cannot contain spaces.'  // Show error message if the name contains a space
-              : ''} // Show error message directly on TextField
+            error={formData.name.includes('_') || formData.name.includes(' ')}
+              helperText={(formData.name.includes('_') || formData.name.includes(' ')) ? 'Name cannot contain an underscore (_) or spaces.' : ''}
             InputProps={{
               className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
             }}

@@ -46,6 +46,7 @@ const ProfilePage = () => {
   };
   const handleLogout = ()=>{
     localStorage.clear()
+    document.cookie = `access_token=; path=/`;
     window.location.href = "/"
   }
   return (
