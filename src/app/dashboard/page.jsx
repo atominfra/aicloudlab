@@ -16,7 +16,7 @@ const NotebooksPage = () => {
   const {notebooks, setNotebooks} = useGlobalContext();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-``
+
   const handleCreateClick = () => {
     // window.location.href = '/create'
     router.push('/create')
