@@ -105,7 +105,6 @@ const CreateNotebook = () => {
             required
             error={formData.name.includes('_') || formData.name.includes(' ')}
               helperText={(formData.name.includes('_') || formData.name.includes(' ')) ? 'Name cannot contain an underscore (_) or spaces.' : ''}
-
             InputProps={{
               className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
             }}
