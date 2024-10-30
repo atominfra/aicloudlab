@@ -76,7 +76,7 @@ console.log("data",reEnterPassword,data)
       if (response.ok) {
         localStorage.setItem('user', JSON.stringify(responseData.data.user)); 
         localStorage.setItem('access_token', responseData.data.access_token);
-        document.cookie = `access_token=${responseData.data.access_token}; path=/`;
+        document.cookie = `access_token=Bearer ${responseData.data.access_token}; path=/`;
         window.location.href = '/dashboard' 
       } else {
         toast.error(responseData.message || 'Signup failed');
