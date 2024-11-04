@@ -1,13 +1,13 @@
 'use client';
-import React, { useState } from 'react';
-import { Typography, Box, TextField, Select, MenuItem, ButtonBase } from '@mui/material';
-import { useRouter } from 'next/navigation';
-import { RiArrowDropDownLine } from "react-icons/ri";
-import Navbar from '../../components/navbar';
-import { useTheme } from 'next-themes';
-import { useGlobalContext } from '@/context/GlobalContext';
 import CustomButton from '@/components/ui/button';
 import withAuth from '@/components/withAuth';
+import { useGlobalContext } from '@/context/GlobalContext';
+import { Box, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { useTheme } from 'next-themes';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
+import { RiArrowDropDownLine } from "react-icons/ri";
+import Navbar from '../../components/navbar';
 
 const CreateNotebook = () => {
   const router = useRouter();
@@ -91,11 +91,11 @@ const CreateNotebook = () => {
         </Typography>
         
         <Box component="form" onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <ButtonBase title='Name'>
           <TextField
             fullWidth
             label="Name"
             name="name"
+            title='Name'
             value={formData.name}
             onChange={handleChange}
             variant="outlined"
@@ -121,13 +121,12 @@ const CreateNotebook = () => {
               }
             }}
           />
-        </ButtonBase>   
 
-          <ButtonBase title= 'Coming Soon'>
           <TextField
           disabled
             fullWidth
             label="Github URL "
+            title= 'Coming Soon'
             name="githubURL"
             value={formData.githubURL}
             onChange={handleChange}
@@ -150,12 +149,11 @@ const CreateNotebook = () => {
               }
             }}
           />
-          </ButtonBase>
 
-          <ButtonBase title='Python Version'>
             <Select
               fullWidth
               name="pythonVersion"
+              title='Python Version'
               value={formData.pythonVersion}
               onChange={handleChange}
               displayEmpty
@@ -175,12 +173,11 @@ const CreateNotebook = () => {
               <MenuItem value="3.9">Python 3.9</MenuItem>
               <MenuItem value="3.10">Python 3.10</MenuItem>
             </Select>
-          </ButtonBase>
 
-          <ButtonBase title='Coming Soon'>
           <Select
           disabled
             fullWidth
+            title='Coming Soon'
             name="packages"
             value={formData.packages}
             onChange={handleChange}
@@ -202,14 +199,12 @@ const CreateNotebook = () => {
             <MenuItem value="scikit-learn">Scikit-Learn</MenuItem>
             <MenuItem value="matplotlib">Matplotlib</MenuItem>
           </Select>
-          </ButtonBase>
           <CustomButton 
             text={'Create Notebook'} 
             customCss={'mt-6'} 
             onclickhandler={handleSubmit}
             type="submit" 
           />
-
           
         </Box>
       </Box>
