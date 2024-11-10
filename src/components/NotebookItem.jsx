@@ -1,20 +1,19 @@
 import {
-  Button,
-  Typography,
   Box,
+  Button,
   ButtonBase,
   dialogActionsClasses,
+  Modal,
   TextField,
-  Modal
+  Typography
 } from "@mui/material";
+import CircularProgress from '@mui/material/CircularProgress';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { FaPlay } from "react-icons/fa";
 import { GoLinkExternal } from "react-icons/go";
 import { IoMdPause } from "react-icons/io";
-import { MdSettings } from "react-icons/md";
-import Link from 'next/link';
-import { FaPlay } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
-import CircularProgress from '@mui/material/CircularProgress';
+import { MdDelete, MdSettings } from "react-icons/md";
 export default function NotebookItem({ id, name, version, status, notebook_url, onOperation }) {
   const [isHovered, setIsHovered] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -175,16 +174,17 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
           <MdSettings className='dark:hover:text-yellow-500 text-2xl text-[#111827] dark:text-white' />
         </ButtonBase>
 
-        <Link href={notebook_url} target='_blank'>
           <Button
             endIcon={<GoLinkExternal className='dark:hover:text-yellow-500 text-xl' />}
             className="dark:hover:text-yellow-500 font-poppins text-[#111827] dark:text-white underline capitalize"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            disabled={isRunning}
           >
-            Go to notebook
+          <Link href={notebook_url} target='_blank'>
+              Go to notebook
+          </Link>
           </Button>
-        </Link>
       </Box>
     </Box>
   );
