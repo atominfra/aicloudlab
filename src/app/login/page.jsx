@@ -72,7 +72,7 @@ export default function Login() {
           date.setDate(date.getDate() + days); 
           return date.toUTCString(); 
         };
-        document.cookie = `access_token=Bearer ${responseData.data.access_token}; path=/; domain=.${window.location.hostname}; expires=${getCookieExpirationDate(7)}; SameSite=Strict; secure`;
+        document.cookie = `access_token=Bearer ${responseData.data.access_token}; path=/; domain=.${window.location.hostname}; expires=${getCookieExpirationDate(7)};`;
         window.location.href = '/dashboard' 
       } else {
         console.error("Login failed", responseData);
