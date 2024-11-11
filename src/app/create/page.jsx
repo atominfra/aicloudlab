@@ -127,7 +127,6 @@ const CreateNotebook = () => {
 
           <ButtonBase title= 'Coming Soon'>
           <TextField
-          disabled
             fullWidth
             label="Github URL "
             name="githubURL"
