@@ -32,12 +32,16 @@ export default function Login() {
       setAuth(token);
     }
   }, []);
-
   useEffect(() => {
-    if (auth && auth !== '') {
+    const hasAccessTokenCookie = document.cookie
+      .split("; ")
+      .some((cookie) => cookie.startsWith("access_token="));
+  
+    if (auth && hasAccessTokenCookie) {
       window.location.href = '/dashboard';
-    } 
+    }
   }, [auth]);
+  
   // Validate the form data
   const validateForm = () => {
     const newErrors = {};

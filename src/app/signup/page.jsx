@@ -25,9 +25,13 @@ export default function Signup() {
   }, []);
 
   useEffect(() => {
-    if (auth && auth !== '') {
+    const hasAccessTokenCookie = document.cookie
+      .split("; ")
+      .some((cookie) => cookie.startsWith("access_token="));
+  
+    if (auth && hasAccessTokenCookie) {
       window.location.href = '/dashboard';
-    } 
+    }
   }, [auth]);
   // Form state
   const [formData, setFormData] = useState({

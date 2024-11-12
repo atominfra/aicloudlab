@@ -85,7 +85,8 @@ const NotebooksPage = () => {
 
   useEffect(() => {
     const access_token = localStorage.getItem("access_token"); 
-    if (access_token) {
+
+    if (access_token ) {
       document.cookie = `access_token=Bearer ${access_token}; path=/; domain=.${window.location.hostname}; expires=${getCookieExpirationDate(7)};`;
     }
   }, []);
