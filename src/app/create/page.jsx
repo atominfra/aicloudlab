@@ -1,6 +1,6 @@
 'use client';
-import React, { useState } from 'react';
-import { Typography, Box, TextField, Select, MenuItem, ButtonBase } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Typography, Box, TextField, Select, MenuItem, ButtonBase, Modal } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { RiArrowDropDownLine } from "react-icons/ri";
 import Navbar from '../../components/navbar';
@@ -12,6 +12,9 @@ import withAuth from '@/components/withAuth';
 const CreateNotebook = () => {
   const router = useRouter();
   const { notebooks, setNotebooks } = useGlobalContext();
+  const [credits, setCredits] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
   const [formData, setFormData] = useState({
     name: '',
     githubURL: '',
@@ -21,6 +24,29 @@ const CreateNotebook = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const { resolvedTheme } = useTheme();
+  useEffect(()=>{
+    fetchCredits()
+  },[])
+    // Fetch credits on page load
+    const fetchCredits = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/credits`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`, 
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setCredits(data.data.credits); // Assuming `credits` is the field in response
+        } else {
+          setError('Failed to fetch credits');
+        }
+      } catch (err) {
+        setError('An error occurred while fetching credits');
+      }
+    };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -31,7 +57,10 @@ const CreateNotebook = () => {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    if (credits < 1) {
+      setShowModal(true);
+    } else {
+      event.preventDefault();
     setError(null);
     setIsSubmitting(true);
 
@@ -82,6 +111,8 @@ const CreateNotebook = () => {
     } finally {
       setIsSubmitting(false);
     }
+    }
+    
   };
 
   return (
@@ -210,10 +241,19 @@ const CreateNotebook = () => {
             onclickhandler={handleSubmit}
             type="submit" 
           />
-
-          
         </Box>
       </Box>
+      <Modal
+          open={showModal} onClose={() => setShowModal(false)}
+          className="w-full h-full justify-items-center content-center"
+        >
+          <Box className="p-8 bg-white shadow-xl rounded-2xl flex flex-col items-center justify-center w-[35vw] gap-4">
+          <Typography variant="body1" className="text-gray-600 mt-2">
+            You’ve run out of credits to create another notebook. Upgrade to Premium for more credits.
+          </Typography>
+          <CustomButton text={'Upgrade Plan'} onclickhandler={()=>{}} customCss={'w-[150px]'}/>
+        </Box>
+        </Modal>
     </Box>
   );
 }

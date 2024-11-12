@@ -1,19 +1,21 @@
-'use client';
+"use client"
 import React, { useEffect, useState } from 'react';
-import { Typography, Box } from '@mui/material';
-import {useRouter} from 'next/navigation';
+import { Typography, Box, Modal, Button } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import Navbar from '@/components/navbar';
 import NotebookItem from '@/components/NotebookItem';
 import CustomButton from "@/components/ui/button";
 import { useGlobalContext } from '@/context/GlobalContext';
-import Image from 'next/image'
-import notebook from '@/assets/notebook.svg'
+import Image from 'next/image';
+import notebook from '@/assets/notebook.svg';
 import CircularProgress from '@mui/material/CircularProgress';
 import withAuth from '@/components/withAuth';
 
 const NotebooksPage = () => {
   const router = useRouter();
-  const {notebooks, setNotebooks} = useGlobalContext();
+  const { notebooks, setNotebooks } = useGlobalContext();
+  const [credits, setCredits] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -22,16 +24,15 @@ const NotebooksPage = () => {
     date.setDate(date.getDate() + days); 
     return date.toUTCString(); 
   };
-  
-  useEffect(()=>{ 
-    const access_token = localStorage.getItem("access_token") 
-    if(access_token) 
-      document.cookie = `access_token=Bearer ${access_token}; path=/; domain=.${window.location.hostname}; expires=${getCookieExpirationDate(7)};`;    
-    },[])
+
   const handleCreateClick = () => {
-    // window.location.href = '/create'
-    router.push('/create')
+    if (credits < 1) {
+      setShowModal(true);
+    } else {
+      router.push('/create');
+    }
   };
+
   const fetchNotebooks = async () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/notebook`, {
@@ -44,7 +45,7 @@ const NotebooksPage = () => {
 
       if (response.ok) {
         const responseData = await response.json();
-        setNotebooks(responseData.data.notebooks); 
+        setNotebooks(responseData.data.notebooks);
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Failed to fetch notebooks');
@@ -53,9 +54,42 @@ const NotebooksPage = () => {
       setError('An error occurred while fetching notebooks');
     } finally {
       setLoading(false);
-      
     }
   };
+
+  // Fetch credits on page load
+  const fetchCredits = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/credits`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`, 
+        },
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setCredits(data.data.credits); // Assuming `credits` is the field in response
+      } else {
+        setError('Failed to fetch credits');
+      }
+    } catch (err) {
+      setError('An error occurred while fetching credits');
+    }
+  };
+
+  useEffect(() => {
+    fetchNotebooks();
+    fetchCredits()
+  }, []);
+
+  useEffect(() => {
+    const access_token = localStorage.getItem("access_token"); 
+    if (access_token) {
+      document.cookie = `access_token=Bearer ${access_token}; path=/; domain=.${window.location.hostname}; expires=${getCookieExpirationDate(7)};`;
+    }
+  }, []);
+
   const handleOperationRequest = async (notebookId, operationName) => {
     try {
       console.log("operationName in dashboard",operationName)
@@ -78,18 +112,16 @@ const NotebooksPage = () => {
       if(operationName === 'delete') {
         setLoading(true)
         fetchNotebooks()
+        fetchCredits()
       }
       const result = await response.json();
       console.log('Operation successful:', result);
     } catch (error) {
       setError(error?.message);
     }
-    fetchNotebooks();
+    fetchNotebooks()
+    fetchCredits()
   };
-  useEffect(() => {
-    fetchNotebooks();
-  }, []);
-
   return (
     <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white">
       <Navbar />
@@ -103,10 +135,7 @@ const NotebooksPage = () => {
 
       {loading ? (
         <Box className='flex justify-center items-center h-[60vh] w-full'>
-        {/* <Typography variant="body1" className="text-gray-400 mb-4 px-6 ">
-          Loading...
-        </Typography> */}
-        <CircularProgress color="inherit" />
+          <CircularProgress color="inherit" />
         </Box>
       ) : notebooks.length > 0 ? (
         <Box className="w-full mt-6 flex justify-center items-center flex-col px-6">
@@ -115,7 +144,7 @@ const NotebooksPage = () => {
               key={notebook?.id}
               id={notebook?.id} 
               name={notebook?.name} 
-              version={notebook?.python_verson} 
+              version={notebook?.python_version} 
               notebook_url={notebook?.notebook_url}
               onOperation={handleOperationRequest}
               status={notebook?.status} 
@@ -123,22 +152,34 @@ const NotebooksPage = () => {
           ))}
         </Box>
       ) : (
-        
         <Box className='flex flex-col gap-2 justify-center items-center h-[60vh] w-full'>
           <Image 
-        src={notebook}
-        width={1000}  
-        height={1000}
-        className=' w-[100px] h-[100px]'
-        alt="AI Cloud Lab Logo" />
-        <Typography variant="body1" className="text-gray-400 mb-4 px-6">
-          No notebooks yet.
-        </Typography>
+            src={notebook}
+            width={1000}  
+            height={1000}
+            className='w-[100px] h-[100px]'
+            alt="AI Cloud Lab Logo" 
+          />
+          <Typography variant="body1" className="text-gray-400 mb-4 px-6">
+            No notebooks yet.
+          </Typography>
         </Box>
       )}
+
+      <Modal
+          open={showModal} onClose={() => setShowModal(false)}
+          className="w-full h-full justify-items-center content-center"
+        >
+          <Box className="p-8 bg-white shadow-xl rounded-2xl flex flex-col items-center justify-center w-[35vw] gap-4">
+          <Typography variant="body1" className="text-gray-600 mt-2">
+            You’ve run out of credits to create another notebook. Upgrade to Premium for more credits.
+          </Typography>
+          <CustomButton text={'Upgrade Plan'} onclickhandler={()=>{}} customCss={'w-[150px]'}/>
+        </Box>
+        </Modal>
+
     </Box>
-  )
-}
+  );
+};
 
-
-export default withAuth(NotebooksPage)
+export default withAuth(NotebooksPage);
