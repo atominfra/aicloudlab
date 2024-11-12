@@ -17,6 +17,18 @@ const NotebooksPage = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const getCookieExpirationDate = (days) => {
+    const date = new Date();
+    date.setDate(date.getDate() + days); 
+    return date.toUTCString(); 
+  };
+  
+  useEffect(()=>{ 
+    const access_token = localStorage.getItem("access_token") 
+    if(access_token) 
+      document.cookie = `access_token=Bearer ${access_token}; path=/; domain=.${window.location.hostname}; expires=${getCookieExpirationDate(7)};`;    
+    },[])
+
   const handleCreateClick = () => {
     // window.location.href = '/create'
     router.push('/create')
