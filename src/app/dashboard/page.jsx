@@ -28,7 +28,6 @@ const NotebooksPage = () => {
     if(access_token) 
       document.cookie = `access_token=Bearer ${access_token}; path=/; domain=.${window.location.hostname}; expires=${getCookieExpirationDate(7)};`;    
     },[])
-
   const handleCreateClick = () => {
     // window.location.href = '/create'
     router.push('/create')

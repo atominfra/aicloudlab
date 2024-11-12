@@ -15,7 +15,20 @@ import toast, { Toaster } from 'react-hot-toast';
 export default function Signup() {
   const router = useRouter();
   const { resolvedTheme } = useTheme();
-  
+  const [auth, setAuth] = useState('');
+
+  useEffect(() => {
+    const token  = localStorage.getItem('access_token');
+    if (token) {
+      setAuth(token);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (auth && auth !== '') {
+      window.location.href = '/dashboard';
+    } 
+  }, [auth]);
   // Form state
   const [formData, setFormData] = useState({
     full_name: '',

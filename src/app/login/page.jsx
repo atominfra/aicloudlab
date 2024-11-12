@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import CustomButton from "@/components/ui/button"
 import { 
@@ -24,7 +24,20 @@ export default function Login() {
   const router = useRouter()
   const { resolvedTheme } = useTheme();
   const {  setUser } = useGlobalContext();
+  const [auth, setAuth] = useState('');
 
+  useEffect(() => {
+    const token  = localStorage.getItem('access_token');
+    if (token) {
+      setAuth(token);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (auth && auth !== '') {
+      window.location.href = '/dashboard';
+    } 
+  }, [auth]);
   // Validate the form data
   const validateForm = () => {
     const newErrors = {};
