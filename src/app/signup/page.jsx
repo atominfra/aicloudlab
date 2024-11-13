@@ -89,7 +89,7 @@ console.log("data",reEnterPassword,data)
       if (response.ok) {
         localStorage.setItem('user', JSON.stringify(responseData.data.user)); 
         localStorage.setItem('access_token', responseData.data.access_token);        
-        document.cookie = `access_token=Bearer ${responseData.data.access_token}; path=/; domain=.${window.location.hostname}`;
+        document.cookie = `access_token=Bearer ${responseData.data.access_token}; expires=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString()}; path=/; domain=.${window.location.hostname}`;
         
         window.location.href = '/dashboard' 
       } else {
