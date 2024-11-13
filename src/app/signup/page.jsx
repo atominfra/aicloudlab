@@ -15,7 +15,20 @@ import toast, { Toaster } from 'react-hot-toast';
 export default function Signup() {
   const router = useRouter();
   const { resolvedTheme } = useTheme();
-  
+  const [auth, setAuth] = useState('');
+
+  useEffect(() => {
+    const token  = localStorage.getItem('access_token');
+    if (token) {
+      setAuth(token);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (auth && auth !== '') {
+      window.location.href = '/dashboard';
+    } 
+  }, [auth]);
   // Form state
   const [formData, setFormData] = useState({
     full_name: '',
@@ -76,7 +89,7 @@ console.log("data",reEnterPassword,data)
       if (response.ok) {
         localStorage.setItem('user', JSON.stringify(responseData.data.user)); 
         localStorage.setItem('access_token', responseData.data.access_token);        
-        document.cookie = `access_token=Bearer ${responseData.data.access_token}; path=/; domain=.${window.location.hostname}`;
+        document.cookie = `access_token=Bearer ${responseData.data.access_token}; expires=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString()}; path=/; domain=.${window.location.hostname}`;
         
         window.location.href = '/dashboard' 
       } else {
