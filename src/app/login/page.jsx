@@ -83,7 +83,7 @@ export default function Login() {
         document.cookie = `access_token=Bearer ${responseData.data.access_token}; 
         expires=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString()}; 
         path=/; 
-        ${process.env.NODE_ENV === 'production' ? `domain=.${window.location.hostname}; SameSite=None; Secure` : ''}`;
+        domain=.${window.location.hostname}`;
         // document.cookie = `access_token=Bearer ${accessToken}; 
         // Max-Age=${maxAge}; 
         // path=/; 
