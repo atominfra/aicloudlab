@@ -92,7 +92,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
           disabled={loading}
         >
           {loading ? (
-            <CircularProgress color="inherit" /> 
+            <CircularProgress className="text-black" size={24}/> 
           ) : isRunning ? (
             <IoMdPause className='dark:hover:text-yellow-500 text-2xl text-[#111827] dark:text-white' />
           ) : (
@@ -172,7 +172,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
         </Modal>
 
         <ButtonBase title='Coming Soon' className="text-gray-400 min-w-0 dark:hover:text-yellow-500" >
-          <MdSettings className='dark:hover:text-yellow-500 text-2xl text-[#111827] dark:text-white' />
+          <MdSettings className='dark:hover:text-yellow-500 text-3xl text-[#111827] dark:text-white' />
         </ButtonBase>
 
         <Link href={notebook_url} target='_blank'>
