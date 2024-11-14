@@ -80,14 +80,7 @@ export default function Login() {
         console.log("Login successful", responseData);
         localStorage.setItem('user', JSON.stringify(responseData.data.user)); 
         localStorage.setItem('access_token', responseData.data.access_token);
-        document.cookie = `access_token=Bearer ${responseData.data.access_token}; 
-        expires=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString()}; 
-        path=/; 
-        domain=.${window.location.hostname}`;
-        // document.cookie = `access_token=Bearer ${accessToken}; 
-        // Max-Age=${maxAge}; 
-        // path=/; 
-        // ${process.env.NODE_ENV === 'production' ? `domain=.${window.location.hostname}; SameSite=None; Secure` : ''}`;
+        document.cookie = `access_token=Bearer ${responseData.data.access_token}; expires=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString()}; path=/; domain=.${window.location.hostname}`;
         window.location.href = '/dashboard' 
       } else {
         console.error("Login failed", responseData);
