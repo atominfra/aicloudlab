@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Typography, Box, TextField, Select, MenuItem, ButtonBase } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { RiArrowDropDownLine } from "react-icons/ri";
@@ -8,10 +8,11 @@ import { useTheme } from 'next-themes';
 import { useGlobalContext } from '@/context/GlobalContext';
 import CustomButton from '@/components/ui/button';
 import withAuth from '@/components/withAuth';
+import CreditsModal from '@/components/creditsModal';
 
 const CreateNotebook = () => {
   const router = useRouter();
-  const { notebooks, setNotebooks } = useGlobalContext();
+  const { notebooks, setNotebooks, credits, fetchCredits  } = useGlobalContext();
   const [formData, setFormData] = useState({
     name: '',
     githubURL: '',
@@ -21,6 +22,7 @@ const CreateNotebook = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
   const { resolvedTheme } = useTheme();
+  const [showModal, setShowModal] = useState(false);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -32,6 +34,9 @@ const CreateNotebook = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (credits < 1) {
+      setShowModal(true);
+    } else {
     setError(null);
     setIsSubmitting(true);
 
@@ -82,8 +87,12 @@ const CreateNotebook = () => {
     } finally {
       setIsSubmitting(false);
     }
+  }
   };
 
+  useEffect(()=>{
+    fetchCredits()
+  },[])
   return (
     <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white p-6">
       <Navbar />
@@ -214,6 +223,8 @@ const CreateNotebook = () => {
           
         </Box>
       </Box>
+      <CreditsModal showModal={showModal} onClose={() => setShowModal(false)}/>
+
     </Box>
   );
 }
