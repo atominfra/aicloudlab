@@ -84,12 +84,7 @@ export default function Login() {
         console.log("Login successful", responseData);
         localStorage.setItem('user', JSON.stringify(responseData.data.user)); 
         localStorage.setItem('access_token', responseData.data.access_token);
-        const getCookieExpirationDate = (days) => {
-          const date = new Date();
-          date.setDate(date.getDate() + days); 
-          return date.toUTCString(); 
-        };
-        document.cookie = `access_token=Bearer ${responseData.data.access_token}; path=/; domain=.${window.location.hostname}; expires=${getCookieExpirationDate(7)};`;
+        document.cookie = `access_token=Bearer ${responseData.data.access_token}; expires=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString()}; path=/; domain=.${window.location.hostname}`;
         window.location.href = '/dashboard' 
       } else {
         console.error("Login failed", responseData);

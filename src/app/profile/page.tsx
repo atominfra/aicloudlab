@@ -46,7 +46,7 @@ const ProfilePage = () => {
   };
   const handleLogout = ()=>{
     localStorage.clear()
-    document.cookie = `access_token=; path=/`;
+    document.cookie = `access_token=; path=/; domain=.${window.location.hostname}`;
     window.location.href = "/"
   }
   return (
