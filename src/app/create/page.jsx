@@ -204,11 +204,12 @@ const CreateNotebook = () => {
           </Select>
           </ButtonBase>
           <CustomButton 
+            disabled={isLoading}
             text={isLoading=== true ? <>
             <CircularProgress className="text-white" size={30}/> 
             </>:
             <>Create Notebook</>} 
-            customCss={'mt-6'} 
+            customCss={`mt-6 ${isLoading===true? 'bg-[#e3e3e3]':'bg-[#1976D2]'}`} 
             onclickhandler={handleSubmit}
             type="submit" 
           />
