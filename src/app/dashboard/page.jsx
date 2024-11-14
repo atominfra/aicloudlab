@@ -170,13 +170,18 @@ const NotebooksPage = () => {
           open={showModal} onClose={() => setShowModal(false)}
           className="w-full h-full justify-items-center content-center"
         >
-          <Box className="p-8 bg-white shadow-xl rounded-2xl flex flex-col items-center justify-center w-[35vw] gap-4">
-          <Typography variant="body1" className="text-gray-600 mt-2">
-            You’ve run out of credits to create another notebook. Upgrade to Premium for more credits.
+          <Box className="p-8 bg-white shadow-xl rounded-2xl flex flex-col items-start justify-start w-[35vw] gap-4">
+          <Typography className="text-black font-poppins font-semibold text-2xl">
+          You are on free plan
           </Typography>
-          <CustomButton text={'Upgrade Plan'} onclickhandler={()=>{}} customCss={'w-[150px]'}/>
+          <Typography className="text-gray-600 font-poppins text-lg ">
+          Upgrade to Pro to create more notebooks         
+          </Typography>
+        <Box className="flex w-full justify-between gap-4">          
+          <CustomButton text={'Maybe later'} onclickhandler={() => setShowModal(false)} customCss={' w-[50%] bg-[#e3e3e3]  text-black shadow-none'}/>
+        <CustomButton text={'Upgrade '} onclickhandler={()=>{}} customCss={'w-[50%] bg-[#1976D2] '}/></Box>
         </Box>
-        </Modal>
+        </Modal>  
 
     </Box>
   );
