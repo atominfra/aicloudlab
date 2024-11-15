@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, Modal } from '@mui/material';
 import {useRouter} from 'next/navigation';
 import Navbar from '@/components/navbar';
 import NotebookItem from '@/components/NotebookItem';
@@ -10,16 +10,21 @@ import Image from 'next/image'
 import notebook from '@/assets/notebook.svg'
 import CircularProgress from '@mui/material/CircularProgress';
 import withAuth from '@/components/withAuth';
+import CreditsModal from '@/components/creditsModal';
 
 const NotebooksPage = () => {
   const router = useRouter();
-  const {notebooks, setNotebooks} = useGlobalContext();
+  const {notebooks, setNotebooks, credits, fetchCredits} = useGlobalContext();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   const handleCreateClick = () => {
-    // window.location.href = '/create'
-    router.push('/create')
+    if (credits < 1) {
+      setShowModal(true);
+    } else {
+      router.push('/create');
+    }
   };
   const fetchNotebooks = async () => {
     try {
@@ -67,6 +72,7 @@ const NotebooksPage = () => {
       if(operationName === 'delete') {
         setLoading(true)
         fetchNotebooks()
+        fetchCredits()
       }
       const result = await response.json();
       console.log('Operation successful:', result);
@@ -74,9 +80,14 @@ const NotebooksPage = () => {
       setError(error?.message);
     }
     fetchNotebooks();
+    fetchCredits()
   };
+
+
+
   useEffect(() => {
     fetchNotebooks();
+    fetchCredits()
   }, []);
 
   return (
@@ -104,7 +115,7 @@ const NotebooksPage = () => {
               key={notebook?.id}
               id={notebook?.id} 
               name={notebook?.name} 
-              version={notebook?.python_verson} 
+              version={notebook?.python_version} 
               notebook_url={notebook?.notebook_url}
               onOperation={handleOperationRequest}
               status={notebook?.status} 
@@ -125,6 +136,7 @@ const NotebooksPage = () => {
         </Typography>
         </Box>
       )}
+      <CreditsModal showModal={showModal} onClose={() => setShowModal(false)}/>
     </Box>
   )
 }
