@@ -1,6 +1,6 @@
 'use client';
-import React, { useEffect, useState } from 'react';
-import { Typography, Box, TextField, Select, MenuItem, ButtonBase } from '@mui/material';
+import React, { useState,useEffect } from 'react';
+import { Typography, Box, TextField, Select, MenuItem, ButtonBase, CircularProgress } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { RiArrowDropDownLine } from "react-icons/ri";
 import Navbar from '../../components/navbar';
@@ -19,11 +19,10 @@ const CreateNotebook = () => {
     pythonVersion: '3.7',
     packages: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const { resolvedTheme } = useTheme();
   const [showModal, setShowModal] = useState(false);
-
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({
@@ -38,11 +37,11 @@ const CreateNotebook = () => {
       setShowModal(true);
     } else {
     setError(null);
-    setIsSubmitting(true);
+    setIsLoading(true);
 
     if (formData.name.includes('_') || formData.name.includes(' ')) {
       setError('Name cannot contain an underscore (_) or spaces.');
-      setIsSubmitting(false);
+      setIsLoading(false);
       return;
     }
 
@@ -85,7 +84,7 @@ const CreateNotebook = () => {
     } catch (err) {
       setError('An error occurred while creating the notebook');
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   }
   };
@@ -214,8 +213,12 @@ const CreateNotebook = () => {
           </Select>
           </ButtonBase>
           <CustomButton 
-            text={'Create Notebook'} 
-            customCss={'mt-6'} 
+            disabled={isLoading}
+            text={isLoading=== true ? <>
+            <CircularProgress className="text-white" size={30}/> 
+            </>:
+            <>Create Notebook</>} 
+            customCss={`mt-6 ${isLoading===true? 'bg-[#e3e3e3]':'bg-[#1976D2]'}`} 
             onclickhandler={handleSubmit}
             type="submit" 
           />

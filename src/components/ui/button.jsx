@@ -1,9 +1,10 @@
 import { Button } from '@mui/material'
 import React from 'react'
 
-export default function CustomButton({text,onclickhandler,customCss,}) {
+export default function CustomButton({text,onclickhandler,customCss, disabled=false}) {
   return (
     <Button
+      disabled={disabled}
       variant="contained"
       className={` bg-[#1976D2] text-base  font-semibold font-poppins p-3 rounded-[15px] ${customCss}`}
       onClick={onclickhandler}
