@@ -45,6 +45,12 @@ const CreateNotebook = () => {
       return;
     }
 
+    if (formData.name === '') {
+      setError('Please enter name');
+      setIsLoading(false);
+      return;
+    }
+
     let payload = {
       name: formData.name,
       python_version: formData.pythonVersion,

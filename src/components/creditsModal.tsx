@@ -18,7 +18,7 @@ export default function CreditsModal({ showModal, onClose }:{
         <Typography className="text-gray-600 font-poppins text-lg ">
           Upgrade to Pro to create more notebooks
         </Typography>
-        <Box className="flex w-full justify-between gap-4">
+        <Box className="flex w-full justify-between gap-4 pt-4">
           <CustomButton
             text="Maybe later"
             onclickhandler={onClose}
