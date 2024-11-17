@@ -1,17 +1,24 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box,Button, Typography } from '@mui/material';
 import withAuth from '@/components/withAuth';
 import { useParams } from 'next/navigation';
 import AnchorTemporaryDrawer from '@/components/notebook /hamburger';
 import { SiJupyter } from 'react-icons/si';
 import Link from 'next/link';
 import { PiUserCircleFill } from 'react-icons/pi';
+import CustomButton from '@/components/ui/button';
+
+type Notebook = {
+  id: number;
+  name: string;
+  notebook_url: string;
+};
 
 const NotebookPage = () => {
-  const { id } = useParams();  // Get notebook id from params
-  const [notebook, setNotebook] = useState(null);
+  const { id } = useParams();  
+  const [notebook, setNotebook] = useState<Notebook | null>(null);
 
   useEffect(() => {
     const fetchNotebook = async () => {
@@ -49,17 +56,25 @@ const NotebookPage = () => {
           <SiJupyter  className='text-[#ff7c20]' size={40}/>
           <Box>
           <Typography className=' text-2xl text-black font-poppins '>{notebook?.name}</Typography>
-            <div className='text-black flex gap-3 font-light font-poppins text-sm'>
-            <span>File</span>
-            <span>Edit</span>
-            <span>View</span>
-            <span>Run</span>
-            <span>kernel</span>
-            <span>Settings</span>
-            </div>
           </Box>
         </Box>
         <Box className="flex gap-8 items-center pr-6">
+        <button
+      // variant="contained"
+      className={` bg-white hover:bg-[#1976D2] hover:text-white text-black shadow-none  text-base font-semibold font-poppins  rounded-[10px] border px-2 py-1 border-gray-300 `}
+      onClick={()=>{}}
+      style={{ textTransform: 'none' }}
+    >
+    Sync
+    </button>
+        <button
+      // variant="contained"
+      className={` bg-white hover:bg-[#1976D2] hover:text-white text-black shadow-none  text-base font-semibold font-poppins  rounded-[10px] border px-2 py-1 border-gray-300 `}
+      onClick={()=>{}}
+      style={{ textTransform: 'none' }}
+    >
+    Deploy
+    </button>
       <Link href={'/profile'}>
       <PiUserCircleFill size={45} className='text-black' />
       </Link>
