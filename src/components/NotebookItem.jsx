@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { GoLinkExternal } from "react-icons/go";
-import { IoMdPause } from "react-icons/io";
+import { IoIosArrowForward, IoMdPause } from "react-icons/io";
 import { MdSettings } from "react-icons/md";
 import Link from 'next/link';
 import { FaPlay } from "react-icons/fa";
@@ -70,7 +70,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
   };
 
   return (
-    <Box className="flex items-center justify-between bg-white dark:bg-gray-800 text-[#111827] dark:text-white p-4 rounded-lg mb-2 w-[90%] border-2 border-[#111827] dark:border-0">
+    <Box className="flex items-center justify-between bg-white dark:bg-gray-800 text-[#111827] dark:text-white p-4  mb-2 w-[90%] border rounded-[20px] border-gray-300 ">
       <Box className='w-[16%]'>
         <Typography variant="body1" className="font-poppins">
           {name}
@@ -85,7 +85,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
       <Typography variant="body2" className="text-[#111827] dark:text-white font-poppins">
         Python {version}
       </Typography>
-      <Box className="flex items-center justify-evenly font-poppins gap-10 w-[34%]">
+      <Box className="flex items-center justify-evenly font-poppins gap-10 w-[40%]">
         <ButtonBase
           title={isRunning ? 'Pause' : 'Start'}
           className={`text-gray-400 min-w-0 dark:hover:text-yellow-500 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -103,7 +103,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
 
         <button
           title="Delete"
-          className="text-red-600 hover:text-white hover:ease-in duration-100 font-bold border border-2 border-red-600 px-2 py-2 rounded-2xl hover:bg-red-600"
+          className="text-red-600 hover:text-white hover:ease-in duration-100 font-bold   border-2 border-red-600 px-2 py-2 rounded-[200px] hover:bg-red-600"
           onClick={handleOpen}
         >
           Delete
@@ -174,9 +174,9 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
           <MdSettings className='dark:hover:text-yellow-500 text-3xl text-[#111827] dark:text-white' />
         </ButtonBase>
 
-        <Link href={notebook_url} target='_blank'>
+        <Link href={`/notebook/${id}`} target='_blank'>
           <Button
-            endIcon={<GoLinkExternal className='dark:hover:text-yellow-500 text-xl' />}
+            endIcon={<IoIosArrowForward className='dark:hover:text-yellow-500 text-xl' />}
             className="dark:hover:text-yellow-500 font-poppins text-[#111827] dark:text-white underline capitalize"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
