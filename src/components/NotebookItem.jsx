@@ -15,6 +15,7 @@ import Link from 'next/link';
 import { FaPlay } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import CircularProgress from '@mui/material/CircularProgress';
+import CustomButton from "./ui/button";
 export default function NotebookItem({ id, name, version, status, notebook_url, onOperation }) {
   const [isHovered, setIsHovered] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -117,10 +118,10 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
         >
           <div
             class="block"
-            className=" p-8 bg-white shadow-xl rounded-2xl item-center"
+            className=" p-8 bg-white shadow-xl rounded-2xl item-center w-[35vw]"
           >
-            <p className="pr-10 pb-4 font-bold text-[#111827]">You are deleting &apos;{name}&apos;</p>
-            <p className="pb-4 text-[#111827]">Type &apos;{name}&apos; to confirm.</p>
+            <p className="pr-10 pb-4 text-[22px] font-bold text-[#111827]">You are deleting &apos;{name}&apos;</p>
+            <p className="pb-4 text-[#111827] text-[18px]">If you&apos;re sure, type &apos;{name}&apos; to confirm.</p>
             <form onSubmit={handleSubmit}>
               <TextField
                 fullWidth
@@ -152,20 +153,18 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
                   },
                 }}
               />
-              <div className="block space-x-8 p-4 pl-0">
-                <button
-                  onClick={handleClose}
-                  className="text-[#111827] hover:ease-in duration-100 font-bold min-w-0 px-8 py-1.5 rounded-xl border border-2 border-[#111827]"
-                >
-                  No, cancel.
-                </button>
-                <button
-                  type="submit"
-                  className="text-white bg-red-600 hover:ease-in duration-100 font-bold px-2 py-2 rounded-xl"
-                >
-                  Delete Notebook
-                </button>
-              </div>
+              <Box className="flex w-full justify-between gap-4 pt-4">
+                <CustomButton
+                  text="No, cancel"
+                  onclickhandler={handleClose}
+                  customCss="w-[50%] bg-[#e3e3e3] text-black shadow-none"
+                />
+                <CustomButton
+                  text="Delete Notebook"
+                  onclickhandler={handleSubmit}
+                  customCss="w-[50%] bg-red-600"
+                />
+              </Box>
 
             </form>
           </div>
