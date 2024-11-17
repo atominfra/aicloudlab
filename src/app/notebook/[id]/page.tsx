@@ -9,7 +9,11 @@ import { SiJupyter } from 'react-icons/si';
 import Link from 'next/link';
 import { PiUserCircleFill } from 'react-icons/pi';
 import CustomButton from '@/components/ui/button';
+import Image from 'next/image';
+import { AiOutlineSync } from "react-icons/ai";
+import { FaRocket } from "react-icons/fa6";
 
+import deploy from "@/assets/deploy.png"
 type Notebook = {
   id: number;
   name: string;
@@ -51,29 +55,36 @@ const NotebookPage = () => {
   })
   return (
     <div className="flex flex-col h-screen">
-      <Box className="w-full h-[50px] bg-white flex items-center justify-between m-2">
-        <Box className="flex gap-2 items-center pl-4"> 
-          <SiJupyter  className='text-[#ff7c20]' size={40}/>
-          <Box>
+      <Box className="w-full bg-white flex items-center justify-between p-2">
+        <Box className="flex  items-center px-4"> 
+        <Link className=" flex items-center" href={`/dashboard`}>
+          <Image 
+          src= 'https://res.cloudinary.com/dsfu8suwl/image/upload/v1729192530/cloud-lab-high-resolution-logo-grayscale-transparent_1_-_Edited_a4pbfi.webp'
+          width={1000}  
+          height={1000}
+          className=' w-20 h-12 '
+          alt="AI Cloud Lab Logo" />
+      </Link>          <Box>
           <Typography className=' text-2xl text-black font-poppins '>{notebook?.name}</Typography>
           </Box>
         </Box>
-        <Box className="flex gap-8 items-center pr-6">
+        <Box className="flex gap-8 items-center ">
         <button
-      // variant="contained"
-      className={` bg-white hover:bg-[#1976D2] hover:text-white text-black shadow-none  text-base font-semibold font-poppins  rounded-[10px] border px-2 py-1 border-gray-300 `}
+      className={` bg-white hover:bg-[#1976D2] hover:text-white text-black shadow-none  text-[15px] font-semibold font-poppins  rounded-[10px] border px-2 py-1 border-gray-300  flex gap-1 items-center`}
       onClick={()=>{}}
       style={{ textTransform: 'none' }}
     >
+      <AiOutlineSync />
     Sync
     </button>
         <button
       // variant="contained"
-      className={` bg-white hover:bg-[#1976D2] hover:text-white text-black shadow-none  text-base font-semibold font-poppins  rounded-[10px] border px-2 py-1 border-gray-300 `}
+      className={` bg-white hover:bg-[#1976D2] hover:text-white text-black shadow-none  text-[15px] font-semibold font-poppins  rounded-[10px] border px-2 py-1 border-gray-300 flex gap-1 items-center`}
       onClick={()=>{}}
       style={{ textTransform: 'none' }}
     >
-    Deploy
+      <FaRocket/>
+      Deploy
     </button>
       <Link href={'/profile'}>
       <PiUserCircleFill size={45} className='text-black' />
