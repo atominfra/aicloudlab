@@ -71,7 +71,7 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     const { reEnterPassword, ...data } = formData;
-console.log("data",reEnterPassword,data)
+    console.log("data",reEnterPassword,data)
     e.preventDefault();
     if (!validateForm()) return;
 
@@ -102,6 +102,7 @@ console.log("data",reEnterPassword,data)
     }
   };
 
+  
   useEffect(() => {
     console.log("resolvedTheme", resolvedTheme);
   }, [resolvedTheme]);

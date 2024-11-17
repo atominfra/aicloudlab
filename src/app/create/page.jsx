@@ -1,6 +1,6 @@
 'use client';
-import React, { useState } from 'react';
-import { Typography, Box, TextField, Select, MenuItem, ButtonBase } from '@mui/material';
+import React, { useState,useEffect } from 'react';
+import { Typography, Box, TextField, Select, MenuItem, ButtonBase, CircularProgress } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { RiArrowDropDownLine } from "react-icons/ri";
 import Navbar from '../../components/navbar';
@@ -8,20 +8,21 @@ import { useTheme } from 'next-themes';
 import { useGlobalContext } from '@/context/GlobalContext';
 import CustomButton from '@/components/ui/button';
 import withAuth from '@/components/withAuth';
+import CreditsModal from '@/components/creditsModal';
 
 const CreateNotebook = () => {
   const router = useRouter();
-  const { notebooks, setNotebooks } = useGlobalContext();
+  const { notebooks, setNotebooks, credits, fetchCredits  } = useGlobalContext();
   const [formData, setFormData] = useState({
     name: '',
     githubURL: '',
     pythonVersion: '3.7',
     packages: ''
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const { resolvedTheme } = useTheme();
-
+  const [showModal, setShowModal] = useState(false);
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({
@@ -32,12 +33,21 @@ const CreateNotebook = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (credits < 1) {
+      setShowModal(true);
+    } else {
     setError(null);
-    setIsSubmitting(true);
+    setIsLoading(true);
 
     if (formData.name.includes('_') || formData.name.includes(' ')) {
       setError('Name cannot contain an underscore (_) or spaces.');
-      setIsSubmitting(false);
+      setIsLoading(false);
+      return;
+    }
+
+    if (formData.name === '') {
+      setError('Please enter name');
+      setIsLoading(false);
       return;
     }
 
@@ -80,10 +90,14 @@ const CreateNotebook = () => {
     } catch (err) {
       setError('An error occurred while creating the notebook');
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
+  }
   };
 
+  useEffect(()=>{
+    fetchCredits()
+  },[])
   return (
     <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white p-6">
       <Navbar />
@@ -205,8 +219,12 @@ const CreateNotebook = () => {
           </Select>
           </ButtonBase>
           <CustomButton 
-            text={'Create Notebook'} 
-            customCss={'mt-6'} 
+            disabled={isLoading}
+            text={isLoading=== true ? <>
+            <CircularProgress className="text-white" size={30}/> 
+            </>:
+            <>Create Notebook</>} 
+            customCss={`mt-6 ${isLoading===true? 'bg-[#e3e3e3]':'bg-[#1976D2]'}`} 
             onclickhandler={handleSubmit}
             type="submit" 
           />
@@ -214,6 +232,8 @@ const CreateNotebook = () => {
           
         </Box>
       </Box>
+      <CreditsModal showModal={showModal} onClose={() => setShowModal(false)}/>
+
     </Box>
   );
 }
