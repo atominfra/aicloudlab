@@ -56,8 +56,7 @@ const ProfilePage = () => {
   return (
     <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
       <Navbar />
-      <Box className="flex justify-center items-center gap-8 w-[90vw] h-[100vh]">
-        <Box className="flex flex-col space-y-4 border rounded-[10px] border-[#cccccc] p-10  w-[40vw]">
+        <Box className="flex flex-col space-y-4 border rounded-[10px] border-[#cccccc] p-10  w-[60vw]">
         <Box className=' flex flex-col gap-6'>
         <Typography variant="h5" className="font-bold ">
             Profile Page
@@ -73,7 +72,7 @@ const ProfilePage = () => {
             </Box>
             <Box className="flex  items-center w-full ">
               <Typography className="text-sm text-black w-[40%] ">E-mail Address</Typography>
-              <Typography className=' p-5 bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.phone}</Typography>
+              <Typography className=' p-5 bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.email}</Typography>
             </Box>
             </>
         </Box>
@@ -103,7 +102,7 @@ const ProfilePage = () => {
                 />
                 <Typography>GitHub</Typography>
               </Box>
-              <Button variant="contained" disabled>
+              <Button title='github' variant="contained" disabled>
                 Coming Soon
               </Button>
             </Box>
@@ -140,7 +139,6 @@ const ProfilePage = () => {
           
         </Box>
       </Box>
-    </Box>
   );
 }
 
