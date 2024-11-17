@@ -65,7 +65,7 @@ const NotebookPage = () => {
           className=' w-20 h-12 '
           alt="AI Cloud Lab Logo" />
       </Link>          <Box>
-          <Typography className='pl-2 text-2xl text-black font-poppins '>{notebook?.name}</Typography>
+          <Typography className='pl-2 text-2xl text-black  '>{notebook?.name}</Typography>
           </Box>
         </Box>
         <Box className="flex gap-8 items-center ">
@@ -79,7 +79,7 @@ const NotebookPage = () => {
     </button>
         <button
       // variant="contained"
-      className={` bg-white hover:bg-[#1976D2] hover:text-white text-black shadow-none  text-[15px] font-semibold font-poppins  rounded-[10px] border px-2 py-1 border-gray-300 flex gap-1 items-center`}
+      className={` bg-white hover:bg-[#1976D2] hover:text-white text-black shadow-none  text-[15px] font-semibold   rounded-[10px] border px-2 py-1 border-gray-300 flex gap-1 items-center`}
       onClick={()=>{}}
       style={{ textTransform: 'none' }}
     >
