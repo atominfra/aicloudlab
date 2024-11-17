@@ -65,7 +65,7 @@ const NotebookPage = () => {
           className=' w-20 h-12 '
           alt="AI Cloud Lab Logo" />
       </Link>          <Box>
-          <Typography className=' text-2xl text-black font-poppins '>{notebook?.name}</Typography>
+          <Typography className='pl-2 text-2xl text-black font-poppins '>{notebook?.name}</Typography>
           </Box>
         </Box>
         <Box className="flex gap-8 items-center ">

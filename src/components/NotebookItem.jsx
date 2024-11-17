@@ -84,7 +84,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
       <Typography variant="body2" className="text-[#111827] dark:text-white font-poppins">
         Python {version}
       </Typography>
-      <Box className="flex items-center justify-evenly font-poppins gap-10 w-[34%]">
+      <Box className="flex items-center justify-evenly font-poppins gap-10 w-[38%]">
         <ButtonBase
           title={isRunning ? 'Pause' : 'Start'}
           className={`text-gray-400 min-w-0 dark:hover:text-yellow-500 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
