@@ -83,7 +83,7 @@ export default function Login() {
         document.cookie = `access_token=Bearer ${responseData.data.access_token}; expires=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString()}; path=/; domain=.${window.location.hostname}`;
         window.location.href = '/dashboard' 
       } else {
-        console.error("Login failed", responseData);f
+        console.error("Login failed", responseData);
         setLoginError(responseData.message || 'An unexpected error occurred. Please try again.');
       }
     } catch (error) {

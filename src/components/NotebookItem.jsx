@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { GoLinkExternal } from "react-icons/go";
-import { IoMdPause } from "react-icons/io";
+import { IoIosArrowForward, IoMdPause } from "react-icons/io";
 import { MdSettings } from "react-icons/md";
 import Link from 'next/link';
 import { FaPlay } from "react-icons/fa";
@@ -175,9 +175,9 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
           <MdSettings className='dark:hover:text-yellow-500 text-2xl text-[#111827] dark:text-white' />
         </ButtonBase>
 
-        <Link href={notebook_url} target='_blank'>
+        <Link href={`/notebook/${id}`} target='_blank'>
           <Button
-            endIcon={<GoLinkExternal className='dark:hover:text-yellow-500 text-xl' />}
+            endIcon={<IoIosArrowForward className='dark:hover:text-yellow-500 text-xl' />}
             className="dark:hover:text-yellow-500 font-poppins text-[#111827] dark:text-white underline capitalize"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
