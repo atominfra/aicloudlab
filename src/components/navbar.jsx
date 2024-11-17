@@ -10,7 +10,7 @@ export default function Navbar() {
   const { resolvedTheme } = useTheme();
 
   return (
-    <Box className=" w-full p-6 flex justify-between select-none">
+    <Box className=" w-full p-2 flex justify-between select-none px-4">
         <Link className=" flex items-center" href={`/dashboard`}>
           <Image 
           src={resolvedTheme === 'dark' ? 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1729418783/cloud-lab-high-resolution-logo-grayscale-transparent_1_-_Edited_2_sogohi.webp' : 'https://res.cloudinary.com/dsfu8suwl/image/upload/v1729192530/cloud-lab-high-resolution-logo-grayscale-transparent_1_-_Edited_a4pbfi.webp'}
