@@ -120,7 +120,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
             class="block"
             className=" p-8 bg-white shadow-xl rounded-2xl item-center w-[35vw]"
           >
-            <p className="pr-10 pb-4 text-[22px] font-bold text-[#111827]">You are deleting &apos;{name}&apos;</p>
+            <p className="pr-10 pb-4 text-[22px] font-semibold text-[#111827]">You are deleting &apos;{name}&apos;</p>
             <p className="pb-4 text-[#111827] text-[18px]">If you&apos;re sure, type &apos;{name}&apos; to confirm.</p>
             <form onSubmit={handleSubmit}>
               <TextField
