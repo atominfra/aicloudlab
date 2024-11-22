@@ -150,7 +150,8 @@ const CreateNotebook = () => {
 
           <TextField
             fullWidth
-            label="Github URL "
+            label="Github URL (Optional)"
+            title="Github URL"
             name="githubURL"
             value={formData.githubURL}
             onChange={handleChange}
