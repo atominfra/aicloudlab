@@ -57,23 +57,23 @@ const ProfilePage = () => {
     <Box className="flex flex-col items-center bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
       <Navbar />
       <Box className='w-full flex justify-center  p-4'>
-      <Box className="flex flex-col space-y-4 border  rounded-[10px] w-[724px] border-[#cccccc] p-7  ">
+      <Box className="flex flex-col space-y-4 border  rounded-[10px] w-[500px] border-[#cccccc] p-7  ">
         <Box className=' flex flex-col gap-3'>
         <Typography className="font-semibold text-[22px] ">
             My Profile 
           </Typography>
             <>
             <Box className="flex  items-center w-full h-[51px]">
-              <Typography className="text-[15px] text-black w-[40%] ">Full Name</Typography>
-              <Typography className=' p-3 text-[15px] bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.full_name}</Typography>
+              <Typography className="text-[16px] text-black w-[40%] ">Full Name</Typography>
+              <Typography className=' p-3 text-[16px] bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.full_name}</Typography>
             </Box>
              <Box className="flex  items-center w-full h-[51px]">
-              <Typography className="text-[15px] text-black w-[40%] ">Phone Number</Typography>
-              <Typography className=' p-3 bg-white text-[15px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.phone}</Typography>
+              <Typography className="text-[16px] text-black w-[40%] ">Phone Number</Typography>
+              <Typography className=' p-3 bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.phone}</Typography>
             </Box>
             <Box className="flex  items-center w-full h-[51px] ">
-              <Typography className="text-[15px] text-black w-[40%] ">E-mail Address</Typography>
-              <Typography className=' p-3 bg-white text-[15px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.email}</Typography>
+              <Typography className="text-[16px] text-black w-[40%] ">E-mail Address</Typography>
+              <Typography className=' p-3 bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.email}</Typography>
             </Box>
             </>
         </Box>
@@ -82,6 +82,8 @@ const ProfilePage = () => {
               fullWidth
               className="bg-[rgba(255,0,0,0.72)] text-white font-semibold text-[15px] w-[121px] h-[39px] text-center rounded-[10px]"
               onClick={handleLogout}
+              style={{ textTransform: 'none' }}
+
             >
               Log Out
             </Button>
@@ -100,9 +102,11 @@ const ProfilePage = () => {
                 width={24}
                 height={24}
                 />
-                <Typography>GitHub</Typography>
+                <Typography className='text-[16px]'>GitHub</Typography>
               </Box>
-              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]'>
+              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]' 
+                style={{ textTransform: 'none' }}
+              >
                 Coming Soon
               </Button>
             </Box>
@@ -114,9 +118,11 @@ const ProfilePage = () => {
                 width={24}
                 height={24}
                 />
-                <Typography>Google Drive</Typography>
+                <Typography className='text-[16px]'>Google Drive</Typography>
               </Box>
-              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]'>
+              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]'
+                style={{ textTransform: 'none' }}
+              >
                 Coming Soon
               </Button>
             </Box>
@@ -128,9 +134,11 @@ const ProfilePage = () => {
                 width={24}
                 height={24}
                 />
-                <Typography>Hugging Face</Typography>
+                <Typography className='text-[16px]'>Hugging Face</Typography>
               </Box>
-              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]'>
+              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]'
+                style={{ textTransform: 'none' }}
+                >
                 Coming Soon
               </Button>
             </Box>
