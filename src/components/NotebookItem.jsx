@@ -16,6 +16,7 @@ import { FaPlay } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import CircularProgress from '@mui/material/CircularProgress';
 import CustomButton from "./ui/button";
+import { useRouter } from "next/navigation";
 export default function NotebookItem({ id, name, version, status, notebook_url, onOperation }) {
   const [isHovered, setIsHovered] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -26,7 +27,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
   const handleClose = () => setOpen(false);
   const [inputValue, setInputValue] = useState("");
   const [isError, setIsError] = useState(false);
-
+  const router= useRouter()
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
@@ -173,17 +174,18 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
           <MdSettings className='dark:hover:text-yellow-500 h-[26px] w-[26px] text-[#111827] dark:text-white' />
         </div>
 
-        <Link href={`/notebook/${id}`} target='_blank'>
+        {/* <Link href={`/notebook/${id}`} target='_blank'> */}
           <Button
             // endIcon={<IoIosArrowForward className='dark:hover:text-yellow-500 text-lg pb-1 m-0' />}
             className="dark:hover:text-yellow-500 font-poppins text-[#111827] dark:text-white  capitalize"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            onClick={()=>router.push(`/notebook/${id}`)}
           >
             Go to notebook
             <IoIosArrowForward className='dark:hover:text-yellow-500 text-lg pb-[2px] m-0' />
           </Button>
-        </Link>
+        {/* </Link> */}
       </Box>
     </Box>
   );
