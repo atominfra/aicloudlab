@@ -94,11 +94,11 @@ const NotebooksPage = () => {
     <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white">
       <Navbar />
 
-      <Box className="w-[90%] text-end px-6 flex justify-between">
-        <Typography variant="h4" className="font-bold font-poppins">
+      <Box className="w-[90%] text-end px-6 flex justify-between mt-8">
+        <Typography variant="h4" className="font-bold font-poppins text-[28px]" >
           Notebooks
         </Typography>
-        <CustomButton text={'+ Create'} onclickhandler={handleCreateClick} />
+        <CustomButton text={'+ Create'} onclickhandler={handleCreateClick} customCss={"text-[18px]"} />
       </Box>
 
       {loading ? (
