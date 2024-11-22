@@ -80,7 +80,7 @@ const ProfilePage = () => {
             <Box className="pt-2 w-full flex justify-end pr-4">
             <Button
               fullWidth
-              className="bg-[rgba(255,0,0,0.72)] text-white font-semibold text-[15px] w-[121px] h-[39px] text-center rounded-[10px]"
+              className="bg-red-600 text-white font-semibold text-[15px] w-[121px] h-[39px] text-center rounded-[10px]"
               onClick={handleLogout}
               style={{ textTransform: 'none' }}
 
