@@ -24,7 +24,7 @@ const CreateNotebook = () => {
   const { resolvedTheme } = useTheme();
   const [showModal, setShowModal] = useState(false);
   const [isNameTouched,setIsNameTouched] = useState(false)
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handlePopoverOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -261,7 +261,7 @@ const CreateNotebook = () => {
             <CircularProgress className="text-white" size={30}/> 
             </>:
             <>Create Notebook</>} 
-            customCss={`mt-6 ${isLoading===true ? 'bg-[#e3e3e3]':'bg-[#1976D2]'}`} 
+            customCss={`mt-6 ${isLoading===true ? 'bg-[#e3e3e3]':'bg-[#1976D2]'} text-white`} 
             onclickhandler={handleSubmit}
             type="submit" 
           />
