@@ -27,7 +27,7 @@ export default function CreditsModal({ showModal, onClose }:{
           <CustomButton
             text="Upgrade"
             onclickhandler={() => toast.success('Coming Soon')}
-            customCss="w-[50%] bg-[#1976D2]"
+            customCss="w-[50%] bg-[#1976D2] text-white"
           />
         </Box>
       <Toaster position="bottom-right" />

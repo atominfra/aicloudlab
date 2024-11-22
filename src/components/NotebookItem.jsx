@@ -122,7 +122,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
             className=" p-8 bg-white shadow-xl rounded-2xl item-center w-[35vw]"
           >
             <p className="pr-10 pb-4 text-[22px] font-semibold text-[#111827]">You are deleting &apos;{name}&apos;</p>
-            <p className="pb-4 text-[#111827] text-[18px]">If you&apos;re sure, type &apos;{name}&apos; to confirm.</p>
+            <p className="pb-4 text-gray-600 text-lg">If you&apos;re sure, type &apos;{name}&apos; to confirm.</p>
             <form onSubmit={handleSubmit}>
               <TextField
                 fullWidth
@@ -163,7 +163,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
                 <CustomButton
                   text="Delete Notebook"
                   onclickhandler={handleSubmit}
-                  customCss="w-[50%] bg-red-600"
+                  customCss="w-[50%] bg-red-600 text-white"
                 />
               </Box>
 
