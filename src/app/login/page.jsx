@@ -182,13 +182,13 @@ export default function Login() {
               />
                 {loginError && <Typography className="text-red-600">{loginError}</Typography>} 
               <Box className="w-full flex flex-col gap-4 mt-6">
-                <CustomButton text={'Login'} customCss='w-full' onclickhandler={handleLogin}/>
+                <CustomButton text={'Login'} customCss='w-full text-white' onclickhandler={handleLogin}/>
                 <div className='text-[#111827] w-full flex items-center'>
                   <hr style={{ flex: 1, border: 'none', borderTop: '1px solid black' }} />
                   <Typography className='font-poppins mx-1'>OR</Typography>
                   <hr style={{ flex: 1, border: 'none', borderTop: '1px solid black' }} />
                 </div>
-                <CustomButton text={'Sign up for new account'} onclickhandler={() => window.location.href='/signup'} customCss='w-full'/>
+                <CustomButton text={'Sign up for new account'} onclickhandler={() => window.location.href='/signup'} customCss='w-full text-white'/>
               </Box>
             </form>
           </div>

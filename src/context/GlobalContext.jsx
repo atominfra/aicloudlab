@@ -23,7 +23,7 @@ export const GlobalProvider = ({ children }) => {
             setCredits(data.data.credits); 
         } 
         } catch (err) {
-        console.err('An error occurred while fetching credits');
+        console.log('An error occurred while fetching credits');
         }
     };
 

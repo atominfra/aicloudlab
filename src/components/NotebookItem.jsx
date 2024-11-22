@@ -9,23 +9,26 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from 'react';
 import { GoLinkExternal } from "react-icons/go";
-import { IoMdPause } from "react-icons/io";
+import { IoIosArrowForward, IoMdPause } from "react-icons/io";
 import { MdSettings } from "react-icons/md";
 import Link from 'next/link';
 import { FaPlay } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import CircularProgress from '@mui/material/CircularProgress';
+import CustomButton from "./ui/button";
+import { useRouter } from "next/navigation";
+import Popper from '@mui/material/Popper';
 export default function NotebookItem({ id, name, version, status, notebook_url, onOperation }) {
   const [isHovered, setIsHovered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isRunning,setIsRunning] = useState(false);
   const [open, setOpen] = useState(false);
-
+  const [anchorEl, setAnchorEl] = useState(null);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [inputValue, setInputValue] = useState("");
   const [isError, setIsError] = useState(false);
-
+  const router= useRouter()
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
@@ -69,40 +72,39 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
   };
 
   return (
-    <Box className="flex items-center justify-between bg-white dark:bg-gray-800 text-[#111827] dark:text-white p-4 rounded-lg mb-2 w-[90%] border-2 border-[#111827] dark:border-0">
-      <Box className='w-[16%]'>
-        <Typography variant="body1" className="font-poppins">
+    <Box className="flex items-center justify-between bg-white dark:bg-gray-800 text-[#111827] dark:text-white p-4 h-[60px]  mb-2 w-[90%] border rounded-[20px] border-gray-300 ">
+      <Box className='w-[16%] px-4'>
+        <Typography  className="font-poppins text-[16px]">
           {name}
         </Typography>
       </Box>
       <Typography 
-        variant="body2" 
-        className={`text-[#111827] font-poppins capitalize font-bold`}
+        className={`text-[#111827] font-poppins capitalize font-semibold text-[16px]`}
       >
         {status}
       </Typography>
-      <Typography variant="body2" className="text-[#111827] dark:text-white font-poppins">
+      <Typography className="text-[#111827] dark:text-white font-poppins text-[16px]">
         Python {version}
       </Typography>
-      <Box className="flex items-center justify-evenly font-poppins gap-10 w-[34%]">
-        <ButtonBase
+      <Box className="flex items-center justify-evenly font-poppins gap-10 w-[40%]">
+        <div
           title={isRunning ? 'Pause' : 'Start'}
-          className={`text-gray-400 min-w-0 dark:hover:text-yellow-500 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`text-gray-400 min-w-0 hover:cursor-pointer dark:hover:text-yellow-500 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
           onClick={handleToggle}
           disabled={loading}
         >
           {loading ? (
             <CircularProgress className="text-black" size={24}/> 
           ) : isRunning ? (
-            <IoMdPause className='dark:hover:text-yellow-500 text-2xl text-[#111827] dark:text-white' />
+            <IoMdPause className='dark:hover:text-yellow-500 h-[20px] w-[20px] text-[#111827] dark:text-white' />
           ) : (
-            <FaPlay className='dark:hover:text-yellow-500 text-2xl text-[#111827] dark:text-white' />
+            <FaPlay className='dark:hover:text-yellow-500 h-[20px] w-[20px] text-[#111827] dark:text-white' />
           )}
-        </ButtonBase>
+        </div>
 
         <button
           title="Delete"
-          className="text-red-600 hover:text-white hover:ease-in duration-100 font-bold border border-2 border-red-600 px-2 py-2 rounded-2xl hover:bg-red-600"
+          className="text-red-600 hover:text-white hover:ease-in duration-100  h-[38px] w-[88px] text-[16px] font-semibold border-[1px] border-red-600 rounded-[200px] hover:bg-red-600"
           onClick={handleOpen}
         >
           Delete
@@ -117,10 +119,10 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
         >
           <div
             class="block"
-            className=" p-8 bg-white shadow-xl rounded-2xl item-center"
+            className=" p-8 bg-white shadow-xl rounded-2xl item-center w-[35vw]"
           >
-            <p className="pr-10 pb-4 font-bold text-[#111827]">You are deleting &apos;{name}&apos;</p>
-            <p className="pb-4 text-[#111827]">Type &apos;{name}&apos; to confirm.</p>
+            <p className="pr-10 pb-4 text-[22px] font-semibold text-[#111827]">You are deleting &apos;{name}&apos;</p>
+            <p className="pb-4 text-gray-600 text-lg">If you&apos;re sure, type &apos;{name}&apos; to confirm.</p>
             <form onSubmit={handleSubmit}>
               <TextField
                 fullWidth
@@ -152,39 +154,38 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
                   },
                 }}
               />
-              <div className="block space-x-8 p-4 pl-0">
-                <button
-                  onClick={handleClose}
-                  className="text-[#111827] hover:ease-in duration-100 font-bold min-w-0 px-8 py-1.5 rounded-xl border border-2 border-[#111827]"
-                >
-                  No, cancel.
-                </button>
-                <button
-                  type="submit"
-                  className="text-white bg-red-600 hover:ease-in duration-100 font-bold px-2 py-2 rounded-xl"
-                >
-                  Delete Notebook
-                </button>
-              </div>
-
+              <Box className="flex w-full justify-between gap-4 pt-4">
+                <CustomButton
+                  text="No, cancel"
+                  onclickhandler={handleClose}
+                  customCss="w-[50%] bg-[#e3e3e3] text-black shadow-none"
+                />
+                <CustomButton
+                  text="Delete Notebook"
+                  onclickhandler={handleSubmit}
+                  customCss="w-[50%] bg-red-600 text-white"
+                />
+              </Box>
             </form>
           </div>
         </Modal>
 
-        <ButtonBase title='Coming Soon' className="text-gray-400 min-w-0 dark:hover:text-yellow-500" >
-          <MdSettings className='dark:hover:text-yellow-500 text-3xl text-[#111827] dark:text-white' />
-        </ButtonBase>
+        {/* <div title='Coming Soon' className="text-gray-400 min-w-0 dark:hover:text-yellow-500 hover:cursor-pointer" >
+          <MdSettings className='dark:hover:text-yellow-500 h-[26px] w-[26px] text-[#111827] dark:text-white' />
+        </div> */}
 
-        <Link href={notebook_url} target='_blank'>
-          <Button
-            endIcon={<GoLinkExternal className='dark:hover:text-yellow-500 text-xl' />}
-            className="dark:hover:text-yellow-500 font-poppins text-[#111827] dark:text-white underline capitalize"
+        {/* <Link href={`/notebook/${id}`} target='_blank'> */}
+          <Box
+            // endIcon={<IoIosArrowForward className='dark:hover:text-yellow-500 text-lg pb-1 m-0' />}
+            className=" font-poppins text-[#111827] hover:text-gray-600 capitalize flex items-center justify-center hover:cursor-pointer"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            onClick={()=>router.push(`/notebook/${id}`)}
           >
             Go to notebook
-          </Button>
-        </Link>
+            <IoIosArrowForward className=' text-lg pb-[2px] m-0' />
+          </Box>
+        {/* </Link> */}
       </Box>
     </Box>
   );

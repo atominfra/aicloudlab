@@ -9,7 +9,11 @@ import { PiUserCircleFill } from "react-icons/pi";
 import Navbar from '@/components/navbar';
 import { useTheme } from 'next-themes';
 import withAuth from '@/components/withAuth';
-
+import { SiHuggingface } from 'react-icons/si';
+import github from "@/assets/github.png"
+import gdrive from "@/assets/googledrive.png"
+import huggingface from "@/assets//huggingface.png"
+import Image from 'next/image';
 interface User {
   full_name: string;
   email: string;
@@ -50,34 +54,100 @@ const ProfilePage = () => {
     window.location.href = "/"
   }
   return (
-    <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white">
+    <Box className="flex flex-col items-center bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
       <Navbar />
-      <Box className="flex justify-center items-center gap-8 w-[90vw] h-[70vh]">
-        <Box className='w-[25vw] flex justify-center items-center'>
-          <PiUserCircleFill size={200} />
-        </Box>
-        <Box className="flex flex-col space-y-4 border-l-2 border-[#666666] p-10 pl-16 w-[40vw]">
-          {user && (
+      <Box className='w-full flex justify-center  p-4'>
+      <Box className="flex flex-col space-y-4 border  rounded-[10px] w-[500px] border-[#cccccc] p-7  ">
+        <Box className=' flex flex-col gap-3'>
+        <Typography className="font-semibold text-[22px] ">
+            My Profile 
+          </Typography>
             <>
-              <Typography className=' p-4 bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-black rounded-[10px]'>{user.full_name}</Typography>
-              <Typography className=' p-4 bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-black rounded-[10px]'>{user.email}</Typography>
-              <Typography className=' p-4 bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-black rounded-[10px]'>{user.phone}</Typography>
+            <Box className="flex  items-center w-full h-[51px]">
+              <Typography className="text-[16px] text-black w-[40%] ">Full Name</Typography>
+              <Typography className=' p-3 text-[16px] bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.full_name}</Typography>
+            </Box>
+             <Box className="flex  items-center w-full h-[51px]">
+              <Typography className="text-[16px] text-black w-[40%] ">Phone Number</Typography>
+              <Typography className=' p-3 bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.phone}</Typography>
+            </Box>
+            <Box className="flex  items-center w-full h-[51px] ">
+              <Typography className="text-[16px] text-black w-[40%] ">E-mail Address</Typography>
+              <Typography className=' p-3 bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.email}</Typography>
+            </Box>
             </>
-          )}
-          <Box className="pt-4">
+        </Box>
+            <Box className="pt-2 w-full flex justify-end pr-4">
             <Button
-              variant="contained"
-              color="error"
               fullWidth
-              className="bg-red-500 hover:bg-red-600 text-white w-[200px] text-center rounded-[10px]"
+              className="bg-red-600 text-white font-semibold text-[15px] w-[121px] h-[39px] text-center rounded-[10px]"
               onClick={handleLogout}
+              style={{ textTransform: 'none' }}
+
             >
               Log Out
             </Button>
+
+          </Box>
+          <Box className='pt-5'>
+          <Typography  className=" mb-5 text-[22px] font-semibold">
+            Connected Accounts
+          </Typography>
+          <Box className="space-y-4">
+            <Box className="flex items-center justify-between p-3 border rounded-[10px] h-[70px]">
+              <Box className="flex items-center space-x-2">
+                <Image 
+                src={github}
+                alt="github Icon"
+                width={24}
+                height={24}
+                />
+                <Typography className='text-[16px]'>GitHub</Typography>
+              </Box>
+              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]' 
+                style={{ textTransform: 'none' }}
+              >
+                Coming Soon
+              </Button>
+            </Box>
+            <Box className="flex items-center justify-between  p-3 border rounded-[10px] h-[70px]">
+              <Box className="flex items-center space-x-2">
+                <Image 
+                src={gdrive}
+                alt="github Icon"
+                width={24}
+                height={24}
+                />
+                <Typography className='text-[16px]'>Google Drive</Typography>
+              </Box>
+              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]'
+                style={{ textTransform: 'none' }}
+              >
+                Coming Soon
+              </Button>
+            </Box>
+            <Box className="flex items-center justify-between p-3 border rounded-[10px] h-[70px]">
+              <Box className="flex items-center space-x-2">
+                <Image 
+                src={huggingface}
+                alt="github Icon"
+                width={24}
+                height={24}
+                />
+                <Typography className='text-[16px]'>Hugging Face</Typography>
+              </Box>
+              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]'
+                style={{ textTransform: 'none' }}
+                >
+                Coming Soon
+              </Button>
+            </Box>
           </Box>
         </Box>
+          
+        </Box>
+        </Box> 
       </Box>
-    </Box>
   );
 }
 

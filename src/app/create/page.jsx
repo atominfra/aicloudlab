@@ -1,6 +1,6 @@
 'use client';
 import React, { useState,useEffect } from 'react';
-import { Typography, Box, TextField, Select, MenuItem, ButtonBase, CircularProgress } from '@mui/material';
+import { Typography, Box, TextField, Select, MenuItem, ButtonBase, CircularProgress, Popover } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { RiArrowDropDownLine } from "react-icons/ri";
 import Navbar from '../../components/navbar';
@@ -23,16 +23,33 @@ const CreateNotebook = () => {
   const [error, setError] = useState(null);
   const { resolvedTheme } = useTheme();
   const [showModal, setShowModal] = useState(false);
+  const [isNameTouched,setIsNameTouched] = useState(false)
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handlePopoverOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({
       ...formData,
       [name]: value
     });
+    if (name === 'name' && value.trim() !== '') {
+      setIsNameTouched(true); 
+    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsNameTouched(true); 
     if (credits < 1) {
       setShowModal(true);
     } else {
@@ -41,6 +58,12 @@ const CreateNotebook = () => {
 
     if (formData.name.includes('_') || formData.name.includes(' ')) {
       setError('Name cannot contain an underscore (_) or spaces.');
+      setIsLoading(false);
+      return;
+    }
+
+    if (formData.name === '') {
+      setError('Please enter name');
       setIsLoading(false);
       return;
     }
@@ -93,26 +116,31 @@ const CreateNotebook = () => {
     fetchCredits()
   },[])
   return (
-    <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white p-6">
+    <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
       <Navbar />
       
-      <Box className="w-full max-w-md">
-        <Typography variant="h4" className="text-center text-3xl mb-10 font-poppins">
+      <Box className="w-full max-w-md p-6">
+        <Typography variant="h4" className="text-center text-3xl mb-10 font-poppins ">
           Create Notebook
         </Typography>
         
         <Box component="form" onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <ButtonBase title='Name'>
           <TextField
             fullWidth
+            title="Name"
             label="Name"
             name="name"
             value={formData.name}
             onChange={handleChange}
             variant="outlined"
-            required
-            error={formData.name.includes('_') || formData.name.includes(' ')}
-              helperText={(formData.name.includes('_') || formData.name.includes(' ')) ? 'Name cannot contain an underscore (_) or spaces.' : ''}
+            error={isNameTouched && (formData.name === '' || formData.name.includes('_') || formData.name.includes(' '))}
+            helperText={
+              isNameTouched && formData.name === ''
+                ? 'Name cannot be empty.'
+                : isNameTouched && (formData.name.includes('_') || formData.name.includes(' '))
+                ? 'Name cannot contain an underscore (_) or spaces.'
+                : ''
+            }          
             InputProps={{
               className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
             }}
@@ -131,12 +159,11 @@ const CreateNotebook = () => {
               }
             }}
           />
-        </ButtonBase>   
 
-          <ButtonBase title= 'Coming Soon'>
           <TextField
             fullWidth
-            label="Github URL "
+            label="Github URL (Optional)"
+            title="Github URL"
             name="githubURL"
             value={formData.githubURL}
             onChange={handleChange}
@@ -159,12 +186,11 @@ const CreateNotebook = () => {
               }
             }}
           />
-          </ButtonBase>
 
-          <ButtonBase title='Python Version'>
             <Select
               fullWidth
               name="pythonVersion"
+              title="Python Version"
               value={formData.pythonVersion}
               onChange={handleChange}
               displayEmpty
@@ -184,17 +210,35 @@ const CreateNotebook = () => {
               <MenuItem value="3.9">Python 3.9</MenuItem>
               <MenuItem value="3.10">Python 3.10</MenuItem>
             </Select>
-          </ButtonBase>
-
-          <ButtonBase title='Coming Soon'>
+            <Popover
+              id="mouse-over-popover"
+              sx={{ pointerEvents: 'none', m: 1 }}
+              open={open}
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'left',
+              }}
+              onClose={handlePopoverClose}
+              disableRestoreFocus
+            >
+              <Typography sx={{ p: 1 }}>Feature coming soon</Typography>
+            </Popover>
           <Select
           disabled
             fullWidth
             name="packages"
+            title='Select packages (Coming Soon)'
             value={formData.packages}
             onChange={handleChange}
             displayEmpty
             variant="outlined"
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
             className="bg-white dark:bg-gray-800 text-[#111827] dark:text-white font-poppins rounded-[10px]"
             IconComponent={(props) => (
               <RiArrowDropDownLine {...props} style={{ color: resolvedTheme === "dark"?'white':'black', fontSize: '30px' }} />
@@ -205,20 +249,19 @@ const CreateNotebook = () => {
               '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: resolvedTheme === "dark"?'white':'black' }
             }}
           >
-            <MenuItem disabled value="">Select Packages</MenuItem>
+            <MenuItem disabled value="">Select Packages (Coming Soon) </MenuItem>
             <MenuItem value="numpy">Numpy</MenuItem>
             <MenuItem value="pandas">Pandas</MenuItem>
             <MenuItem value="scikit-learn">Scikit-Learn</MenuItem>
             <MenuItem value="matplotlib">Matplotlib</MenuItem>
           </Select>
-          </ButtonBase>
           <CustomButton 
             disabled={isLoading}
             text={isLoading=== true ? <>
             <CircularProgress className="text-white" size={30}/> 
             </>:
             <>Create Notebook</>} 
-            customCss={`mt-6 ${isLoading===true? 'bg-[#e3e3e3]':'bg-[#1976D2]'}`} 
+            customCss={`mt-6 ${isLoading===true ? 'bg-[#e3e3e3]':'bg-[#1976D2]'} text-white`} 
             onclickhandler={handleSubmit}
             type="submit" 
           />
