@@ -23,16 +23,21 @@ const CreateNotebook = () => {
   const [error, setError] = useState(null);
   const { resolvedTheme } = useTheme();
   const [showModal, setShowModal] = useState(false);
+  const [isNameTouched,setIsNameTouched] = useState(false)
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData({
       ...formData,
       [name]: value
     });
+    if (name === 'name' && value.trim() !== '') {
+      setIsNameTouched(true); 
+    }
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setIsNameTouched(true); 
     if (credits < 1) {
       setShowModal(true);
     } else {
@@ -108,17 +113,22 @@ const CreateNotebook = () => {
         </Typography>
         
         <Box component="form" onSubmit={handleSubmit} className="flex flex-col gap-4">
-        <ButtonBase title='Name'>
           <TextField
             fullWidth
+            title="Name"
             label="Name"
             name="name"
             value={formData.name}
             onChange={handleChange}
             variant="outlined"
-            required
-            error={formData.name.includes('_') || formData.name.includes(' ')}
-              helperText={(formData.name.includes('_') || formData.name.includes(' ')) ? 'Name cannot contain an underscore (_) or spaces.' : ''}
+            error={isNameTouched && (formData.name === '' || formData.name.includes('_') || formData.name.includes(' '))}
+            helperText={
+              isNameTouched && formData.name === ''
+                ? 'Name cannot be empty.'
+                : isNameTouched && (formData.name.includes('_') || formData.name.includes(' '))
+                ? 'Name cannot contain an underscore (_) or spaces.'
+                : ''
+            }          
             InputProps={{
               className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
             }}
@@ -137,9 +147,7 @@ const CreateNotebook = () => {
               }
             }}
           />
-        </ButtonBase>   
 
-          <ButtonBase title= 'Coming Soon'>
           <TextField
             fullWidth
             label="Github URL "
@@ -165,12 +173,11 @@ const CreateNotebook = () => {
               }
             }}
           />
-          </ButtonBase>
 
-          <ButtonBase title='Python Version'>
             <Select
               fullWidth
               name="pythonVersion"
+              title="Python Version"
               value={formData.pythonVersion}
               onChange={handleChange}
               displayEmpty
@@ -190,9 +197,7 @@ const CreateNotebook = () => {
               <MenuItem value="3.9">Python 3.9</MenuItem>
               <MenuItem value="3.10">Python 3.10</MenuItem>
             </Select>
-          </ButtonBase>
 
-          <ButtonBase title='Coming Soon'>
           <Select
           disabled
             fullWidth
@@ -217,14 +222,13 @@ const CreateNotebook = () => {
             <MenuItem value="scikit-learn">Scikit-Learn</MenuItem>
             <MenuItem value="matplotlib">Matplotlib</MenuItem>
           </Select>
-          </ButtonBase>
           <CustomButton 
             disabled={isLoading}
             text={isLoading=== true ? <>
             <CircularProgress className="text-white" size={30}/> 
             </>:
             <>Create Notebook</>} 
-            customCss={`mt-6 ${isLoading===true? 'bg-[#e3e3e3]':'bg-[#1976D2]'}`} 
+            customCss={`mt-6 ${isLoading===true ? 'bg-[#e3e3e3]':'bg-[#1976D2]'}`} 
             onclickhandler={handleSubmit}
             type="submit" 
           />
