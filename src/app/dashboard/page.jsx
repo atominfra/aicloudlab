@@ -98,7 +98,7 @@ const NotebooksPage = () => {
         <Typography variant="h4" className="font-bold font-poppins text-[28px]" >
           Notebooks
         </Typography>
-        <CustomButton text={'+ Create'} onclickhandler={handleCreateClick} customCss={"text-[18px]"} />
+        <CustomButton text={'+ Create'} onclickhandler={handleCreateClick} customCss={"text-[18px] text-white"} />
       </Box>
 
       {loading ? (
