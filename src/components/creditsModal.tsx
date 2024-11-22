@@ -30,7 +30,7 @@ export default function CreditsModal({ showModal, onClose }:{
             customCss="w-[50%] bg-[#1976D2]"
           />
         </Box>
-    <Toaster />
+      <Toaster position="bottom-right" />
 
       </Box>
 
