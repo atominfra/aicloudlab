@@ -116,11 +116,11 @@ const CreateNotebook = () => {
     fetchCredits()
   },[])
   return (
-    <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white p-6">
+    <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
       <Navbar />
       
-      <Box className="w-full max-w-md">
-        <Typography variant="h4" className="text-center text-3xl mb-10 font-poppins">
+      <Box className="w-full max-w-md p-6">
+        <Typography variant="h4" className="text-center text-3xl mb-10 font-poppins ">
           Create Notebook
         </Typography>
         
