@@ -17,12 +17,13 @@ import { MdDelete } from "react-icons/md";
 import CircularProgress from '@mui/material/CircularProgress';
 import CustomButton from "./ui/button";
 import { useRouter } from "next/navigation";
+import Popper from '@mui/material/Popper';
 export default function NotebookItem({ id, name, version, status, notebook_url, onOperation }) {
   const [isHovered, setIsHovered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isRunning,setIsRunning] = useState(false);
   const [open, setOpen] = useState(false);
-
+  const [anchorEl, setAnchorEl] = useState(null);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [inputValue, setInputValue] = useState("");
