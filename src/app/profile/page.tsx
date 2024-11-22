@@ -54,45 +54,45 @@ const ProfilePage = () => {
     window.location.href = "/"
   }
   return (
-    <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
+    <Box className="flex flex-col items-center bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
       <Navbar />
-        <Box className="flex flex-col space-y-4 border rounded-[10px] border-[#cccccc] p-10  w-[60vw]">
-        <Box className=' flex flex-col gap-6'>
-        <Typography variant="h5" className="font-bold ">
-            Profile Page
+      <Box className='w-full flex justify-center  p-4'>
+      <Box className="flex flex-col space-y-4 border  rounded-[10px] w-[724px] border-[#cccccc] p-7  ">
+        <Box className=' flex flex-col gap-3'>
+        <Typography className="font-semibold text-[22px] ">
+            My Profile 
           </Typography>
             <>
-            <Box className="flex  items-center w-full">
-              <Typography className="text-sm text-black w-[40%] ">Full Name</Typography>
-              <Typography className=' p-5 bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.full_name}</Typography>
+            <Box className="flex  items-center w-full h-[51px]">
+              <Typography className="text-[15px] text-black w-[40%] ">Full Name</Typography>
+              <Typography className=' p-3 text-[15px] bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.full_name}</Typography>
             </Box>
-             <Box className="flex  items-center w-full">
-              <Typography className="text-sm text-black w-[40%] ">Phone Number</Typography>
-              <Typography className=' p-5 bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.phone}</Typography>
+             <Box className="flex  items-center w-full h-[51px]">
+              <Typography className="text-[15px] text-black w-[40%] ">Phone Number</Typography>
+              <Typography className=' p-3 bg-white text-[15px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.phone}</Typography>
             </Box>
-            <Box className="flex  items-center w-full ">
-              <Typography className="text-sm text-black w-[40%] ">E-mail Address</Typography>
-              <Typography className=' p-5 bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.email}</Typography>
+            <Box className="flex  items-center w-full h-[51px] ">
+              <Typography className="text-[15px] text-black w-[40%] ">E-mail Address</Typography>
+              <Typography className=' p-3 bg-white text-[15px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.email}</Typography>
             </Box>
             </>
         </Box>
-            <Box className="pt-4 w-full flex justify-end">
+            <Box className="pt-2 w-full flex justify-end pr-4">
             <Button
-              variant="contained"
-              color="error"
               fullWidth
-              className="bg-[#FF0000] text-white w-[150px] text-center rounded-[10px]"
+              className="bg-[rgba(255,0,0,0.72)] text-white font-semibold text-[15px] w-[121px] h-[39px] text-center rounded-[10px]"
               onClick={handleLogout}
             >
               Log Out
             </Button>
+
           </Box>
-          <Box className='pt-10'>
-          <Typography variant="h5" className="font-bold mb-10">
+          <Box className='pt-5'>
+          <Typography  className=" mb-5 text-[22px] font-semibold">
             Connected Accounts
           </Typography>
           <Box className="space-y-4">
-            <Box className="flex items-center justify-between p-4 border rounded-[10px]">
+            <Box className="flex items-center justify-between p-3 border rounded-[10px] h-[70px]">
               <Box className="flex items-center space-x-2">
                 <Image 
                 src={github}
@@ -102,11 +102,11 @@ const ProfilePage = () => {
                 />
                 <Typography>GitHub</Typography>
               </Box>
-              <Button title='github' variant="contained" disabled>
+              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]'>
                 Coming Soon
               </Button>
             </Box>
-            <Box className="flex items-center justify-between p-4 border rounded-[10px]">
+            <Box className="flex items-center justify-between  p-3 border rounded-[10px] h-[70px]">
               <Box className="flex items-center space-x-2">
                 <Image 
                 src={gdrive}
@@ -116,11 +116,11 @@ const ProfilePage = () => {
                 />
                 <Typography>Google Drive</Typography>
               </Box>
-              <Button variant="contained" disabled>
+              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]'>
                 Coming Soon
               </Button>
             </Box>
-            <Box className="flex items-center justify-between p-4 border rounded-[10px]">
+            <Box className="flex items-center justify-between p-3 border rounded-[10px] h-[70px]">
               <Box className="flex items-center space-x-2">
                 <Image 
                 src={huggingface}
@@ -130,7 +130,7 @@ const ProfilePage = () => {
                 />
                 <Typography>Hugging Face</Typography>
               </Box>
-              <Button variant="contained" disabled>
+              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]'>
                 Coming Soon
               </Button>
             </Box>
@@ -138,6 +138,7 @@ const ProfilePage = () => {
         </Box>
           
         </Box>
+        </Box> 
       </Box>
   );
 }
