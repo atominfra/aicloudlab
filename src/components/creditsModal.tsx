@@ -26,7 +26,7 @@ export default function CreditsModal({ showModal, onClose }:{
           />
           <CustomButton
             text="Upgrade"
-            onclickhandler={() => toast.success('Comming Soon')}
+            onclickhandler={() => toast.success('Coming Soon')}
             customCss="w-[50%] bg-[#1976D2]"
           />
         </Box>
