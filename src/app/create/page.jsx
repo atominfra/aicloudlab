@@ -202,6 +202,7 @@ const CreateNotebook = () => {
           disabled
             fullWidth
             name="packages"
+            title='Select packages (Coming Soon)'
             value={formData.packages}
             onChange={handleChange}
             displayEmpty
@@ -216,7 +217,7 @@ const CreateNotebook = () => {
               '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: resolvedTheme === "dark"?'white':'black' }
             }}
           >
-            <MenuItem disabled value="">Select Packages</MenuItem>
+            <MenuItem disabled value="">Select Packages (Coming Soon) </MenuItem>
             <MenuItem value="numpy">Numpy</MenuItem>
             <MenuItem value="pandas">Pandas</MenuItem>
             <MenuItem value="scikit-learn">Scikit-Learn</MenuItem>
