@@ -166,7 +166,6 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
                   customCss="w-[50%] bg-red-600 text-white"
                 />
               </Box>
-
             </form>
           </div>
         </Modal>
@@ -176,16 +175,16 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
         </div> */}
 
         {/* <Link href={`/notebook/${id}`} target='_blank'> */}
-          <Button
+          <Box
             // endIcon={<IoIosArrowForward className='dark:hover:text-yellow-500 text-lg pb-1 m-0' />}
-            className="dark:hover:text-yellow-500 font-poppins text-[#111827] dark:text-white  capitalize"
+            className=" font-poppins text-[#111827] hover:text-gray-600 capitalize flex items-center justify-center hover:cursor-pointer"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             onClick={()=>router.push(`/notebook/${id}`)}
           >
             Go to notebook
-            <IoIosArrowForward className='dark:hover:text-yellow-500 text-lg pb-[2px] m-0' />
-          </Button>
+            <IoIosArrowForward className=' text-lg pb-[2px] m-0' />
+          </Box>
         {/* </Link> */}
       </Box>
     </Box>
