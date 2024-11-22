@@ -171,9 +171,9 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
           </div>
         </Modal>
 
-        <div title='Coming Soon' className="text-gray-400 min-w-0 dark:hover:text-yellow-500 hover:cursor-pointer" >
+        {/* <div title='Coming Soon' className="text-gray-400 min-w-0 dark:hover:text-yellow-500 hover:cursor-pointer" >
           <MdSettings className='dark:hover:text-yellow-500 h-[26px] w-[26px] text-[#111827] dark:text-white' />
-        </div>
+        </div> */}
 
         {/* <Link href={`/notebook/${id}`} target='_blank'> */}
           <Button
