@@ -119,7 +119,7 @@ const CreateNotebook = () => {
     <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
       <Navbar />
       
-      <Box className="w-full max-w-md p-6">
+      <Box className="w-full max-w-lg p-6">
         <Typography variant="h4" className="text-center text-3xl mb-10 font-poppins ">
           Create Notebook
         </Typography>
@@ -261,7 +261,7 @@ const CreateNotebook = () => {
             <CircularProgress className="text-white" size={30}/> 
             </>:
             <>Create Notebook</>} 
-            customCss={`mt-6 ${isLoading===true ? 'bg-[#e3e3e3]':'bg-[#1976D2]'} text-white`} 
+            customCss={`mt-6 ${isLoading===true ? 'bg-[#e3e3e3]':'bg-[#1976D2]'} text-white text-[15px] lg:text-[16px]`} 
             onclickhandler={handleSubmit}
             type="submit" 
           />

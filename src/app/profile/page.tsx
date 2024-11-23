@@ -113,16 +113,16 @@ const ProfilePage = () => {
           </Typography>
             <>
             <Box className="flex  items-center w-full h-[51px]">
-              <Typography className="text-[16px] text-black w-[40%] ">Full Name</Typography>
-              <Typography className=' p-3 text-[16px] bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.full_name}</Typography>
+              <Typography className="text-[16px] text-black w-[40%] hidden lg:block ">Full Name</Typography>
+              <Typography className=' p-3 text-[16px] bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.full_name}</Typography>
             </Box>
              <Box className="flex  items-center w-full h-[51px]">
-              <Typography className="text-[16px] text-black w-[40%] ">Phone Number</Typography>
-              <Typography className=' p-3 bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.phone}</Typography>
+              <Typography className="text-[16px] text-black w-[40%] hidden lg:block">Phone Number</Typography>
+              <Typography className=' p-3 bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.phone}</Typography>
             </Box>
             <Box className="flex  items-center w-full h-[51px] ">
-              <Typography className="text-[16px] text-black w-[40%] ">E-mail Address</Typography>
-              <Typography className=' p-3 bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.email}</Typography>
+              <Typography className="text-[16px] text-black w-[40%] hidden lg:block ">E-mail Address</Typography>
+              <Typography className=' p-3 bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.email}</Typography>
             </Box>
             </>
         </Box>
@@ -152,7 +152,7 @@ const ProfilePage = () => {
                 />
                 <Typography className='text-[16px]'>GitHub</Typography>
               </Box>
-              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]' 
+              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]  w-[121px]' 
                 style={{ textTransform: 'none' }}
               >
                 Coming Soon
@@ -168,7 +168,7 @@ const ProfilePage = () => {
                 />
                 <Typography className='text-[16px]'>Google Drive</Typography>
               </Box>
-              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]'
+              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]  w-[121px]'
                 style={{ textTransform: 'none' }}
               >
                 Coming Soon
@@ -190,7 +190,7 @@ const ProfilePage = () => {
               {hfUser?
                 <button
                 disabled={isloadingRevokebttn}
-                className={`h-[39px] w-[93px] font-semibold text-black text-[15px] ${isloadingRevokebttn?'bg-[#e3e3e3]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
+                className={`h-[39px]  w-[121px] font-semibold text-black text-[15px] ${isloadingRevokebttn?'bg-[#e3e3e3]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
                 style={{ textTransform: 'none' }}
                 onClick={revokeHfUser}
                 >
@@ -199,7 +199,7 @@ const ProfilePage = () => {
               :<>
                 <Button
                 disabled={isfetchHfUserLoading}
-                className={`h-[39px] w-[93px] font-semibold text-white text-[15px] ${isfetchHfUserLoading ?`bg-[#e3e3e3]`:`bg-[#1976D2]`} rounded-[10px]`}
+                className={`h-[39px]  w-[121px] font-semibold text-white text-[15px] ${isfetchHfUserLoading ?`bg-[#e3e3e3]`:`bg-[#1976D2]`} rounded-[10px]`}
                 style={{ textTransform: 'none' }}
                 onClick={handleClick}
                 >

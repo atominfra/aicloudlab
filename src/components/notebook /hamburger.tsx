@@ -32,11 +32,11 @@ export default function AnchorTemporaryDrawer() {
        <div className="h-full m-4 w-[150px]">
        <Box>
           <Typography>Deploy model</Typography>
-          <CustomButton text="Deploy" onclickhandler={()=>{}}  customCss={''}/>
+          <CustomButton text="Deploy" onclickhandler={()=>{}}  customCss={'text-[15px] lg:text-[16px]'}/>
         </Box>
         <Box>
           <Typography>Sync Model</Typography>
-          <CustomButton text="Sync" onclickhandler={()=>{}}  customCss={''}/>
+          <CustomButton text="Sync" onclickhandler={()=>{}}  customCss={'text-[15px] lg:text-[16px]'}/>
         </Box>
        </div>
       </Drawer>

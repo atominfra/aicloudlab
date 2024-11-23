@@ -18,6 +18,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import CustomButton from "./ui/button";
 import { useRouter } from "next/navigation";
 import Popper from '@mui/material/Popper';
+import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
 export default function NotebookItem({ id, name, version, status, notebook_url, onOperation }) {
   const [isHovered, setIsHovered] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -29,6 +30,14 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
   const [inputValue, setInputValue] = useState("");
   const [isError, setIsError] = useState(false);
   const router= useRouter()
+  const [popperOpen, setPopperOpen] = useState(false);
+  const [popperAnchorEl, setPopperAnchorEl] = useState(null);
+  const popperId = open ? 'simple-popper' : undefined;
+  const handleClick = (event) => {
+    setPopperAnchorEl(event.currentTarget);
+    setPopperOpen((previousOpen) => !previousOpen);
+  };
+
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
@@ -72,45 +81,106 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
   };
 
   return (
-    <Box className="flex items-center justify-between bg-white dark:bg-gray-800 text-[#111827] dark:text-white p-4 h-[60px]  mb-2 w-[90%] border rounded-[20px] border-gray-300 ">
-      <Box className='w-[16%] px-4'>
-        <Typography  className="font-poppins text-[16px]">
+    <Box className="flex items-center justify-between bg-white dark:bg-gray-800 text-[#111827] dark:text-white p-4 h-[60px]  mb-2 w-full lg:w-[90%] border rounded-[10px] lg:rounded-[20px] border-gray-300 ">
+      <Box className=" w-full lg:w-[60%]  flex flex-col lg:flex-row ">
+      <Box className='w-[33%] lg:px-4'>
+        <Typography  className="font-poppins text-[15px] lg:text-[16px] pt-2 lg:pt-0">
           {name}
         </Typography>
       </Box>
+      <Box className='lg:w-[66%] flex '>
       <Typography 
-        className={`text-[#111827] font-poppins capitalize font-semibold text-[16px]`}
+        className={`flex items-center  text-[rgba(17,24,39,0.6)] lg:text-[#111827] font-poppins capitalize font-semibold text-[11px]  lg:text-[16px] lg:w-[50%]`}
       >
         {status}
       </Typography>
-      <Typography className="text-[#111827] dark:text-white font-poppins text-[16px]">
+      <span className="flex items-center px-1 text-[rgba(17,24,39,0.6)] lg:hidden">•</span>
+      <Typography className=" flex items-center text-[rgba(17,24,39,0.6)] lg:text-[#111827] dark:text-white font-poppins text-[11px] lg:text-[16px] lg:w-[50%]">
         Python {version}
       </Typography>
-      <Box className="flex items-center justify-evenly font-poppins gap-10 w-[40%]">
+      </Box>
+      </Box>
+      <Box className="hidden lg:flex items-center justify-evenly font-poppins gap-10 w-[40%]">
+      <div
+            title={isRunning ? 'Pause' : 'Start'}
+            className={`text-gray-400 min-w-0 hover:cursor-pointer dark:hover:text-yellow-500 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={handleToggle}
+            disabled={loading}
+          >
+            {loading ? (
+              <CircularProgress className="text-black" size={24}/> 
+            ) : isRunning ? (
+              <IoMdPause className='dark:hover:text-yellow-500 h-[20px] w-[20px] text-[#111827] dark:text-white' />
+            ) : (
+              <FaPlay className='dark:hover:text-yellow-500 h-[20px] w-[20px] text-[#111827] dark:text-white' />
+            )}
+          </div>
+  
+          <div
+            title="Delete"
+            className="text-red-600 hover:text-white hover:ease-in duration-100  h-[38px] w-[88px] text-[16px] font-semibold border-[1px] border-red-600 rounded-[200px] hover:bg-red-600 flex justify-center items-center hover:cursor-pointer"
+            onClick={handleOpen}
+          >
+            Delete
+          </div>
+          
+            <div
+              className=" font-poppins text-[#111827] hover:text-gray-600 capitalize flex items-center justify-center hover:cursor-pointer"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              onClick={()=>router.push(`/notebook/${id}`)}
+            >
+              Go to notebook
+              <IoIosArrowForward className=' text-lg pb-[2px] m-0' />
+            </div>
+      </Box>
+      <span
+          variant="text"
+          className=" text-xl text-black hover:text-black lg:hidden"
+          ripple={false}
+          onClick={handleClick}
+        >
+          <PiDotsThreeOutlineVerticalFill />
+        </span>
+        <Popper id={popperId} open={popperOpen} anchorEl={popperAnchorEl} placement='bottom-end'>
+        <Box className='border p-4 flex flex-col gap-6 bg-white text-black mt-6 rounded-[10px]'>
         <div
-          title={isRunning ? 'Pause' : 'Start'}
-          className={`text-gray-400 min-w-0 hover:cursor-pointer dark:hover:text-yellow-500 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-          onClick={handleToggle}
-          disabled={loading}
-        >
-          {loading ? (
-            <CircularProgress className="text-black" size={24}/> 
-          ) : isRunning ? (
-            <IoMdPause className='dark:hover:text-yellow-500 h-[20px] w-[20px] text-[#111827] dark:text-white' />
-          ) : (
-            <FaPlay className='dark:hover:text-yellow-500 h-[20px] w-[20px] text-[#111827] dark:text-white' />
-          )}
-        </div>
-
-        <button
-          title="Delete"
-          className="text-red-600 hover:text-white hover:ease-in duration-100  h-[38px] w-[88px] text-[16px] font-semibold border-[1px] border-red-600 rounded-[200px] hover:bg-red-600"
-          onClick={handleOpen}
-        >
-          Delete
-        </button>
-
-        <Modal
+            title={isRunning ? 'Pause' : 'Start'}
+            className={`text-gray-400 min-w-0 flex items-center  hover:cursor-pointer dark:hover:text-yellow-500 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            onClick={handleToggle}
+            disabled={loading}
+          >
+            {loading ? (
+              <div className="w-full flex justify-center items-center">
+                <CircularProgress className="text-black " size={24}/> 
+              </div>
+            ) : isRunning ? (
+              <span className="text-black">
+              Pause
+              </span>
+            ) : (
+              <span className="text-black">
+              Play
+              </span>
+            )}
+          </div>
+  
+          <div
+              className=" font-poppins text-[#111827] hover:text-gray-600 capitalize flex items-center  hover:cursor-pointer"
+              onClick={handleOpen}            >
+              Delete
+            </div>
+            <div
+              className=" font-poppins text-[#111827] hover:text-gray-600 capitalize flex items-center  hover:cursor-pointer"
+              onMouseEnter={() => setIsHovered(true)}
+              onMouseLeave={() => setIsHovered(false)}
+              onClick={()=>router.push(`/notebook/${id}`)}
+            >
+              Go to notebook
+            </div>
+        </Box>
+      </Popper>
+      <Modal
           open={open}
           onClose={handleClose}
           aria-labelledby="modal-modal-title"
@@ -119,10 +189,10 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
         >
           <div
             class="block"
-            className=" p-8 bg-white shadow-xl rounded-2xl item-center w-[35vw]"
+            className=" p-8 bg-white shadow-xl rounded-2xl item-center lg:w-[35vw] m-4"
           >
-            <p className="pr-10 pb-4 text-[22px] font-semibold text-[#111827]">You are deleting &apos;{name}&apos;</p>
-            <p className="pb-4 text-gray-600 text-lg">If you&apos;re sure, type &apos;{name}&apos; to confirm.</p>
+            <p className="pr-10 pb-4 text-[18px] lg:text-[22px] font-semibold text-[#111827]">You are deleting &apos;{name}&apos;</p>
+            <p className="pb-4 text-gray-600 text-[15px] lg:text-lg">If you&apos;re sure, type &apos;{name}&apos; to confirm.</p>
             <form onSubmit={handleSubmit}>
               <TextField
                 fullWidth
@@ -158,35 +228,20 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
                 <CustomButton
                   text="No, cancel"
                   onclickhandler={handleClose}
-                  customCss="w-[50%] bg-[#e3e3e3] text-black shadow-none"
+                  customCss="w-[50%] bg-[#e3e3e3] text-black shadow-none text-[15px] lg:text-[16px]"
                 />
                 <CustomButton
                   text="Delete Notebook"
                   onclickhandler={handleSubmit}
-                  customCss="w-[50%] bg-red-600 text-white"
+                  customCss="w-[50%] bg-red-600 text-white text-[15px] lg:text-[16px]"
                 />
               </Box>
             </form>
           </div>
         </Modal>
 
-        {/* <div title='Coming Soon' className="text-gray-400 min-w-0 dark:hover:text-yellow-500 hover:cursor-pointer" >
-          <MdSettings className='dark:hover:text-yellow-500 h-[26px] w-[26px] text-[#111827] dark:text-white' />
-        </div> */}
-
-        {/* <Link href={`/notebook/${id}`} target='_blank'> */}
-          <Box
-            // endIcon={<IoIosArrowForward className='dark:hover:text-yellow-500 text-lg pb-1 m-0' />}
-            className=" font-poppins text-[#111827] hover:text-gray-600 capitalize flex items-center justify-center hover:cursor-pointer"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            onClick={()=>router.push(`/notebook/${id}`)}
-          >
-            Go to notebook
-            <IoIosArrowForward className=' text-lg pb-[2px] m-0' />
-          </Box>
-        {/* </Link> */}
-      </Box>
     </Box>
   );
 }
+
+
