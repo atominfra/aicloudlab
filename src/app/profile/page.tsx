@@ -16,6 +16,7 @@ import huggingface from "@/assets//huggingface.png"
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import toast, { Toaster } from 'react-hot-toast';
+import Loader from '@/components/loader';
 interface User {
   full_name: string;
   email: string;
@@ -25,9 +26,10 @@ interface User {
 const ProfilePage = () => {
   
   const [user, setUser] = useState<User | null>(null); 
-  const [loading, setLoading] = useState(false)
-  const [loadingRevokebttn, setLoadingRevokeBttn] = useState(false)
-  const [hfUser, setHfUser] = useState<string | null>()
+  const [isfetchHfUserLoading, setIsfetchHfUserLoading] = useState(false)
+  const [isloading, setIsloading] = useState(true)
+  const [isloadingRevokebttn, setIsLoadingRevokeBttn] = useState(false)
+  const [hfUser, setHfUser] = useState<string | null>('')
   const [error, setError] = useState({})
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -38,7 +40,7 @@ const ProfilePage = () => {
   const router = useRouter()
 
   const handleClick = async ()=>{
-    setLoading(true)
+    setIsfetchHfUserLoading(true)
     router.push(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hf/connect`)
   }
 
@@ -49,6 +51,7 @@ const ProfilePage = () => {
   }
 
   const fetchHfUser =  async ()=>{
+    setIsloading(true)
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hf/user `, {
       method: 'GET',
       headers: {
@@ -60,15 +63,17 @@ const ProfilePage = () => {
       const responseData = await response.json();
       console.log('responseData',responseData)
       setHfUser(responseData.data.hf_username); 
+      setIsloading(false)
     } else {
       const errorData = await response.json();
       setError(errorData.message || 'Failed to fetch notebooks');
+      setIsloading(false)
     } 
 
   }
 
   const revokeHfUser = async ()=>{
-    setLoadingRevokeBttn(true)
+    setIsLoadingRevokeBttn(true)
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hf/revoke `, {
       method: 'GET',
       headers: {
@@ -79,7 +84,7 @@ const ProfilePage = () => {
     if (response.ok) {
       const responseData = await response.json();
       console.log('responseData',responseData)
-      toast.success('Successfully logged out')
+      // toast.success('Successfully logged out')
       setHfUser(null)
     } else {
       const errorData = await response.json();
@@ -95,6 +100,11 @@ const ProfilePage = () => {
   return (
     <Box className="flex flex-col items-center bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
       <Navbar />
+      {isloading ? 
+      <>
+        <Loader/>
+      </>
+      : 
       <Box className='w-full flex justify-center  p-4'>
       <Box className="flex flex-col space-y-4 border  rounded-[10px] w-[500px] border-[#cccccc] p-7  ">
         <Box className=' flex flex-col gap-3'>
@@ -179,8 +189,8 @@ const ProfilePage = () => {
               </Box>
               {hfUser?
                 <button
-                disabled={loadingRevokebttn}
-                className={`h-[39px] w-[93px] font-semibold text-black text-[15px] ${loadingRevokebttn?'bg-[#e3e3e3]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
+                disabled={isloadingRevokebttn}
+                className={`h-[39px] w-[93px] font-semibold text-black text-[15px] ${isloadingRevokebttn?'bg-[#e3e3e3]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
                 style={{ textTransform: 'none' }}
                 onClick={revokeHfUser}
                 >
@@ -188,8 +198,8 @@ const ProfilePage = () => {
               </button>
               :<>
                 <Button
-                disabled={loading}
-                className={`h-[39px] w-[93px] font-semibold text-white text-[15px] ${loading ?`bg-[#e3e3e3]`:`bg-[#1976D2]`} rounded-[10px]`}
+                disabled={isfetchHfUserLoading}
+                className={`h-[39px] w-[93px] font-semibold text-white text-[15px] ${isfetchHfUserLoading ?`bg-[#e3e3e3]`:`bg-[#1976D2]`} rounded-[10px]`}
                 style={{ textTransform: 'none' }}
                 onClick={handleClick}
                 >
@@ -201,6 +211,8 @@ const ProfilePage = () => {
         </Box>
         </Box>
         </Box> 
+      }
+      
         <Toaster position="top-center" reverseOrder={false} />
       </Box>
 
