@@ -14,6 +14,8 @@ import github from "@/assets/github.png"
 import gdrive from "@/assets/googledrive.png"
 import huggingface from "@/assets//huggingface.png"
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import toast, { Toaster } from 'react-hot-toast';
 interface User {
   full_name: string;
   email: string;
@@ -21,38 +23,75 @@ interface User {
 }
 
 const ProfilePage = () => {
-  const { resolvedTheme } = useTheme();
   
   const [user, setUser] = useState<User | null>(null); 
-
+  const [loading, setLoading] = useState(false)
+  const [loadingRevokebttn, setLoadingRevokeBttn] = useState(false)
+  const [hfUser, setHfUser] = useState<string | null>()
+  const [error, setError] = useState({})
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
   }, []);
+  const router = useRouter()
 
-  // State for form fields
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phoneNumber: '',
-    password: '',
-  });
+  const handleClick = async ()=>{
+    setLoading(true)
+    router.push(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hf/connect`)
+  }
 
-  // Handle input change
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
   const handleLogout = ()=>{
     localStorage.clear()
     document.cookie = `access_token=; path=/; domain=.${window.location.hostname}`;
     window.location.href = "/"
   }
+
+  const fetchHfUser =  async ()=>{
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hf/user `, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`, 
+      },
+    });
+    if (response.ok) {
+      const responseData = await response.json();
+      console.log('responseData',responseData)
+      setHfUser(responseData.data.hf_username); 
+    } else {
+      const errorData = await response.json();
+      setError(errorData.message || 'Failed to fetch notebooks');
+    } 
+
+  }
+
+  const revokeHfUser = async ()=>{
+    setLoadingRevokeBttn(true)
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hf/revoke `, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`, 
+      },
+    });
+    if (response.ok) {
+      const responseData = await response.json();
+      console.log('responseData',responseData)
+      toast.success('Successfully logged out')
+      setHfUser(null)
+    } else {
+      const errorData = await response.json();
+      toast.error('Failed to logg out')
+      setError(errorData.message || 'Failed to logg out');
+    } 
+
+  }
+
+  useEffect(()=>{
+    fetchHfUser()
+  },[])
   return (
     <Box className="flex flex-col items-center bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
       <Navbar />
@@ -83,7 +122,6 @@ const ProfilePage = () => {
               className="bg-red-600 text-white font-semibold text-[15px] w-[121px] h-[39px] text-center rounded-[10px]"
               onClick={handleLogout}
               style={{ textTransform: 'none' }}
-
             >
               Log Out
             </Button>
@@ -134,20 +172,38 @@ const ProfilePage = () => {
                 width={24}
                 height={24}
                 />
+                <Box>
                 <Typography className='text-[16px]'>Hugging Face</Typography>
+                {hfUser && <Typography className="text-[12px] text-[rgb(17,24,39,0.6)]">{String(hfUser)}</Typography>}
+                </Box>
               </Box>
-              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]'
+              {hfUser?
+                <button
+                disabled={loadingRevokebttn}
+                className={`h-[39px] w-[93px] font-semibold text-black text-[15px] ${loadingRevokebttn?'bg-[#e3e3e3]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
                 style={{ textTransform: 'none' }}
+                onClick={revokeHfUser}
                 >
-                Coming Soon
+                Remove
+              </button>
+              :<>
+                <Button
+                disabled={loading}
+                className={`h-[39px] w-[93px] font-semibold text-white text-[15px] ${loading ?`bg-[#e3e3e3]`:`bg-[#1976D2]`} rounded-[10px]`}
+                style={{ textTransform: 'none' }}
+                onClick={handleClick}
+                >
+                Connect
               </Button>
+                </>}
             </Box>
           </Box>
         </Box>
-          
         </Box>
         </Box> 
+        <Toaster position="top-center" reverseOrder={false} />
       </Box>
+
   );
 }
 
