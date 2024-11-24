@@ -99,13 +99,16 @@ const ProfilePage = () => {
   },[])
   return (
     <Box className="flex flex-col items-center bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
+      <div className="w-full z-[10] fixed  top-0 ">
       <Navbar />
+      </div>
+
       {isloading ? 
       <>
         <Loader/>
       </>
       : 
-      <Box className='w-full flex justify-center  p-4'>
+      <Box className='w-full flex justify-center p-4 mt-[80px]'>
       <Box className="flex flex-col space-y-4 border  rounded-[10px] w-[500px] border-[#cccccc] p-7  ">
         <Box className=' flex flex-col gap-3'>
         <Typography className="font-semibold text-[22px] ">

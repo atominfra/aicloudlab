@@ -91,19 +91,20 @@ const NotebooksPage = () => {
 
   return (
     <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white">
+     <div className="w-full z-[10] fixed  top-0 ">
       <Navbar />
-
-      <Box className="w-[90%] text-end px-6 flex justify-between items-center mt-8">
+      </div>
+      <Box className="w-[90%] text-end px-6 flex justify-between items-center mt-28 ">
         <Typography  className="font-semibold lg:font-bold font-poppins text-[18px] lg:text-[28px] " >
           Notebooks
         </Typography>
           <button
             color='white'
-            className={`  bg-[#1976D2] text-base  font-semibold font-poppins py-1 px-3 lg:p-3 rounded-[10px] lg:rounded-[15px] text-[16px] lg:text-[18px] text-white flex`}
+            className={`  bg-[#1976D2] text-base  font-semibold font-poppins py-1 px-3 lg:p-3 rounded-[10px] lg:rounded-[15px] text-[16px] lg:text-[18px] text-white flex hover:shadow-md`}
             onClick={handleCreateClick}
             style={{ textTransform: 'none' }}
           >
-             {"+" + " "}<span className=' hidden lg:block'>Create</span>
+          {"+"}<span className='hidden lg:block'>&nbsp;Create</span>
           </button>     
         </Box>
 
