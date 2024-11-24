@@ -136,6 +136,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
                 }
               }}
             >
+
               Go to notebook
               <IoIosArrowForward className=' text-lg  m-0' />
             </div>

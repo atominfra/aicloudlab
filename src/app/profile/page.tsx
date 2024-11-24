@@ -203,7 +203,6 @@ const ProfilePage = () => {
             >
               Log Out
             </Button>
-
           </Box>
           <Box className='pt-5'>
           <Typography  className=" mb-5 text-[22px] font-semibold">
@@ -305,7 +304,6 @@ const ProfilePage = () => {
       
         <Toaster position="top-center" reverseOrder={false} />
       </Box>
-
   );
 }
 

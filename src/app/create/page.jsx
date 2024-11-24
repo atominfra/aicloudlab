@@ -208,6 +208,8 @@ const CreateNotebook = () => {
             onChange={handleChange}
             displayEmpty
             variant="outlined"
+            onMouseEnter={handlePopoverOpen}
+            onMouseLeave={handlePopoverClose}
             className="bg-white dark:bg-gray-800 text-[#111827] dark:text-white font-poppins rounded-[10px]"
             IconComponent={(props) => (
               <RiArrowDropDownLine {...props} style={{ color: resolvedTheme === "dark"?'white':'black', fontSize: '30px' }} />
