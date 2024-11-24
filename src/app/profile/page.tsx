@@ -174,7 +174,7 @@ const ProfilePage = () => {
       </>
       : 
       <Box className='w-full flex justify-center p-4 mt-[80px]'>
-      <Box className="flex flex-col space-y-4 border  rounded-[10px] w-[500px] border-[#cccccc] p-7  ">
+      <Box className="flex flex-col space-y-4 lg:border  rounded-[10px] w-[500px] lg:border-[#cccccc] p-7  ">
         <Box className=' flex flex-col gap-3'>
         <Typography className="font-semibold text-[22px] ">
             My Profile 
