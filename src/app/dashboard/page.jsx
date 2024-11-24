@@ -95,12 +95,12 @@ const NotebooksPage = () => {
       <Navbar />
       </div>
       <Box className="w-[90%] text-end px-6 flex justify-between items-center mt-28 ">
-        <Typography  className="font-semibold lg:font-bold font-poppins text-[18px] lg:text-[28px] " >
+        <Typography  className="font-semibold lg:font-bold font-poppins text-[24px] lg:text-[28px] " >
           Notebooks
         </Typography>
           <button
             color='white'
-            className={`  bg-[#1976D2] text-base  font-semibold font-poppins py-1 px-3 lg:p-3 rounded-[10px] lg:rounded-[15px] text-[16px] lg:text-[18px] text-white flex hover:shadow-md`}
+            className={`  bg-[#1976D2] text-[18px]  font-semibold font-poppins py-2 px-4 lg:p-3 rounded-[10px] lg:rounded-[15px]  lg:text-[18px] text-white flex hover:shadow-md`}
             onClick={handleCreateClick}
             style={{ textTransform: 'none' }}
           >

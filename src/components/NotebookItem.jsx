@@ -142,7 +142,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
       </Box>
       <span
           variant="text"
-          className=" text-xl text-black hover:text-black lg:hidden"
+          className={`text-xl text-black hover:text-black lg:hidden hover:cursor-pointer p-3 ${popperOpen ? 'rounded-full bg-gray-100 ':''}`}
           ripple={false}
           onClick={handleClick}
         >
