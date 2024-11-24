@@ -24,17 +24,6 @@ const CreateNotebook = () => {
   const { resolvedTheme } = useTheme();
   const [showModal, setShowModal] = useState(false);
   const [isNameTouched,setIsNameTouched] = useState(false)
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handlePopoverOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -210,24 +199,6 @@ const CreateNotebook = () => {
               <MenuItem value="3.9">Python 3.9</MenuItem>
               <MenuItem value="3.10">Python 3.10</MenuItem>
             </Select>
-            <Popover
-              id="mouse-over-popover"
-              sx={{ pointerEvents: 'none', m: 1 }}
-              open={open}
-              anchorEl={anchorEl}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
-              }}
-              onClose={handlePopoverClose}
-              disableRestoreFocus
-            >
-              <Typography sx={{ p: 1 }}>Feature coming soon</Typography>
-            </Popover>
           <Select
           disabled
             fullWidth
@@ -237,8 +208,6 @@ const CreateNotebook = () => {
             onChange={handleChange}
             displayEmpty
             variant="outlined"
-            onMouseEnter={handlePopoverOpen}
-            onMouseLeave={handlePopoverClose}
             className="bg-white dark:bg-gray-800 text-[#111827] dark:text-white font-poppins rounded-[10px]"
             IconComponent={(props) => (
               <RiArrowDropDownLine {...props} style={{ color: resolvedTheme === "dark"?'white':'black', fontSize: '30px' }} />
