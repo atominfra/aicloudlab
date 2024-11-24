@@ -11,23 +11,23 @@ export default function CreditsModal({ showModal, onClose }:{
       onClose={onClose}
       className="w-full h-full justify-items-center content-center"
     >
-      <Box className="p-8 bg-white shadow-xl rounded-2xl flex flex-col items-start justify-start w-[35vw] gap-4">
-        <Typography className="text-black font-poppins font-semibold text-2xl">
+      <Box className="p-8 bg-white shadow-xl rounded-2xl flex flex-col items-start justify-start lg:w-[35vw] m-4 gap-4">
+        <Typography className="text-black font-poppins font-semibold text-[19px] lg:text-2xl">
           You are on free plan
         </Typography>
-        <Typography className="text-gray-600 font-poppins text-lg ">
+        <Typography className="text-gray-600 font-poppins text-[15px] lg:text-lg ">
           Upgrade to Pro to create more notebooks
         </Typography>
         <Box className="flex w-full justify-between gap-4 pt-4">
           <CustomButton
             text="Maybe later"
             onclickhandler={onClose}
-            customCss="w-[50%] bg-[#e3e3e3] text-black shadow-none"
+            customCss="w-[50%] bg-[#e3e3e3] text-black shadow-none text-[15px] lg:text-[18px]"
           />
           <CustomButton
             text="Upgrade"
             onclickhandler={() => toast.success('Coming Soon')}
-            customCss="w-[50%] bg-[#1976D2] text-white"
+            customCss="w-[50%] bg-[#1976D2] text-white text-[15px] lg:text-[16px]"
           />
         </Box>
       <Toaster position="bottom-right" />

@@ -1,10 +1,9 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Typography, Box, Modal } from '@mui/material';
+import { Typography, Box, Modal, Button } from '@mui/material';
 import {useRouter} from 'next/navigation';
 import Navbar from '@/components/navbar';
 import NotebookItem from '@/components/NotebookItem';
-import CustomButton from "@/components/ui/button";
 import { useGlobalContext } from '@/context/GlobalContext';
 import Image from 'next/image'
 import notebook from '@/assets/notebook.svg'
@@ -92,14 +91,22 @@ const NotebooksPage = () => {
 
   return (
     <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white">
+     <div className="w-full z-[10] fixed  top-0 ">
       <Navbar />
-
-      <Box className="w-[90%] text-end px-6 flex justify-between mt-8">
-        <Typography variant="h4" className="font-bold font-poppins text-[28px]" >
+      </div>
+      <Box className="w-[90%] text-end px-6 flex justify-between items-center mt-28 ">
+        <Typography  className="font-semibold lg:font-bold font-poppins text-[24px] lg:text-[28px] " >
           Notebooks
         </Typography>
-        <CustomButton text={'+ Create'} onclickhandler={handleCreateClick} customCss={"text-[18px] text-white"} />
-      </Box>
+          <button
+            color='white'
+            className={`  bg-[#1976D2] text-[18px]  font-semibold font-poppins py-2 px-4 lg:p-3 rounded-[10px] lg:rounded-[15px]  lg:text-[18px] text-white flex hover:shadow-md`}
+            onClick={handleCreateClick}
+            style={{ textTransform: 'none' }}
+          >
+          {"+"}<span className='hidden lg:block'>&nbsp;Create</span>
+          </button>     
+        </Box>
 
       {loading ? (
         <Box className='flex justify-center items-center h-[60vh] w-full'>

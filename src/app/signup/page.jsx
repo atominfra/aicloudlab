@@ -5,6 +5,7 @@ import {
   Typography, 
   TextField, 
   Container,
+  CircularProgress,
 } from '@mui/material';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
@@ -16,6 +17,7 @@ export default function Signup() {
   const router = useRouter();
   const { resolvedTheme } = useTheme();
   const [auth, setAuth] = useState('');
+  const [isloading, setIsloading] = useState(false)
 
   useEffect(() => {
     const token  = localStorage.getItem('access_token');
@@ -74,6 +76,7 @@ export default function Signup() {
     console.log("data",reEnterPassword,data)
     e.preventDefault();
     if (!validateForm()) return;
+    setIsloading(true)
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/signup`, {
@@ -96,9 +99,13 @@ export default function Signup() {
         toast.error(responseData.message || 'Signup failed');
         setLoginError(responseData.message || 'An unexpected error occurred. Please try again.');
       }
+      setIsloading(false)
+
     } catch (error) {
       console.error("Signup failed", error);
       setLoginError( 'An unexpected error occurred. Please try again.');
+      setIsloading(false)
+
     }
   };
 
@@ -110,17 +117,17 @@ export default function Signup() {
   return (
     <Box className="h-screen w-screen flex flex-col justify-center items-center bg-white dark:bg-gray-900 text-[#111827] dark:text-white">
       <Container>
-        <div className='flex font-poppins gap-4 justify-between'>
-          <div className='flex w-[35vw]'>
-            <Box className='flex flex-col justify-center items-center gap-8'>
+        <div className='flex flex-col lg:flex-row font-poppins gap-4 justify-between p-4'>
+          <div className='flex lg:w-[35vw] justify-center items-center pt-10 lg:pt-0'>
+            <Box className='flex flex-col  justify-center items-center gap-8'>
               <Image 
                 src='https://res.cloudinary.com/dy8hx2xrj/image/upload/v1729418783/cloud-lab-high-resolution-logo-grayscale-transparent_1_-_Edited_2_sogohi.webp'
-                width={1000}
-                height={1000}
-                className='w-[10rem]'
+                width={200}
+                height={200}
+                className='w-[74px] h-[44px] lg:w-[12rem] lg:h-auto '
                 alt="AI Cloud Lab Logo" 
               />
-              <Typography className='text-center text-xl font-light font-poppins'>
+              <Typography className='hidden lg:block text-center text-xl font-light font-poppins'>
                 Seamless AI <span className='font-semibold'>development, </span> 
                 <span className='font-semibold'>deployment </span>
                 and  
@@ -129,11 +136,11 @@ export default function Signup() {
               </Typography>
             </Box>
           </div>
-          <div className='w-[30vw]'>
-            <Typography className='text-center text-3xl mb-10 font-poppins'>
-              Welcome to <span className='font-bold'>AI Cloud Lab!</span>
+          <div className='lg:w-[30vw] '>
+            <Typography className='text-center text-[20px] lg:text-3xl mb-10 font-poppins font-semibold lg:font-normal'>
+              Welcome to <span className='lg:font-bold'>AI Cloud Lab!</span>
             </Typography>
-            <form onSubmit={handleSubmit} className='flex flex-col justify-center items-center gap-4'>
+            <div  className='flex flex-col justify-center items-center gap-4'>
               <TextField
                 name="full_name"
                 fullWidth
@@ -268,15 +275,20 @@ export default function Signup() {
               />
                {loginError && <Typography className="text-red-600">{loginError}</Typography>} 
               <Box className="w-full flex flex-col gap-4 mt-6">
-              <CustomButton text={'Sign up'} onclickhandler={handleSubmit} customCss='w-full text-white'/>
+
+              <CustomButton text={isloading=== true ? <>
+            <CircularProgress className="text-white" size={30}/> 
+            </>:
+            <>Sign up</>}  customCss={`w-full text-white text-[15px] lg:text-[16px] ${isloading===true ? 'bg-[rgba(17,24,39,0.32)]':'bg-[#1976D2]'}`} onclickhandler={handleSubmit}/>
+
                 <div className='text-[#111827] w-full flex items-center'>
                   <hr style={{ flex: 1, border: 'none', borderTop: '1px solid black' }} />
                   <Typography className='font-poppins mx-1'>OR</Typography>
                   <hr style={{ flex: 1, border: 'none', borderTop: '1px solid black' }} />
                 </div>
-                <CustomButton text={'Log in'} onclickhandler={() => window.location.href='/login'} customCss='w-full text-white'/>
+                <CustomButton text={'Log in'} onclickhandler={() => window.location.href='/login'} customCss='w-full text-white text-[15px] lg:text-[16px]'/>
               </Box>
-            </form>
+            </div>
           </div>
         </div>
       </Container>

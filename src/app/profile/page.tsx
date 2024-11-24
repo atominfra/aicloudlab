@@ -27,9 +27,11 @@ const ProfilePage = () => {
   
   const [user, setUser] = useState<User | null>(null); 
   const [isfetchHfUserLoading, setIsfetchHfUserLoading] = useState(false)
+  const [isfetchGhUserLoading, setIsfetchGhUserLoading] = useState(false)
   const [isloading, setIsloading] = useState(true)
-  const [isloadingRevokebttn, setIsLoadingRevokeBttn] = useState(false)
-  const [hfUser, setHfUser] = useState<string | null>('')
+  const [isloadingHfRevokebttn, setIsLoadingHfRevokeBttn] = useState(false)
+  const [isloadingGhRevokebttn, setIsLoadingGhRevokeBttn] = useState(false)
+  const [userDetails, setUserDetails] = useState<string | null>('')
   const [error, setError] = useState({})
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -38,10 +40,14 @@ const ProfilePage = () => {
     }
   }, []);
   const router = useRouter()
-
-  const handleClick = async ()=>{
+  
+  const handleHfConnect = async ()=>{
     setIsfetchHfUserLoading(true)
     router.push(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hf/connect`)
+  }
+  const handleGhConnect = async ()=>{
+    setIsfetchGhUserLoading(true)
+    router.push(`${process.env.NEXT_PUBLIC_API_BASE_URL}/gh/connect`)
   }
 
   const handleLogout = ()=>{
@@ -50,62 +56,124 @@ const ProfilePage = () => {
     window.location.href = "/"
   }
 
-  const fetchHfUser =  async ()=>{
-    setIsloading(true)
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hf/user `, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`, 
-      },
-    });
-    if (response.ok) {
+  const fetchUser = async () => {
+    setIsloading(true);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+  
+      if (!response.ok) {
+        // Attempt to parse the error body if possible
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to fetch Hugging Face user');
+      }
+  
       const responseData = await response.json();
-      console.log('responseData',responseData)
-      setHfUser(responseData.data.hf_username); 
-      setIsloading(false)
-    } else {
-      const errorData = await response.json();
-      setError(errorData.message || 'Failed to fetch notebooks');
-      setIsloading(false)
-    } 
-
-  }
-
-  const revokeHfUser = async ()=>{
-    setIsLoadingRevokeBttn(true)
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hf/revoke `, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('access_token')}`, 
-      },
-    });
-    if (response.ok) {
+      console.log('responseData', responseData);
+      setUserDetails(responseData.data);
+    } catch (error) {
+      // Handle error of type `unknown`
+      if (error instanceof Error) {
+        console.error('Error fetching Hugging Face user:', error.message);
+        toast.error(error.message);
+      } else {
+        console.error('Unknown error occurred:', error);
+        toast.error('An unexpected error occurred.');
+      }
+    } finally {
+      setIsloading(false);
+    }
+  };
+  
+  const revokeHfUser = async () => {
+    setIsLoadingHfRevokeBttn(true);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hf/revoke`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+  
+      if (!response.ok) {
+        // Attempt to parse the error body if possible
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to revoke Hugging Face user');
+      }
+  
       const responseData = await response.json();
-      console.log('responseData',responseData)
-      // toast.success('Successfully logged out')
-      setHfUser(null)
-    } else {
-      const errorData = await response.json();
-      toast.error('Failed to logg out')
-      setError(errorData.message || 'Failed to logg out');
-    } 
+      console.log('responseData', responseData);
+    } catch (error) {
+      // Handle error of type `unknown`
+      if (error instanceof Error) {
+        console.error('Error revoking Hugging Face user:', error.message);
+        toast.error(error.message);
+      } else {
+        console.error('Unknown error occurred:', error);
+        toast.error('An unexpected error occurred.');
+      }
+    } finally {
+      setIsLoadingHfRevokeBttn(false);
+      fetchUser()
+    }
+  };
 
-  }
+  const revokeGhUser = async () => {
+    setIsLoadingGhRevokeBttn(true);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/gh/revoke`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+  
+      if (!response.ok) {
+        // Attempt to parse the error body if possible
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to revoke Hugging Face user');
+      }
+  
+      const responseData = await response.json();
+      console.log('responseData', responseData);
+    } catch (error) {
+      // Handle error of type `unknown`
+      if (error instanceof Error) {
+        console.error('Error revoking Hugging Face user:', error.message);
+        toast.error(error.message);
+      } else {
+        console.error('Unknown error occurred:', error);
+        toast.error('An unexpected error occurred.');
+      }
+    } finally {
+      setIsLoadingGhRevokeBttn(false);
+      fetchUser()
+    }
+  };
+  
 
   useEffect(()=>{
-    fetchHfUser()
+    fetchUser()
   },[])
   return (
     <Box className="flex flex-col items-center bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
+      <div className="w-full z-[10] fixed  top-0 ">
       <Navbar />
+      </div>
+
       {isloading ? 
       <>
         <Loader/>
       </>
       : 
-      <Box className='w-full flex justify-center  p-4'>
+      <Box className='w-full flex justify-center p-4 mt-[80px]'>
       <Box className="flex flex-col space-y-4 border  rounded-[10px] w-[500px] border-[#cccccc] p-7  ">
         <Box className=' flex flex-col gap-3'>
         <Typography className="font-semibold text-[22px] ">
@@ -113,16 +181,16 @@ const ProfilePage = () => {
           </Typography>
             <>
             <Box className="flex  items-center w-full h-[51px]">
-              <Typography className="text-[16px] text-black w-[40%] ">Full Name</Typography>
-              <Typography className=' p-3 text-[16px] bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.full_name}</Typography>
+              <Typography className="text-[16px] text-black w-[40%] hidden lg:block ">Full Name</Typography>
+              <Typography className=' p-3 text-[16px] bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.full_name}</Typography>
             </Box>
              <Box className="flex  items-center w-full h-[51px]">
-              <Typography className="text-[16px] text-black w-[40%] ">Phone Number</Typography>
-              <Typography className=' p-3 bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.phone}</Typography>
+              <Typography className="text-[16px] text-black w-[40%] hidden lg:block">Phone Number</Typography>
+              <Typography className=' p-3 bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.phone}</Typography>
             </Box>
             <Box className="flex  items-center w-full h-[51px] ">
-              <Typography className="text-[16px] text-black w-[40%] ">E-mail Address</Typography>
-              <Typography className=' p-3 bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[60%]'>{user?.email}</Typography>
+              <Typography className="text-[16px] text-black w-[40%] hidden lg:block ">E-mail Address</Typography>
+              <Typography className=' p-3 bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.email}</Typography>
             </Box>
             </>
         </Box>
@@ -150,13 +218,33 @@ const ProfilePage = () => {
                 width={24}
                 height={24}
                 />
+                <Box>
                 <Typography className='text-[16px]'>GitHub</Typography>
+              {/* @ts-expect-error  error*/}
+                {userDetails?.gh_username && <Typography className="text-[12px] text-[rgb(17,24,39,0.6)]">{String(userDetails?.gh_username)}</Typography>}
+                </Box>
               </Box>
-              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]' 
+              {/* @ts-expect-error  error*/}
+              {userDetails?.gh_username?
+                <button
+                disabled={isloadingGhRevokebttn}
+                className={`h-[39px]  w-[121px] font-semibold text-black text-[15px] ${isloadingGhRevokebttn?'bg-[rgba(17,24,39,0.32)]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
                 style={{ textTransform: 'none' }}
-              >
-                Coming Soon
+                onClick={revokeGhUser}
+                >
+                Remove
+              </button>
+              :<>
+                <Button
+                disabled={isfetchGhUserLoading}
+                className={`h-[39px]  w-[121px] font-semibold text-white text-[15px] ${isfetchGhUserLoading ?`bg-[rgba(17,24,39,0.32)]`:`bg-[#1976D2]`} rounded-[10px]`}
+                style={{ textTransform: 'none' }}
+                onClick={handleGhConnect}
+                >
+                Connect
               </Button>
+                </>}
+              
             </Box>
             <Box className="flex items-center justify-between  p-3 border rounded-[10px] h-[70px]">
               <Box className="flex items-center space-x-2">
@@ -168,7 +256,7 @@ const ProfilePage = () => {
                 />
                 <Typography className='text-[16px]'>Google Drive</Typography>
               </Box>
-              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]'
+              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]  w-[121px]' 
                 style={{ textTransform: 'none' }}
               >
                 Coming Soon
@@ -184,13 +272,15 @@ const ProfilePage = () => {
                 />
                 <Box>
                 <Typography className='text-[16px]'>Hugging Face</Typography>
-                {hfUser && <Typography className="text-[12px] text-[rgb(17,24,39,0.6)]">{String(hfUser)}</Typography>}
+              {/* @ts-expect-error  error*/}
+                {userDetails?.hf_username && <Typography className="text-[12px] text-[rgb(17,24,39,0.6)]">{String(userDetails?.hf_username)}</Typography>}
                 </Box>
               </Box>
-              {hfUser?
+              {/* @ts-expect-error  error*/}
+              {userDetails?.hf_username?
                 <button
-                disabled={isloadingRevokebttn}
-                className={`h-[39px] w-[93px] font-semibold text-black text-[15px] ${isloadingRevokebttn?'bg-[#e3e3e3]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
+                disabled={isloadingHfRevokebttn}
+                className={`h-[39px]  w-[121px] font-semibold text-black text-[15px] ${isloadingHfRevokebttn?'bg-[rgba(17,24,39,0.32)]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
                 style={{ textTransform: 'none' }}
                 onClick={revokeHfUser}
                 >
@@ -199,9 +289,9 @@ const ProfilePage = () => {
               :<>
                 <Button
                 disabled={isfetchHfUserLoading}
-                className={`h-[39px] w-[93px] font-semibold text-white text-[15px] ${isfetchHfUserLoading ?`bg-[#e3e3e3]`:`bg-[#1976D2]`} rounded-[10px]`}
+                className={`h-[39px]  w-[121px] font-semibold text-white text-[15px] ${isfetchHfUserLoading ?`bg-[rgba(17,24,39,0.32)]`:`bg-[#1976D2]`} rounded-[10px]`}
                 style={{ textTransform: 'none' }}
-                onClick={handleClick}
+                onClick={handleHfConnect}
                 >
                 Connect
               </Button>

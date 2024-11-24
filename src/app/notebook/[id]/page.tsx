@@ -13,7 +13,6 @@ import rackCorp from "@/assets/rackCorp.png"
 import Loader from "@/components/loader"; // Import your loader
 import deploy from "@/assets/deploy.png";
 import { FiExternalLink } from "react-icons/fi";
-import CustomButton from '@/components/ui/button';
 import toast, { Toaster } from "react-hot-toast";
 
 import { IoIosArrowBack } from "react-icons/io";
@@ -67,7 +66,7 @@ const NotebookPage = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <Box className="w-full bg-white flex items-center justify-between px-10   py-4 shadow-md z-[10]">
+      <Box className="w-full bg-white flex items-center justify-between px-10   py-4 shadow-lg z-[10]">
         <Box className="flex items-end"> 
           <Link className="flex items-center" href={`/dashboard`}>
             <Image 

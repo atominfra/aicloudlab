@@ -29,7 +29,7 @@ const Notebook =() => {
               Packages
             </Typography>
         <div className=" flex flex-wrap justify-between items-center">
-          <Box className="w-full md:w-1/2">
+          <Box className="w-full lg:w-1/2">
           
 
             {/* Packages Section */}
@@ -50,8 +50,8 @@ const Notebook =() => {
           </Box>
 
           {/* Resource Usage */}
-          <Box className="w-full md:w-1/3 mt-6 md:mt-0">
-            <Box className="border-2 border-[#111827] rounded-md p-4 space-y-4">
+          <Box className="w-full lg:w-1/3 mt-6 lg:mt-0">
+            <Box className="border-2 border-[#111827] rounded-lg p-4 space-y-4">
               <Box className=''>
               <Box className="flex justify-between  ">
                   <Typography variant="body2">STORAGE</Typography>
@@ -97,7 +97,7 @@ const Notebook =() => {
 
         {/* Delete Notebook Button */}
         <div className="mt-6 bg-">
-          <CustomButton text={'Delete Notebook'} onclickhandler={null} customCss={'bg-[#FF0000]'}></CustomButton>
+          <CustomButton text={'Delete Notebook'} onclickhandler={null} customCss={'bg-[#FF0000] text-[15px] lg:text-[16px]'}></CustomButton>
         </div>
       </Box>
     </Box>
