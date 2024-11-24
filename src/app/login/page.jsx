@@ -6,7 +6,8 @@ import {
   Box, 
   Typography, 
   TextField, 
-  Container 
+  Container, 
+  CircularProgress
 } from '@mui/material';
 import Image from 'next/image'
 import { useTheme } from 'next-themes'
@@ -25,6 +26,7 @@ export default function Login() {
   const { resolvedTheme } = useTheme();
   const {  setUser } = useGlobalContext();
   const [auth, setAuth] = useState('');
+  const [isloading, setIsloading] = useState(false)
 
   useEffect(() => {
     const token  = localStorage.getItem('access_token');
@@ -60,11 +62,11 @@ export default function Login() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-  
     if (!validateForm()) {
       return;
     }
-  
+    
+    setIsloading(true)
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/login`, {
         method: 'POST',
@@ -86,9 +88,11 @@ export default function Login() {
         console.error("Login failed", responseData);
         setLoginError(responseData.message || 'An unexpected error occurred. Please try again.');
       }
+      setIsloading(false)
     } catch (error) {
       console.error("Error during login", error);
-      setLoginError('An unexpected error occurred. Please try again.'); // Set error message for catch block
+      setLoginError('An unexpected error occurred. Please try again.'); 
+      setIsloading(false)
     }
   };
   
@@ -118,7 +122,7 @@ export default function Login() {
             <Typography className='text-center text-[20px] lg:text-3xl mb-10 font-poppins font-semibold lg:font-normal'>
               Welcome to <span className='lg:font-bold'>AI Cloud Lab!</span>
             </Typography>
-            <form onSubmit={handleLogin} className='flex flex-col justify-center items-center gap-4'>
+            <div  className='flex flex-col justify-center items-center gap-4'>
               <TextField
                 required
                 fullWidth
@@ -184,7 +188,12 @@ export default function Login() {
               />
                 {loginError && <Typography className="text-red-600">{loginError}</Typography>} 
               <Box className="w-full flex flex-col gap-4 mt-6">
-                <CustomButton text={'Login'} customCss='w-full text-white text-[15px] lg:text-[16px]' onclickhandler={handleLogin}/>
+                <CustomButton 
+                text={isloading=== true ? <>
+                                <CircularProgress className="text-white" size={30}/> 
+                                </>:
+                                <>Login</>}  
+                customCss={`w-full text-white text-[15px] lg:text-[16px] ${isloading===true ? 'bg-[rgba(17,24,39,0.32)]':'bg-[#1976D2]'}`} onclickhandler={handleLogin}/>
                 <div className='text-[#111827] w-full flex items-center'>
                   <hr style={{ flex: 1, border: 'none', borderTop: '1px solid black' }} />
                   <Typography className='font-poppins mx-1'>OR</Typography>
@@ -192,7 +201,7 @@ export default function Login() {
                 </div>
                 <CustomButton text={'Sign up for new account'} onclickhandler={() => window.location.href='/signup'} customCss='w-full text-white text-[15px] lg:text-[16px]'/>
               </Box>
-            </form>
+            </div>
           </div>
         </div>
       </Container>

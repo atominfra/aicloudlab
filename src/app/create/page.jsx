@@ -230,7 +230,7 @@ const CreateNotebook = () => {
             <CircularProgress className="text-white" size={30}/> 
             </>:
             <>Create Notebook</>} 
-            customCss={`mt-6 ${isLoading===true ? 'bg-[#e3e3e3]':'bg-[#1976D2]'} text-white text-[15px] lg:text-[16px]`} 
+            customCss={`mt-6 ${isLoading===true ? 'bg-[rgba(17,24,39,0.32)]':'bg-[#1976D2]'} text-white text-[15px] lg:text-[16px]`} 
             onclickhandler={handleSubmit}
             type="submit" 
           />

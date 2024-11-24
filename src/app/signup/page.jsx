@@ -5,6 +5,7 @@ import {
   Typography, 
   TextField, 
   Container,
+  CircularProgress,
 } from '@mui/material';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
@@ -16,6 +17,7 @@ export default function Signup() {
   const router = useRouter();
   const { resolvedTheme } = useTheme();
   const [auth, setAuth] = useState('');
+  const [isloading, setIsloading] = useState(false)
 
   useEffect(() => {
     const token  = localStorage.getItem('access_token');
@@ -74,6 +76,7 @@ export default function Signup() {
     console.log("data",reEnterPassword,data)
     e.preventDefault();
     if (!validateForm()) return;
+    setIsloading(true)
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/signup`, {
@@ -96,9 +99,13 @@ export default function Signup() {
         toast.error(responseData.message || 'Signup failed');
         setLoginError(responseData.message || 'An unexpected error occurred. Please try again.');
       }
+      setIsloading(false)
+
     } catch (error) {
       console.error("Signup failed", error);
       setLoginError( 'An unexpected error occurred. Please try again.');
+      setIsloading(false)
+
     }
   };
 
@@ -133,7 +140,7 @@ export default function Signup() {
             <Typography className='text-center text-[20px] lg:text-3xl mb-10 font-poppins font-semibold lg:font-normal'>
               Welcome to <span className='lg:font-bold'>AI Cloud Lab!</span>
             </Typography>
-            <form onSubmit={handleSubmit} className='flex flex-col justify-center items-center gap-4'>
+            <div  className='flex flex-col justify-center items-center gap-4'>
               <TextField
                 name="full_name"
                 fullWidth
@@ -268,7 +275,12 @@ export default function Signup() {
               />
                {loginError && <Typography className="text-red-600">{loginError}</Typography>} 
               <Box className="w-full flex flex-col gap-4 mt-6">
-              <CustomButton text={'Sign up'} onclickhandler={handleSubmit} customCss='w-full text-white text-[15px] lg:text-[16px]'/>
+
+              <CustomButton text={isloading=== true ? <>
+            <CircularProgress className="text-white" size={30}/> 
+            </>:
+            <>Sign up</>}  customCss={`w-full text-white text-[15px] lg:text-[16px] ${isloading===true ? 'bg-[rgba(17,24,39,0.32)]':'bg-[#1976D2]'}`} onclickhandler={handleSubmit}/>
+
                 <div className='text-[#111827] w-full flex items-center'>
                   <hr style={{ flex: 1, border: 'none', borderTop: '1px solid black' }} />
                   <Typography className='font-poppins mx-1'>OR</Typography>
@@ -276,7 +288,7 @@ export default function Signup() {
                 </div>
                 <CustomButton text={'Log in'} onclickhandler={() => window.location.href='/login'} customCss='w-full text-white text-[15px] lg:text-[16px]'/>
               </Box>
-            </form>
+            </div>
           </div>
         </div>
       </Container>
