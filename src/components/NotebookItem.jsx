@@ -19,6 +19,7 @@ import CustomButton from "./ui/button";
 import { useRouter } from "next/navigation";
 import Popper from '@mui/material/Popper';
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
+import toast, { Toaster } from "react-hot-toast";
 export default function NotebookItem({ id, name, version, status, notebook_url, onOperation }) {
   const [isHovered, setIsHovered] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -125,13 +126,18 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
           </div>
           
             <div
-              className=" font-poppins text-[#111827] hover:text-gray-600 capitalize flex items-center justify-center hover:cursor-pointer"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              onClick={()=>router.push(`/notebook/${id}`)}
+              disabled={status !== 'running'}
+              className={`font-poppins   capitalize flex items-center justify-center hover:cursor-pointer ${status !== 'running' ? "text-[#b0b0b0]":"text-[#111827] hover:text-gray-600"}`}
+              onClick={()=>{
+                if(status === 'running'){
+                  router.push(`/notebook/${id}`)
+                }else{
+                  toast.error('Notebook is not running')
+                }
+              }}
             >
               Go to notebook
-              <IoIosArrowForward className=' text-lg pb-[2px] m-0' />
+              <IoIosArrowForward className=' text-lg  m-0' />
             </div>
       </Box>
       <span
@@ -169,14 +175,6 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
               className=" font-poppins text-[#111827] hover:text-gray-600 capitalize flex items-center  hover:cursor-pointer"
               onClick={handleOpen}            >
               Delete
-            </div>
-            <div
-              className=" font-poppins text-[#111827] hover:text-gray-600 capitalize flex items-center  hover:cursor-pointer"
-              onMouseEnter={() => setIsHovered(true)}
-              onMouseLeave={() => setIsHovered(false)}
-              onClick={()=>router.push(`/notebook/${id}`)}
-            >
-              Go to notebook
             </div>
         </Box>
       </Popper>
@@ -239,7 +237,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
             </form>
           </div>
         </Modal>
-
+        <Toaster  position="bottom-right"/>
     </Box>
   );
 }
