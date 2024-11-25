@@ -16,7 +16,7 @@ import { FiExternalLink } from "react-icons/fi";
 import toast, { Toaster } from "react-hot-toast";
 
 import { IoIosArrowBack } from "react-icons/io";
-import NoteBookLoader from '@/components/notebook /notebookLoader';
+import NoteBookLoader from '@/components/notebook/notebookLoader';
 type Notebook = {
   id: number;
   name: string;
