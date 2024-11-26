@@ -57,10 +57,7 @@ export default function CreditsModal({ showModal, onClose }:{
           />
         </Box>
       <Toaster position="bottom-right" />
-
       </Box>
-
-    </Modal>
-    
+    </Modal>   
   );
 }
