@@ -21,15 +21,15 @@ export default function CreditsModal({ showModal, onClose }:{
         <Box className='my-4 w-full flex justify-between gap-6'>
           <div className="bg-[#F5F6F6] w-[48%] rounded-lg px-4 py-[15px]">
             <div className="flex items-center justify-between">
-            <Typography className="font-semibold font-poppins lg:text-[20px]">
+            <Typography className="font-semibold font-poppins lg:text-[20px] text-black">
               Free
             </Typography>
-            <div className="font-poppins font-semibold text-[6px] lg:text-[8px] border-black border-[1px] py-[2px] px-[4px] rounded-full">Current Plan</div>
+            <div className="font-poppins font-semibold text-[6px] lg:text-[8px] border-black border-[1px] py-[2px] px-[4px] rounded-full text-black">Current Plan</div>
             </div>
-            <Typography className="my-2 text-[18px] lg:text-[25px] font-poppins pb-4">
+            <Typography className="my-2 text-[18px] lg:text-[25px] font-poppins pb-4 text-black">
             ₹0 <span className="text-[10px] text-gray-600">/month</span>
             </Typography>
-            <ul className="list-disc pl-5 font-poppins lg:text-[16px] text-[13px]">
+            <ul className="list-disc pl-5 font-poppins lg:text-[16px] text-[13px] text-black">
               <li>
                 Access 1 notebook
               </li>
@@ -37,14 +37,14 @@ export default function CreditsModal({ showModal, onClose }:{
           </div>
           <div className="bg-[#E8F1FB] w-[48%] rounded-lg px-4 py-[15px]">
             <div>
-            <Typography className="font-semibold font-poppins lg:text-[20px]">
+            <Typography className="font-semibold font-poppins lg:text-[20px] text-black">
               Pro
             </Typography>
             </div>
-            <Typography className="my-2 text-[18px] lg:text-[25px] font-poppins pb-4">
+            <Typography className="my-2 text-[18px] lg:text-[25px] font-poppins pb-4 text-black">
             ₹1000 <span className="text-[10px] text-gray-600">/month</span>
             </Typography>
-            <ul className="list-disc pl-5 font-poppins lg:text-[16px] text-[13px]">
+            <ul className="list-disc pl-5 font-poppins lg:text-[16px] text-[13px] text-black">
               <li>Access up to 5 notebooks</li>
             </ul>
           </div>
