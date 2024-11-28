@@ -174,30 +174,30 @@ const ProfilePage = () => {
       </>
       : 
       <Box className='w-full flex justify-center p-4 mt-[80px]'>
-      <Box className="flex flex-col space-y-4 lg:border  rounded-[10px] w-[500px] lg:border-[#cccccc] p-7  ">
+      <Box className="flex flex-col space-y-4 lg:border  rounded-[10px] w-[600px] lg:border-[#cccccc] p-7 font-poppins ">
         <Box className=' flex flex-col gap-3'>
-        <Typography className="font-semibold text-[22px] ">
+        <Typography className="font-semibold font-poppins text-[22px] ">
             My Profile 
           </Typography>
             <>
             <Box className="flex  items-center w-full h-[51px]">
-              <Typography className="text-[16px] text-black w-[40%] hidden lg:block ">Full Name</Typography>
-              <Typography className=' p-3 text-[16px] bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.full_name}</Typography>
+              <Typography className="text-[16px] font-poppins text-black w-[38%] hidden lg:block ">Full Name</Typography>
+              <Typography className=' p-3 font-poppins text-[16px] bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.full_name}</Typography>
             </Box>
              <Box className="flex  items-center w-full h-[51px]">
-              <Typography className="text-[16px] text-black w-[40%] hidden lg:block">Phone Number</Typography>
-              <Typography className=' p-3 bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.phone}</Typography>
+              <Typography className="text-[16px] font-poppins text-black w-[38%] hidden lg:block">Phone Number</Typography>
+              <Typography className=' p-3 font-poppins bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.phone}</Typography>
             </Box>
-            <Box className="flex  items-center w-full h-[51px] ">
-              <Typography className="text-[16px] text-black w-[40%] hidden lg:block ">E-mail Address</Typography>
-              <Typography className=' p-3 bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.email}</Typography>
-            </Box>
+             <Box className="flex  items-center w-full h-[51px] ">
+              <Typography className="text-[16px] font-poppins text-black w-[38%] hidden lg:block ">E-mail Address</Typography>
+              <Typography className=' p-3 font-poppins bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.email}</Typography>
+             </Box>
             </>
         </Box>
             <Box className="pt-2 w-full flex justify-end pr-4">
             <Button
               fullWidth
-              className="bg-red-600 text-white font-semibold text-[15px] w-[121px] h-[39px] text-center rounded-[10px]"
+              className="bg-red-600 text-white font-semibold text-[15px] w-[124px] h-[39px] text-center rounded-[10px] font-poppins"
               onClick={handleLogout}
               style={{ textTransform: 'none' }}
             >
@@ -205,7 +205,7 @@ const ProfilePage = () => {
             </Button>
           </Box>
           <Box className='pt-5'>
-          <Typography  className=" mb-5 text-[22px] font-semibold">
+          <Typography  className=" mb-5 font-poppins text-[22px] font-semibold">
             Connected Accounts
           </Typography>
           <Box className="space-y-4">
@@ -218,16 +218,16 @@ const ProfilePage = () => {
                 height={24}
                 />
                 <Box>
-                <Typography className='text-[16px]'>GitHub</Typography>
+                <Typography className='text-[16px] font-poppins'>GitHub</Typography>
               {/* @ts-expect-error  error*/}
-                {userDetails?.gh_username && <Typography className="text-[12px] text-[rgb(17,24,39,0.6)]">{String(userDetails?.gh_username)}</Typography>}
+                {userDetails?.gh_username && <Typography className="text-[12px] font-poppins text-[rgb(17,24,39,0.6)]">{String(userDetails?.gh_username)}</Typography>}
                 </Box>
               </Box>
               {/* @ts-expect-error  error*/}
               {userDetails?.gh_username?
                 <button
                 disabled={isloadingGhRevokebttn}
-                className={`h-[39px]  w-[121px] font-semibold text-black text-[15px] ${isloadingGhRevokebttn?'bg-[rgba(17,24,39,0.32)]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
+                className={`h-[39px]  w-[124px] font-semibold font-poppins text-black text-[15px] ${isloadingGhRevokebttn?'bg-[rgba(17,24,39,0.32)]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
                 style={{ textTransform: 'none' }}
                 onClick={revokeGhUser}
                 >
@@ -236,7 +236,7 @@ const ProfilePage = () => {
               :<>
                 <Button
                 disabled={isfetchGhUserLoading}
-                className={`h-[39px]  w-[121px] font-semibold text-white text-[15px] ${isfetchGhUserLoading ?`bg-[rgba(17,24,39,0.32)]`:`bg-[#1976D2]`} rounded-[10px]`}
+                className={`h-[39px]  w-[124px] font-semibold font-poppins text-white text-[15px] ${isfetchGhUserLoading ?`bg-[rgba(17,24,39,0.32)]`:`bg-[#1976D2]`} rounded-[10px]`}
                 style={{ textTransform: 'none' }}
                 onClick={handleGhConnect}
                 >
@@ -253,9 +253,9 @@ const ProfilePage = () => {
                 width={24}
                 height={24}
                 />
-                <Typography className='text-[16px]'>Google Drive</Typography>
+                <Typography className='text-[16px] font-poppins'>Google Drive</Typography>
               </Box>
-              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]  w-[121px]' 
+              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]  w-[124px] font-poppins' 
                 style={{ textTransform: 'none' }}
               >
                 Coming Soon
@@ -270,7 +270,7 @@ const ProfilePage = () => {
                 height={24}
                 />
                 <Box>
-                <Typography className='text-[16px]'>Hugging Face</Typography>
+                <Typography className='text-[16px] font-poppins'>Hugging Face</Typography>
               {/* @ts-expect-error  error*/}
                 {userDetails?.hf_username && <Typography className="text-[12px] text-[rgb(17,24,39,0.6)]">{String(userDetails?.hf_username)}</Typography>}
                 </Box>
@@ -279,7 +279,7 @@ const ProfilePage = () => {
               {userDetails?.hf_username?
                 <button
                 disabled={isloadingHfRevokebttn}
-                className={`h-[39px]  w-[121px] font-semibold text-black text-[15px] ${isloadingHfRevokebttn?'bg-[rgba(17,24,39,0.32)]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
+                className={`h-[39px]  w-[124px] font-semibold font-poppins text-black text-[15px] ${isloadingHfRevokebttn?'bg-[rgba(17,24,39,0.32)]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
                 style={{ textTransform: 'none' }}
                 onClick={revokeHfUser}
                 >
@@ -288,7 +288,7 @@ const ProfilePage = () => {
               :<>
                 <Button
                 disabled={isfetchHfUserLoading}
-                className={`h-[39px]  w-[121px] font-semibold text-white text-[15px] ${isfetchHfUserLoading ?`bg-[rgba(17,24,39,0.32)]`:`bg-[#1976D2]`} rounded-[10px]`}
+                className={`h-[39px]  w-[124px] font-semibold font-poppins text-white text-[15px] ${isfetchHfUserLoading ?`bg-[rgba(17,24,39,0.32)]`:`bg-[#1976D2]`} rounded-[10px]`}
                 style={{ textTransform: 'none' }}
                 onClick={handleHfConnect}
                 >
