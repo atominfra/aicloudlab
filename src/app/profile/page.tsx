@@ -181,16 +181,16 @@ const ProfilePage = () => {
           </Typography>
             <>
             <Box className="flex  items-center w-full h-[51px]">
-              <Typography className="text-[16px] font-poppins text-black w-[38%] hidden lg:block ">Full Name</Typography>
-              <Typography className=' p-3 font-poppins text-[16px] bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.full_name}</Typography>
+              <Typography className="text-[15px] font-poppins text-black w-[38%] hidden lg:block ">Full Name</Typography>
+              <Typography className=' p-3 font-poppins text-[15px] bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.full_name}</Typography>
             </Box>
              <Box className="flex  items-center w-full h-[51px]">
-              <Typography className="text-[16px] font-poppins text-black w-[38%] hidden lg:block">Phone Number</Typography>
-              <Typography className=' p-3 font-poppins bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.phone}</Typography>
+              <Typography className="text-[15px] font-poppins text-black w-[38%] hidden lg:block">Phone Number</Typography>
+              <Typography className=' p-3 font-poppins bg-white text-[15px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.phone}</Typography>
             </Box>
              <Box className="flex  items-center w-full h-[51px] ">
-              <Typography className="text-[16px] font-poppins text-black w-[38%] hidden lg:block ">E-mail Address</Typography>
-              <Typography className=' p-3 font-poppins bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.email}</Typography>
+              <Typography className="text-[15px] font-poppins text-black w-[38%] hidden lg:block ">E-mail Address</Typography>
+              <Typography className=' p-3 font-poppins bg-white text-[15px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.email}</Typography>
              </Box>
             </>
         </Box>
@@ -218,7 +218,7 @@ const ProfilePage = () => {
                 height={24}
                 />
                 <Box>
-                <Typography className='text-[16px] font-poppins'>GitHub</Typography>
+                <Typography className='text-[15px] font-poppins'>GitHub</Typography>
               {/* @ts-expect-error  error*/}
                 {userDetails?.gh_username && <Typography className="text-[12px] font-poppins text-[rgb(17,24,39,0.6)]">{String(userDetails?.gh_username)}</Typography>}
                 </Box>
@@ -253,7 +253,7 @@ const ProfilePage = () => {
                 width={24}
                 height={24}
                 />
-                <Typography className='text-[16px] font-poppins'>Google Drive</Typography>
+                <Typography className='text-[15px] font-poppins'>Google Drive</Typography>
               </Box>
               <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]  w-[124px] font-poppins' 
                 style={{ textTransform: 'none' }}
@@ -270,7 +270,7 @@ const ProfilePage = () => {
                 height={24}
                 />
                 <Box>
-                <Typography className='text-[16px] font-poppins'>Hugging Face</Typography>
+                <Typography className='text-[15px] font-poppins'>Hugging Face</Typography>
               {/* @ts-expect-error  error*/}
                 {userDetails?.hf_username && <Typography className="text-[12px] text-[rgb(17,24,39,0.6)]">{String(userDetails?.hf_username)}</Typography>}
                 </Box>
