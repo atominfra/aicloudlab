@@ -28,9 +28,11 @@ const ProfilePage = () => {
   const [user, setUser] = useState<User | null>(null); 
   const [isfetchHfUserLoading, setIsfetchHfUserLoading] = useState(false)
   const [isfetchGhUserLoading, setIsfetchGhUserLoading] = useState(false)
+  const [isfetchGdUserLoading, setIsfetchGdUserLoading] = useState(false)
   const [isloading, setIsloading] = useState(true)
   const [isloadingHfRevokebttn, setIsLoadingHfRevokeBttn] = useState(false)
   const [isloadingGhRevokebttn, setIsLoadingGhRevokeBttn] = useState(false)
+  const [isloadingGdRevokebttn, setIsLoadingGdRevokeBttn] = useState(false)
   const [userDetails, setUserDetails] = useState<string | null>('')
   const [error, setError] = useState({})
   useEffect(() => {
@@ -48,6 +50,10 @@ const ProfilePage = () => {
   const handleGhConnect = async ()=>{
     setIsfetchGhUserLoading(true)
     router.push(`${process.env.NEXT_PUBLIC_API_BASE_URL}/gh/connect`)
+  }
+  const handleGdConnect = async ()=>{
+    setIsfetchGdUserLoading(true)
+    router.push(`${process.env.NEXT_PUBLIC_API_BASE_URL}/google/connect`)
   }
 
   const handleLogout = ()=>{
@@ -157,6 +163,40 @@ const ProfilePage = () => {
       fetchUser()
     }
   };
+
+  const revokeGdUser = async () => {
+    setIsLoadingGdRevokeBttn(true);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/gopgle/revoke`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+  
+      if (!response.ok) {
+        // Attempt to parse the error body if possible
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to revoke Google user');
+      }
+  
+      const responseData = await response.json();
+      console.log('responseData', responseData);
+    } catch (error) {
+      // Handle error of type `unknown`
+      if (error instanceof Error) {
+        console.error('Error revoking Google user:', error.message);
+        toast.error(error.message);
+      } else {
+        console.error('Unknown error occurred:', error);
+        toast.error('An unexpected error occurred.');
+      }
+    } finally {
+      setIsLoadingGdRevokeBttn(false);
+      fetchUser()
+    }
+  };
   
 
   useEffect(()=>{
@@ -253,13 +293,32 @@ const ProfilePage = () => {
                 width={24}
                 height={24}
                 />
+                <Box>
                 <Typography className='text-[16px]'>Google Drive</Typography>
+              {/* @ts-expect-error  error*/}
+                {userDetails?.google_username && <Typography className="text-[12px] text-[rgb(17,24,39,0.6)]">{String(userDetails?.google_username)}</Typography>}
+                </Box>
               </Box>
-              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]  w-[121px]' 
+              {/* @ts-expect-error  error*/}
+              {userDetails?.google_username?
+                <button
+                disabled={isloadingGdRevokebttn}
+                className={`h-[39px]  w-[121px] font-semibold text-black text-[15px] ${isloadingGdRevokebttn?'bg-[rgba(17,24,39,0.32)]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
                 style={{ textTransform: 'none' }}
-              >
-                Coming Soon
+                onClick={revokeGdUser}
+                >
+                Remove
+              </button>
+              :<>
+                <Button
+                disabled={isfetchGdUserLoading}
+                className={`h-[39px]  w-[121px] font-semibold text-white text-[15px] ${isfetchGdUserLoading ?`bg-[rgba(17,24,39,0.32)]`:`bg-[#1976D2]`} rounded-[10px]`}
+                style={{ textTransform: 'none' }}
+                onClick={handleGdConnect}
+                >
+                Connect
               </Button>
+                </>}
             </Box>
             <Box className="flex items-center justify-between p-3 border rounded-[10px] h-[70px]">
               <Box className="flex items-center space-x-2">
