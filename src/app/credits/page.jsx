@@ -29,7 +29,7 @@ const NotebooksPage = () => {
   <>
   <Navbar />
     <Box className="flex flex-col items-center justify-center gap-8 h-[90vh] bg-white  text-[#111827]">
-        <Box className=' w-[626px] border-2 rounded-[20px] p-8'>
+        <Box className=' lg:w-[626px] border-2 rounded-[20px] p-8'>
           <Box className='flex flex-col  '>
             <span className='pb-5 font-semibold text-[20px]'>Credit Balance</span>
             <span className='h-[50px] border border-[#1115275a] rounded-[10px] text-black w-full flex  items-center px-4 '>
@@ -71,7 +71,7 @@ const NotebooksPage = () => {
               />
           </Box>
           <Box className='flex w-full justify-end pt-8'>
-          <CustomButton text={'Proceed to Checkout'} onclickhandler={() => window.location.href='/signup'} customCss='w-[229px] text-white text-[15px] lg:text-[16px]'/>
+          <CustomButton text={'Proceed to Checkout'} onclickhandler={() => window.location.href='/signup'} customCss='lg:w-[229px] w-full text-white text-[15px] lg:text-[16px]'/>
 
           </Box>
         </Box> 

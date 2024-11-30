@@ -20,7 +20,7 @@ export default function Navbar() {
           alt="AI Cloud Lab Logo" />
       </Link>
 
-      <Box className="flex gap-8 items-center text-black">
+      <Box className=" gap-8 items-center text-black hidden lg:flex">
         <CreditsPill/>
         <Link href={'/profile'}>
         <PiUserCircleFill className='size-[38px] text-black' />
