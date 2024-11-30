@@ -15,7 +15,7 @@ import gdrive from "@/assets/googledrive.png"
 import huggingface from "@/assets//huggingface.png"
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import Loader from '@/components/loader';
 interface User {
   full_name: string;
@@ -80,10 +80,10 @@ const ProfilePage = () => {
       // Handle error of type `unknown`
       if (error instanceof Error) {
         console.error('Error fetching Hugging Face user:', error.message);
-        toast.error(error.message);
+        toast.error(`${error.message}`,{position:"top-center"});
       } else {
         console.error('Unknown error occurred:', error);
-        toast.error('An unexpected error occurred.');
+        toast.error('An unexpected error occurred.',{position:"top-center"});
       }
     } finally {
       setIsloading(false);
@@ -113,10 +113,10 @@ const ProfilePage = () => {
       // Handle error of type `unknown`
       if (error instanceof Error) {
         console.error('Error revoking Hugging Face user:', error.message);
-        toast.error(error.message);
+        toast.error(error.message,{position:"top-center"});
       } else {
         console.error('Unknown error occurred:', error);
-        toast.error('An unexpected error occurred.');
+        toast.error('An unexpected error occurred.',{position:"top-center"});
       }
     } finally {
       setIsLoadingHfRevokeBttn(false);
@@ -147,10 +147,10 @@ const ProfilePage = () => {
       // Handle error of type `unknown`
       if (error instanceof Error) {
         console.error('Error revoking Hugging Face user:', error.message);
-        toast.error(error.message);
+        toast.error(error.message,{position:"top-center"});
       } else {
         console.error('Unknown error occurred:', error);
-        toast.error('An unexpected error occurred.');
+        toast.error('An unexpected error occurred.',{position:"top-center"});
       }
     } finally {
       setIsLoadingGhRevokeBttn(false);
@@ -302,7 +302,6 @@ const ProfilePage = () => {
         </Box> 
       }
       
-        <Toaster position="top-center" reverseOrder={false} />
       </Box>
   );
 }

@@ -11,7 +11,7 @@ import Image from 'next/image';
 import { useTheme } from 'next-themes';
 import CustomButton from "@/components/ui/button";
 import { useRouter } from 'next/navigation';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 export default function Signup() {
   const router = useRouter();
@@ -96,7 +96,7 @@ export default function Signup() {
         
         window.location.href = '/dashboard' 
       } else {
-        toast.error(responseData.message || 'Signup failed');
+        toast.error(responseData.message || 'Signup failed',{position:"top-center"});
         setLoginError(responseData.message || 'An unexpected error occurred. Please try again.');
       }
       setIsloading(false)
@@ -292,7 +292,6 @@ export default function Signup() {
           </div>
         </div>
       </Container>
-      <Toaster position="top-center" reverseOrder={false} />
     </Box>
   );
 }
