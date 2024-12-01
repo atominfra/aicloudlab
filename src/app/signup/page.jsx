@@ -96,7 +96,7 @@ export default function Signup() {
         
         window.location.href = '/dashboard' 
       } else {
-        toast.error(responseData.message || 'Signup failed',{position:"top-center"});
+        toast.error(responseData.message || 'Signup failed',{position:"bottom-center"});
         setLoginError(responseData.message || 'An unexpected error occurred. Please try again.');
       }
       setIsloading(false)

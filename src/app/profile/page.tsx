@@ -80,10 +80,10 @@ const ProfilePage = () => {
       // Handle error of type `unknown`
       if (error instanceof Error) {
         console.error('Error fetching Hugging Face user:', error.message);
-        toast.error(`${error.message}`,{position:"top-center"});
+        toast.error(`${error.message}`,{position:"bottom-center"});
       } else {
         console.error('Unknown error occurred:', error);
-        toast.error('An unexpected error occurred.',{position:"top-center"});
+        toast.error('An unexpected error occurred.',{position:"bottom-center"});
       }
     } finally {
       setIsloading(false);
@@ -113,10 +113,10 @@ const ProfilePage = () => {
       // Handle error of type `unknown`
       if (error instanceof Error) {
         console.error('Error revoking Hugging Face user:', error.message);
-        toast.error(error.message,{position:"top-center"});
+        toast.error(error.message,{position:"bottom-center"});
       } else {
         console.error('Unknown error occurred:', error);
-        toast.error('An unexpected error occurred.',{position:"top-center"});
+        toast.error('An unexpected error occurred.',{position:"bottom-center"});
       }
     } finally {
       setIsLoadingHfRevokeBttn(false);
@@ -147,10 +147,10 @@ const ProfilePage = () => {
       // Handle error of type `unknown`
       if (error instanceof Error) {
         console.error('Error revoking Hugging Face user:', error.message);
-        toast.error(error.message,{position:"top-center"});
+        toast.error(error.message,{position:"bottom-center"});
       } else {
         console.error('Unknown error occurred:', error);
-        toast.error('An unexpected error occurred.',{position:"top-center"});
+        toast.error('An unexpected error occurred.',{position:"bottom-center"});
       }
     } finally {
       setIsLoadingGhRevokeBttn(false);
