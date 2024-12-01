@@ -167,7 +167,7 @@ const ProfilePage = () => {
   const revokeGdUser = async () => {
     setIsLoadingGdRevokeBttn(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/gopgle/revoke`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/google/revoke`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
