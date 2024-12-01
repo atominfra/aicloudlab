@@ -2,14 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Box, Modal, Button, TextField } from '@mui/material';
 import {useRouter} from 'next/navigation';
-import Navbar from '@/components/navbar';
-import NotebookItem from '@/components/NotebookItem';
+import Navbar from '@/components/navbar/navbar';
+import NotebookItem from '@/components/notebook/NotebookItem';
 import { useGlobalContext } from '@/context/GlobalContext';
 import Image from 'next/image'
 import notebook from '@/assets/notebook.svg'
 import CircularProgress from '@mui/material/CircularProgress';
 import withAuth from '@/components/withAuth';
-import CreditsModal from '@/components/creditsModal';
+import CreditsModal from '@/components/modals/creditsModal';
 import CustomButton from '@/components/ui/button';
 import toast from 'react-hot-toast';
 
