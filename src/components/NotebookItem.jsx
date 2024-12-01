@@ -132,7 +132,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
                 if(status === 'running'){
                   router.push(`/notebook/${id}`)
                 }else{
-                  toast.error('Notebook is not running')
+                  toast.error('Notebook is not running',{position:"bottom-right"})
                 }
               }}
             >
@@ -238,7 +238,6 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
             </form>
           </div>
         </Modal>
-        <Toaster  position="bottom-right"/>
     </Box>
   );
 }
