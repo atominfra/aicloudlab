@@ -5,6 +5,7 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 import Image from "next/image";
 import ConfirmationModal from "./modals/ConfirmationModal";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 const AccountButton = ({ account , userName, api, fetchUser}) => {
   const [isConnecting, setIsConnecting] = useState(false);
@@ -36,7 +37,7 @@ const AccountButton = ({ account , userName, api, fetchUser}) => {
   
       const responseData = await response.json();
       console.log('responseData', responseData);
-    } catch (err) {
+    } catch (error) {
       if (error instanceof Error) {
         console.error('Error revoking Google user:', error.message);
         toast.error(error.message);

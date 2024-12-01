@@ -39,7 +39,7 @@ const ProfilePage = () => {
   const [isloadingHfRevokebttn, setIsLoadingHfRevokeBttn] = useState(false)
   const [isloadingGhRevokebttn, setIsLoadingGhRevokeBttn] = useState(false)
   const [isloadingGdRevokebttn, setIsLoadingGdRevokeBttn] = useState(false)
-  const [userDetails, setUserDetails] = useState<UserDetails | null>({})
+  const [userDetails, setUserDetails] = useState<UserDetails | null>()
   const [error, setError] = useState({})
   useEffect(() => {
     const storedUser = localStorage.getItem('user');

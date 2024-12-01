@@ -8,7 +8,7 @@ import { useTheme } from 'next-themes';
 import { useGlobalContext } from '@/context/GlobalContext';
 import CustomButton from '@/components/ui/button';
 import withAuth from '@/components/withAuth';
-import CreditsModal from '@/components/creditsModal';
+import CreditsModal from '@/components/modals/creditsModal';
 
 const CreateNotebook = () => {
   const router = useRouter();
