@@ -3,7 +3,7 @@ import React, { useState,useEffect } from 'react';
 import { Typography, Box, TextField, Select, MenuItem, ButtonBase, CircularProgress, Popover } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { RiArrowDropDownLine } from "react-icons/ri";
-import Navbar from '../../components/navbar';
+import Navbar from '@/components/navbar/navbar';
 import { useTheme } from 'next-themes';
 import { useGlobalContext } from '@/context/GlobalContext';
 import CustomButton from '@/components/ui/button';

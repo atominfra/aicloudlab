@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import Image from 'next/image'
 import React from 'react'
-import ThemeSwitch from './ThemeSwitch'
+import ThemeSwitch from '../ThemeSwitch'
 import { useTheme } from 'next-themes';
 import Link from 'next/link';
 import { PiUserCircleFill } from 'react-icons/pi';
