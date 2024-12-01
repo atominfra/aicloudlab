@@ -6,7 +6,7 @@ import {
   Typography,
 } from '@mui/material';
 import { PiUserCircleFill } from "react-icons/pi";
-import Navbar from '@/components/navbar';
+import Navbar from '@/components/navbar/navbar';
 import { useTheme } from 'next-themes';
 import withAuth from '@/components/withAuth';
 import { SiHuggingface } from 'react-icons/si';
@@ -17,10 +17,16 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import Loader from '@/components/loader';
+import AccountButton from '@/components/accountButton';
 interface User {
   full_name: string;
   email: string;
   phone: string;
+}
+interface UserDetails{
+  gh_username:string 
+  google_username:string
+  hf_username:string
 }
 
 const ProfilePage = () => {
@@ -33,7 +39,7 @@ const ProfilePage = () => {
   const [isloadingHfRevokebttn, setIsLoadingHfRevokeBttn] = useState(false)
   const [isloadingGhRevokebttn, setIsLoadingGhRevokeBttn] = useState(false)
   const [isloadingGdRevokebttn, setIsLoadingGdRevokeBttn] = useState(false)
-  const [userDetails, setUserDetails] = useState<string | null>('')
+  const [userDetails, setUserDetails] = useState<UserDetails | null>({})
   const [error, setError] = useState({})
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -249,112 +255,9 @@ const ProfilePage = () => {
             Connected Accounts
           </Typography>
           <Box className="space-y-4">
-            <Box className="flex items-center justify-between p-3 border rounded-[10px] h-[70px]">
-              <Box className="flex items-center space-x-2">
-                <Image 
-                src={github}
-                alt="github Icon"
-                width={24}
-                height={24}
-                />
-                <Box>
-                <Typography className='text-[16px]'>GitHub</Typography>
-              {/* @ts-expect-error  error*/}
-                {userDetails?.gh_username && <Typography className="text-[12px] text-[rgb(17,24,39,0.6)]">{String(userDetails?.gh_username)}</Typography>}
-                </Box>
-              </Box>
-              {/* @ts-expect-error  error*/}
-              {userDetails?.gh_username?
-                <button
-                disabled={isloadingGhRevokebttn}
-                className={`h-[39px]  w-[121px] font-semibold text-black text-[15px] ${isloadingGhRevokebttn?'bg-[rgba(17,24,39,0.32)]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
-                style={{ textTransform: 'none' }}
-                onClick={revokeGhUser}
-                >
-                Remove
-              </button>
-              :<>
-                <Button
-                disabled={isfetchGhUserLoading}
-                className={`h-[39px]  w-[121px] font-semibold text-white text-[15px] ${isfetchGhUserLoading ?`bg-[rgba(17,24,39,0.32)]`:`bg-[#1976D2]`} rounded-[10px]`}
-                style={{ textTransform: 'none' }}
-                onClick={handleGhConnect}
-                >
-                Connect
-              </Button>
-                </>}
-              
-            </Box>
-            <Box className="flex items-center justify-between  p-3 border rounded-[10px] h-[70px]">
-              <Box className="flex items-center space-x-2">
-                <Image 
-                src={gdrive}
-                alt="github Icon"
-                width={24}
-                height={24}
-                />
-                <Box>
-                <Typography className='text-[16px]'>Google Drive</Typography>
-              {/* @ts-expect-error  error*/}
-                {userDetails?.google_username && <Typography className="text-[12px] text-[rgb(17,24,39,0.6)]">{String(userDetails?.google_username)}</Typography>}
-                </Box>
-              </Box>
-              {/* @ts-expect-error  error*/}
-              {userDetails?.google_username?
-                <button
-                disabled={isloadingGdRevokebttn}
-                className={`h-[39px]  w-[121px] font-semibold text-black text-[15px] ${isloadingGdRevokebttn?'bg-[rgba(17,24,39,0.32)]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
-                style={{ textTransform: 'none' }}
-                onClick={revokeGdUser}
-                >
-                Remove
-              </button>
-              :<>
-                <Button
-                disabled={isfetchGdUserLoading}
-                className={`h-[39px]  w-[121px] font-semibold text-white text-[15px] ${isfetchGdUserLoading ?`bg-[rgba(17,24,39,0.32)]`:`bg-[#1976D2]`} rounded-[10px]`}
-                style={{ textTransform: 'none' }}
-                onClick={handleGdConnect}
-                >
-                Connect
-              </Button>
-                </>}
-            </Box>
-            <Box className="flex items-center justify-between p-3 border rounded-[10px] h-[70px]">
-              <Box className="flex items-center space-x-2">
-                <Image 
-                src={huggingface}
-                alt="github Icon"
-                width={24}
-                height={24}
-                />
-                <Box>
-                <Typography className='text-[16px]'>Hugging Face</Typography>
-              {/* @ts-expect-error  error*/}
-                {userDetails?.hf_username && <Typography className="text-[12px] text-[rgb(17,24,39,0.6)]">{String(userDetails?.hf_username)}</Typography>}
-                </Box>
-              </Box>
-              {/* @ts-expect-error  error*/}
-              {userDetails?.hf_username?
-                <button
-                disabled={isloadingHfRevokebttn}
-                className={`h-[39px]  w-[121px] font-semibold text-black text-[15px] ${isloadingHfRevokebttn?'bg-[rgba(17,24,39,0.32)]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
-                style={{ textTransform: 'none' }}
-                onClick={revokeHfUser}
-                >
-                Remove
-              </button>
-              :<>
-                <Button
-                disabled={isfetchHfUserLoading}
-                className={`h-[39px]  w-[121px] font-semibold text-white text-[15px] ${isfetchHfUserLoading ?`bg-[rgba(17,24,39,0.32)]`:`bg-[#1976D2]`} rounded-[10px]`}
-                style={{ textTransform: 'none' }}
-                onClick={handleHfConnect}
-                >
-                Connect
-              </Button>
-                </>}
-            </Box>
+          <AccountButton  account={ {id: 1, name: "Github", icon: github} } userName={userDetails?.gh_username} api={'gh'} fetchUser={fetchUser}/>
+          <AccountButton  account={ {id: 1, name: "Google Drive", icon: gdrive} } userName={userDetails?.google_username} api={'google'} fetchUser={fetchUser}/>
+          <AccountButton  account={ {id: 1, name: "Hugging Face", icon: huggingface} } userName={userDetails?.hf_username} api={'hf'} fetchUser={fetchUser}/>
           </Box>
         </Box>
         </Box>
