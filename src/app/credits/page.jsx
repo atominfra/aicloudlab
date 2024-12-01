@@ -12,7 +12,7 @@ import withAuth from '@/components/withAuth';
 import CreditsModal from '@/components/creditsModal';
 import CustomButton from '@/components/ui/button';
 
-const NotebooksPage = () => {
+const CreditsPage = () => {
   const router = useRouter();
   const {notebooks, setNotebooks, credits, fetchCredits} = useGlobalContext();
   const [formData, setFormData] = useState({
@@ -28,7 +28,7 @@ const NotebooksPage = () => {
   return (
   <>
   <Navbar />
-    <Box className="flex flex-col items-center justify-center gap-8 h-[90vh] bg-white  text-[#111827]">
+    <Box className="flex flex-col items-center justify-center gap-8 h-[90vh] bg-transparent  text-[#111827]">
         <Box className=' lg:w-[626px] border-2 rounded-[20px] p-8'>
           <Box className='flex flex-col  '>
             <span className='pb-5 font-semibold text-[20px]'>Credit Balance</span>
@@ -42,7 +42,6 @@ const NotebooksPage = () => {
             <TextField
                 fullWidth
                 name="credits"
-                label="₹"
                 type="text"
                 id="credits"
                 autoComplete="current-password"
@@ -51,6 +50,14 @@ const NotebooksPage = () => {
                 error={!!errors.credits}
                 helperText={errors.credits}
                 variant="outlined"
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <span className='font-serif pr-1'>₹</span>
+                    ),
+                  },
+                }}
+        
                 InputProps={{
                   className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
                 }}
@@ -71,7 +78,7 @@ const NotebooksPage = () => {
               />
           </Box>
           <Box className='flex w-full justify-end pt-8'>
-          <CustomButton text={'Proceed to Checkout'} onclickhandler={() => window.location.href='/signup'} customCss='lg:w-[229px] w-full text-white text-[15px] lg:text-[16px]'/>
+          <CustomButton text={'Proceed to Checkout'} onclickhandler={() => router.push('/checkout')} customCss='lg:w-[229px] w-full text-white text-[15px] lg:text-[16px]'/>
 
           </Box>
         </Box> 
@@ -81,4 +88,4 @@ const NotebooksPage = () => {
 }
 
 
-export default withAuth(NotebooksPage)
+export default withAuth(CreditsPage)
