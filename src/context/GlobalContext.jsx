@@ -7,32 +7,69 @@ const GlobalContext = createContext();
 export const GlobalProvider = ({ children }) => {
     const [notebooks, setNotebooks] = useState([]);
     const [user , setUser] = useState({})
-    const [credits, setCredits] =useState(0)
+    const [isloading, setIsloading] = useState(true)
 
-    const fetchCredits = async () => {
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        }
+      }, []);
+  
+
+    const fetchUserDetails = async () => {
+        setIsloading(true);
         try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/credits`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user`, {
             method: 'GET',
             headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`, 
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
             },
-        });
-        if (response.ok) {
-            const data = await response.json();
-            setCredits(data.data.credits); 
-        } 
-        } catch (err) {
-        console.log('An error occurred while fetching credits');
+          });
+      
+          if (!response.ok) {
+            // Attempt to parse the error body if possible
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to fetch user data');
+          }
+      
+          const responseData = await response.json();
+          console.log('responseData', responseData);
+          setUser(user=>({...user, ...responseData.data}));
+        } catch (error) {
+          // Handle error of type `unknown`
+          if (error instanceof Error) {
+            console.error('Error fetching user data:', error.message);
+            toast.error(`${error.message}`,{position:"bottom-center"});
+          } else {
+            console.error('Unknown error occurred:', error);
+            toast.error('An unexpected error occurred.',{position:"bottom-center"});
+          }
+        } finally {
+          setIsloading(false);
         }
-    };
+      };
 
-    useEffect(()=>{
-        console.log("credits",credits)
-    },[credits])
+      useEffect(()=>{
+        fetchUserDetails()
+      },[])
 
+      useEffect(()=>{
+        console.log("user",user)
+      },[user])
+
+
+      const options = { 
+        notebooks, 
+        setNotebooks, 
+        user, 
+        setUser, 
+        fetchUserDetails, 
+        isloading, 
+      }
     return (
-        <GlobalContext.Provider value={{ notebooks, setNotebooks, user , setUser, credits, setCredits, fetchCredits }}>
+        <GlobalContext.Provider value={options}>
             {children}
         </GlobalContext.Provider>
     );

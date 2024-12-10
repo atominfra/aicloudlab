@@ -4,14 +4,11 @@ import { Box } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useGlobalContext } from "@/context/GlobalContext";
+import { userAgent } from "next/server";
 
 export default function CreditsPill() {
   const router = useRouter();
-  const { credits, fetchCredits, isLoadingCredits } = useGlobalContext();
-
-  useEffect(() => {
-    fetchCredits();
-  }, [fetchCredits]);
+  const { user } = useGlobalContext();
 
   return (
     <div 
@@ -21,7 +18,7 @@ export default function CreditsPill() {
       Credits: 
       <span className='text-black font-semibold flex items-center'>
         <span className='font-serif px-1'>₹</span>
-        {isLoadingCredits ? '...' : credits.toLocaleString()}
+        {user?.credits}
       </span>
     </div>
   );

@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, CircularProgress } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/navbar/navbar';
 import { useGlobalContext } from '@/context/GlobalContext';
@@ -11,21 +11,12 @@ import axios from 'axios';
 import { useSearchParams } from 'next/navigation'
 const CheckoutPage = () => {
   const router = useRouter();
-  const { fetchCredits } = useGlobalContext();
+  const { fetchUserDetails, user } = useGlobalContext();
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
   const searchParams = useSearchParams()
   const value = searchParams.get('value')
   const calculateGST = (amount) => (18 / 100) * amount;
   const totalAmount = Number(value) + calculateGST(Number(value));
-  const [user, setUser] = useState(null); 
-
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
 
   useEffect(() => {
     if (!value) {
@@ -73,7 +64,7 @@ const CheckoutPage = () => {
         handler: async function (paymentResponse) {
           toast.success('Transaction successful!', { position: 'bottom-right' });
           console.log("paymentResponse",paymentResponse)
-          await fetchCredits(); 
+          await fetchUserDetails(); 
           router.push('/dashboard')
         },
         prefill: {
@@ -147,9 +138,12 @@ const CheckoutPage = () => {
                 customCss="lg:w-[100px] w-full text-[15px] lg:text-[16px] text-black bg-[rgba(0,0,0,0.1)]"
               />
               <CustomButton
-                text={isPaymentLoading ? 'Processing...' : 'Confirm'}
+                text={isPaymentLoading=== true ? <>
+                  <CircularProgress className="text-white" size={16}/> 
+                  </>:
+                  <>Confirm</>}  
                 onclickhandler={handlePayment}
-                customCss="lg:w-[100px] w-full text-white text-[15px] lg:text-[16px]"
+                customCss={`lg:w-[100px] w-full text-white ${isPaymentLoading === true ? 'bg-[rgba(17,24,39,0.32)]':'bg-[#1976D2]'} text-[15px] lg:text-[16px]`}
                 disabled={isPaymentLoading}
               />
             </Box>
