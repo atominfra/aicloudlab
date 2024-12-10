@@ -15,14 +15,18 @@ import CustomButton from '@/components/ui/button';
 const CreditsPage = () => {
   const router = useRouter();
   const {notebooks, setNotebooks, credits, fetchCredits} = useGlobalContext();
-  const [formData, setFormData] = useState({
-    credits: '',
-  });
+  const [addCredits, setAddCredits] = useState('');
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { value } = e.target;
+    console.log("credits",value)
+    setAddCredits(value)
+  };
+  
+  const handleClick = () => {
+    console.log("credits", addCredits)
+    router.push(`/checkout?value=${addCredits}`);
   };
 
   return (
@@ -32,7 +36,7 @@ const CreditsPage = () => {
         <Box className=' lg:w-[626px] border-2 rounded-[20px] p-8'>
           <Box className='flex flex-col  '>
             <span className='pb-5 font-semibold text-[20px]'>Credit Balance</span>
-            <span className='h-[50px] border border-[#1115275a] rounded-[10px] text-black w-full flex  items-center px-4 '>
+            <span className='h-[50px] border border-[#1115275a] rounded-[5px] text-black w-full flex  items-center px-4 '>
               <span className='font-serif'>₹</span>
               1940
               </span>
@@ -44,12 +48,10 @@ const CreditsPage = () => {
                 name="credits"
                 type="text"
                 id="credits"
-                autoComplete="current-password"
-                value={formData.credits}
+                value={addCredits}
                 onChange={handleChange}
                 error={!!errors.credits}
                 helperText={errors.credits}
-                variant="outlined"
                 slotProps={{
                   input: {
                     startAdornment: (
@@ -78,7 +80,7 @@ const CreditsPage = () => {
               />
           </Box>
           <Box className='flex w-full justify-end pt-8'>
-          <CustomButton text={'Proceed to Checkout'} onclickhandler={() => router.push('/checkout')} customCss='lg:w-[229px] w-full text-white text-[15px] lg:text-[16px]'/>
+          <CustomButton text={'Proceed to Checkout'} onclickhandler={handleClick} customCss='lg:w-[229px] w-full text-white text-[15px] lg:text-[16px]'/>
 
           </Box>
         </Box> 
