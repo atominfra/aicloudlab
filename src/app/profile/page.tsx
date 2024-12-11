@@ -5,50 +5,19 @@ import {
   Button,
   Typography,
 } from '@mui/material';
-import { PiUserCircleFill } from "react-icons/pi";
-import Navbar from '@/components/navbar';
-import { useTheme } from 'next-themes';
+import Navbar from '@/components/navbar/navbar';
 import withAuth from '@/components/withAuth';
-import { SiHuggingface } from 'react-icons/si';
 import github from "@/assets/github.png"
 import gdrive from "@/assets/googledrive.png"
 import huggingface from "@/assets//huggingface.png"
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import toast, { Toaster } from 'react-hot-toast';
 import Loader from '@/components/loader';
-interface User {
-  full_name: string;
-  email: string;
-  phone: string;
-}
+import AccountButton from '@/components/accountButton';
+import { useGlobalContext } from '@/context/GlobalContext';
 
 const ProfilePage = () => {
-  
-  const [user, setUser] = useState<User | null>(null); 
-  const [isfetchHfUserLoading, setIsfetchHfUserLoading] = useState(false)
-  const [isfetchGhUserLoading, setIsfetchGhUserLoading] = useState(false)
-  const [isloading, setIsloading] = useState(true)
-  const [isloadingHfRevokebttn, setIsLoadingHfRevokeBttn] = useState(false)
-  const [isloadingGhRevokebttn, setIsLoadingGhRevokeBttn] = useState(false)
-  const [userDetails, setUserDetails] = useState<string | null>('')
-  const [error, setError] = useState({})
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-  const router = useRouter()
-  
-  const handleHfConnect = async ()=>{
-    setIsfetchHfUserLoading(true)
-    router.push(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hf/connect`)
-  }
-  const handleGhConnect = async ()=>{
-    setIsfetchGhUserLoading(true)
-    router.push(`${process.env.NEXT_PUBLIC_API_BASE_URL}/gh/connect`)
-  }
+
+  const { fetchUserDetails, isloading, user } = useGlobalContext();
+
 
   const handleLogout = ()=>{
     localStorage.clear()
@@ -56,111 +25,8 @@ const ProfilePage = () => {
     window.location.href = "/"
   }
 
-  const fetchUser = async () => {
-    setIsloading(true);
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        },
-      });
-  
-      if (!response.ok) {
-        // Attempt to parse the error body if possible
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to fetch Hugging Face user');
-      }
-  
-      const responseData = await response.json();
-      console.log('responseData', responseData);
-      setUserDetails(responseData.data);
-    } catch (error) {
-      // Handle error of type `unknown`
-      if (error instanceof Error) {
-        console.error('Error fetching Hugging Face user:', error.message);
-        toast.error(error.message);
-      } else {
-        console.error('Unknown error occurred:', error);
-        toast.error('An unexpected error occurred.');
-      }
-    } finally {
-      setIsloading(false);
-    }
-  };
-  
-  const revokeHfUser = async () => {
-    setIsLoadingHfRevokeBttn(true);
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hf/revoke`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        },
-      });
-  
-      if (!response.ok) {
-        // Attempt to parse the error body if possible
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to revoke Hugging Face user');
-      }
-  
-      const responseData = await response.json();
-      console.log('responseData', responseData);
-    } catch (error) {
-      // Handle error of type `unknown`
-      if (error instanceof Error) {
-        console.error('Error revoking Hugging Face user:', error.message);
-        toast.error(error.message);
-      } else {
-        console.error('Unknown error occurred:', error);
-        toast.error('An unexpected error occurred.');
-      }
-    } finally {
-      setIsLoadingHfRevokeBttn(false);
-      fetchUser()
-    }
-  };
-
-  const revokeGhUser = async () => {
-    setIsLoadingGhRevokeBttn(true);
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/gh/revoke`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        },
-      });
-  
-      if (!response.ok) {
-        // Attempt to parse the error body if possible
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to revoke Hugging Face user');
-      }
-  
-      const responseData = await response.json();
-      console.log('responseData', responseData);
-    } catch (error) {
-      // Handle error of type `unknown`
-      if (error instanceof Error) {
-        console.error('Error revoking Hugging Face user:', error.message);
-        toast.error(error.message);
-      } else {
-        console.error('Unknown error occurred:', error);
-        toast.error('An unexpected error occurred.');
-      }
-    } finally {
-      setIsLoadingGhRevokeBttn(false);
-      fetchUser()
-    }
-  };
-  
-
   useEffect(()=>{
-    fetchUser()
+    fetchUserDetails()
   },[])
   return (
     <Box className="flex flex-col items-center bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
@@ -209,100 +75,15 @@ const ProfilePage = () => {
             Connected Accounts
           </Typography>
           <Box className="space-y-4">
-            <Box className="flex items-center justify-between p-3 border rounded-[10px] h-[70px]">
-              <Box className="flex items-center space-x-2">
-                <Image 
-                src={github}
-                alt="github Icon"
-                width={24}
-                height={24}
-                />
-                <Box>
-                <Typography className='text-[16px]'>GitHub</Typography>
-              {/* @ts-expect-error  error*/}
-                {userDetails?.gh_username && <Typography className="text-[12px] text-[rgb(17,24,39,0.6)]">{String(userDetails?.gh_username)}</Typography>}
-                </Box>
-              </Box>
-              {/* @ts-expect-error  error*/}
-              {userDetails?.gh_username?
-                <button
-                disabled={isloadingGhRevokebttn}
-                className={`h-[39px]  w-[121px] font-semibold text-black text-[15px] ${isloadingGhRevokebttn?'bg-[rgba(17,24,39,0.32)]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
-                style={{ textTransform: 'none' }}
-                onClick={revokeGhUser}
-                >
-                Remove
-              </button>
-              :<>
-                <Button
-                disabled={isfetchGhUserLoading}
-                className={`h-[39px]  w-[121px] font-semibold text-white text-[15px] ${isfetchGhUserLoading ?`bg-[rgba(17,24,39,0.32)]`:`bg-[#1976D2]`} rounded-[10px]`}
-                style={{ textTransform: 'none' }}
-                onClick={handleGhConnect}
-                >
-                Connect
-              </Button>
-                </>}
-              
-            </Box>
-            <Box className="flex items-center justify-between  p-3 border rounded-[10px] h-[70px]">
-              <Box className="flex items-center space-x-2">
-                <Image 
-                src={gdrive}
-                alt="github Icon"
-                width={24}
-                height={24}
-                />
-                <Typography className='text-[16px]'>Google Drive</Typography>
-              </Box>
-              <Button  className='h-[39px] font-semibold text-white text-[15px] bg-[rgba(17,24,39,0.32)] rounded-[10px]  w-[121px]' 
-                style={{ textTransform: 'none' }}
-              >
-                Coming Soon
-              </Button>
-            </Box>
-            <Box className="flex items-center justify-between p-3 border rounded-[10px] h-[70px]">
-              <Box className="flex items-center space-x-2">
-                <Image 
-                src={huggingface}
-                alt="github Icon"
-                width={24}
-                height={24}
-                />
-                <Box>
-                <Typography className='text-[16px]'>Hugging Face</Typography>
-              {/* @ts-expect-error  error*/}
-                {userDetails?.hf_username && <Typography className="text-[12px] text-[rgb(17,24,39,0.6)]">{String(userDetails?.hf_username)}</Typography>}
-                </Box>
-              </Box>
-              {/* @ts-expect-error  error*/}
-              {userDetails?.hf_username?
-                <button
-                disabled={isloadingHfRevokebttn}
-                className={`h-[39px]  w-[121px] font-semibold text-black text-[15px] ${isloadingHfRevokebttn?'bg-[rgba(17,24,39,0.32)]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
-                style={{ textTransform: 'none' }}
-                onClick={revokeHfUser}
-                >
-                Remove
-              </button>
-              :<>
-                <Button
-                disabled={isfetchHfUserLoading}
-                className={`h-[39px]  w-[121px] font-semibold text-white text-[15px] ${isfetchHfUserLoading ?`bg-[rgba(17,24,39,0.32)]`:`bg-[#1976D2]`} rounded-[10px]`}
-                style={{ textTransform: 'none' }}
-                onClick={handleHfConnect}
-                >
-                Connect
-              </Button>
-                </>}
-            </Box>
+          <AccountButton  account={ {id: 1, name: "Github", icon: github} } userName={user?.gh_username} api={'gh'} />
+          <AccountButton  account={ {id: 1, name: "Google Drive", icon: gdrive} } userName={user?.google_username} api={'google'} />
+          <AccountButton  account={ {id: 1, name: "Hugging Face", icon: huggingface} } userName={user?.hf_username} api={'hf'} />
           </Box>
         </Box>
         </Box>
         </Box> 
       }
       
-        <Toaster position="top-center" reverseOrder={false} />
       </Box>
   );
 }

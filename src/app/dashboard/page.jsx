@@ -2,24 +2,24 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Box, Modal, Button } from '@mui/material';
 import {useRouter} from 'next/navigation';
-import Navbar from '@/components/navbar';
-import NotebookItem from '@/components/NotebookItem';
+import Navbar from '@/components/navbar/navbar';
+import NotebookItem from '@/components/notebook/NotebookItem';
 import { useGlobalContext } from '@/context/GlobalContext';
 import Image from 'next/image'
 import notebook from '@/assets/notebook.svg'
 import CircularProgress from '@mui/material/CircularProgress';
 import withAuth from '@/components/withAuth';
-import CreditsModal from '@/components/creditsModal';
+import CreditsModal from '@/components/modals/creditsModal';
 
 const NotebooksPage = () => {
   const router = useRouter();
-  const {notebooks, setNotebooks, credits, fetchCredits} = useGlobalContext();
+  const {notebooks, setNotebooks, user, fetchUserDetails} = useGlobalContext();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
   const handleCreateClick = () => {
-    if (credits < 1) {
+    if (user?.credits < 1) {
       setShowModal(true);
     } else {
       router.push('/create');
@@ -71,7 +71,7 @@ const NotebooksPage = () => {
       if(operationName === 'delete') {
         setLoading(true)
         fetchNotebooks()
-        fetchCredits()
+        fetchUserDetails()
       }
       const result = await response.json();
       console.log('Operation successful:', result);
@@ -79,14 +79,14 @@ const NotebooksPage = () => {
       setError(error?.message);
     }
     fetchNotebooks();
-    fetchCredits()
+    fetchUserDetails()
   };
 
 
 
   useEffect(() => {
     fetchNotebooks();
-    fetchCredits()
+    fetchUserDetails()
   }, []);
 
   return (

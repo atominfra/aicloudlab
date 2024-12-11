@@ -3,16 +3,16 @@ import React, { useState,useEffect } from 'react';
 import { Typography, Box, TextField, Select, MenuItem, ButtonBase, CircularProgress, Popover } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { RiArrowDropDownLine } from "react-icons/ri";
-import Navbar from '../../components/navbar';
+import Navbar from '@/components/navbar/navbar';
 import { useTheme } from 'next-themes';
 import { useGlobalContext } from '@/context/GlobalContext';
 import CustomButton from '@/components/ui/button';
 import withAuth from '@/components/withAuth';
-import CreditsModal from '@/components/creditsModal';
+import CreditsModal from '@/components/modals/creditsModal';
 
 const CreateNotebook = () => {
   const router = useRouter();
-  const { notebooks, setNotebooks, credits, fetchCredits  } = useGlobalContext();
+  const { fetchUserDetails, setNotebooks, user } = useGlobalContext();
   const [formData, setFormData] = useState({
     name: '',
     githubURL: '',
@@ -39,7 +39,7 @@ const CreateNotebook = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsNameTouched(true); 
-    if (credits < 1) {
+    if (user?.credits < 1) {
       setShowModal(true);
     } else {
     setError(null);
@@ -102,7 +102,7 @@ const CreateNotebook = () => {
   };
 
   useEffect(()=>{
-    fetchCredits()
+    fetchUserDetails()
   },[])
   return (
     <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">

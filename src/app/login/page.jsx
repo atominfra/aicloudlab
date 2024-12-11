@@ -24,7 +24,6 @@ export default function Login() {
 
   const router = useRouter()
   const { resolvedTheme } = useTheme();
-  const {  setUser } = useGlobalContext();
   const [auth, setAuth] = useState('');
   const [isloading, setIsloading] = useState(false)
 

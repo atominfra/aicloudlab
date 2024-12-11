@@ -2,6 +2,7 @@ import localFont from "next/font/local";
 import Script from "next/script";
 import "./globals.css";
 import RootLayoutClient from '../app/RootLayoutClient';
+import { Toaster } from "react-hot-toast";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -50,6 +51,8 @@ export default function RootLayout({
         <RootLayoutClient>
           {children}
         </RootLayoutClient>
+        <Toaster />
+
       </body>
     </html>
   );

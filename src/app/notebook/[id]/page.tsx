@@ -13,10 +13,10 @@ import rackCorp from "@/assets/rackCorp.png"
 import Loader from "@/components/loader"; // Import your loader
 import deploy from "@/assets/deploy.png";
 import { FiExternalLink } from "react-icons/fi";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 
 import { IoIosArrowBack } from "react-icons/io";
-import NoteBookLoader from '@/components/notebook /notebookLoader';
+import NoteBookLoader from '@/components/notebook/notebookLoader';
 type Notebook = {
   id: number;
   name: string;
@@ -86,7 +86,7 @@ const NotebookPage = () => {
         <Box className="flex gap-8 items-center">
           <button
             className={`bg-white hover:bg-[#1976D2] h-[38px]  hover:text-white text-black shadow-none text-[16px] font-semibold rounded-[10px] border px-4 py-1 border-gray-300 flex gap-2 items-center justify-center`}
-            onClick={() => toast.success('Coming Soon')}
+            onClick={() => toast.success('Coming Soon',{position: 'bottom-right'})}
             style={{ textTransform: 'none' }}
           >
             <AiOutlineSync />
@@ -94,7 +94,7 @@ const NotebookPage = () => {
           </button>
           <button
             className={`bg-white   text-black shadow-none text-[16px] font-semibold rounded-[10px] ${open ? "border border-black":"border border-gray-300 hover:bg-[#1976D2] hover:text-white"} px-4 py-1 h-[38px]   flex gap-2 items-center justify-center `}
-            onClick={() => toast.success('Coming Soon')}
+            onClick={() => toast.success('Coming Soon',{position: 'bottom-right'})}
             style={{ textTransform: 'none' }}
           >
             <FaRocket className='pt-[2px]' />
@@ -142,7 +142,6 @@ const NotebookPage = () => {
           <Box className='hover:cursor-pointer'>Stop Server</Box>
         </Box>
       </Popper>
-      <Toaster position="bottom-right" />
     </div>
   );
 };

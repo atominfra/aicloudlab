@@ -1,5 +1,5 @@
 import { Box, Modal, Typography } from "@mui/material";
-import CustomButton from "./ui/button";
+import CustomButton from "../ui/button";
 import toast, { Toaster } from "react-hot-toast";
 export default function CreditsModal({ showModal, onClose }:{
   showModal: boolean;
@@ -26,11 +26,10 @@ export default function CreditsModal({ showModal, onClose }:{
           />
           <CustomButton
             text="Upgrade"
-            onclickhandler={() => toast.success('Coming Soon')}
+            onclickhandler={() => toast.success('Coming Soon',{position:"bottom-right"})}
             customCss="w-[50%] bg-[#1976D2] text-white text-[15px] lg:text-[16px]"
           />
         </Box>
-      <Toaster position="bottom-right" />
 
       </Box>
 

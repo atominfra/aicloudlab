@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { FaPlay } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import CircularProgress from '@mui/material/CircularProgress';
-import CustomButton from "./ui/button";
+import CustomButton from "../ui/button";
 import { useRouter } from "next/navigation";
 import Popper from '@mui/material/Popper';
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
@@ -132,7 +132,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
                 if(status === 'running'){
                   router.push(`/notebook/${id}`)
                 }else{
-                  toast.error('Notebook is not running')
+                  toast.error('Notebook is not running',{position:"bottom-right"})
                 }
               }}
             >
@@ -238,7 +238,6 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
             </form>
           </div>
         </Modal>
-        <Toaster  position="bottom-right"/>
     </Box>
   );
 }
