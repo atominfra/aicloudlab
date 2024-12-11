@@ -18,7 +18,7 @@ export default function CreditsPill() {
       Credits: 
       <span className='text-black font-semibold flex items-center'>
         <span className='font-serif px-1'>₹</span>
-        {user?.credits}
+        {user?.credits ? user?.credits : 0}
       </span>
     </div>
   );

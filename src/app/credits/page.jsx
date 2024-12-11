@@ -38,7 +38,7 @@ const CreditsPage = () => {
             <span className='pb-5 font-semibold text-[20px]'>Credit Balance</span>
             <span className='h-[50px] border border-[#1115275a] rounded-[5px] text-black w-full flex  items-center px-4 '>
               <span className='font-serif'>₹</span>
-              {user?.credits}
+              {user?.credits ? user?.credits : 0}
               </span>
           </Box>
           <Box className='flex flex-col  pt-8'>
