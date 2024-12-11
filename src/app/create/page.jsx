@@ -12,7 +12,7 @@ import CreditsModal from '@/components/modals/creditsModal';
 
 const CreateNotebook = () => {
   const router = useRouter();
-  const { notebooks, setNotebooks, user } = useGlobalContext();
+  const { fetchUserDetails, setNotebooks, user } = useGlobalContext();
   const [formData, setFormData] = useState({
     name: '',
     githubURL: '',

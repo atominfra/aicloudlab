@@ -1,6 +1,7 @@
 'use client'; // Ensure this is at the top of the file
 
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 const GlobalContext = createContext();
 
