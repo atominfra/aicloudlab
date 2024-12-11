@@ -55,7 +55,7 @@ const CheckoutPage = () => {
         }
       );
       
-      const { order_id } = response.data;
+      const { order_id } = response.data.data;
 
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, 
