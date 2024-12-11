@@ -13,13 +13,13 @@ import CreditsModal from '@/components/modals/creditsModal';
 
 const NotebooksPage = () => {
   const router = useRouter();
-  const {notebooks, setNotebooks, credits, fetchCredits} = useGlobalContext();
+  const {notebooks, setNotebooks, user, fetchUserDetails} = useGlobalContext();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
   const handleCreateClick = () => {
-    if (credits < 1) {
+    if (user?.credits < 1) {
       setShowModal(true);
     } else {
       router.push('/create');
@@ -71,7 +71,7 @@ const NotebooksPage = () => {
       if(operationName === 'delete') {
         setLoading(true)
         fetchNotebooks()
-        fetchCredits()
+        fetchUserDetails()
       }
       const result = await response.json();
       console.log('Operation successful:', result);
@@ -79,14 +79,14 @@ const NotebooksPage = () => {
       setError(error?.message);
     }
     fetchNotebooks();
-    fetchCredits()
+    fetchUserDetails()
   };
 
 
 
   useEffect(() => {
     fetchNotebooks();
-    fetchCredits()
+    fetchUserDetails()
   }, []);
 
   return (

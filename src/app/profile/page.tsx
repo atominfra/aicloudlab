@@ -5,62 +5,19 @@ import {
   Button,
   Typography,
 } from '@mui/material';
-import { PiUserCircleFill } from "react-icons/pi";
 import Navbar from '@/components/navbar/navbar';
-import { useTheme } from 'next-themes';
 import withAuth from '@/components/withAuth';
-import { SiHuggingface } from 'react-icons/si';
 import github from "@/assets/github.png"
 import gdrive from "@/assets/googledrive.png"
 import huggingface from "@/assets//huggingface.png"
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import toast from 'react-hot-toast';
 import Loader from '@/components/loader';
 import AccountButton from '@/components/accountButton';
-interface User {
-  full_name: string;
-  email: string;
-  phone: string;
-}
-interface UserDetails{
-  gh_username:string 
-  google_username:string
-  hf_username:string
-}
+import { useGlobalContext } from '@/context/GlobalContext';
 
 const ProfilePage = () => {
-  
-  const [user, setUser] = useState<User | null>(null); 
-  const [isfetchHfUserLoading, setIsfetchHfUserLoading] = useState(false)
-  const [isfetchGhUserLoading, setIsfetchGhUserLoading] = useState(false)
-  const [isfetchGdUserLoading, setIsfetchGdUserLoading] = useState(false)
-  const [isloading, setIsloading] = useState(true)
-  const [isloadingHfRevokebttn, setIsLoadingHfRevokeBttn] = useState(false)
-  const [isloadingGhRevokebttn, setIsLoadingGhRevokeBttn] = useState(false)
-  const [isloadingGdRevokebttn, setIsLoadingGdRevokeBttn] = useState(false)
-  const [userDetails, setUserDetails] = useState<UserDetails | null>()
-  const [error, setError] = useState({})
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-  const router = useRouter()
-  
-  const handleHfConnect = async ()=>{
-    setIsfetchHfUserLoading(true)
-    router.push(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hf/connect`)
-  }
-  const handleGhConnect = async ()=>{
-    setIsfetchGhUserLoading(true)
-    router.push(`${process.env.NEXT_PUBLIC_API_BASE_URL}/gh/connect`)
-  }
-  const handleGdConnect = async ()=>{
-    setIsfetchGdUserLoading(true)
-    router.push(`${process.env.NEXT_PUBLIC_API_BASE_URL}/google/connect`)
-  }
+
+  const { fetchUserDetails, isloading, user } = useGlobalContext();
+
 
   const handleLogout = ()=>{
     localStorage.clear()
@@ -68,145 +25,8 @@ const ProfilePage = () => {
     window.location.href = "/"
   }
 
-  const fetchUser = async () => {
-    setIsloading(true);
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        },
-      });
-  
-      if (!response.ok) {
-        // Attempt to parse the error body if possible
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to fetch Hugging Face user');
-      }
-  
-      const responseData = await response.json();
-      console.log('responseData', responseData);
-      setUserDetails(responseData.data);
-    } catch (error) {
-      // Handle error of type `unknown`
-      if (error instanceof Error) {
-        console.error('Error fetching Hugging Face user:', error.message);
-        toast.error(`${error.message}`,{position:"bottom-center"});
-      } else {
-        console.error('Unknown error occurred:', error);
-        toast.error('An unexpected error occurred.',{position:"bottom-center"});
-      }
-    } finally {
-      setIsloading(false);
-    }
-  };
-  
-  const revokeHfUser = async () => {
-    setIsLoadingHfRevokeBttn(true);
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/hf/revoke`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        },
-      });
-  
-      if (!response.ok) {
-        // Attempt to parse the error body if possible
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to revoke Hugging Face user');
-      }
-  
-      const responseData = await response.json();
-      console.log('responseData', responseData);
-    } catch (error) {
-      // Handle error of type `unknown`
-      if (error instanceof Error) {
-        console.error('Error revoking Hugging Face user:', error.message);
-        toast.error(error.message,{position:"bottom-center"});
-      } else {
-        console.error('Unknown error occurred:', error);
-        toast.error('An unexpected error occurred.',{position:"bottom-center"});
-      }
-    } finally {
-      setIsLoadingHfRevokeBttn(false);
-      fetchUser()
-    }
-  };
-
-  const revokeGhUser = async () => {
-    setIsLoadingGhRevokeBttn(true);
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/gh/revoke`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        },
-      });
-  
-      if (!response.ok) {
-        // Attempt to parse the error body if possible
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to revoke Hugging Face user');
-      }
-  
-      const responseData = await response.json();
-      console.log('responseData', responseData);
-    } catch (error) {
-      // Handle error of type `unknown`
-      if (error instanceof Error) {
-        console.error('Error revoking Hugging Face user:', error.message);
-        toast.error(error.message,{position:"bottom-center"});
-      } else {
-        console.error('Unknown error occurred:', error);
-        toast.error('An unexpected error occurred.',{position:"bottom-center"});
-      }
-    } finally {
-      setIsLoadingGhRevokeBttn(false);
-      fetchUser()
-    }
-  };
-
-  const revokeGdUser = async () => {
-    setIsLoadingGdRevokeBttn(true);
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/google/revoke`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        },
-      });
-  
-      if (!response.ok) {
-        // Attempt to parse the error body if possible
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to revoke Google user');
-      }
-  
-      const responseData = await response.json();
-      console.log('responseData', responseData);
-    } catch (error) {
-      // Handle error of type `unknown`
-      if (error instanceof Error) {
-        console.error('Error revoking Google user:', error.message);
-        toast.error(error.message);
-      } else {
-        console.error('Unknown error occurred:', error);
-        toast.error('An unexpected error occurred.');
-      }
-    } finally {
-      setIsLoadingGdRevokeBttn(false);
-      fetchUser()
-    }
-  };
-  
-
   useEffect(()=>{
-    fetchUser()
+    fetchUserDetails()
   },[])
   return (
     <Box className="flex flex-col items-center bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
@@ -255,9 +75,9 @@ const ProfilePage = () => {
             Connected Accounts
           </Typography>
           <Box className="space-y-4">
-          <AccountButton  account={ {id: 1, name: "Github", icon: github} } userName={userDetails?.gh_username} api={'gh'} fetchUser={fetchUser}/>
-          <AccountButton  account={ {id: 1, name: "Google Drive", icon: gdrive} } userName={userDetails?.google_username} api={'google'} fetchUser={fetchUser}/>
-          <AccountButton  account={ {id: 1, name: "Hugging Face", icon: huggingface} } userName={userDetails?.hf_username} api={'hf'} fetchUser={fetchUser}/>
+          <AccountButton  account={ {id: 1, name: "Github", icon: github} } userName={user?.gh_username} api={'gh'} />
+          <AccountButton  account={ {id: 1, name: "Google Drive", icon: gdrive} } userName={user?.google_username} api={'google'} />
+          <AccountButton  account={ {id: 1, name: "Hugging Face", icon: huggingface} } userName={user?.hf_username} api={'hf'} />
           </Box>
         </Box>
         </Box>

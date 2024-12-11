@@ -12,7 +12,7 @@ import CreditsModal from '@/components/modals/creditsModal';
 
 const CreateNotebook = () => {
   const router = useRouter();
-  const { notebooks, setNotebooks, credits, fetchCredits  } = useGlobalContext();
+  const { fetchUserDetails, setNotebooks, user } = useGlobalContext();
   const [formData, setFormData] = useState({
     name: '',
     githubURL: '',
@@ -39,7 +39,7 @@ const CreateNotebook = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsNameTouched(true); 
-    if (credits < 1) {
+    if (user?.credits < 1) {
       setShowModal(true);
     } else {
     setError(null);
@@ -102,7 +102,7 @@ const CreateNotebook = () => {
   };
 
   useEffect(()=>{
-    fetchCredits()
+    fetchUserDetails()
   },[])
   return (
     <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
