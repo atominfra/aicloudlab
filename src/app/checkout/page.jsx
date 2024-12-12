@@ -54,11 +54,13 @@ const CheckoutPage = () => {
           },
         }
       );
-      
-      const { order_id } = response.data.data;
 
+      const { data } = await axios.get('/api/getRazorpayKey');
+      const razorpayKey = data.key;
+
+      const { order_id } = response.data.data;
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID, 
+        key: razorpayKey, 
         amount: totalAmount * 100, 
         order_id,
         handler: async function (paymentResponse) {
