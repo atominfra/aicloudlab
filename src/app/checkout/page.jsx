@@ -69,14 +69,6 @@ const CheckoutPage = () => {
           await fetchUserDetails(); 
           router.push('/dashboard')
         },
-        prefill: {
-          name: user.full_name || 'User Name',
-          email: user.email ||'user@example.com',
-          contact: user.phone ||'9999999999',
-        },
-        theme: {
-          color: '#F37254',
-        },
       };
 
       const razorpay = new window.Razorpay(options);
