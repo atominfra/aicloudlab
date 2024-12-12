@@ -42,10 +42,10 @@ export const GlobalProvider = ({ children }) => {
           // Handle error of type `unknown`
           if (error instanceof Error) {
             console.error('Error fetching user data:', error.message);
-            toast.error(`${error.message}`,{position:"bottom-center"});
+            // toast.error(`${error.message}`,{position:"bottom-center"});
           } else {
             console.error('Unknown error occurred:', error);
-            toast.error('An unexpected error occurred.',{position:"bottom-center"});
+            // toast.error('An unexpected error occurred.',{position:"bottom-center"});
           }
         } finally {
           setIsloading(false);
