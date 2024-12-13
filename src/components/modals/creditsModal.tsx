@@ -1,10 +1,13 @@
 import { Box, Modal, Typography } from "@mui/material";
-import CustomButton from "../ui/button";
+import CustomButton from "@/components/ui/customButton"
 import toast, { Toaster } from "react-hot-toast";
+import { Router } from "lucide-react";
+import { useRouter } from "next/navigation";
 export default function CreditsModal({ showModal, onClose }:{
   showModal: boolean;
   onClose: () => void;
 }) {
+  const router = useRouter()
   return (
     <Modal
       open={showModal}
@@ -26,7 +29,7 @@ export default function CreditsModal({ showModal, onClose }:{
           />
           <CustomButton
             text="Upgrade"
-            onclickhandler={() => toast.success('Coming Soon',{position:"bottom-right"})}
+            onclickhandler={() => router.push('/credits')}
             customCss="w-[50%] bg-[#1976D2] text-white text-[15px] lg:text-[16px]"
           />
         </Box>

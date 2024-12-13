@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, CircularProgress, Modal, Typography } from '@mui/material';
-import CustomButton from '../ui/button';
+import CustomButton from "@/components/ui/customButton"
 
 interface ConfirmationModalProps {
   open: boolean;

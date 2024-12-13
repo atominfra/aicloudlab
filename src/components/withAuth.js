@@ -1,38 +1,38 @@
-"use client";
+// "use client";
 
-import { useState, useEffect } from 'react';
-import { isAuthenticated } from '@/utils/auth'; // Your auth check logic
+// import { useState, useEffect } from 'react';
+// import { isAuthenticated } from '@/utils/auth'; // Your auth check logic
 
-const withAuth = (WrappedComponent) => {
-  const AuthenticatedComponent = (props) => {
-    const [isClient, setIsClient] = useState(false); // To track if it's on client-side
+// const withAuth = (WrappedComponent) => {
+//   const AuthenticatedComponent = (props) => {
+//     const [isClient, setIsClient] = useState(false); // To track if it's on client-side
 
-    useEffect(() => {
-      // Mark as client-side once component is mounted
-      setIsClient(true);
+//     useEffect(() => {
+//       // Mark as client-side once component is mounted
+//       setIsClient(true);
 
-      // Redirect if not authenticated
-      if (!isAuthenticated()) {
-        window.location.href = '/login'; 
-      }
-    }, []);
+//       // Redirect if not authenticated
+//       if (!isAuthenticated()) {
+//         window.location.href = '/login'; 
+//       }
+//     }, []);
 
-    // If not on the client side yet, return null to avoid SSR mismatch
-    if (!isClient) {
-      return null; // Prevent rendering during SSR
-    }
+//     // If not on the client side yet, return null to avoid SSR mismatch
+//     if (!isClient) {
+//       return null; // Prevent rendering during SSR
+//     }
 
-    if (!isAuthenticated()) {
-      return null; // If not authenticated after client check
-    }
+//     if (!isAuthenticated()) {
+//       return null; // If not authenticated after client check
+//     }
 
-    return <WrappedComponent {...props} />;
-  };
+//     return <WrappedComponent {...props} />;
+//   };
 
-  // Set the display name for better debugging
-  AuthenticatedComponent.displayName = `withAuth(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
+//   // Set the display name for better debugging
+//   AuthenticatedComponent.displayName = `withAuth(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
 
-  return AuthenticatedComponent;
-};
+//   return AuthenticatedComponent;
+// };
 
-export default withAuth;
+// export default withAuth;

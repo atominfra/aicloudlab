@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { RiArrowDropDownLine } from "react-icons/ri";
 import Navbar from '@/components/navbar/navbar';
 import { useTheme } from 'next-themes';
-import CustomButton from '@/components/ui/button';
+import CustomButton from "@/components/ui/customButton"
 import withAuth from '@/components/withAuth';
 import CreditsModal from '@/components/modals/creditsModal';
 import { useGlobal } from '@/context/global-context';
@@ -38,9 +38,9 @@ const CreateNotebook = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsNameTouched(true); 
-    if (user?.credits < 1) {
-      setShowModal(true);
-    } else {
+    // if (user?.credits < 1) {
+    //   setShowModal(true);
+    // } else {
     setError(null);
     setIsLoading(true);
 
@@ -88,6 +88,7 @@ const CreateNotebook = () => {
 
         setNotebooks(prev => [...prev, newNotebook]);
         window.location.href='/dashboard'
+        router.push('/dashboard/notebooks')
       } else {
         const errorData = await response.json();
         setError(errorData.detail || 'Failed to create notebook');
@@ -97,7 +98,7 @@ const CreateNotebook = () => {
     } finally {
       setIsLoading(false);
     }
-  }
+  // }
   };
 
   useEffect(()=>{

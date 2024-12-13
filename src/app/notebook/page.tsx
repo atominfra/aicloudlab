@@ -3,8 +3,7 @@ import { Box, Typography,  } from '@mui/material';
 import Link from 'next/link';
 import { FaExternalLinkAlt } from "react-icons/fa";
 import Navbar from '@/components/navbar/navbar';
-import CustomButton from '@/components/ui/button';
-import withAuth from '@/components/withAuth';
+import CustomButton from "@/components/ui/customButton"
 
 const Notebook =() => {
   return (

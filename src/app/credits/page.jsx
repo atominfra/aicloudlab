@@ -11,7 +11,7 @@ import notebook from '@/assets/notebook.svg'
 import CircularProgress from '@mui/material/CircularProgress';
 import withAuth from '@/components/withAuth';
 import CreditsModal from '@/components/modals/creditsModal';
-import CustomButton from '@/components/ui/button';
+import CustomButton from "@/components/ui/customButton"
 
 const CreditsPage = () => {
   const router = useRouter();

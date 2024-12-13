@@ -4,11 +4,10 @@ import { Typography, Box, CircularProgress } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/navbar/navbar';
 import { useGlobal } from '@/context/global-context';
-import CustomButton from '@/components/ui/button';
 import toast from 'react-hot-toast';
-import withAuth from '@/components/withAuth';
 import axios from 'axios';
 import { useSearchParams } from 'next/navigation'
+import CustomButton from "@/components/ui/customButton"
 const CheckoutPage = () => {
   const router = useRouter();
   const { fetchUserDetails, user } = useGlobal();
