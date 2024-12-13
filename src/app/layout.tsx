@@ -3,7 +3,8 @@ import Script from "next/script";
 import "./globals.css";
 import RootLayoutClient from '../app/RootLayoutClient';
 import { Toaster } from "react-hot-toast";
-
+import { GlobalProvider } from "@/context/global-context";
+import { ThemeProvider } from "@/context/theme-provider";
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -48,9 +49,11 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}>
-        <RootLayoutClient>
+      <ThemeProvider defaultTheme="light" storageKey="ui-theme">
+        <GlobalProvider>
           {children}
-        </RootLayoutClient>
+        </GlobalProvider>
+        </ThemeProvider>
         <Toaster />
 
       </body>
