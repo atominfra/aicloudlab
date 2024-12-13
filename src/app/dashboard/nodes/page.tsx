@@ -28,15 +28,15 @@ export default function NodesPage() {
   ] as const
 
   return (
-      <div className="p-6">
+      <div className="p-6 bg-neutral-100 h-screen">
         <div className="flex items-center justify-between mb-6">
           <h1 className="text-2xl font-semibold">Nodes</h1>
-          <Button>
+          <Button className="bg-blue-600">
             <span className="mr-2">+</span>
             Create
           </Button>
         </div>
-        <div className="space-y-4">
+        <div className="">
           {nodes.map((node) => (
             <NodeCard key={node.name} {...node} />
           ))}

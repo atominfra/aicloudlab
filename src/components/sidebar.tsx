@@ -3,19 +3,26 @@ import Link from "next/link"
 import { Book, Cpu } from 'lucide-react'
 import { cn } from "@/lib/utils"
 import { usePathname } from 'next/navigation'
-// import { useGlobal } from "@/contexts/global-context"
+import Image from "next/image"
+import { useGlobal } from "@/context/global-context"
 // import { ThemeToggle } from "./theme-toggle"
 
 export function Sidebar() {
   const pathname = usePathname()
   console.log("pathname",pathname)
-  // const { userName, credits } = useGlobal()
+  const { user } = useGlobal()
 
   return (
     <div className="w-60 bg-card border-r border-border flex flex-col h-full">
       <div className="p-4 flex items-center justify-between border-b">
-        <Link href="/" className="flex items-center">
-          <span className="font-bold text-xl">LOGO</span>
+        <Link href="/" className="flex items-center ">
+          <Image 
+          src='https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png'
+          alt='logo'
+          width={24}
+          height={24}
+          ></Image>
+          <div className="font-bold text-xl pt-[0.8px] pl-2">AI Cloud Lab</div>
         </Link>
         {/* <ThemeToggle /> */}
       </div>
@@ -25,8 +32,9 @@ export function Sidebar() {
             <Link
               href="/dashboard/notebooks"
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-lg text-foreground hover:bg-accent",
-                pathname === '/dashboard/notebooks' && "bg-accent text-accent-foreground"
+                "flex items-center gap-2 px-4 py-2 rounded-lg text-foreground ",
+                pathname === '/dashboard/notebooks'  ? "bg-blue-600 text-white":"hover:bg-accent",
+
               )}
             >
               <Book size={20} />
@@ -37,8 +45,9 @@ export function Sidebar() {
             <Link
               href="/dashboard/nodes"
               className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-lg text-foreground hover:bg-accent",
-                pathname === '/dashboard/nodes' && "bg-accent text-accent-foreground"
+                "flex items-center gap-2 px-4 py-2 rounded-lg text-foreground ",
+                pathname === '/dashboard/nodes'  ? "bg-blue-600 text-white":"hover:bg-accent",
+
               )}
             >
               <Cpu size={20} />
@@ -49,16 +58,19 @@ export function Sidebar() {
       </nav>
       <div className="p-4 border-t border-border">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
-            {/* <span className="text-sm font-medium">{userName.split(' ').map(n => n[0]).join('')}</span> */}
+          <div className="w-10 h-10 rounded-full bg-neutral-100 border flex items-center justify-center">
+            <span className="text-md font-medium ">{'Shryansh'.split(' ').map(n => n[0]).join('')}</span>
           </div>
           <div className="flex-1">
-            {/* <div className="font-medium">{userName}</div> */}
-            <div className="text-sm text-muted-foreground">User</div>
+            <div className="text-sm text-muted-foreground">
+              {/* {user.full_name} */}
+              Shryansh
+              </div>
+            {/* <div className="text-sm text-muted-foreground">User</div> */}
           </div>
-          <div className="px-3 py-1 bg-primary text-primary-foreground text-sm rounded-full">
-            {/* ¥{credits}  */}
-            Credits
+          <div className="px-3 py-1 bg-blue-600 text-primary-foreground text-sm rounded-[4px]">
+            ¥2000
+            
           </div>
         </div>
       </div>

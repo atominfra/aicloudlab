@@ -4,7 +4,8 @@ import { Typography, Box, Modal, Button, TextField } from '@mui/material';
 import {useRouter} from 'next/navigation';
 import Navbar from '@/components/navbar/navbar';
 import NotebookItem from '@/components/notebook/NotebookItem';
-import { useGlobalContext } from '@/context/GlobalContext';
+import { useGlobal } from '@/context/global-context';
+
 import Image from 'next/image'
 import notebook from '@/assets/notebook.svg'
 import CircularProgress from '@mui/material/CircularProgress';
@@ -14,7 +15,7 @@ import CustomButton from '@/components/ui/button';
 
 const CreditsPage = () => {
   const router = useRouter();
-  const {user} = useGlobalContext();
+  const {user} = useGlobal();
   const [addCredits, setAddCredits] = useState('');
   const [errors, setErrors] = useState({});
 
@@ -90,4 +91,4 @@ const CreditsPage = () => {
 }
 
 
-export default withAuth(CreditsPage)
+export default (CreditsPage)

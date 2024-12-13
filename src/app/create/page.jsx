@@ -5,14 +5,13 @@ import { useRouter } from 'next/navigation';
 import { RiArrowDropDownLine } from "react-icons/ri";
 import Navbar from '@/components/navbar/navbar';
 import { useTheme } from 'next-themes';
-import { useGlobalContext } from '@/context/GlobalContext';
 import CustomButton from '@/components/ui/button';
 import withAuth from '@/components/withAuth';
 import CreditsModal from '@/components/modals/creditsModal';
-
+import { useGlobal } from '@/context/global-context';
 const CreateNotebook = () => {
   const router = useRouter();
-  const { fetchUserDetails, setNotebooks, user } = useGlobalContext();
+  const { fetchUserDetails, setNotebooks, user } = useGlobal();
   const [formData, setFormData] = useState({
     name: '',
     githubURL: '',
@@ -246,4 +245,4 @@ const CreateNotebook = () => {
 
 
 
-export default withAuth(CreateNotebook)
+export default (CreateNotebook)

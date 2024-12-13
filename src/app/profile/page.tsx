@@ -12,11 +12,11 @@ import gdrive from "@/assets/googledrive.png"
 import huggingface from "@/assets//huggingface.png"
 import Loader from '@/components/loader';
 import AccountButton from '@/components/accountButton';
-import { useGlobalContext } from '@/context/GlobalContext';
+import { useGlobal } from '@/context/global-context';
 
 const ProfilePage = () => {
 
-  const { fetchUserDetails, isloading, user } = useGlobalContext();
+  const { fetchUserDetails, isloading, user } = useGlobal();
 
 
   const handleLogout = ()=>{
@@ -89,4 +89,4 @@ const ProfilePage = () => {
 }
 
 
-export default withAuth(ProfilePage)
+export default (ProfilePage)

@@ -146,4 +146,4 @@ const NotebookPage = () => {
   );
 };
 
-export default withAuth(NotebookPage);
+export default (NotebookPage);

@@ -105,4 +105,4 @@ const Notebook =() => {
 }
 
 
-export default withAuth(Notebook)
+export default (Notebook)

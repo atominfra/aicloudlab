@@ -6,12 +6,12 @@ import Image from "next/image";
 import ConfirmationModal from "./modals/ConfirmationModal";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { useGlobalContext } from "@/context/GlobalContext";
+import { useGlobal } from "@/context/global-context"
 const AccountButton = ({ account , userName, api}) => {
   const [isConnecting, setIsConnecting] = useState(false);
   const [isRevoking, setIsRevoking] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { fetchUserDetails, } = useGlobalContext();
+  const { fetchUserDetails, } = useGlobal();
 
   const router = useRouter()
 

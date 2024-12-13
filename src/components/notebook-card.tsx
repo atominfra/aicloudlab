@@ -9,7 +9,7 @@ interface NotebookCardProps {
 
 export function NotebookCard({ name, lastEdited, status }: NotebookCardProps) {
   return (
-    <div className="bg-white rounded-lg border p-4">
+    <div className="bg-white border-b rounded-md p-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center">

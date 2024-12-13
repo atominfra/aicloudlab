@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 import Image from 'next/image'
 import { useTheme } from 'next-themes'
-import { useGlobalContext } from '@/context/GlobalContext';
 
 export default function Login() {
 

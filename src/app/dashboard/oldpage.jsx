@@ -4,7 +4,7 @@ import { Typography, Box, Modal, Button } from '@mui/material';
 import {useRouter} from 'next/navigation';
 import Navbar from '@/components/navbar/navbar';
 import NotebookItem from '@/components/notebook/NotebookItem';
-import { useGlobalContext } from '@/context/GlobalContext';
+import { useGlobal } from "@/context/global-context"
 import Image from 'next/image'
 import notebook from '@/assets/notebook.svg'
 import CircularProgress from '@mui/material/CircularProgress';
@@ -13,7 +13,7 @@ import CreditsModal from '@/components/modals/creditsModal';
 
 const NotebooksPage = () => {
   const router = useRouter();
-  const {notebooks, setNotebooks, user, fetchUserDetails} = useGlobalContext();
+  const {notebooks, setNotebooks, user, fetchUserDetails} = useGlobal();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -149,4 +149,4 @@ const NotebooksPage = () => {
 }
 
 
-export default withAuth(NotebooksPage)
+export default (NotebooksPage)

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Typography, Box, CircularProgress } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/navbar/navbar';
-import { useGlobalContext } from '@/context/GlobalContext';
+import { useGlobal } from '@/context/global-context';
 import CustomButton from '@/components/ui/button';
 import toast from 'react-hot-toast';
 import withAuth from '@/components/withAuth';
@@ -11,7 +11,7 @@ import axios from 'axios';
 import { useSearchParams } from 'next/navigation'
 const CheckoutPage = () => {
   const router = useRouter();
-  const { fetchUserDetails, user } = useGlobalContext();
+  const { fetchUserDetails, user } = useGlobal();
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
   const searchParams = useSearchParams()
   const value = searchParams.get('value')
@@ -148,4 +148,4 @@ const CheckoutPage = () => {
   );
 };
 
-export default withAuth(CheckoutPage);
+export default withuth(CheckoutPage);

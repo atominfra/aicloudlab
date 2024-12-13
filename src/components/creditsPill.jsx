@@ -3,12 +3,12 @@
 import { Box } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useGlobalContext } from "@/context/GlobalContext";
+import { useGlobal } from "@/context/global-context"
 import { userAgent } from "next/server";
 
 export default function CreditsPill() {
   const router = useRouter();
-  const { user } = useGlobalContext();
+  const { user } = useGlobal();
 
   return (
     <div 
