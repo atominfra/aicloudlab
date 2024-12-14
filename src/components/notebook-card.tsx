@@ -13,10 +13,12 @@ import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import CustomButton from "@/components/ui/customButton"
 interface NodeCardProps {
+  id: string
   name: string
   notebook_url: string
   python_version: string
   status: "running" | "stopped" | "error"
+  onOperation: (notebookId: string, operationName: string) => Promise<void>
 }
 
 export function NotebookCard({ id, name, status, notebook_url, python_version, onOperation }: NodeCardProps) {

@@ -1,9 +1,24 @@
 'use client';
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
-type UserType = Record<string, any>; // Replace `Record<string, any>` with a specific type if available
-type NotebooksType = string[]; // Array of strings for notebooks
+type UserType = {
+  id: string;
+  full_name: string;
+  email: string;
+  credits: number;
+  phone:string
+  gh_username:string
+  google_username:string
+  hf_username:string
+};
+
+type NotebooksType = {
+  id: string;
+  name: string;
+  notebook_url: string;
+  python_version: string;
+  status: "running" | "stopped" | "error";
+}[];
 
 type GlobalContextType = {
   notebooks: NotebooksType;
@@ -12,22 +27,32 @@ type GlobalContextType = {
   setUser: React.Dispatch<React.SetStateAction<UserType>>;
   fetchUserDetails: () => Promise<void>;
   isloading: boolean;
+  auth: string | null;
+  setAuth: React.Dispatch<React.SetStateAction<string | null>>;
 };
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
 export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [notebooks, setNotebooks] = useState<NotebooksType>([]);
-  const [user, setUser] = useState<UserType>({});
+  const [user, setUser] = useState<UserType>();
   const [isloading, setIsloading] = useState<boolean>(true);
+  const [auth, setAuth] = useState<string | null>(null);
 
-  // ------------------useEffects--------------------
   useEffect(() => {
+    if(typeof window !== "undefined"){
+
+    const storedToken = localStorage.getItem('access_token');
+    if (storedToken) {
+      setAuth(storedToken);
+    }
+  
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
-  }, []);
+  }
+  }, []); 
 
   // ------------------Functions--------------------
   const fetchUserDetails = async () => {
@@ -37,7 +62,7 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+          Authorization: `Bearer ${auth}`,
         },
       });
 
@@ -48,7 +73,7 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
       const responseData = await response.json();
       console.log('responseData', responseData);
-      setUser((user) => ({ ...user, ...responseData.data }));
+      setUser((prevUser) => ({ ...prevUser, ...responseData.data }));
     } catch (error) {
       if (error instanceof Error) {
         console.error('Error fetching user data:', error.message);
@@ -60,14 +85,19 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   };
 
+  // Fetch user details on initial load
   useEffect(() => {
-    fetchUserDetails();
-  }, []);
+    if (auth) {
+      fetchUserDetails();
+    }
+  }, [auth]); 
 
+  // Log user changes
   useEffect(() => {
     console.log('user', user);
   }, [user]);
 
+  // Prepare context value
   const value: GlobalContextType = {
     notebooks,
     setNotebooks,
@@ -75,6 +105,8 @@ export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setUser,
     fetchUserDetails,
     isloading,
+    auth,
+    setAuth,
   };
 
   return <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>;

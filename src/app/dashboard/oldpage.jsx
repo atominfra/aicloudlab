@@ -8,12 +8,11 @@ import { useGlobal } from "@/context/global-context"
 import Image from 'next/image'
 import notebook from '@/assets/notebook.svg'
 import CircularProgress from '@mui/material/CircularProgress';
-import withAuth from '@/components/withAuth';
 import CreditsModal from '@/components/modals/creditsModal';
 
 const NotebooksPage = () => {
   const router = useRouter();
-  const {notebooks, setNotebooks, user, fetchUserDetails} = useGlobal();
+  const {notebooks, setNotebooks, user, fetchUserDetails, auth} = useGlobal();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -31,7 +30,7 @@ const NotebooksPage = () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`, 
+          'Authorization': `Bearer ${auth}`, 
         },
       });
 
@@ -56,7 +55,7 @@ const NotebooksPage = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+          'Authorization': `Bearer ${auth}`,
         },
         body: JSON.stringify({
           notebook_id: notebookId,

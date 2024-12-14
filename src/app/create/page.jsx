@@ -6,12 +6,11 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import Navbar from '@/components/navbar/navbar';
 import { useTheme } from 'next-themes';
 import CustomButton from "@/components/ui/customButton"
-import withAuth from '@/components/withAuth';
 import CreditsModal from '@/components/modals/creditsModal';
 import { useGlobal } from '@/context/global-context';
 const CreateNotebook = () => {
   const router = useRouter();
-  const { fetchUserDetails, setNotebooks, user } = useGlobal();
+  const { fetchUserDetails, setNotebooks, user, auth } = useGlobal();
   const [formData, setFormData] = useState({
     name: '',
     githubURL: '',
@@ -71,7 +70,7 @@ const CreateNotebook = () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+          'Authorization': `Bearer ${auth}`,
         },
         body: JSON.stringify(payload),
       });

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react';
 import { Box, Button, Popper, Typography } from '@mui/material';
-import withAuth from '@/components/withAuth';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -17,6 +16,7 @@ import toast from "react-hot-toast";
 
 import { IoIosArrowBack } from "react-icons/io";
 import NoteBookLoader from '@/components/notebook/notebookLoader';
+import { useGlobal } from '@/context/global-context';
 type Notebook = {
   id: number;
   name: string;
@@ -35,6 +35,7 @@ const NotebookPage = () => {
     setAnchorEl(event.currentTarget);
     setOpen((previousOpen) => !previousOpen);
   };
+  const {auth, setAuth} =  useGlobal()
 
   useEffect(() => {
     const fetchNotebook = async () => {
@@ -43,7 +44,7 @@ const NotebookPage = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+            'Authorization': `Bearer ${auth}`,
           },
         });
         if (response.ok) {

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-// import { verify } from 'jsonwebtoken'
+import { isAuthenticated } from '@/utils/auth'; 
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key'
 
@@ -15,7 +15,7 @@ export function middleware(request: NextRequest) {
     }
 
     try {
-      // verify(token, JWT_SECRET)
+      isAuthenticated()
     } catch (error) {
       return NextResponse.json({ error: 'Invalid token' }, { status: 401 })
     }

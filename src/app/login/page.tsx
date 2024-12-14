@@ -11,10 +11,14 @@ import {
 } from '@mui/material';
 import Image from 'next/image'
 import { useTheme } from 'next-themes'
-
+import { useGlobal } from '@/context/global-context';
+type Errors = {
+  identifier?: string;
+  password?: string;
+};
 export default function Login() {
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Errors>({});
   const [loginError, setLoginError] = useState('');
   const [formData, setFormData] = useState({
     identifier: '',
@@ -23,14 +27,15 @@ export default function Login() {
 
   const router = useRouter()
   const { resolvedTheme } = useTheme();
-  const [auth, setAuth] = useState('');
   const [isloading, setIsloading] = useState(false)
-
+  const {auth, setAuth} =  useGlobal()
   useEffect(() => {
+    if(typeof window !== 'undefined'){
     const token  = localStorage.getItem('access_token');
     if (token) {
       setAuth(token);
     }
+  }
   }, []);
 
   useEffect(() => {
@@ -40,8 +45,7 @@ export default function Login() {
   }, [auth]);
   // Validate the form data
   const validateForm = () => {
-    const newErrors = {};
-    if (!formData.identifier) {
+    const newErrors: Errors = {};    if (!formData.identifier) {
       newErrors.identifier = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.identifier)) {
       newErrors.identifier = 'Email address is invalid';
@@ -76,10 +80,11 @@ export default function Login() {
   
       const responseData = await response.json(); 
   
-      if (response.ok) {
+      if (response.ok && typeof window !== 'undefined') {
         console.log("Login successful", responseData);
         localStorage.setItem('user', JSON.stringify(responseData.data.user)); 
         localStorage.setItem('access_token', responseData.data.access_token);
+        setAuth(responseData.data.access_token)
         document.cookie = `access_token=Bearer ${responseData.data.access_token}; expires=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString()}; path=/; domain=.${window.location.hostname}`;
         window.location.href = '/dashboard' 
       } else {

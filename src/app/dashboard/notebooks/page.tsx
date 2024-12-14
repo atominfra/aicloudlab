@@ -8,7 +8,7 @@ import CreditsModal from "@/components/modals/creditsModal";
 
 export default function NotebooksPage() {
   const router = useRouter();
-  const {notebooks, setNotebooks, user, fetchUserDetails} = useGlobal();
+  const {notebooks, setNotebooks, user, fetchUserDetails, auth} = useGlobal();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -26,7 +26,7 @@ export default function NotebooksPage() {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`, 
+          'Authorization': `Bearer ${auth}`, 
         },
       });
 
@@ -51,7 +51,7 @@ export default function NotebooksPage() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+          'Authorization': `Bearer ${auth}`,
         },
         body: JSON.stringify({
           notebook_id: notebookId,

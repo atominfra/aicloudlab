@@ -12,18 +12,21 @@ import { useTheme } from 'next-themes';
 import CustomButton from "@/components/ui/customButton";
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { useGlobal } from '@/context/global-context';
 
 export default function Signup() {
   const router = useRouter();
   const { resolvedTheme } = useTheme();
-  const [auth, setAuth] = useState('');
+  const {auth, setAuth} =  useGlobal()
   const [isloading, setIsloading] = useState(false)
 
   useEffect(() => {
+    if(typeof window !== "undefined"){
     const token  = localStorage.getItem('access_token');
     if (token) {
       setAuth(token);
     }
+  }
   }, []);
 
   useEffect(() => {
@@ -89,9 +92,10 @@ export default function Signup() {
 
       const responseData = await response.json();
 
-      if (response.ok) {
+      if (response.ok && typeof window !== "undefined") {
         localStorage.setItem('user', JSON.stringify(responseData.data.user)); 
-        localStorage.setItem('access_token', responseData.data.access_token);        
+        localStorage.setItem('access_token', responseData.data.access_token);   
+        setAuth(responseData.data.access_token);   
         document.cookie = `access_token=Bearer ${responseData.data.access_token}; expires=${new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toUTCString()}; path=/; domain=.${window.location.hostname}`;
         
         window.location.href = '/dashboard' 

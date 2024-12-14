@@ -11,7 +11,7 @@ const AccountButton = ({ account , userName, api}) => {
   const [isConnecting, setIsConnecting] = useState(false);
   const [isRevoking, setIsRevoking] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { fetchUserDetails, } = useGlobal();
+  const { fetchUserDetails, auth } = useGlobal();
 
   const router = useRouter()
 
@@ -27,7 +27,7 @@ const AccountButton = ({ account , userName, api}) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+          'Authorization': `Bearer ${auth}`,
         },
       });
   

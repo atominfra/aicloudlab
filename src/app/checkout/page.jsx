@@ -10,7 +10,7 @@ import { useSearchParams } from 'next/navigation'
 import CustomButton from "@/components/ui/customButton"
 const CheckoutPage = () => {
   const router = useRouter();
-  const { fetchUserDetails, user } = useGlobal();
+  const { fetchUserDetails, user, auth } = useGlobal();
   const [isPaymentLoading, setIsPaymentLoading] = useState(false);
   const searchParams = useSearchParams()
   const value = searchParams.get('value')
@@ -49,7 +49,7 @@ const CheckoutPage = () => {
         {
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`, 
+            'Authorization': `Bearer ${auth}`, 
           },
         }
       );
@@ -147,4 +147,4 @@ const CheckoutPage = () => {
   );
 };
 
-export default withuth(CheckoutPage);
+export default (CheckoutPage);

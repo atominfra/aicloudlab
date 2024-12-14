@@ -6,7 +6,6 @@ import {
   Typography,
 } from '@mui/material';
 import Navbar from '@/components/navbar/navbar';
-import withAuth from '@/components/withAuth';
 import github from "@/assets/github.png"
 import gdrive from "@/assets/googledrive.png"
 import huggingface from "@/assets//huggingface.png"
@@ -20,9 +19,11 @@ const ProfilePage = () => {
 
 
   const handleLogout = ()=>{
-    localStorage.clear()
-    document.cookie = `access_token=; path=/; domain=.${window.location.hostname}`;
-    window.location.href = "/"
+    if (typeof window !== "undefined") {
+      localStorage.clear()
+      document.cookie = `access_token=; path=/; domain=.${window.location.hostname}`;
+      window.location.href = "/"
+    }
   }
 
   useEffect(()=>{

@@ -1,16 +1,10 @@
 'use client';
 
+import { useGlobal } from '@/context/global-context';
 import { useEffect, useState } from 'react';
 
 const Home: React.FC = () => {
-  const [auth, setAuth] = useState<string>('');
-
-  useEffect(() => {
-    const token: string | null = localStorage.getItem('access_token');
-    if (token) {
-      setAuth(token);
-    }
-  }, []);
+  const {auth, setAuth} =  useGlobal()
 
   useEffect(() => {
     if (auth && auth !== '') {
