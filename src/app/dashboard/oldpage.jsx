@@ -6,7 +6,7 @@ import Navbar from '@/components/navbar/navbar';
 import NotebookItem from '@/components/notebook/NotebookItem';
 import { useGlobal } from "@/context/global-context"
 import Image from 'next/image'
-import notebook from '@/assets/notebook.svg'
+import notebook from '@/assets/notebook.png'
 import CircularProgress from '@mui/material/CircularProgress';
 import CreditsModal from '@/components/modals/creditsModal';
 

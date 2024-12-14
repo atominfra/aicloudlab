@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useGlobal } from "@/context/global-context";
 import CreditsModal from "@/components/modals/creditsModal";
+import { Box, Typography } from "@mui/material";
+import Image from "next/image";
+import notebook from '@/assets/notebook.png'
 
 export default function NotebooksPage() {
   const router = useRouter();
@@ -94,12 +97,26 @@ export default function NotebooksPage() {
             Create 
           </Button>
         </div>
+        {notebooks.length === 0 ? <div>
+          <Box className='flex flex-col gap-2 justify-center items-center h-[60vh] w-full bg-neutral-100'>
+          <Image 
+            src={notebook}
+            width={1000}  
+            height={1000}
+            className=' w-[100px] h-[100px] text-neutral-100'
+            alt="AI Cloud Lab Logo" />
+        <Typography variant="body1" className="text-gray-400 mb-4 px-6">
+          No notebooks yet.
+        </Typography>
+        </Box>
+        </div>:
         <div className="">
           {notebooks.map((notebook) => (
             <NotebookCard key={notebook.id} {...notebook} onOperation={handleOperationRequest}
             />
           ))}
         </div>
+        }
         <CreditsModal showModal={showModal} onClose={() => setShowModal(false)}/>
 
       </div>
