@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import Image from 'next/image';
 import { useTheme } from 'next-themes';
-import CustomButton from "@/components/ui/button";
+import CustomButton from "@/components/button";
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 

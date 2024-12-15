@@ -6,7 +6,7 @@ import { RiArrowDropDownLine } from "react-icons/ri";
 import Navbar from '@/components/navbar/navbar';
 import { useTheme } from 'next-themes';
 import { useGlobalContext } from '@/context/GlobalContext';
-import CustomButton from '@/components/ui/button';
+import CustomButton from '@/components/button';
 import withAuth from '@/components/withAuth';
 import CreditsModal from '@/components/modals/creditsModal';
 

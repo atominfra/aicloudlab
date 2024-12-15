@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import CustomButton from "@/components/ui/button"
+import CustomButton from "@/components/button"
 import { 
   Box, 
   Typography, 
