@@ -1,5 +1,5 @@
 import { Box, Modal, Typography } from "@mui/material";
-import CustomButton from "../ui/button";
+import CustomButton from "../button";
 import toast, { Toaster } from "react-hot-toast";
 export default function CreditsModal({ showModal, onClose }:{
   showModal: boolean;

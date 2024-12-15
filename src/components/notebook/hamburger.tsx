@@ -10,7 +10,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Typography } from '@mui/material';
-import CustomButton from '../ui/button';
+import CustomButton from '../button';
 import { SiJupyter } from "react-icons/si";
 
 

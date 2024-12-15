@@ -4,7 +4,7 @@ import { Typography, Box, CircularProgress } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/navbar/navbar';
 import { useGlobalContext } from '@/context/GlobalContext';
-import CustomButton from '@/components/ui/button';
+import CustomButton from '@/components/button';
 import toast from 'react-hot-toast';
 import withAuth from '@/components/withAuth';
 import axios from 'axios';
