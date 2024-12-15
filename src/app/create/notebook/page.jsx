@@ -8,6 +8,7 @@ import { useTheme } from 'next-themes';
 import CustomButton from "@/components/ui/customButton"
 import CreditsModal from '@/components/modals/creditsModal';
 import { useGlobal } from '@/context/global-context';
+import { createNoteboook } from '../../api/notebooks/api';
 const CreateNotebook = () => {
   const router = useRouter();
   const { fetchUserDetails, setNotebooks, user, auth } = useGlobal();
@@ -66,31 +67,12 @@ const CreateNotebook = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/notebook/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${auth}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (response.ok) {
-        const responseData = await response.json();
-        const newNotebook = {
-          id: responseData.id,
-          name: formData.name,
-          version: formData.pythonVersion,
-          packages: formData.packages,
-          status: 'stop'
-        };
-
-        setNotebooks(prev => [...prev, newNotebook]);
-        window.location.href='/dashboard'
+      const response = await createNoteboook(auth,payload);
+      console.log("rsponse",response)
+      if (response) {
         router.push('/dashboard/notebooks')
       } else {
-        const errorData = await response.json();
-        setError(errorData.detail || 'Failed to create notebook');
+        setError('Failed to create notebook');
       }
     } catch (err) {
       setError('An error occurred while creating the notebook');
