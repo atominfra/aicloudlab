@@ -39,9 +39,9 @@ const CreateNotebook = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsNameTouched(true); 
-    if (user?.credits < 1) {
-      setShowModal(true);
-    } else {
+    // if (user?.credits < 1) {
+    //   setShowModal(true);
+    // } else {
     setError(null);
     setIsLoading(true);
 
@@ -98,7 +98,7 @@ const CreateNotebook = () => {
     } finally {
       setIsLoading(false);
     }
-  }
+  // }
   };
 
   useEffect(()=>{
