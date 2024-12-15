@@ -1,5 +1,6 @@
 import { Settings, Pause, Trash2, Cpu } from 'lucide-react'
-// import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button"
+// import Button from '@mui/material'
 import { StatusBadge } from './status-badge'
 import notebook from "@/assets/notebook.webp"
 import Image from 'next/image'
@@ -133,9 +134,9 @@ export function NotebookCard({ id, name, status, notebook_url, python_version, o
           <div  onClick={handleOpen} className='p-2 hover:cursor-pointer'>
             <MdDelete className="w-[20px] h-[30px] text-red-600" />
           </div>
-          <button              
+          <Button              
               disabled={status !== 'running'}
-              // variant="outline" 
+              variant="outline" 
               className={`text-gray-600 ${status !== 'running' ? "text-[#b0b0b0]":"text-[#111827] hover:text-gray-600"}`} 
               onClick={()=>{
                 if(status === 'running'){
@@ -145,7 +146,7 @@ export function NotebookCard({ id, name, status, notebook_url, python_version, o
                 }
               }}>Go to Notebook 
             <span className=''><FaArrowRight /></span>
-          </button>
+          </Button>
         </div>
       </div>
       <Modal

@@ -1,9 +1,10 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import React from 'react'
+import withAuth from '@/components/withAuth';
 
 
-export default function Page(props) {
+const Page = (props) => {
   const router = useRouter();
 
   React.useEffect(() => {
@@ -12,3 +13,5 @@ export default function Page(props) {
 
   return <div></div>;
 }
+
+export default withAuth(Page)

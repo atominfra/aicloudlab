@@ -1,6 +1,5 @@
 "use client";
-import Button from "@mui/material";
-// import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { NotebookCard } from "@/components/notebook-card";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -9,8 +8,9 @@ import CreditsModal from "@/components/modals/creditsModal";
 import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import notebook from "@/assets/notebook.png";
+import withAuth from '@/components/withAuth';
 
-export default function NotebooksPage() {
+const  NotebooksPage= () => {
   const router = useRouter();
   const { notebooks, setNotebooks, user, fetchUserDetails,  } = useGlobalContext();
   const [error, setError] = useState<string | null>(null);
@@ -92,10 +92,10 @@ export default function NotebooksPage() {
     <div className="p-6 bg-neutral-100 h-screen">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-semibold">Notebooks</h1>
-        <button className="bg-blue-600" onClick={handleCreateClick}>
+        <Button className="bg-blue-600" onClick={handleCreateClick}>
           <span className="mr-2">+</span>
           Create
-        </button>
+        </Button>
       </div>
       {notebooks.length === 0 ? (
         <Box className="flex flex-col gap-2 justify-center items-center h-[60vh] w-full bg-neutral-100">
@@ -127,3 +127,6 @@ export default function NotebooksPage() {
     </div>
   );
 }
+
+
+export default  withAuth(NotebooksPage)
