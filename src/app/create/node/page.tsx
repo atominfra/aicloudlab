@@ -66,7 +66,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   // Derived State
   const [osOptions, setOSOptions] = useState<OSOption[]>([])
   const [osVersions, setOSVersions] = useState<string[]>([])
-  const [plans, setPlans] = useState<any[]>([])
+  const [plans, setPlans] = useState([])
   const [existingReservedIPs, setExistingReservedIPs] = useState<string[]>([])
   const [selectedPlanCommitment, setSelectedPlanCommitment] = useState(initialData?.planCommitment || '')
   //const [ipReservation, setIpReservation] = useState<'new' | 'existing' | 'none'>(initialData?.ipReservation || 'none')
@@ -121,11 +121,11 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   // Update Handlers
   const updateFormState = <K extends keyof NodeData>(
     field: K, 
-    value: NodeData[K] | any,
+    value ,
     index?: number
   ) => {
     if (index !== undefined && Array.isArray(formState[field])) {
-      const updatedArray = [...(formState[field] as any[])]
+      const updatedArray = [...(formState[field] )]
       updatedArray[index] = { ...updatedArray[index], ...value }
       setFormState(prev => ({ ...prev, [field]: updatedArray }))
     } else {

@@ -12,13 +12,10 @@ import {
 import Image from 'next/image'
 import { useTheme } from 'next-themes'
 import { useGlobal } from '@/context/global-context';
-type Errors = {
-  identifier?: string;
-  password?: string;
-};
+
 export default function Login() {
 
-  const [errors, setErrors] = useState<Errors>({});
+  const [errors, setErrors] = useState({});
   const [loginError, setLoginError] = useState('');
   const [formData, setFormData] = useState({
     identifier: '',
@@ -45,7 +42,7 @@ export default function Login() {
   }, [auth]);
   // Validate the form data
   const validateForm = () => {
-    const newErrors: Errors = {};    if (!formData.identifier) {
+    const newErrors = {};    if (!formData.identifier) {
       newErrors.identifier = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.identifier)) {
       newErrors.identifier = 'Email address is invalid';
