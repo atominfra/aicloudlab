@@ -6,7 +6,6 @@ import { usePathname, useRouter } from 'next/navigation'
 import Image from "next/image"
 import { useGlobalContext } from '@/context/GlobalContext';
 // import { ThemeToggle } from "./theme-toggle"
-
 export function Sidebar() {
   const pathname = usePathname()
   console.log("pathname",pathname)
@@ -57,16 +56,17 @@ export function Sidebar() {
       <div className="p-4 border-t border-border">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-neutral-100 border flex items-center justify-center hover:cursor-pointer hover:border-gray-300" onClick={()=> router.push("/profile")}>
-            <span className="text-md font-medium ">{'Shryansh'.split(' ').map(n => n[0]).join('')}</span>
+           {/* @ts-expect-error build */}
+          <span className="text-md font-medium ">{user?.full_name && user?.full_name.split(' ').map(n=> n[0]).join('')}</span>
           </div>
           <div className="flex-1">
             <div className="text-sm text-muted-foreground">
               {user?.full_name}
               </div>
           </div>
-          <div className="px-3 py-1 bg-blue-600 text-primary-foreground text-sm rounded-[4px] hover:cursor-pointer" onClick={()=> router.push("/credits")}>
-          <span className='font-serif px-1'>₹</span>
-            {user?.credits} 
+          <div className="px-3 py-1 bg-blue-600 text-primary-foreground text-white text-sm rounded-[4px] hover:cursor-pointer" onClick={()=> router.push("/credits")}>
+          <span className='font-serif px-1 text-white'>₹</span>
+            {user?.credits ? user?.credits : 0} 
             
           </div>
         </div>
