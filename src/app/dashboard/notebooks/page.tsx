@@ -49,7 +49,6 @@ const  NotebooksPage= () => {
       
     }
   };
-// @ts-expect-error build
   const handleOperationRequest = async (notebookId, operationName) => {
     try {
       console.log("operationName in dashboard",operationName)
@@ -77,7 +76,6 @@ const  NotebooksPage= () => {
       const result = await response.json();
       console.log('Operation successful:', result);
     } catch (error) {
-      // @ts-expect-error build
       setError(error?.message);
     }
     fetchNotebooks();
@@ -112,7 +110,6 @@ const  NotebooksPage= () => {
         </Box>
       ) : (
         <div>
-         {/* @ts-expect-error build */}
 
           {notebooks.map((notebook) => (
             <NotebookCard

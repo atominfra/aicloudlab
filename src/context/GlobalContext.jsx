@@ -1,4 +1,4 @@
-'use client'; // Ensure this is at the top of the file
+'use client'; 
 
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import toast from 'react-hot-toast';
@@ -9,13 +9,22 @@ export const GlobalProvider = ({ children }) => {
     const [notebooks, setNotebooks] = useState([]);
     const [user , setUser] = useState({})
     const [isloading, setIsloading] = useState(true)
+    const [auth, setAuth] = useState(null);
 
     useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
-      }, []);
+      if(typeof window !== "undefined"){
+  
+      const storedToken = localStorage.getItem('access_token');
+      if (storedToken) {
+        setAuth(storedToken);
+      }
+    
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    }
+    }, []); 
   
 
     const fetchUserDetails = async () => {
@@ -25,7 +34,7 @@ export const GlobalProvider = ({ children }) => {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+              'Authorization': `Bearer ${auth}`,
             },
           });
       
@@ -68,6 +77,8 @@ export const GlobalProvider = ({ children }) => {
         setUser, 
         fetchUserDetails, 
         isloading, 
+        auth,
+        setAuth
       }
     return (
         <GlobalContext.Provider value={options}>

@@ -36,19 +36,16 @@ export function NotebookCard({ id, name, status, notebook_url, python_version, o
   const [popperOpen, setPopperOpen] = useState(false);
   const [popperAnchorEl, setPopperAnchorEl] = useState(null);
   const popperId = open ? 'simple-popper' : undefined;
-  // @ts-expect-error build
   const handleClick = (event) => {
     setPopperAnchorEl(event.currentTarget);
     setPopperOpen((previousOpen) => !previousOpen);
   };
-  // @ts-expect-error build
 
   const handleInputChange = (e) => {
     const value = e.target.value;
     setInputValue(value);
     setIsError(value !== name); // Set error if input doesn't match the name
   };
-  // @ts-expect-error build
 
   const handleSubmit = (e) => {
     e.preventDefault();
