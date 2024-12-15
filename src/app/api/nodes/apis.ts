@@ -47,18 +47,16 @@ export async function fetchPlans(auth,os, osVersion) {
   }
 }
 
-export async function createNode(nodeData) {
+export async function createNode(auth , nodeData) {
   try {
-    const url = API_BASE_URL;
-    const options = {
+    const url = `${API_BASE_URL}/e2e/node`;
+    const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(nodeData),
-    };
-
-    const response = await fetch(url, options);
+        'Authorization': `Bearer ${auth}`,
+      }
+  });
 
     if (!response.ok) {
       const errorDetails = await response.text();
