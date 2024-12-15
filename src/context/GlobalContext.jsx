@@ -62,8 +62,10 @@ export const GlobalProvider = ({ children }) => {
       };
 
       useEffect(()=>{
-        fetchUserDetails()
-      },[])
+        if(auth){
+          fetchUserDetails()
+        }
+      },[auth])
 
       useEffect(()=>{
         console.log("user",user)

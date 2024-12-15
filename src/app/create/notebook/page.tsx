@@ -5,14 +5,13 @@ import { useRouter } from 'next/navigation';
 import { RiArrowDropDownLine } from "react-icons/ri";
 import Navbar from '@/components/navbar/navbar';
 import { useTheme } from 'next-themes';
-import { useGlobalContext } from '@/context/GlobalContext';
 import CustomButton from '@/components/button';
-import withAuth from '@/components/withAuth';
 import CreditsModal from '@/components/modals/creditsModal';
-
+import { useGlobalContext } from '@/context/GlobalContext';
+import { createNoteboook } from '@/app/api/notebooks/api';
 const CreateNotebook = () => {
   const router = useRouter();
-  const { fetchUserDetails, setNotebooks, user } = useGlobalContext();
+  const { fetchUserDetails, setNotebooks, user, auth } = useGlobalContext();
   const [formData, setFormData] = useState({
     name: '',
     githubURL: '',
@@ -58,40 +57,24 @@ const CreateNotebook = () => {
     }
 
     let payload = {
-      name: formData.name,
-      python_version: formData.pythonVersion,
-      packages: formData.packages.split(',').map(pkg => pkg.trim())
+      name: formData.name || '',
+      python_version: formData.pythonVersion || '',
+      packages: formData.packages.split(',').map(pkg => pkg.trim()) || '',
+      
     };
 
     if(formData.githubURL && formData.githubURL !== '') {
+      // @ts-ignore
       payload = {...payload, github_url: formData.githubURL}
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/notebook/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (response.ok) {
-        const responseData = await response.json();
-        const newNotebook = {
-          id: responseData.id,
-          name: formData.name,
-          version: formData.pythonVersion,
-          packages: formData.packages,
-          status: 'stop'
-        };
-
-        setNotebooks(prev => [...prev, newNotebook]);
-        window.location.href='/dashboard'
+      const response = await createNoteboook(auth,payload);
+      console.log("rsponse",response)
+      if (response) {
+        router.push('/dashboard/notebooks')
       } else {
-        const errorData = await response.json();
-        setError(errorData.detail || 'Failed to create notebook');
+        setError('Failed to create notebook');
       }
     } catch (err) {
       setError('An error occurred while creating the notebook');
@@ -232,7 +215,6 @@ const CreateNotebook = () => {
             <>Create Notebook</>} 
             customCss={`mt-6 ${isLoading===true ? 'bg-[rgba(17,24,39,0.32)]':'bg-[#1976D2]'} text-white text-[15px] lg:text-[16px]`} 
             onclickhandler={handleSubmit}
-            type="submit" 
           />
 
           
@@ -246,4 +228,4 @@ const CreateNotebook = () => {
 
 
 
-export default withAuth(CreateNotebook)
+export default (CreateNotebook)

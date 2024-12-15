@@ -21,7 +21,7 @@ const  NotebooksPage= () => {
     // if (user?.credits < 1) {
     //   setShowModal(true);
     // } else {
-      router.push('/create/');
+      router.push('/create/notebook');
     // }
   };
 
