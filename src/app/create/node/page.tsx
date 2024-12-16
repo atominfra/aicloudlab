@@ -144,8 +144,8 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     const apiData = {
       name: formState.name,
       ssh_keys: formState.sshKeys.map(key => key.key),
-      plan: selectedPlan?.plan,
-      image: selectedPlan?.image
+      plan: selectedPlan.plan,
+      image: selectedPlan.image
     }
     console.log("API Data:", JSON.stringify(apiData, null, 2))
     try {

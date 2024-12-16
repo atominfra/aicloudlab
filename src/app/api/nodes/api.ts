@@ -75,7 +75,7 @@ export async function createNode(auth , nodeData) {
 
 export async function fetchNodes() {
   try {
-    const url = `${API_BASE_URL}?action=nodes`;
+    const url = `${API_BASE_URL}/e2e/node`;
     const response = await fetch(url);
 
     if (!response.ok) {

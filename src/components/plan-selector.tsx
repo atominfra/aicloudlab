@@ -8,7 +8,7 @@ import { extractRamOptions, getCpuOptionsForRam, filterPlans } from '@/utils/pla
 export default function PlanSelector({planData, setPlan}) {
   const [selectedRam, setSelectedRam] = useState<string>('');
   const [selectedCpu, setSelectedCpu] = useState<number | null>(null);
-  const [filteredPlans, setFilteredPlans] = useState<any[]>([]);
+  const [filteredPlans, setFilteredPlans] = useState([]);
   const [cpuOptions, setCpuOptions] = useState<number[]>([]);
   const ramOptions = extractRamOptions(planData);
 
