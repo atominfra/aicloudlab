@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -13,6 +13,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Trash2 } from 'lucide-react'
 import { fetchOSOptions, fetchPlans, createNode } from '@/app/api/nodes/api'
 import { useGlobalContext } from '@/context/GlobalContext'
+import PlanSelector from '@/components/plan-selector'
 
 // Types
 interface OSOption {
@@ -69,14 +70,15 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const [plans, setPlans] = useState([])
   const [existingReservedIPs, setExistingReservedIPs] = useState<string[]>([])
   const [selectedPlanCommitment, setSelectedPlanCommitment] = useState(initialData?.planCommitment || '')
+  const [selectedPlan, setSelectedPlan] = useState()
   //const [ipReservation, setIpReservation] = useState<'new' | 'existing' | 'none'>(initialData?.ipReservation || 'none')
   //const [existingIp, setExistingIp] = useState(initialData?.existingIp || '')
-  const [securityRules, setSecurityRules] = useState(initialData?.securityRules || [
-    { type: 'inbound', port: '', protocol: 'tcp', ipAddresses: '', allowed: true }
-  ])
-  const [volumes, setVolumes] = useState(initialData?.volumes || [{ name: '', size: '' }])
+  //const [securityRules, setSecurityRules] = useState(initialData?.securityRules || [
+  //  { type: 'inbound', port: '', protocol: 'tcp', ipAddresses: '', allowed: true }
+  //])
+  //const [volumes, setVolumes] = useState(initialData?.volumes || [{ name: '', size: '' }])
   const [sshKeys, setSSHKeys] = useState(initialData?.sshKeys || [{ name: '', key: '' }])
-
+  //const [selectedPlan, setSelectedPlan] = useState('')
   // Hooks
   const { auth } = useGlobalContext()
 
@@ -132,13 +134,22 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       setFormState(prev => ({ ...prev, [field]: value }))
     }
   }
+  useEffect(()=>{
+    console.log("selectedPlan",selectedPlan)
+  },[selectedPlan])
 
   // Submission Handler
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    console.log("Form Data:", JSON.stringify(formState, null, 2))
-       try {
-      const result = await createNode(auth,formState)
+    const apiData = {
+      name: formState.name,
+      ssh_keys: formState.sshKeys.map(key => key.key),
+      plan: selectedPlan?.plan,
+      image: selectedPlan?.image
+    }
+    console.log("API Data:", JSON.stringify(apiData, null, 2))
+    try {
+      const result = await createNode(auth, apiData)
       console.log('Node created successfully:', result)
       // Handle successful creation 
     } catch (error) {
@@ -167,21 +178,21 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
 
 
-  const addSecurityRule = () => {
-    updateFormState('securityRules', [...formState.securityRules, { type: 'inbound', port: '', protocol: 'tcp', ipAddresses: '', allowed: true }])
-  }
+  //const addSecurityRule = () => {
+  //  updateFormState('securityRules', [...formState.securityRules, { type: 'inbound', port: '', protocol: 'tcp', ipAddresses: '', allowed: true }])
+  //}
 
-  const removeSecurityRule = (index: number) => {
-    updateFormState('securityRules', formState.securityRules.filter((_, i) => i !== index))
-  }
+  //const removeSecurityRule = (index: number) => {
+  //  updateFormState('securityRules', formState.securityRules.filter((_, i) => i !== index))
+  //}
 
-  const addVolume = () => {
-    updateFormState('volumes', [...formState.volumes, { name: '', size: '' }])
-  }
+  //const addVolume = () => {
+  //  updateFormState('volumes', [...formState.volumes, { name: '', size: '' }])
+  //}
 
-  const removeVolume = (index: number) => {
-    updateFormState('volumes', formState.volumes.filter((_, i) => i !== index))
-  }
+  //const removeVolume = (index: number) => {
+  //  updateFormState('volumes', formState.volumes.filter((_, i) => i !== index))
+  //}
 
   const addSSHKey = () => {
     updateFormState('sshKeys', [...formState.sshKeys, { name: '', key: '' }])
@@ -191,23 +202,23 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     updateFormState('sshKeys', formState.sshKeys.filter((_, i) => i !== index))
   }
 
-  const updateSecurityRule = (index: number, field: string, value: string | boolean) => {
-    updateFormState('securityRules', { [field]: value }, index)
-  }
+  //const updateSecurityRule = (index: number, field: string, value: string | boolean) => {
+  //  updateFormState('securityRules', { [field]: value }, index)
+  //}
 
-  const updateVolume = (index: number, field: string, value: string) => {
-    updateFormState('volumes', { [field]: value }, index)
-  }
+  //const updateVolume = (index: number, field: string, value: string) => {
+  //  updateFormState('volumes', { [field]: value }, index)
+  //}
 
   const updateSSHKey = (index: number, field: string, value: string) => {
     updateFormState('sshKeys', { [field]: value }, index)
   }
 
   // Mock function to calculate volume cost
-  const calculateVolumeCost = (size: number) => {
-    const costPerGB = 0.10 // $0.10 per GB per month
-    return size * costPerGB
-  }
+  //const calculateVolumeCost = (size: number) => {
+  //  const costPerGB = 0.10 // $0.10 per GB per month
+  //  return size * costPerGB
+  //}
 
 
   return (
@@ -274,26 +285,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 </SelectContent>
               </Select>
             </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="plan">Plan *</Label>
-              <Select 
-                onValueChange={(value) => updateFormState('plan', value)} 
-                value={formState.plan} 
-                required
-                disabled={plans.length === 0}
-              >
-                <SelectTrigger id="plan">
-                  <SelectValue placeholder="Select plan" />
-                </SelectTrigger>
-                <SelectContent>
-                  {plans.map((plan) => (
-                    <SelectItem key={plan?.id} value={plan?.id}>{plan?.plan_name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
+            {plans.length !== 0 && 
+            <PlanSelector  planData={plans} setPlan={setSelectedPlan} />
+            }
             <div className="space-y-2">
               <Label htmlFor="plan-commitment">Plan Commitment *</Label>
               <Select 
@@ -348,7 +342,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               </Select>
             )}
           </div> */}
-
           {/* Optional Sections */}
           <Accordion type="single" collapsible className="w-full">
             {/* SSH Keys */}
@@ -357,15 +350,30 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               <AccordionContent>
                 <div className="space-y-4">
                   {formState.sshKeys.map((sshKey, index) => (
-                    <div key={index} className="space-y-2 p-4 border rounded-md">
-                      <div className="flex justify-between items-center mb-2">
-                        <Input
-                          placeholder="SSH Key Name"
-                          value={sshKey.name}
-                          onChange={(e) => updateSSHKey(index, 'name', e.target.value)}
-                          className="flex-grow mr-2"
-                        />
-                        <Button
+                    // <div key={index} className="space-y-2 p-4 border rounded-md">
+                    //   <div className="flex justify-between items-center mb-2">
+                    //     <Input
+                    //       placeholder="SSH Key Name"
+                    //       value={sshKey.name}
+                    //       onChange={(e) => updateSSHKey(index, 'name', e.target.value)}
+                    //       className="flex-grow mr-2"
+                    //     />
+                    //     <Button
+                    //       type="button"
+                    //       variant="ghost"
+                    //       size="icon"
+                    //       onClick={() => removeSSHKey(index)}
+                    //     >
+                    //       <Trash2 className="h-4 w-4" />
+                    //     </Button>
+                    //   </div>
+                     <div className='flex'>
+                       <Textarea
+                        placeholder="Paste your SSH public key here"
+                        value={sshKey.key}
+                        onChange={(e) => updateSSHKey(index, 'key', e.target.value)}
+                      />
+                      <Button
                           type="button"
                           variant="ghost"
                           size="icon"
@@ -373,12 +381,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
-                      </div>
-                      <Textarea
-                        placeholder="Paste your SSH public key here"
-                        value={sshKey.key}
-                        onChange={(e) => updateSSHKey(index, 'key', e.target.value)}
-                      />
                     </div>
                   ))}
                   <Button type="button" variant="outline" onClick={addSSHKey}>

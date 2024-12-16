@@ -57,7 +57,7 @@ export async function createNode(auth , nodeData) {
         'Authorization': `Bearer ${auth}`,
       },
       body: JSON.stringify({
-        nodeData
+        ...nodeData
       }),
   });
 
