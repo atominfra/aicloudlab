@@ -125,9 +125,9 @@ export function NotebookCard({ id, name, status, notebook_url, python_version, o
               <FaPlay className="w-[15px] h-[20px] text-gray-400 " />
             )}
           </div>
-          <div  className='p-2 hover:cursor-pointer'>
+          {/* <div  className='p-2 hover:cursor-pointer'>
             <IoMdSettings className="w-[20px] h-[30px] text-gray-400" />
-          </div>
+          </div> */}
           <div  onClick={handleOpen} className='p-2 hover:cursor-pointer'>
             <MdDelete className="w-[20px] h-[30px] text-red-600" />
           </div>

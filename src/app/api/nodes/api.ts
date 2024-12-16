@@ -55,7 +55,10 @@ export async function createNode(auth , nodeData) {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${auth}`,
-      }
+      },
+      body: JSON.stringify({
+        nodeData
+      }),
   });
 
     if (!response.ok) {

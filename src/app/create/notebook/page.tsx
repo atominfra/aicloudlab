@@ -64,7 +64,7 @@ const CreateNotebook = () => {
     };
 
     if(formData.githubURL && formData.githubURL !== '') {
-      // @ts-ignore
+      // @ts-expect-error build
       payload = {...payload, github_url: formData.githubURL}
     }
 
