@@ -211,7 +211,8 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-4xl mx-auto">
+    <div className='h-full w-full flex justify-center items-center'>
+         <form onSubmit={handleSubmit} className=" w-full max-w-4xl mx-auto ">
       <Card>
         <CardHeader>
           <CardTitle>{isEditMode ? 'Edit Node' : 'Create a New Node'}</CardTitle>
@@ -310,7 +311,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               </Select>
             </div>
           </div>
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Label>IP Reservation</Label>
             <RadioGroup 
               value={formState.ipReservation} 
@@ -346,7 +347,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 </SelectContent>
               </Select>
             )}
-          </div>
+          </div> */}
 
           {/* Optional Sections */}
           <Accordion type="single" collapsible className="w-full">
@@ -388,7 +389,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             </AccordionItem>
 
             {/* Volumes */}
-            <AccordionItem value="volumes">
+            {/* <AccordionItem value="volumes" >
               <AccordionTrigger>Volumes (Optional)</AccordionTrigger>
               <AccordionContent>
                 <div className="space-y-4">
@@ -429,10 +430,10 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   </Button>
                 </div>
               </AccordionContent>
-            </AccordionItem>
+            </AccordionItem> */}
 
             {/* Security Rules */}
-            <AccordionItem value="security-rules">
+            {/* <AccordionItem value="security-rules">
               <AccordionTrigger>Security Rules (Optional)</AccordionTrigger>
               <AccordionContent>
                 <div className="space-y-4">
@@ -503,7 +504,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   </Button>
                 </div>
               </AccordionContent>
-            </AccordionItem>
+            </AccordionItem> */}
           </Accordion>
         </CardContent>
         <CardFooter>
@@ -513,6 +514,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         </CardFooter>
       </Card>
     </form>
+    </div>
   )
 }
 

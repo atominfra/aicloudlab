@@ -88,8 +88,8 @@ const CreateNotebook = () => {
     fetchUserDetails()
   },[])
   return (
-    <Box className="flex flex-col items-center gap-8 min-h-screen bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
-      <Navbar />
+    <Box className="h-full w-full flex justify-center items-center ">
+      {/* <Navbar /> */}
       
       <Box className="w-full max-w-lg p-6">
         <Typography variant="h4" className="text-center text-3xl mb-10 font-poppins ">
