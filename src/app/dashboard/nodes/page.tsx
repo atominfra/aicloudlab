@@ -68,7 +68,7 @@ export default function NodesPage() {
         <div>
           {hasActiveNodes() ? (
             nodes.map((node) => 
-              node.isDeleted === false && <NodeCard key={node.name} {...node} />
+              node.isDeleted === false && <NodeCard key={node.name} {...node} fetchNodes={fetchNodes} />
             )
           ) : (
             <Box className="flex flex-col gap-2 justify-center items-center h-[80vh] w-full bg-neutral-100">

@@ -7,13 +7,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { Switch } from "@/components/ui/switch"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Trash2 } from 'lucide-react'
 import { fetchOSOptions, fetchPlans, createNode } from '@/app/api/nodes/api'
 import { useGlobalContext } from '@/context/GlobalContext'
-import PlanSelector from '@/components/plan-selector'
+import { CircularProgress } from '@mui/material'
+import { useRouter } from 'next/navigation'
 
 // Types
 interface OSOption {
@@ -21,17 +20,20 @@ interface OSOption {
   version: string[]
 }
 
+interface Plan {
+  id: string
+  plan: string
+  image: string
+}
+
 interface NodeData {
   name: string
   os: string
   osVersion: string
   plan: string
+  image: string
   planCommitment: string
-  ipReservation: 'new' | 'existing' | 'none'
-  existingIp?: string
-  sshKeys: Array<{ name: string; key: string; }>
-  volumes: Array<{ name: string; size: string }>
-  securityRules: Array<{ type: string; port: string; protocol: string; ipAddresses: string; allowed: boolean }>
+  sshKeys: Array<{ key: string }>
 }
 
 interface NodeCreationFormProps {
@@ -47,46 +49,25 @@ const PLAN_COMMITMENTS = [
 ]
 
 export default function NodeCreationForm({ initialData, isEditMode = false }: NodeCreationFormProps) {
-  // State Management
   const [formState, setFormState] = useState<NodeData>({
     name: initialData?.name || '',
     os: initialData?.os || '',
     osVersion: initialData?.osVersion || '',
     plan: initialData?.plan || '',
+    image: initialData?.image || '',
     planCommitment: initialData?.planCommitment || '',
-    ipReservation: initialData?.ipReservation || 'none',
-    existingIp: initialData?.existingIp || '',
-    sshKeys: initialData?.sshKeys || [{ name: '', key: ''}],
-    volumes: initialData?.volumes || [{ name: '', size: '' }],
-    securityRules: initialData?.securityRules || [
-      { type: 'inbound', port: '', protocol: 'tcp', ipAddresses: '', allowed: true }
-    ]
+    sshKeys: initialData?.sshKeys || [{ key: '' }],
   })
 
-
-  // Derived State
   const [osOptions, setOSOptions] = useState<OSOption[]>([])
   const [osVersions, setOSVersions] = useState<string[]>([])
-  const [plans, setPlans] = useState([])
-  const [existingReservedIPs, setExistingReservedIPs] = useState<string[]>([])
-  const [selectedPlanCommitment, setSelectedPlanCommitment] = useState(initialData?.planCommitment || '')
-  const [selectedPlan, setSelectedPlan] = useState()
-  //const [ipReservation, setIpReservation] = useState<'new' | 'existing' | 'none'>(initialData?.ipReservation || 'none')
-  //const [existingIp, setExistingIp] = useState(initialData?.existingIp || '')
-  //const [securityRules, setSecurityRules] = useState(initialData?.securityRules || [
-  //  { type: 'inbound', port: '', protocol: 'tcp', ipAddresses: '', allowed: true }
-  //])
-  //const [volumes, setVolumes] = useState(initialData?.volumes || [{ name: '', size: '' }])
-  const [sshKeys, setSSHKeys] = useState(initialData?.sshKeys || [{ name: '', key: '' }])
-  //const [selectedPlan, setSelectedPlan] = useState('')
-  // Hooks
+  const [plans, setPlans] = useState<Plan[]>([])
+  const [loading, setLoading] = useState(false)
   const { auth } = useGlobalContext()
-
-  // Fetch OS Options
+  const router = useRouter()
   useEffect(() => {
     const fetchInitialData = async () => {
       if (!auth) return
-
       try {
         const osData = await fetchOSOptions(auth)
         setOSOptions(osData.data.os)
@@ -94,21 +75,17 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         console.error('Failed to fetch initial data:', error)
       }
     }
-
     fetchInitialData()
   }, [auth])
 
-  // Update Versions when OS Changes
   useEffect(() => {
     const selectedOSOption = osOptions.find(os => os.name === formState.os)
     setOSVersions(selectedOSOption?.version || [])
   }, [formState.os, osOptions])
 
-  // Fetch Plans when OS and Version are Selected
   useEffect(() => {
     const fetchAvailablePlans = async () => {
       if (!formState.os || !formState.osVersion) return
-
       try {
         const plansData = await fetchPlans(auth, formState.os, formState.osVersion)
         setPlans(plansData.data.plans)
@@ -116,39 +93,29 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         console.error('Failed to fetch plans:', error)
       }
     }
-
     fetchAvailablePlans()
-  }, [formState.os, formState.osVersion])
+  }, [formState.os, formState.osVersion, auth])
 
-  // Update Handlers
-  const updateFormState = <K extends keyof NodeData>(
-    field: K, 
-    value ,
-    index?: number
-  ) => {
-    if (index !== undefined && Array.isArray(formState[field])) {
-      const updatedArray = [...(formState[field] )]
-      updatedArray[index] = { ...updatedArray[index], ...value }
-      setFormState(prev => ({ ...prev, [field]: updatedArray }))
-    } else {
-      setFormState(prev => ({ ...prev, [field]: value }))
-    }
+  useEffect(() => {
+    console.log("formState updated:", formState)
+  }, [formState])
+
+  const updateFormState = (field: keyof NodeData, value: any) => {
+    setFormState(prev => ({ ...prev, [field]: value }))
   }
-  useEffect(()=>{
-    console.log("selectedPlan",selectedPlan)
-  },[selectedPlan])
 
-  // Submission Handler
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     const apiData = {
       name: formState.name,
       ssh_keys: formState.sshKeys.map(key => key.key),
-      plan: selectedPlan.plan,
-      image: selectedPlan.image
+      plan: formState.plan,
+      image: formState.image
     }
     console.log("API Data:", JSON.stringify(apiData, null, 2))
     try {
+      setLoading(true)
+
       const result = await createNode(auth, apiData)
       console.log('Node created successfully:', result)
       // Handle successful creation 
@@ -156,224 +123,192 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       console.error('Failed to create node:', error)
       // Handle error
     }
+    setLoading(false)
+    router.push('/dashboard/nodes')
   }
 
-  // Render Helpers
-  const renderOSOptions = () => 
-    osOptions.map((os) => (
-      <SelectItem key={os.name} value={os.name}>{os.name}</SelectItem>
-    ))
-
-  const renderOSVersionOptions = () => 
-    osVersions.map((version) => (
-      <SelectItem key={version} value={version}>{version}</SelectItem>
-    ))
-
-  const renderPlanCommitmentOptions = () => 
-    PLAN_COMMITMENTS.map((commitment) => (
-      <SelectItem key={commitment.value} value={commitment.value}>
-        {commitment.label}
-      </SelectItem>
-    ))
-
-
-
-  //const addSecurityRule = () => {
-  //  updateFormState('securityRules', [...formState.securityRules, { type: 'inbound', port: '', protocol: 'tcp', ipAddresses: '', allowed: true }])
-  //}
-
-  //const removeSecurityRule = (index: number) => {
-  //  updateFormState('securityRules', formState.securityRules.filter((_, i) => i !== index))
-  //}
-
-  //const addVolume = () => {
-  //  updateFormState('volumes', [...formState.volumes, { name: '', size: '' }])
-  //}
-
-  //const removeVolume = (index: number) => {
-  //  updateFormState('volumes', formState.volumes.filter((_, i) => i !== index))
-  //}
+  const findplan = (plans: Plan[], value: string) => {
+    return plans.find((plan) => plan.id === value)
+  }
+  const handlePlanChange = (value: string) => {
+    const selectedPlan = findplan(plans, value)
+    if (selectedPlan) {
+      setFormState(prev => ({
+        ...prev,
+        plan: selectedPlan.plan,
+        image: selectedPlan.image
+      }))
+    }
+  }
 
   const addSSHKey = () => {
-    updateFormState('sshKeys', [...formState.sshKeys, { name: '', key: '' }])
+    setFormState(prev => ({
+      ...prev,
+      sshKeys: [...prev.sshKeys, { key: '' }]
+    }))
   }
 
   const removeSSHKey = (index: number) => {
-    updateFormState('sshKeys', formState.sshKeys.filter((_, i) => i !== index))
+    setFormState(prev => ({
+      ...prev,
+      sshKeys: prev.sshKeys.filter((_, i) => i !== index)
+    }))
   }
 
-  //const updateSecurityRule = (index: number, field: string, value: string | boolean) => {
-  //  updateFormState('securityRules', { [field]: value }, index)
-  //}
-
-  //const updateVolume = (index: number, field: string, value: string) => {
-  //  updateFormState('volumes', { [field]: value }, index)
-  //}
-
-  const updateSSHKey = (index: number, field: string, value: string) => {
-    updateFormState('sshKeys', { [field]: value }, index)
+  const updateSSHKey = (index: number, value: string) => {
+    setFormState(prev => {
+      const newSSHKeys = [...prev.sshKeys]
+      newSSHKeys[index] = { key: value }
+      return { ...prev, sshKeys: newSSHKeys }
+    })
   }
-
-  // Mock function to calculate volume cost
-  //const calculateVolumeCost = (size: number) => {
-  //  const costPerGB = 0.10 // $0.10 per GB per month
-  //  return size * costPerGB
-  //}
-
-
+  const formatPlanName = (plan: any) => {
+    const parts = []
+    
+    // Add CPU info
+    if (plan.cpu && plan.cpu_type) {
+      parts.push(`${plan.cpu} ${plan.cpu_type}`)
+    }
+    
+    // Add RAM info
+    if (plan.ram) {
+      parts.push(`${plan.ram} GB Memory`)
+    }
+    
+    // Add GPU info if present
+    if (plan.gpu_card_details && Object.keys(plan.gpu_card_details).length > 0) {
+      parts.push(plan.gpu_card_details.name || 'GPU')
+    }
+    
+    // Add price per hour
+    if (plan.price_per_hour) {
+      parts.push(`₹${plan.price_per_hour} per hour`)
+    }
+    
+    return parts.join(' • ')
+  }
   return (
     <div className='h-full w-full flex justify-center mt-[20vh]'>
-         <form onSubmit={handleSubmit} className=" w-full max-w-4xl mx-auto ">
-      <Card>
-        <CardHeader>
-          <CardTitle>{isEditMode ? 'Edit Node' : 'Create a New Node'}</CardTitle>
-          <CardDescription>
-            {isEditMode ? 'Update your node details' : 'Fill in the details to create your node'}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {/* Basic Information */}
-          <div className="space-y-2">
-            <Label htmlFor="name">Name *</Label>
-            <Input 
-              id="name" 
-              placeholder="Enter node name" 
-              required 
-              value={formState.name}
-              onChange={(e) => updateFormState('name', e.target.value)}
-            />
-          </div>
-
-          {/* System Details */}
-          <div className="grid grid-cols-2 gap-4">
+      <form onSubmit={handleSubmit} className="w-full max-w-4xl mx-auto">
+        <Card>
+          <CardHeader>
+            <CardTitle>{isEditMode ? 'Edit Node' : 'Create a New Node'}</CardTitle>
+            <CardDescription>
+              {isEditMode ? 'Update your node details' : 'Fill in the details to create your node'}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
             <div className="space-y-2">
-              <Label htmlFor="os">Operating System *</Label>
-              <Select 
-                onValueChange={(value) => {
-                  updateFormState('os', value)
-                  updateFormState('osVersion', '')
-                  updateFormState('plan', '')
-                }} 
-                value={formState.os} 
-                required
-              >
-                <SelectTrigger id="os">
-                  <SelectValue placeholder="Select OS" />
-                </SelectTrigger>
-                <SelectContent>
-                  {renderOSOptions()}
-                </SelectContent>
-              </Select>
+              <Label htmlFor="name">Name *</Label>
+              <Input 
+                id="name" 
+                placeholder="Enter node name" 
+                required 
+                value={formState.name}
+                onChange={(e) => updateFormState('name', e.target.value)}
+              />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="os-version">OS Version *</Label>
-              <Select 
-                onValueChange={(value) => {
-                  updateFormState('osVersion', value)
-                  updateFormState('plan', '')
-                }} 
-                value={formState.osVersion} 
-                required
-                disabled={!formState.os}
-              >
-                <SelectTrigger id="os-version">
-                  <SelectValue placeholder="Select Version" />
-                </SelectTrigger>
-                <SelectContent>
-                  {renderOSVersionOptions()}
-                </SelectContent>
-              </Select>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="os">Operating System *</Label>
+                <Select 
+                  onValueChange={(value) => {
+                    updateFormState('os', value)
+                    updateFormState('osVersion', '')
+                    updateFormState('plan', '')
+                    updateFormState('image', '')
+                  }} 
+                  value={formState.os} 
+                  required
+                >
+                  <SelectTrigger id="os">
+                    <SelectValue placeholder="Select OS" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {osOptions.map((os) => (
+                      <SelectItem key={os.name} value={os.name}>{os.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="os-version">OS Version *</Label>
+                <Select 
+                  onValueChange={(value) => {
+                    updateFormState('osVersion', value)
+                    updateFormState('plan', '')
+                    updateFormState('image', '')
+                  }} 
+                  value={formState.osVersion} 
+                  required
+                  disabled={!formState.os}
+                >
+                  <SelectTrigger id="os-version">
+                    <SelectValue placeholder="Select Version" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {osVersions.map((version) => (
+                      <SelectItem key={version} value={version}>{version}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="plan">Plan *</Label>
+                <Select 
+                  onValueChange={handlePlanChange} 
+                  value={plans.find(p => p.plan === formState.plan)?.id || ''}
+                  required
+                  disabled={plans.length === 0}
+                >
+                  <SelectTrigger id="plan">
+                    <SelectValue placeholder="Select plan" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {plans.map((plan) => (
+                      <SelectItem key={plan.id} value={plan.id}>{formatPlanName(plan)}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* <div className="space-y-2">
+                <Label htmlFor="plan-commitment">Plan Commitment *</Label>
+                <Select 
+                  onValueChange={(value) => updateFormState('planCommitment', value)} 
+                  value={formState.planCommitment} 
+                  required
+                >
+                  <SelectTrigger id="plan-commitment">
+                    <SelectValue placeholder="Select commitment" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {PLAN_COMMITMENTS.map((commitment) => (
+                      <SelectItem key={commitment.value} value={commitment.value}>
+                        {commitment.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div> */}
             </div>
-            {plans.length !== 0 && 
-            <PlanSelector  planData={plans} setPlan={setSelectedPlan} />
-            }
-            <div className="space-y-2">
-              <Label htmlFor="plan-commitment">Plan Commitment *</Label>
-              <Select 
-                onValueChange={(value) => updateFormState('planCommitment', value)} 
-                value={formState.planCommitment} 
-                required
-                disabled={true}
-              >
-                <SelectTrigger id="plan-commitment">
-                  <SelectValue placeholder="Select commitment" />
-                </SelectTrigger>
-                <SelectContent>
-                  {renderPlanCommitmentOptions()}
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          {/* <div className="space-y-2">
-            <Label>IP Reservation</Label>
-            <RadioGroup 
-              value={formState.ipReservation} 
-              onValueChange={(value) => updateFormState('ipReservation', value as 'new' | 'existing' | 'none')}
-            >
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="none" id="ip-none" />
-                <Label htmlFor="ip-none">No IP reservation</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="new" id="ip-new" />
-                <Label htmlFor="ip-new">Reserve new IP</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <RadioGroupItem value="existing" id="ip-existing" />
-                <Label htmlFor="ip-existing">Use existing reserved IP</Label>
-              </div>
-            </RadioGroup>
-            {formState.ipReservation === 'existing' && (
-              <Select 
-                onValueChange={(value) => updateFormState('existingIp', value)} 
-                value={formState.existingIp}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select existing IP" />
-                </SelectTrigger>
-                <SelectContent>
-                  {existingReservedIPs.map((ip) => (
-                    <SelectItem key={ip} value={ip}>
-                      {ip}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          </div> */}
-          {/* Optional Sections */}
-          <Accordion type="single" collapsible className="w-full">
-            {/* SSH Keys */}
-            <AccordionItem value="ssh-keys">
-              <AccordionTrigger>SSH Keys (Optional)</AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-4">
-                  {formState.sshKeys.map((sshKey, index) => (
-                    // <div key={index} className="space-y-2 p-4 border rounded-md">
-                    //   <div className="flex justify-between items-center mb-2">
-                    //     <Input
-                    //       placeholder="SSH Key Name"
-                    //       value={sshKey.name}
-                    //       onChange={(e) => updateSSHKey(index, 'name', e.target.value)}
-                    //       className="flex-grow mr-2"
-                    //     />
-                    //     <Button
-                    //       type="button"
-                    //       variant="ghost"
-                    //       size="icon"
-                    //       onClick={() => removeSSHKey(index)}
-                    //     >
-                    //       <Trash2 className="h-4 w-4" />
-                    //     </Button>
-                    //   </div>
-                     <div className='flex'>
-                       <Textarea
-                        placeholder="Paste your SSH public key here"
-                        value={sshKey.key}
-                        onChange={(e) => updateSSHKey(index, 'key', e.target.value)}
-                      />
-                      <Button
+
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="ssh-keys">
+                <AccordionTrigger>SSH Keys (Optional)</AccordionTrigger>
+                <AccordionContent>
+                  <div className="space-y-4">
+                    {formState.sshKeys.map((sshKey, index) => (
+                      <div key={index} className='flex'>
+                        <Textarea
+                          placeholder="Paste your SSH public key here"
+                          value={sshKey.key}
+                          onChange={(e) => updateSSHKey(index, e.target.value)}
+                        />
+                        <Button
                           type="button"
                           variant="ghost"
                           size="icon"
@@ -381,141 +316,37 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
-                    </div>
-                  ))}
-                  <Button type="button" variant="outline" onClick={addSSHKey}>
-                    Add SSH Key
-                  </Button>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-
-            {/* Volumes */}
-            {/* <AccordionItem value="volumes" >
-              <AccordionTrigger>Volumes (Optional)</AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-4">
-                  {formState.volumes.map((volume, index) => (
-                    <div key={index} className="space-y-2 p-4 border rounded-md">
-                      <div className="flex justify-between items-center mb-2">
-                        <Input
-                          placeholder="Volume Name"
-                          value={volume.name}
-                          onChange={(e) => updateVolume(index, 'name', e.target.value)}
-                          className="flex-grow mr-2"
-                        />
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeVolume(index)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
                       </div>
-                      <Input
-                        type="number"
-                        min="1"
-                        placeholder="Size (GB)"
-                        value={volume.size}
-                        onChange={(e) => updateVolume(index, 'size', e.target.value)}
-                      />
-                      {volume.size && (
-                        <p className="text-sm text-muted-foreground">
-                          Estimated cost: ${calculateVolumeCost(Number(volume.size)).toFixed(2)}/month
-                        </p>
-                      )}
-                    </div>
-                  ))}
-                  <Button type="button" variant="outline" onClick={addVolume}>
-                    Add Volume
-                  </Button>
-                </div>
-              </AccordionContent>
-            </AccordionItem> */}
-
-            {/* Security Rules */}
-            {/* <AccordionItem value="security-rules">
-              <AccordionTrigger>Security Rules (Optional)</AccordionTrigger>
-              <AccordionContent>
-                <div className="space-y-4">
-                  {formState.securityRules.map((rule, index) => (
-                    <div key={index} className="p-4 border rounded-md space-y-2">
-                      <div className="flex justify-between items-center mb-2">
-                        <div className="flex items-center space-x-2 flex-grow">
-                          <Select
-                            value={rule.type}
-                            onValueChange={(value) => updateSecurityRule(index, 'type', value)}
-                          >
-                            <SelectTrigger className="w-28">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="inbound">Inbound</SelectItem>
-                              <SelectItem value="outbound">Outbound</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <Input
-                            placeholder="Port"
-                            value={rule.port}
-                            onChange={(e) => updateSecurityRule(index, 'port', e.target.value)}
-                            className="w-20"
-                          />
-                          <Select
-                            value={rule.protocol}
-                            onValueChange={(value) => updateSecurityRule(index, 'protocol', value)}
-                          >
-                            <SelectTrigger className="w-20">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="tcp">TCP</SelectItem>
-                              <SelectItem value="udp">UDP</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="icon"
-                          onClick={() => removeSecurityRule(index)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Input
-                          placeholder="IP Addresses (comma-separated)"
-                          value={rule.ipAddresses}
-                          onChange={(e) => updateSecurityRule(index, 'ipAddresses', e.target.value)}
-                          className="flex-grow"
-                        />
-                        <div className="flex items-center space-x-2">
-                          <Switch
-                            checked={rule.allowed}
-                            onCheckedChange={(checked) => updateSecurityRule(index, 'allowed', checked)}
-                            id={`allow-rule-${index}`}
-                          />
-                          <Label htmlFor={`allow-rule-${index}`}>Allow</Label>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  <Button type="button" variant="outline" onClick={addSecurityRule}>
-                    Add Rule
-                  </Button>
-                </div>
-              </AccordionContent>
-            </AccordionItem> */}
-          </Accordion>
-        </CardContent>
-        <CardFooter>
-          <Button type="submit" className="w-full">
-            {isEditMode ? 'Update Node' : 'Create Node'}
-          </Button>
-        </CardFooter>
-      </Card>
-    </form>
+                    ))}
+                    <Button type="button" variant="outline" onClick={addSSHKey}>
+                      Add SSH Key
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </CardContent>
+          <CardFooter>
+            <Button                        
+             disabled={loading}
+              type="submit" className={`w-full ${loading===true ? 'bg-[rgba(17,24,39,0.32)]':'bg-black'}`}>
+              {loading=== true ? <>
+                        <CircularProgress className="text-white" size={30}/> 
+                        </>:
+                        <>Create Node</>}
+            </Button>
+            {/* <CustomButton 
+                        disabled={isLoading}
+                        text={isLoading=== true ? <>
+                        <CircularProgress className="text-white" size={30}/> 
+                        </>:
+                        <>Create Notebook</>} 
+                        customCss={`mt-6 ${isLoading===true ? 'bg-[rgba(17,24,39,0.32)]':'bg-[#1976D2]'} text-white text-[15px] lg:text-[16px]`} 
+                        onclickhandler={handleSubmit}
+                      /> */}
+          </CardFooter>
+        </Card>
+      </form>
     </div>
   )
 }

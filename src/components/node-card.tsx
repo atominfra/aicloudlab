@@ -23,11 +23,12 @@ interface NodeCardProps {
   gpu: string
   isDeleted: true
   status: "running" | "stopped" | "error"
+  fetchNodes:() => Promise<void>
 }
 
 
 
-export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, public_ip_address, gpu, isDeleted, status }: NodeCardProps) {
+export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, public_ip_address, gpu, isDeleted, status, fetchNodes }: NodeCardProps) {
   const [copySuccess, setCopySuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isRunning,setIsRunning] = useState(false);
@@ -84,6 +85,36 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
     return null
   }
 
+  const handleDelete = async (id)=>{
+    try {
+      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/e2e/node/${encodeURIComponent(id)}`;
+  
+      const response = await fetch(url, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`, 
+        },
+      });
+
+      if (!response.ok) {
+        const errorDetails = await response.text();
+        throw new Error(`HTTP Error ${response.status}: ${response.statusText}. Details: ${errorDetails}`);
+      }
+
+      const result = await response.json();
+      console.log("Delete successful", result);
+      fetchNodes()
+      return result;
+
+
+    } catch (err) {
+
+      console.error("Error during deletion:", err.message);
+      return null; 
+
+    } 
+  }
   return (
     <div className="bg-white border-b rounded-md p-4">
       <div className="flex items-center justify-between">
@@ -143,16 +174,16 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
           {/* <div  className='p-2 hover:cursor-pointer'>
             <IoMdSettings className="w-[20px] h-[30px] text-gray-400" />
           </div> */}
-          <div  onClick={handleOpen} className='p-2 hover:cursor-pointer'>
+          <div  onClick={()=>handleDelete(id)} className='p-2 hover:cursor-pointer'>
             <MdDelete className="w-[20px] h-[30px] text-red-600" />
           </div>
           <Button              
-              disabled={status !== 'running'}
+              disabled={true}
+              // disabled={status !== 'running'}
               variant="outline" 
               className={`text-gray-600 ${status !== 'running' ? "text-[#b0b0b0]":"text-[#111827] hover:text-gray-600"}`} 
               onClick={()=>{
                 if(status === 'running'){
-                  router.push(`/notebook/${id}`)
                 }else{
                   toast.error('Notebook is not running',{position:"bottom-right"})
                 }
