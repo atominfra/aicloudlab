@@ -96,7 +96,7 @@ const  NotebooksPage= () => {
         </Button>
       </div>
       {notebooks.length === 0 ? (
-        <Box className="flex flex-col gap-2 justify-center items-center h-[60vh] w-full bg-neutral-100">
+        <Box className="flex flex-col gap-2 justify-center items-center h-[80vh] w-full bg-neutral-100">
           <Image
             src={notebook}
             width={1000}
