@@ -80,6 +80,9 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
     setIsError(value !== name); // Set error if input doesn't match the name
   };
 
+  if(isDeleted === true){
+    return null
+  }
 
   return (
     <div className="bg-white border-b rounded-md p-4">
