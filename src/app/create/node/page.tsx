@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -13,6 +13,7 @@ import { fetchOSOptions, fetchPlans, createNode } from '@/app/api/nodes/api'
 import { useGlobalContext } from '@/context/GlobalContext'
 import { CircularProgress } from '@mui/material'
 import { useRouter } from 'next/navigation'
+import { Switch } from "@/components/ui/switch"
 
 // Types
 interface OSOption {
@@ -24,6 +25,14 @@ interface Plan {
   id: string
   plan: string
   image: string
+  cpu?: number
+  cpu_type?: string
+  ram?: number
+  disk:string
+  gpu_card_details?: {
+    name?: string
+  }
+  price_per_hour?: number
 }
 
 interface NodeData {
@@ -34,6 +43,8 @@ interface NodeData {
   image: string
   planCommitment: string
   sshKeys: Array<{ key: string }>
+  volumes: Array<{ name: string; size: string }>
+  securityRules: Array<{ type: string; port: string; protocol: string; ipAddresses: string; allowed: boolean }>
 }
 
 interface NodeCreationFormProps {
@@ -57,14 +68,18 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     image: initialData?.image || '',
     planCommitment: initialData?.planCommitment || '',
     sshKeys: initialData?.sshKeys || [{ key: '' }],
+    volumes: initialData?.volumes || [],
+    securityRules: initialData?.securityRules || [],
   })
 
   const [osOptions, setOSOptions] = useState<OSOption[]>([])
   const [osVersions, setOSVersions] = useState<string[]>([])
   const [plans, setPlans] = useState<Plan[]>([])
   const [loading, setLoading] = useState(false)
+  const [loadingPlans, setLoadingPlans] = useState(false) // Added loadingPlans state
   const { auth } = useGlobalContext()
   const router = useRouter()
+  const [error, setError] = useState('')
   useEffect(() => {
     const fetchInitialData = async () => {
       if (!auth) return
@@ -83,16 +98,20 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     setOSVersions(selectedOSOption?.version || [])
   }, [formState.os, osOptions])
 
-  useEffect(() => {
-    const fetchAvailablePlans = async () => {
-      if (!formState.os || !formState.osVersion) return
-      try {
-        const plansData = await fetchPlans(auth, formState.os, formState.osVersion)
-        setPlans(plansData.data.plans)
-      } catch (error) {
-        console.error('Failed to fetch plans:', error)
-      }
+  const fetchAvailablePlans = async () => {
+    if (!formState.os || !formState.osVersion) return
+    setLoadingPlans(true) // Set loadingPlans to true before fetching
+    try {
+      const plansData = await fetchPlans(auth, formState.os, formState.osVersion)
+      setPlans(plansData.data.plans)
+    } catch (error) {
+      console.error('Failed to fetch plans:', error)
+    } finally {
+      setLoadingPlans(false) // Set loadingPlans to false after fetching (success or failure)
     }
+  }
+
+  useEffect(() => {
     fetchAvailablePlans()
   }, [formState.os, formState.osVersion, auth])
 
@@ -106,30 +125,39 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
+     // Validate SSH keys
+      const hasEmptySSHKeys = formState.sshKeys.some(key => key.key.trim() === '');
+      if (hasEmptySSHKeys || formState.sshKeys.length === 0) {
+        // alert("Please add at least one valid SSH key."); 
+        setError("Please add at least one valid SSH key.")
+        return;
+      }
     const apiData = {
       name: formState.name,
       ssh_keys: formState.sshKeys.map(key => key.key),
       plan: formState.plan,
-      image: formState.image
+      image: formState.image,
+      volumes: formState.volumes,
+      security_rules: formState.securityRules
     }
     console.log("API Data:", JSON.stringify(apiData, null, 2))
     try {
       setLoading(true)
-
       const result = await createNode(auth, apiData)
       console.log('Node created successfully:', result)
-      // Handle successful creation 
+      router.push('/dashboard/nodes')
     } catch (error) {
       console.error('Failed to create node:', error)
-      // Handle error
+      // Handle error (e.g., show error message to user)
+    } finally {
+      setLoading(false)
     }
-    setLoading(false)
-    router.push('/dashboard/nodes')
   }
 
   const findplan = (plans: Plan[], value: string) => {
     return plans.find((plan) => plan.id === value)
   }
+
   const handlePlanChange = (value: string) => {
     const selectedPlan = findplan(plans, value)
     if (selectedPlan) {
@@ -162,42 +190,108 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       return { ...prev, sshKeys: newSSHKeys }
     })
   }
-  const formatPlanName = (plan: any) => {
+
+  const addVolume = () => {
+    setFormState(prev => ({
+      ...prev,
+      volumes: [...prev.volumes, { name: '', size: '' }]
+    }))
+  }
+
+  const removeVolume = (index: number) => {
+    setFormState(prev => ({
+      ...prev,
+      volumes: prev.volumes.filter((_, i) => i !== index)
+    }))
+  }
+
+  const updateVolume = (index: number, field: 'name' | 'size', value: string) => {
+    setFormState(prev => {
+      const newVolumes = [...prev.volumes]
+      newVolumes[index] = { ...newVolumes[index], [field]: value }
+      return { ...prev, volumes: newVolumes }
+    })
+  }
+
+  const addSecurityRule = () => {
+    setFormState(prev => ({
+      ...prev,
+      securityRules: [...prev.securityRules, { type: 'inbound', port: '', protocol: 'tcp', ipAddresses: '', allowed: true }]
+    }))
+  }
+
+  const removeSecurityRule = (index: number) => {
+    setFormState(prev => ({
+      ...prev,
+      securityRules: prev.securityRules.filter((_, i) => i !== index)
+    }))
+  }
+
+  const updateSecurityRule = (index: number, field: keyof NodeData['securityRules'][0], value: any) => {
+    setFormState(prev => {
+      const newRules = [...prev.securityRules]
+      newRules[index] = { ...newRules[index], [field]: value }
+      return { ...prev, securityRules: newRules }
+    })
+  }
+
+  const calculateVolumeCost = (size: number) => {
+    // This is a placeholder function. Replace with actual cost calculation logic.
+    return size * 0.1 // Assuming $0.1 per GB
+  }
+
+  const formatPlanName = (plan: Plan) => {
     const parts = []
     
-    // Add CPU info
     if (plan.cpu && plan.cpu_type) {
       parts.push(`${plan.cpu} ${plan.cpu_type}`)
     }
     
-    // Add RAM info
     if (plan.ram) {
       parts.push(`${plan.ram} GB Memory`)
     }
-    
-    // Add GPU info if present
-    if (plan.gpu_card_details && Object.keys(plan.gpu_card_details).length > 0) {
-      parts.push(plan.gpu_card_details.name || 'GPU')
+
+    if (plan.disk && Object.keys(plan.disk).length > 0) {
+      parts.push(plan?.disk || 'Disk')
     }
     
-    // Add price per hour
-    if (plan.price_per_hour) {
-      parts.push(`₹${plan.price_per_hour} per hour`)
+    
+    if (plan.gpu_card_details && Object.keys(plan.gpu_card_details).length > 0) {
+      parts.push(plan?.gpu_card_details?.name || 'GPU')
     }
     
     return parts.join(' • ')
+    
+  // return (
+  //   <div className="flex justify-between items-center space-x-4">
+  //     {parts.map((part, index) => (
+  //       <div key={index} className="flex-1 text-center">
+  //         {part+ " •"} 
+  //       </div>
+  //     ))}
+  //   </div>
+  // );
   }
+
+  const renderPlanCommitmentOptions = () => {
+    return PLAN_COMMITMENTS.map((option) => (
+      <SelectItem key={option.value} value={option.value}>
+        {option.label}
+      </SelectItem>
+    ));
+  };
+
   return (
-    <div className='h-full w-full flex justify-center mt-[20vh]'>
-      <form onSubmit={handleSubmit} className="w-full max-w-4xl mx-auto">
-        <Card>
-          <CardHeader>
-            <CardTitle>{isEditMode ? 'Edit Node' : 'Create a New Node'}</CardTitle>
-            <CardDescription>
+    <div className='p-6 bg-neutral-100 min-h-screen flex justify-center items-start'>
+      <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto mt-[10vh]">
+        <Card className="bg-neutral-100 shadow-none border-none">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-semibold ">{isEditMode ? 'Edit Node' : 'Create a New Node'}</CardTitle>
+            {/* <CardDescription className="text-muted-foreground">
               {isEditMode ? 'Update your node details' : 'Fill in the details to create your node'}
-            </CardDescription>
+            </CardDescription> */}
           </CardHeader>
-          <CardContent className="space-y-6">
+          <CardContent className="space-y-6 p-6">
             <div className="space-y-2">
               <Label htmlFor="name">Name *</Label>
               <Input 
@@ -206,10 +300,11 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 required 
                 value={formState.name}
                 onChange={(e) => updateFormState('name', e.target.value)}
+                className="max-w-full"
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="os">Operating System *</Label>
                 <Select 
@@ -221,8 +316,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   }} 
                   value={formState.os} 
                   required
+                  disabled={osOptions.length === 0} 
                 >
-                  <SelectTrigger id="os">
+                  <SelectTrigger id="os" className="max-w-full">
                     <SelectValue placeholder="Select OS" />
                   </SelectTrigger>
                   <SelectContent>
@@ -245,7 +341,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   required
                   disabled={!formState.os}
                 >
-                  <SelectTrigger id="os-version">
+                  <SelectTrigger id="os-version" className="max-w-full">
                     <SelectValue placeholder="Select Version" />
                   </SelectTrigger>
                   <SelectContent>
@@ -261,11 +357,18 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 <Select 
                   onValueChange={handlePlanChange} 
                   value={plans.find(p => p.plan === formState.plan)?.id || ''}
-                  required
                   disabled={plans.length === 0}
+                  required
                 >
-                  <SelectTrigger id="plan">
-                    <SelectValue placeholder="Select plan" />
+                  <SelectTrigger id="plan" className="max-w-full">
+                    {loadingPlans ? (
+                      <div className="flex items-center">
+                        <CircularProgress size={16} className="mr-2" />
+                        Loading plans...
+                      </div>
+                    ) : (
+                      <SelectValue placeholder="Select plan" />
+                    )}
                   </SelectTrigger>
                   <SelectContent>
                     {plans.map((plan) => (
@@ -275,75 +378,186 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 </Select>
               </div>
 
-              {/* <div className="space-y-2">
+              <div className="space-y-2">
                 <Label htmlFor="plan-commitment">Plan Commitment *</Label>
                 <Select 
                   onValueChange={(value) => updateFormState('planCommitment', value)} 
                   value={formState.planCommitment} 
                   required
+                  disabled={true}
                 >
-                  <SelectTrigger id="plan-commitment">
+                  <SelectTrigger id="plan-commitment" className="max-w-full">
                     <SelectValue placeholder="Select commitment" />
                   </SelectTrigger>
                   <SelectContent>
-                    {PLAN_COMMITMENTS.map((commitment) => (
-                      <SelectItem key={commitment.value} value={commitment.value}>
-                        {commitment.label}
-                      </SelectItem>
-                    ))}
+                    {renderPlanCommitmentOptions()}
                   </SelectContent>
                 </Select>
-              </div> */}
+              </div>
             </div>
 
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="ssh-keys">
-                <AccordionTrigger>SSH Keys (Optional)</AccordionTrigger>
-                <AccordionContent>
+            <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
+              <AccordionItem value="ssh-keys" className="border-b-0" >
+                <AccordionTrigger className="px-4 py-2">SSH Keys </AccordionTrigger>
+                <AccordionContent className="px-4 py-2" >
                   <div className="space-y-4">
                     {formState.sshKeys.map((sshKey, index) => (
-                      <div key={index} className='flex'>
+                      <div key={index} className='flex items-center'>
                         <Textarea
                           placeholder="Paste your SSH public key here"
                           value={sshKey.key}
                           onChange={(e) => updateSSHKey(index, e.target.value)}
+                          className="flex-grow mr-2"
                         />
                         <Button
                           type="button"
                           variant="ghost"
                           size="icon"
                           onClick={() => removeSSHKey(index)}
+                          className="mt-2"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     ))}
-                    <Button type="button" variant="outline" onClick={addSSHKey}>
+                    <Button type="button" variant="outline" onClick={addSSHKey} className="mt-2">
                       Add SSH Key
                     </Button>
                   </div>
                 </AccordionContent>
               </AccordionItem>
+
+              {/* Volumes */}
+              <AccordionItem value="volumes" disabled>
+                <AccordionTrigger className="px-4 py-2 text-[#e5e5e5] hover:cursor-not-allowed">Volumes (Optional)</AccordionTrigger>
+                <AccordionContent className="px-4 py-2">
+                  <div className="space-y-4">
+                    {formState.volumes.map((volume, index) => (
+                      <div key={index} className="space-y-2 p-4 border rounded-md">
+                        <div className="flex justify-between items-center mb-2">
+                          <Input
+                            placeholder="Volume Name"
+                            value={volume.name}
+                            onChange={(e) => updateVolume(index, 'name', e.target.value)}
+                            className="flex-grow mr-2"
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeVolume(index)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <Input
+                          type="number"
+                          min="1"
+                          placeholder="Size (GB)"
+                          value={volume.size}
+                          onChange={(e) => updateVolume(index, 'size', e.target.value)}
+                        />
+                        {volume.size && (
+                          <p className="text-sm text-muted-foreground">
+                            Estimated cost: ${calculateVolumeCost(Number(volume.size)).toFixed(2)}/month
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                    <Button type="button" variant="outline" onClick={addVolume}>
+                      Add Volume
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+
+              {/* Security Rules */}
+              <AccordionItem value="security-rules " disabled>
+                <AccordionTrigger className="px-4 py-2 text-[#e5e5e5] hover:cursor-not-allowed">Security Rules (Optional)</AccordionTrigger>
+                <AccordionContent className="px-4 py-2">
+                  <div className="space-y-4">
+                    {formState.securityRules.map((rule, index) => (
+                      <div key={index} className="p-4 border rounded-md space-y-2">
+                        <div className="flex justify-between items-center mb-2">
+                          <div className="flex items-center space-x-2 flex-grow">
+                            <Select
+                              value={rule.type}
+                              onValueChange={(value) => updateSecurityRule(index, 'type', value)}
+                            >
+                              <SelectTrigger className="w-28">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="inbound">Inbound</SelectItem>
+                                <SelectItem value="outbound">Outbound</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <Input
+                              placeholder="Port"
+                              value={rule.port}
+                              onChange={(e) => updateSecurityRule(index, 'port', e.target.value)}
+                              className="w-20"
+                            />
+                            <Select
+                              value={rule.protocol}
+                              onValueChange={(value) => updateSecurityRule(index, 'protocol', value)}
+                            >
+                              <SelectTrigger className="w-20">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="tcp">TCP</SelectItem>
+                                <SelectItem value="udp">UDP</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => removeSecurityRule(index)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Input
+                            placeholder="IP Addresses (comma-separated)"
+                            value={rule.ipAddresses}
+                            onChange={(e) => updateSecurityRule(index, 'ipAddresses', e.target.value)}
+                            className="flex-grow"
+                          />
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              checked={rule.allowed}
+                              onCheckedChange={(checked) => updateSecurityRule(index, 'allowed', checked)}
+                              id={`allow-rule-${index}`}
+                            />
+                            <Label htmlFor={`allow-rule-${index}`}>Allow</Label>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    <Button type="button" variant="outline" onClick={addSecurityRule}>
+                      Add Rule
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
             </Accordion>
+              {error !== '' && (
+              <p className="text-red-500 text-sm">{error}</p>
+            )}
           </CardContent>
-          <CardFooter>
-            <Button                        
-             disabled={loading}
-              type="submit" className={`w-full ${loading===true ? 'bg-[rgba(17,24,39,0.32)]':'bg-black'}`}>
-              {loading=== true ? <>
-                        <CircularProgress className="text-white" size={30}/> 
-                        </>:
-                        <>Create Node</>}
+          <CardFooter className="flex justify-end space-x-4 pt-4">
+            <Button variant="outline" onClick={() => router.push('/dashboard/nodes')}>Cancel</Button>
+            <Button 
+              type="submit" 
+              disabled={loading} 
+              className={`bg-[#1976D2] text-white ${loading ? 'opacity-50' : ''}`}
+            >
+              {loading ? 'Creating...' : 'Create Node'}
             </Button>
-            {/* <CustomButton 
-                        disabled={isLoading}
-                        text={isLoading=== true ? <>
-                        <CircularProgress className="text-white" size={30}/> 
-                        </>:
-                        <>Create Notebook</>} 
-                        customCss={`mt-6 ${isLoading===true ? 'bg-[rgba(17,24,39,0.32)]':'bg-[#1976D2]'} text-white text-[15px] lg:text-[16px]`} 
-                        onclickhandler={handleSubmit}
-                      /> */}
           </CardFooter>
         </Card>
       </form>
