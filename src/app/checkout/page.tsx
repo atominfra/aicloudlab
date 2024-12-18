@@ -66,15 +66,15 @@ const CheckoutPage = () => {
         key: razorpayKey,
         amount: totalAmount * 100,
         order_id,
-        handler: async function (paymentResponse: any) {
+        handler: async function (paymentResponse) {
           toast.success('Transaction successful!')
           console.log("paymentResponse", paymentResponse)
           await fetchUserDetails()
           router.push('/dashboard')
         },
       }
-
-      const razorpay = new (window as any).Razorpay(options)
+      // @ts-expect-error build
+      const razorpay = new (window).Razorpay(options)
       razorpay.open()
     } catch (error) {
       console.error('Error during payment:', error)
