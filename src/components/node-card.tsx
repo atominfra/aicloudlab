@@ -127,9 +127,9 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
                 />
           </div>
           <div>
-            <h3 className="font-medium">Name</h3>
+            <h3 className="font-medium">{name}</h3>
             <div className="flex items-center gap-4 text-sm text-gray-500">
-              <StatusBadge status={"running"} />
+              <StatusBadge status={status} />
               <span>IP: {public_ip_address}</span>
               <button onClick={handleCopy} >
                 <Image
