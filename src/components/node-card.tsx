@@ -22,7 +22,7 @@ interface NodeCardProps {
   public_ip_address: string,
   gpu: string
   isDeleted: true
-  status: "running" | "stopped" | "error"
+  status: string
   fetchNodes:() => Promise<void>
 }
 
