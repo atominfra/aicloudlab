@@ -398,7 +398,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
             <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
               <AccordionItem value="ssh-keys" className="border-b-0" >
-                <AccordionTrigger className="px-4 py-2">SSH Keys </AccordionTrigger>
+                <AccordionTrigger className="px-4 py-2">SSH Keys* </AccordionTrigger>
                 <AccordionContent className="px-4 py-2" >
                   <div className="space-y-4">
                     {formState.sshKeys.map((sshKey, index) => (
