@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Github } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -31,10 +31,18 @@ export default function CreateNotebook() {
   const [error, setError] = useState<string | null>(null)
   const [isNameTouched, setIsNameTouched] = useState(false)
 
+  useEffect(() => {
+    return () => {
+      setError(null);
+      setIsNameTouched(false);
+    };
+  }, []);
+
   const handleChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }))
     if (name === 'name' && value.trim() !== '') {
       setIsNameTouched(true)
+      setError(null) 
     }
   }
 
@@ -63,6 +71,7 @@ export default function CreateNotebook() {
     }
 
     if (formData.githubURL && formData.githubURL !== '') {
+      // @ts-expect-error build
       payload = { ...payload, github_url: formData.githubURL }
     }
 
@@ -85,9 +94,6 @@ export default function CreateNotebook() {
       <div className="max-w-2xl mx-auto p-6 mt-[10vh] ">
       <div className="text-center mb-8 relative">
         <h1 className="text-2xl font-semibold mb-2">Create New Notebook</h1>
-        {/* <p className="text-sm text-muted-foreground">
-          Configure your notebook environment with the required specifications
-        </p> */}
       </div>
 
       <form className="space-y-6" onSubmit={handleSubmit}>
@@ -200,7 +206,7 @@ export default function CreateNotebook() {
           </Select>
         </div> */}
 
-        {error && (
+        {error && isNameTouched && (
           <p className="text-red-500 text-sm">{error}</p>
         )}
 
