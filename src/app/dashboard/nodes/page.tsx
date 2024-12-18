@@ -80,7 +80,7 @@ export default function NodesPage() {
                 alt="AI Cloud Lab Logo"
               />
               <Typography variant="body1" className="text-gray-400 mb-4 px-6">
-                No notebooks yet
+                No nodes yet
               </Typography>
           </Box>
           )}
