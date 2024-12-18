@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 import RootLayoutClient from '../app/RootLayoutClient';
 import { Toaster } from "react-hot-toast";
+import { Sidebar } from "@/components/sidebar";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -49,7 +50,12 @@ export default function RootLayout({
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}>
         <RootLayoutClient>
-          {children}
+                <div className="flex h-screen bg-background text-foreground">
+                    <Sidebar />
+                    <main className="flex-1 overflow-auto">
+                      {children}
+                    </main>
+                  </div>
         </RootLayoutClient>
         <Toaster />
 

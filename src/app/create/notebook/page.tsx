@@ -1,231 +1,218 @@
-'use client';
-import React, { useState,useEffect } from 'react';
-import { Typography, Box, TextField, Select, MenuItem, ButtonBase, CircularProgress, Popover } from '@mui/material';
-import { useRouter } from 'next/navigation';
-import { RiArrowDropDownLine } from "react-icons/ri";
-import Navbar from '@/components/navbar/navbar';
-import { useTheme } from 'next-themes';
-import CustomButton from '@/components/button';
-import CreditsModal from '@/components/modals/creditsModal';
-import { useGlobalContext } from '@/context/GlobalContext';
-import { createNoteboook } from '@/app/api/notebooks/api';
-const CreateNotebook = () => {
-  const router = useRouter();
-  const { fetchUserDetails, setNotebooks, user, auth } = useGlobalContext();
+'use client'
+
+import React, { useState } from 'react'
+import { Github } from 'lucide-react'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import Image from "next/image"
+import { useRouter } from 'next/navigation'
+import { createNotebook } from '@/app/api/notebooks/api'
+import { useGlobalContext } from '@/context/GlobalContext'
+import notebookInput from "@/assets/notebookInput.svg"
+import githubInput from "@/assets/githubInput.svg"
+
+export default function CreateNotebook() {
+  const router = useRouter()
+  const { auth } = useGlobalContext()
   const [formData, setFormData] = useState({
     name: '',
     githubURL: '',
-    pythonVersion: '3.7',
-    packages: ''
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const { resolvedTheme } = useTheme();
-  const [showModal, setShowModal] = useState(false);
-  const [isNameTouched,setIsNameTouched] = useState(false)
+    pythonVersion: '3.9',
+    packages: 'numpy'
+  })
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [isNameTouched, setIsNameTouched] = useState(false)
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value
-    });
+  const handleChange = (name: string, value: string) => {
+    setFormData(prev => ({ ...prev, [name]: value }))
     if (name === 'name' && value.trim() !== '') {
-      setIsNameTouched(true); 
+      setIsNameTouched(true)
     }
-  };
+  }
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setIsNameTouched(true); 
-    // if (user?.credits < 1) {
-    //   setShowModal(true);
-    // } else {
-    setError(null);
-    setIsLoading(true);
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
+    setIsNameTouched(true)
+    setError(null)
+    setIsLoading(true)
 
     if (formData.name.includes('_') || formData.name.includes(' ')) {
-      setError('Name cannot contain an underscore (_) or spaces.');
-      setIsLoading(false);
-      return;
+      setError('Name cannot contain an underscore (_) or spaces.')
+      setIsLoading(false)
+      return
     }
 
     if (formData.name === '') {
-      setError('Please enter name');
-      setIsLoading(false);
-      return;
+      setError('Please enter a name')
+      setIsLoading(false)
+      return
     }
 
     let payload = {
-      name: formData.name || '',
-      python_version: formData.pythonVersion || '',
-      packages: formData.packages.split(',').map(pkg => pkg.trim()) || '',
-      
-    };
+      name: formData.name,
+      python_version: formData.pythonVersion,
+      packages: [formData.packages],
+    }
 
-    if(formData.githubURL && formData.githubURL !== '') {
-      // @ts-expect-error build
-      payload = {...payload, github_url: formData.githubURL}
+    if (formData.githubURL && formData.githubURL !== '') {
+      payload = { ...payload, github_url: formData.githubURL }
     }
 
     try {
-      const response = await createNoteboook(auth,payload);
-      console.log("rsponse",response)
+      const response = await createNotebook(auth, payload)
       if (response) {
         router.push('/dashboard/notebooks')
       } else {
-        setError('Failed to create notebook');
+        setError('Failed to create notebook')
       }
     } catch (err) {
-      setError('An error occurred while creating the notebook');
+      setError('An error occurred while creating the notebook')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  // }
-  };
+  }
 
-  useEffect(()=>{
-    fetchUserDetails()
-  },[])
   return (
-    <Box className="h-full w-full flex justify-center items-center ">
-      {/* <Navbar /> */}
-      
-      <Box className="w-full max-w-lg p-6">
-        <Typography variant="h4" className="text-center text-3xl mb-10 font-poppins ">
-          Create Notebook
-        </Typography>
-        
-        <Box component="form" onSubmit={handleSubmit} className="flex flex-col gap-4">
-          <TextField
-            fullWidth
-            title="Name"
-            label="Name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            variant="outlined"
-            error={isNameTouched && (formData.name === '' || formData.name.includes('_') || formData.name.includes(' '))}
-            helperText={
-              isNameTouched && formData.name === ''
-                ? 'Name cannot be empty.'
-                : isNameTouched && (formData.name.includes('_') || formData.name.includes(' '))
-                ? 'Name cannot contain an underscore (_) or spaces.'
-                : ''
-            }          
-            InputProps={{
-              className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
-            }}
-            InputLabelProps={{
-              sx: {
-                color: resolvedTheme === "dark" ? 'white' : 'black',
-                fontFamily: 'poppins',
-                '&.Mui-focused': { color: resolvedTheme === "dark" ? 'white' : 'black' }
-              }
-            }}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': { borderColor: resolvedTheme === "dark" ? 'white' : 'black' },
-                '&:hover fieldset': { borderColor: resolvedTheme === "dark" ? 'white' : 'black' },
-                '&.Mui-focused fieldset': { borderColor: resolvedTheme === "dark" ? 'white' : 'black' }
-              }
-            }}
-          />
+    <div className='p-6 bg-neutral-100 h-screen justify-center items-center'>
+      <div className="max-w-2xl mx-auto p-6 mt-[10vh] ">
+      <div className="text-center mb-8 relative">
+        <h1 className="text-2xl font-semibold mb-2">Create New Notebook</h1>
+        {/* <p className="text-sm text-muted-foreground">
+          Configure your notebook environment with the required specifications
+        </p> */}
+      </div>
 
-          <TextField
-            fullWidth
-            label="Github URL (Optional)"
-            title="Github URL"
-            name="githubURL"
-            value={formData.githubURL}
-            onChange={handleChange}
-            variant="outlined"
-            InputProps={{
-              className: 'bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]'
-            }}
-            InputLabelProps={{
-              sx: {
-                color: resolvedTheme === "dark"?'white':'black',
-                fontFamily: 'poppins',
-                '&.Mui-focused': { color: resolvedTheme === "dark"?'white':'black' }
-              }
-            }}
-            sx={{
-              '& .MuiOutlinedInput-root': {
-                '& fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' },
-                '&:hover fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' },
-                '&.Mui-focused fieldset': { borderColor: resolvedTheme === "dark"?'white':'black' }
-              }
-            }}
-          />
+      <form className="space-y-6" onSubmit={handleSubmit}>
+        <div className="space-y-2">
+          <label htmlFor="notebook-name" className="text-sm font-medium text-[#374151]">
+            Notebook Name
+          </label>
+         <div className="relative">
+          <Input
+              id="notebook-name"
+              name="name"
+              value={formData.name}
+              onChange={(e) => handleChange('name', e.target.value)}
+              placeholder="Enter notebook name"
+              className={`max-w-full ${isNameTouched && formData.name === '' ? 'border-red-500' : ''}`}
+            />
+            <Image
+              src={notebookInput}
+              alt="notebookInput"
+              height={15}
+              width={15}
+              className="absolute right-3 top-2.5  text-muted-foreground"
+              />   
+         </div>
+          {isNameTouched && formData.name === '' && (
+            <p className="text-red-500 text-sm">Name cannot be empty.</p>
+          )}
+          {isNameTouched && (formData.name.includes('_') || formData.name.includes(' ')) && (
+            <p className="text-red-500 text-sm">Name cannot contain an underscore (_) or spaces.</p>
+          )}
+        </div>
 
-            <Select
-              fullWidth
-              name="pythonVersion"
-              title="Python Version"
-              value={formData.pythonVersion}
-              onChange={handleChange}
-              displayEmpty
-              variant="outlined"
-              className="bg-white dark:bg-gray-800 text-[#111827] dark:text-white font-poppins rounded-[10px]"
-              IconComponent={(props) => (
-                <RiArrowDropDownLine {...props} style={{ color: resolvedTheme === "dark" ? 'white' : 'black', fontSize: '30px' }} />
-              )}
-              sx={{
-                '& .MuiOutlinedInput-notchedOutline': { borderColor: resolvedTheme === "dark" ? 'white' : 'black' },
-                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: resolvedTheme === "dark" ? 'white' : 'black' },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: resolvedTheme === "dark" ? 'white' : 'black' }
-              }}
-            >
-              <MenuItem value="3.7">Python 3.7</MenuItem>
-              <MenuItem value="3.8">Python 3.8</MenuItem>
-              <MenuItem value="3.9">Python 3.9</MenuItem>
-              <MenuItem value="3.10">Python 3.10</MenuItem>
-            </Select>
-          <Select
-          disabled
-            fullWidth
-            name="packages"
-            title='Select packages (Coming Soon)'
-            value={formData.packages}
-            onChange={handleChange}
-            displayEmpty
-            variant="outlined"
-            className="bg-white dark:bg-gray-800 text-[#111827] dark:text-white font-poppins rounded-[10px]"
-            IconComponent={(props) => (
-              <RiArrowDropDownLine {...props} style={{ color: resolvedTheme === "dark"?'white':'black', fontSize: '30px' }} />
-            )}
-            sx={{
-              '& .MuiOutlinedInput-notchedOutline': { borderColor: resolvedTheme === "dark"?'white':'black' },
-              '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: resolvedTheme === "dark"?'white':'black' },
-              '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: resolvedTheme === "dark"?'white':'black' }
-            }}
+        <div className="space-y-2">
+          <label htmlFor="github-url" className="text-sm font-medium text-[#374151]">
+            GitHub Repository URL (Optional)
+          </label>
+          <div className="relative">
+            <Input
+              id="github-url"
+              name="githubURL"
+              value={formData.githubURL}
+              onChange={(e) => handleChange('githubURL', e.target.value)}
+              placeholder="https://github.com/username/repository"
+              className=""
+            />
+              <Image
+              src={githubInput}
+              alt="githubInput"
+              height={18}
+              width={18}
+              className="absolute right-3 top-2.5  text-muted-foreground"
+              /> 
+              </div>
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="python-version" className="text-sm font-medium text-[#374151]">
+            Python Version
+          </label>
+          <Select 
+            value={formData.pythonVersion} 
+            onValueChange={(value) => handleChange('pythonVersion', value)}
           >
-            <MenuItem disabled value="">Select Packages (Coming Soon) </MenuItem>
-            <MenuItem value="numpy">Numpy</MenuItem>
-            <MenuItem value="pandas">Pandas</MenuItem>
-            <MenuItem value="scikit-learn">Scikit-Learn</MenuItem>
-            <MenuItem value="matplotlib">Matplotlib</MenuItem>
+            <SelectTrigger>
+              <SelectValue placeholder="Select Python version" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="3.7">Python 3.7</SelectItem>
+              <SelectItem value="3.8">Python 3.8</SelectItem>
+              <SelectItem value="3.9">Python 3.9</SelectItem>
+              <SelectItem value="3.10">Python 3.10</SelectItem>
+            </SelectContent>
           </Select>
-          <CustomButton 
-            disabled={isLoading}
-            text={isLoading=== true ? <>
-            <CircularProgress className="text-white" size={30}/> 
-            </>:
-            <>Create Notebook</>} 
-            customCss={`mt-6 ${isLoading===true ? 'bg-[rgba(17,24,39,0.32)]':'bg-[#1976D2]'} text-white text-[15px] lg:text-[16px]`} 
-            onclickhandler={handleSubmit}
-          />
+        </div>
 
-          
-        </Box>
-      </Box>
-      <CreditsModal showModal={showModal} onClose={() => setShowModal(false)}/>
+        <div className="space-y-2">
+          <label htmlFor="packages" className="text-sm font-medium text-[#374151]">
+            Select Required Packages
+          </label>
+          <Select 
+            disabled={true}
+            value={formData.packages} 
+            onValueChange={(value) => handleChange('packages', value)}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select packages" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="numpy">numpy</SelectItem>
+              <SelectItem value="pandas">pandas</SelectItem>
+              <SelectItem value="scipy">scipy</SelectItem>
+              <SelectItem value="matplotlib">matplotlib</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-    </Box>
-  );
+        {/* <div className="space-y-2 relative">
+          <label htmlFor="hardware" className="text-sm font-medium">
+            Hardware Configuration
+          </label>
+          <Select defaultValue="basic">
+            <SelectTrigger>
+              <SelectValue placeholder="Select hardware configuration" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="basic">Basic (4 CPU, 16GB RAM, No GPU)</SelectItem>
+              <SelectItem value="standard">Standard (8 CPU, 32GB RAM, 1 GPU)</SelectItem>
+              <SelectItem value="advanced">Advanced (16 CPU, 64GB RAM, 2 GPU)</SelectItem>
+            </SelectContent>
+          </Select>
+        </div> */}
+
+        {error && (
+          <p className="text-red-500 text-sm">{error}</p>
+        )}
+
+        <div className="flex justify-end space-x-4 pt-4">
+          <Button variant="outline" onClick={() => router.push('/dashboard/notebooks')}>Cancel</Button>
+          <Button type="submit" disabled={isLoading} className='bg-[#1976D2]'>
+            {isLoading ? 'Creating...' : 'Create Notebook'}
+          </Button>
+        </div>
+      </form>
+    </div>
+    </div>
+  )
 }
 
-
-
-export default (CreateNotebook)

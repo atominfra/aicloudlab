@@ -1,6 +1,6 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '/api/dashboard/node';
 
-export const createNoteboook = async (auth: string, payload) => {
+export const createNotebook = async (auth: string, payload) => {
   const response = await fetch(`${API_BASE_URL}/notebook/create`, {
     method: 'POST',
     headers: {
