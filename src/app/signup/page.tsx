@@ -52,7 +52,7 @@ export default function Signup() {
 
   useEffect(() => {
     if (auth && auth !== '') {
-      window.location.href = '/dashboard'
+      window.location.href = '/dashboard/notebooks'
     }
   }, [auth])
 
