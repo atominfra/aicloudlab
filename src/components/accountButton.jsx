@@ -79,8 +79,10 @@ const AccountButton = ({ account , userName, api}) => {
                 variant="ghost" 
                 className={`text-blue-600 hover:text-blue-700  `}
                 onClick={handleDeleteConfirmation}
+                style={{ textTransform: 'none' }}
+
               >
-                  Remove
+                  Disconnect
                 </Button>
               :<>
                 <Button 
@@ -88,6 +90,8 @@ const AccountButton = ({ account , userName, api}) => {
                 variant="ghost" 
                 className={`text-blue-600   `}
                 onClick={handleConnect}
+                style={{ textTransform: 'none' }}
+
               >
                   {isConnecting?
                    <CircularProgress className="text-black" size={18}/> 
