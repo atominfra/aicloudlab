@@ -1,92 +1,109 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  Button,
-  Typography,
-} from '@mui/material';
-import Navbar from '@/components/navbar/navbar';
-import withAuth from '@/components/withAuth';
+'use client'
+
+import { useEffect } from 'react'
+import Image from 'next/image'
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import { UserCircle2 } from 'lucide-react'
+import withAuth from '@/components/withAuth'
+import { useGlobalContext } from '@/context/GlobalContext'
+import Loader from '@/components/loader'
+import logoutIcon from "@/assets/logoutIcon.svg"
+// Keep your existing imports for the icons
 import github from "@/assets/github.png"
 import gdrive from "@/assets/googledrive.png"
-import huggingface from "@/assets//huggingface.png"
-import Loader from '@/components/loader';
-import AccountButton from '@/components/accountButton';
-import { useGlobalContext } from '@/context/GlobalContext';
+import huggingface from "@/assets/huggingface.png"
 
-const ProfilePage = () => {
+import profileIcon from "@/assets/profileIcon.svg"
+import AccountButton from '@/components/accountButton'
 
-  const { fetchUserDetails, isloading, user } = useGlobalContext();
+function ProfilePage() {
+  const { fetchUserDetails, isloading, user } = useGlobalContext()
 
-
-  const handleLogout = ()=>{
+  const handleLogout = () => {
     localStorage.clear()
-    document.cookie = `access_token=; path=/; domain=.${window.location.hostname}`;
+    document.cookie = `access_token=; path=/; domain=.${window.location.hostname}`
     window.location.href = "/"
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchUserDetails()
-  },[])
-  return (
-    <Box className="flex flex-col items-center bg-white dark:bg-gray-900 text-[#111827] dark:text-white ">
-      <div className="w-full z-[10] fixed  top-0 ">
-      <Navbar />
-      </div>
+  }, [])
 
-      {isloading ? 
-      <>
-        <Loader/>
-      </>
-      : 
-      <Box className='w-full flex justify-center p-4 mt-[80px]'>
-      <Box className="flex flex-col space-y-4 lg:border  rounded-[10px] w-[500px] lg:border-[#cccccc] p-7  ">
-        <Box className=' flex flex-col gap-3'>
-        <Typography className="font-semibold text-[22px] ">
-            My Profile 
-          </Typography>
-            <>
-            <Box className="flex  items-center w-full h-[51px]">
-              <Typography className="text-[16px] text-black w-[40%] hidden lg:block ">Full Name</Typography>
-              <Typography className=' p-3 text-[16px] bg-white dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.full_name}</Typography>
-            </Box>
-             <Box className="flex  items-center w-full h-[51px]">
-              <Typography className="text-[16px] text-black w-[40%] hidden lg:block">Phone Number</Typography>
-              <Typography className=' p-3 bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.phone}</Typography>
-            </Box>
-            <Box className="flex  items-center w-full h-[51px] ">
-              <Typography className="text-[16px] text-black w-[40%] hidden lg:block ">E-mail Address</Typography>
-              <Typography className=' p-3 bg-white text-[16px] dark:bg-gray-800 text-[#111827] dark:text-white border border-[#cccccc] rounded-[10px] w-[80vw] lg:w-[60%] overflow-clip'>{user?.email}</Typography>
-            </Box>
-            </>
-        </Box>
-            <Box className="pt-2 w-full flex justify-end pr-4">
-            <Button
-              fullWidth
-              className="bg-red-600 text-white font-semibold text-[15px] w-[121px] h-[39px] text-center rounded-[10px]"
-              onClick={handleLogout}
-              style={{ textTransform: 'none' }}
-            >
+  if (isloading) return <Loader />
+
+  return (
+    <div className="min-h-screen bg-background p-4  bg-neutral-100">
+      <Card className="mx-auto max-w-2xl border-none shadow-none bg-neutral-100">
+        <CardHeader className="space-y-6">
+          <div className="flex items-center gap-4">
+            <Avatar className="h-20 w-20">
+              <AvatarFallback>
+                <Image alt='profileIcon' src={profileIcon} width={96} height={96}  />
+              </AvatarFallback>
+            </Avatar>
+            <div className="space-y-1">
+              <CardTitle className="text-2xl">Profile Settings</CardTitle>
+              <CardDescription>Manage your account settings and connected services</CardDescription>
+            </div>
+          </div>
+          <Separator />
+
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium">Personal Information</h3>
+            <div className="space-y-4">
+              <div className="">
+                <span className="text-sm font-medium text-[#6B7280]">Full Name</span>
+                <div className="col-span-2 text-[14px]  py-2">
+                  {user?.full_name}
+                </div>
+              </div>
+              <Separator />
+              <div className="">
+                <span className="text-sm font-medium text-[#6B7280]">Email Address</span>
+                <div className="col-span-2 text-[14px]  py-2">
+                  {user?.email}
+                </div>
+              </div>
+              <Separator />
+              <div className="">
+                <span className="text-sm font-medium text-[#6B7280]">Phone Number</span>
+                <div className="col-span-2 text-[14px]  py-2">
+                  {user?.phone}
+                </div>
+              </div>
+              <Separator />
+            </div>
+          </div>
+
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-medium text-[#111827]">Connected Accounts</h3>
+            <div className=" py-4">
+            <AccountButton  account={ {id: 1, name: "Github", icon: github} } userName={user?.gh_username} api={'gh'} />
+            <AccountButton  account={ {id: 1, name: "Google Drive", icon: gdrive} } userName={user?.google_username} api={'google'} />
+            <AccountButton  account={ {id: 1, name: "Hugging Face", icon: huggingface} } userName={user?.hf_username} api={'hf'} /> 
+
+            </div>
+          </div>
+
+          <div className="flex justify-end pt-6">
+            <Button className='bg-[#FF0000]' onClick={handleLogout}>
+              <Image
+              src={logoutIcon}
+              alt='logoutIcon'/>
               Log Out
             </Button>
-          </Box>
-          <Box className='pt-5'>
-          <Typography  className=" mb-5 text-[22px] font-semibold">
-            Connected Accounts
-          </Typography>
-          <Box className="space-y-4">
-          <AccountButton  account={ {id: 1, name: "Github", icon: github} } userName={user?.gh_username} api={'gh'} />
-          <AccountButton  account={ {id: 1, name: "Google Drive", icon: gdrive} } userName={user?.google_username} api={'google'} />
-          <AccountButton  account={ {id: 1, name: "Hugging Face", icon: huggingface} } userName={user?.hf_username} api={'hf'} />
-          </Box>
-        </Box>
-        </Box>
-        </Box> 
-      }
-      
-      </Box>
-  );
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  )
 }
 
-
 export default withAuth(ProfilePage)
+
