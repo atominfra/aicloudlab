@@ -184,6 +184,7 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
               className={`text-gray-600 ${status !== 'running' ? "text-[#b0b0b0]":"text-[#111827] hover:text-gray-600"}`} 
               onClick={()=>{
                 if(status === 'running'){
+                  console.log("running")
                 }else{
                   toast.error('Notebook is not running',{position:"bottom-right"})
                 }

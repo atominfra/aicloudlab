@@ -119,7 +119,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     console.log("formState updated:", formState)
   }, [formState])
 
-  const updateFormState = (field: keyof NodeData, value: any) => {
+  const updateFormState = (field: keyof NodeData, value) => {
     setFormState(prev => ({ ...prev, [field]: value }))
   }
 
@@ -227,7 +227,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }))
   }
 
-  const updateSecurityRule = (index: number, field: keyof NodeData['securityRules'][0], value: any) => {
+  const updateSecurityRule = (index: number, field: keyof NodeData['securityRules'][0], value) => {
     setFormState(prev => {
       const newRules = [...prev.securityRules]
       newRules[index] = { ...newRules[index], [field]: value }
