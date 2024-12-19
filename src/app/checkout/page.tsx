@@ -85,13 +85,13 @@ const CheckoutPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-100 p-4 flex justify-center items-center">
+    <div className="h-full lg:min-h-screen bg-neutral-100 lg:p-4 flex justify-center items-center">
       <Card className="w-full max-w-3xl shadow-none border-none bg-neutral-100">
         <CardHeader>
-          <CardTitle className='text-[24px] font-semibold '>Checkout</CardTitle>
+          <CardTitle className='text-lg lg:text-[24px] font-semibold '>Checkout</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-6 bg-neutral-100 = rounded-[8px]">
-          <div className="space-y-6 bg-white p-6 rounded-[8px]">
+        <CardContent className="space-y-6 bg-neutral-100  rounded-[8px]">
+          <div className="space-y-6 bg-white  border lg:border-none p-6 rounded-[8px]">
           <div className="space-y-4">
             <div className="flex justify-between pb-2 ">
               <span className="text-lg font-medium">Purchase Summary</span>
@@ -119,8 +119,8 @@ const CheckoutPage = () => {
           </div>
           </div>
 
-          <div className="flex items-center justify-between  px-6">
-            <p className="text-xs text-muted-foreground">
+          <div className="flex flex-col lg:flex-row gap-5 items-center justify-between  px-6">
+            <p className="text-[10px] lg:text-xs text-right lg:text-left w-full text-muted-foreground">
               By confirming, you agree to our payment policies.
             </p>
             <div className="flex justify-end gap-3">
