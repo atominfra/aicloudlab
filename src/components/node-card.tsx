@@ -64,14 +64,21 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // If inputValue matches name, proceed with deletion
     if (inputValue === name) {
-      handleClose();
+      setLoading(true);
+      try {
+        await handleDelete(id);
+        handleClose();
+        // toast.success('Node deleted successfully');
+      } catch (error) {
+        toast.error('Failed to delete node');
+      } finally {
+        setLoading(false);
+      }
     } else {
-      setIsError(true); // Set error if input doesn't match the name
+      setIsError(true);
     }
   };
 
@@ -85,36 +92,27 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
     return null
   }
 
-  const handleDelete = async (id)=>{
-    try {
-      const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/e2e/node/${encodeURIComponent(id)}`;
-  
-      const response = await fetch(url, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`, 
-        },
-      });
+  const handleDelete = async (id) => {
+    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/e2e/node/${encodeURIComponent(id)}`;
 
-      if (!response.ok) {
-        const errorDetails = await response.text();
-        throw new Error(`HTTP Error ${response.status}: ${response.statusText}. Details: ${errorDetails}`);
-      }
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+      },
+    });
 
-      const result = await response.json();
-      console.log("Delete successful", result);
-      fetchNodes()
-      return result;
+    if (!response.ok) {
+      const errorDetails = await response.text();
+      throw new Error(`HTTP Error ${response.status}: ${response.statusText}. Details: ${errorDetails}`);
+    }
 
-
-    } catch (err) {
-
-      console.error("Error during deletion:", err.message);
-      return null; 
-
-    } 
-  }
+    const result = await response.json();
+    console.log("Delete successful", result);
+    await fetchNodes();
+    return result;
+  };
   return (
     <div className="bg-white border-b rounded-md p-4">
       <div className="flex items-center justify-between">
@@ -174,7 +172,7 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
           {/* <div  className='p-2 hover:cursor-pointer'>
             <IoMdSettings className="w-[20px] h-[30px] text-gray-400" />
           </div> */}
-          <div  onClick={()=>handleDelete(id)} className='p-2 hover:cursor-pointer'>
+          <div  onClick={handleOpen} className='p-2 hover:cursor-pointer'>
             <MdDelete className="w-[20px] h-[30px] text-red-600" />
           </div>
           <Button              
@@ -201,7 +199,7 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
           className="w-full h-full justify-items-center content-center"
         >
           <div
-            className=" p-8 bg-white shadow-xl rounded-2xl item-center lg:w-[35vw] m-4"
+            className=" p-8 bg-white shadow-xl rounded-2xl item-center lg:w-[30vw] m-4"
           >
             <p className="pr-10 pb-4 text-[18px] lg:text-[22px] font-semibold text-[#111827]">You are deleting &apos;{name}&apos;</p>
             <p className="pb-4 text-gray-600 text-[15px] lg:text-lg">If you&apos;re sure, type &apos;{name}&apos; to confirm.</p>
@@ -243,10 +241,13 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
                   customCss="w-[50%] bg-[#e3e3e3] text-black shadow-none text-[15px] lg:text-[16px]"
                 />
                 <CustomButton
-                  text="Delete Notebook"
+                  text={loading ? 'Deleting...' : 'Delete Notebook'}
                   onclickhandler={handleSubmit}
                   customCss="w-[50%] bg-red-600 text-white text-[15px] lg:text-[16px]"
-                />
+                  disabled={loading}
+                >
+                  {loading && <CircularProgress size={20} color="inherit" />}
+                </CustomButton>
               </Box>
             </form>
           </div>

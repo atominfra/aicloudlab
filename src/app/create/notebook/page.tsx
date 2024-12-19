@@ -99,7 +99,7 @@ export default function CreateNotebook() {
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="space-y-2">
           <label htmlFor="notebook-name" className="text-sm font-medium text-[#374151]">
-            Notebook Name
+            Notebook Name*
           </label>
          <div className="relative">
           <Input
@@ -128,7 +128,7 @@ export default function CreateNotebook() {
 
         <div className="space-y-2">
           <label htmlFor="github-url" className="text-sm font-medium text-[#374151]">
-            GitHub Repository URL (Optional)
+            GitHub Repository URL*
           </label>
           <div className="relative">
             <Input
@@ -171,7 +171,7 @@ export default function CreateNotebook() {
 
         <div className="space-y-2">
           <label htmlFor="packages" className="text-sm font-medium text-[#374151]">
-            Select Required Packages
+            Select Packages (Coming Soon)
           </label>
           <Select 
             disabled={true}

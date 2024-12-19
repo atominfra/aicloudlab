@@ -154,7 +154,7 @@ export function NotebookCard({ id, name, status, notebook_url, python_version, o
           className="w-full h-full justify-items-center content-center"
         >
           <div
-            className=" p-8 bg-white shadow-xl rounded-2xl item-center lg:w-[35vw] m-4"
+            className=" p-8 bg-white shadow-xl rounded-2xl item-center lg:w-[30vw] m-4"
           >
             <p className="pr-10 pb-4 text-[18px] lg:text-[22px] font-semibold text-[#111827]">You are deleting &apos;{name}&apos;</p>
             <p className="pb-4 text-gray-600 text-[15px] lg:text-lg">If you&apos;re sure, type &apos;{name}&apos; to confirm.</p>
