@@ -66,7 +66,7 @@ const NotebookPage = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <Box className="w-full bg-white flex items-center justify-between px-10   py-4 shadow-lg z-[10]">
+      {/* <Box className="w-full bg-white flex items-center justify-between px-10   py-4 shadow-lg z-[10]">
         <Box className="flex items-end"> 
           <Link className="flex items-center" href={`/dashboard`}>
             <Image 
@@ -109,7 +109,7 @@ const NotebookPage = () => {
             Dashboard
           </button>
         </Box>
-      </Box>
+      </Box> */}
       <Box className="w-full h-full relative">
         {isLoading && (
           <Box className="absolute inset-0 flex items-center justify-center bg-white">
