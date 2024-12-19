@@ -14,7 +14,7 @@ export default function MobileBottomBar() {
   const { user } = useGlobalContext()
   const router = useRouter()
   return (
-    <div className=" lg:hidden p-4 border-t border-border h-[10vh]">
+    <div className=" lg:hidden  flex flex-col justify-center  px-4 border-t border-border h-[8vh] ">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-neutral-100 border flex items-center justify-center hover:cursor-pointer hover:border-gray-300" onClick={()=> router.push("/profile")}>
           <span className="text-md font-medium ">{user?.full_name && user?.full_name.split(' ').map(n=> n[0]).join('')}</span>

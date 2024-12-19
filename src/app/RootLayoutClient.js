@@ -20,7 +20,7 @@ export default function RootLayoutClient({ children }) {
             {!hideSidebar && <Sidebar />}
             <div className="w-full">
           <MobileTopBar/>
-          <main className="flex-1 overflow-auto h-[80vh] lg:h-auto">
+          <main className="flex-1 overflow-auto h-[84vh] lg:h-auto">
             {children}
           </main>
           <MobileBottomBar/>
