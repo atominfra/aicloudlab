@@ -87,16 +87,16 @@ const  NotebooksPage= () => {
   }, []);
 
   return (
-    <div className="p-6 bg-neutral-100 h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold">Notebooks</h1>
+    <div className="p-4 lg:p-6 bg-neutral-100 lg:h-screen  justify-center items-center">
+      <div className="flex items-center justify-between lg:mb-6 mb-5 h-[6vh]">
+        <h1 className="text-lg lg:text-2xl font-semibold">Notebooks</h1>
         <Button className="bg-blue-600" onClick={handleCreateClick}>
           <span className="">+</span>
           Create
         </Button>
       </div>
       {notebooks.length === 0 ? (
-        <Box className="flex flex-col gap-2 justify-center items-center h-[80vh] w-full bg-neutral-100">
+          <Box className="flex flex-col justify-center items-center lg:h-[80vh] h-[70vh] w-full">
           <Image
             src={notebook}
             width={1000}
@@ -109,7 +109,7 @@ const  NotebooksPage= () => {
           </Typography>
         </Box>
       ) : (
-        <div>
+        <div className="flex flex-col  items-center lg:h-[80vh] h-[70vh] w-full">
 
           {notebooks.map((notebook) => (
             <NotebookCard

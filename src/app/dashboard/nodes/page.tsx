@@ -51,9 +51,9 @@ export default function NodesPage() {
   }, [nodes]);
 
   return (
-    <div className="p-6 bg-neutral-100 h-screen justify-center items-center">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold">Nodes</h1>
+    <div className="p-4 lg:p-6 bg-neutral-100 lg:h-screen  justify-center items-center">
+      <div className="flex items-center justify-between lg:mb-6 mb-5 h-[6vh]">
+        <h1 className="text-lg lg:text-2xl font-semibold">Nodes</h1>
         <Button className="bg-blue-600" onClick={()=> router.push("/create/node")}>
           <span className="">+</span>
           Create
@@ -61,17 +61,17 @@ export default function NodesPage() {
       </div>
 
       {loading ? (
-        <div className="flex flex-col justify-center items-center h-full w-full">
+        <div className="flex flex-col justify-center items-center lg:h-[80vh] h-[70vh] w-full">
           <CircularProgress className="text-black" size={30} /> 
         </div>
       ) : (
-        <div>
+        <div className="flex flex-col  items-center lg:h-[80vh] h-[70vh] w-full">
           {hasActiveNodes() ? (
             nodes.map((node) => 
               node.isDeleted === false && <NodeCard key={node.name} {...node} fetchNodes={fetchNodes} />
             )
           ) : (
-            <Box className="flex flex-col gap-2 justify-center items-center h-[80vh] w-full bg-neutral-100">
+            <Box className="flex flex-col gap-2 justify-center items-center lg:h-[80vh] h-[70vh] w-full bg-neutral-100">
               <Image
                 src={noNodesIcon}
                 width={1000}
