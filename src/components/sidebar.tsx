@@ -12,7 +12,7 @@ export function Sidebar() {
   const { user } = useGlobalContext()
   const router = useRouter()
   return (
-    <div className="w-60 bg-card border-r border-border flex flex-col h-full">
+    <div className="w-60 bg-card border-r border-border  flex-col h-full hidden lg:flex">
         <div className="flex px-4 py-3 border-b">
         <Link href="/" className="flex items-center gap-2 px-4 py-2 rounded-lg text-foreground">
           <Image 
