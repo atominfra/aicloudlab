@@ -13,15 +13,15 @@ export function Sidebar() {
   const router = useRouter()
   return (
     <div className="w-60 bg-card border-r border-border flex flex-col h-full">
-        <div className="flex px-4 pt-5">
+        <div className="flex px-4 py-3 border-b">
         <Link href="/" className="flex items-center gap-2 px-4 py-2 rounded-lg text-foreground">
           <Image 
           src='https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png'
           alt='logo'
-          width={24}
-          height={24}
+          width={32}
+          height={32}
           ></Image>
-          <div className="font-bold text-xl pt-[0.8px] pl-1">AI Cloud Lab</div>
+          {/* <div className="font-bold text-xl pt-[0.8px] pl-1">AI Cloud Lab</div> */}
         </Link>
         </div>
         {/* <ThemeToggle /> */}
