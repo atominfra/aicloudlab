@@ -282,11 +282,11 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   };
 
   return (
-    <div className='p-6 bg-neutral-100 min-h-screen flex justify-center items-start'>
-      <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto mt-[10vh]">
+    <div className='lg:p-6 bg-neutral-100 lg:min-h-screen flex justify-center items-start'>
+      <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto lg:mt-[10vh]">
         <Card className="bg-neutral-100 shadow-none border-none">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-semibold ">{isEditMode ? 'Edit Node' : 'Create a New Node'}</CardTitle>
+            <CardTitle className="text-lg lg:text-2xl font-semibold ">{isEditMode ? 'Edit Node' : 'Create a New Node'}</CardTitle>
             {/* <CardDescription className="text-muted-foreground">
               {isEditMode ? 'Update your node details' : 'Fill in the details to create your node'}
             </CardDescription> */}
@@ -300,7 +300,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 required 
                 value={formState.name}
                 onChange={(e) => updateFormState('name', e.target.value)}
-                className="max-w-full placeholder:text-black "
+                className="max-w-full placeholder:text-black text-sm "
               />
             </div>
 

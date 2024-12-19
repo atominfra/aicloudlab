@@ -90,10 +90,10 @@ export default function CreateNotebook() {
   }
 
   return (
-    <div className='p-6 bg-neutral-100 h-screen justify-center items-center'>
-      <div className="max-w-2xl mx-auto p-6 mt-[10vh] ">
+    <div className='lg:p-6 bg-neutral-100 lg:h-screen justify-center items-center'>
+      <div className="max-w-2xl mx-auto p-4 lg:p-6 lg:mt-[10vh] ">
       <div className="text-center mb-8 relative">
-        <h1 className="text-2xl font-semibold mb-2">Create New Notebook</h1>
+        <h1 className="lg:text-2xl text-lg font-semibold mb-2">Create New Notebook</h1>
       </div>
 
       <form className="space-y-6" onSubmit={handleSubmit}>
@@ -110,13 +110,15 @@ export default function CreateNotebook() {
               placeholder="Enter notebook name"
               className={`max-w-full ${isNameTouched && formData.name === '' ? 'border-red-500' : ''}`}
             />
-            <Image
-              src={notebookInput}
-              alt="notebookInput"
-              height={15}
-              width={15}
-              className="absolute right-3 top-2.5  text-muted-foreground"
-              />   
+            <div className='flex justify-center items-center bg-white w-[30px] h-[22px] absolute right-3 top-2.5'>
+              <Image
+                src={notebookInput}
+                alt="notebookInput"
+                height={15}
+                width={15}
+                className=" text-muted-foreground"
+                />  
+             </div>
          </div>
           {isNameTouched && formData.name === '' && (
             <p className="text-red-500 text-sm">Name cannot be empty.</p>
@@ -139,13 +141,15 @@ export default function CreateNotebook() {
               placeholder="https://github.com/username/repository"
               className=""
             />
+             <div className='flex justify-center items-center bg-white w-[30px] h-[22px] absolute right-3 top-2.5'>
               <Image
-              src={githubInput}
-              alt="githubInput"
-              height={18}
-              width={18}
-              className="absolute right-3 top-2.5  text-muted-foreground"
-              /> 
+                src={githubInput}
+                alt="githubInput"
+                height={18}
+                width={18}
+                className="   text-muted-foreground"
+                /> 
+             </div>
               </div>
         </div>
 
@@ -211,8 +215,8 @@ export default function CreateNotebook() {
         )}
 
         <div className="flex justify-end space-x-4 pt-4">
-          <Button variant="outline" onClick={() => router.push('/dashboard/notebooks')}>Cancel</Button>
-          <Button type="submit" disabled={isLoading} className='bg-[#1976D2]'>
+          <Button variant="outline" className='text-[14px]' onClick={() => router.push('/dashboard/notebooks')}>Cancel</Button>
+          <Button type="submit" disabled={isLoading} className='bg-[#1976D2] text-[14px]'>
             {isLoading ? 'Creating...' : 'Create Notebook'}
           </Button>
         </div>
