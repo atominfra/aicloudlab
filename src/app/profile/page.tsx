@@ -35,54 +35,54 @@ function ProfilePage() {
   if (isloading) return <Loader />
 
   return (
-    <div className="min-h-screen bg-background p-4  bg-neutral-100">
+    <div className="min-h-screen bg-background  lg:p-4  bg-neutral-100">
       <Card className="mx-auto max-w-2xl border-none shadow-none bg-neutral-100">
         <CardHeader className="space-y-6">
-          <div className="flex items-center gap-4">
-            <Avatar className="h-20 w-20">
+          <div className=" items-center gap-4 lg:flex">
+            <Avatar className="h-20 w-20 hidden lg:block">
               <AvatarFallback>
                 <Image alt='profileIcon' src={profileIcon} width={96} height={96}  />
               </AvatarFallback>
             </Avatar>
-            <div className="space-y-1">
-              <CardTitle className="text-2xl">Profile Settings</CardTitle>
-              <CardDescription>Manage your account settings and connected services</CardDescription>
+            <div className="space-y-1 ">
+              <CardTitle className="lg:text-2xl text-xl">Profile Settings</CardTitle>
+              <CardDescription className='hidden lg:block'>Manage your account settings and connected services</CardDescription>
             </div>
           </div>
-          <Separator />
+          <Separator className='hidden lg:block' />
 
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-1">
-            <h3 className="text-xl font-semibold">Personal Information</h3>
+            <h3 className="lg:text-xl text-base font-semibold">Personal Information</h3>
             <div className="space-y-1">
               <div className="">
                 <span className="text-sm font-medium text-[#6B7280]">Full Name</span>
-                <div className="col-span-2 text-[14px]  py-2">
+                <div className="col-span-2 text-[14px] border lg:border-none rounded-[8px] bg-white lg:bg-neutral-100 px-2 lg:px-0 py-2">
                   {user?.full_name}
                 </div>
               </div>
               {/* <Separator /> */}
               <div className="">
                 <span className="text-sm font-medium text-[#6B7280]">Email Address</span>
-                <div className="col-span-2 text-[14px]  py-2">
+                <div className="col-span-2 text-[14px] border lg:border-none rounded-[8px] bg-white lg:bg-neutral-100 px-2 lg:px-0 py-2">
                   {user?.email}
                 </div>
               </div>
               {/* <Separator /> */}
               <div className="">
                 <span className="text-sm font-medium text-[#6B7280]">Phone Number</span>
-                <div className="col-span-2 text-[14px]  py-2">
+                <div className="col-span-2 text-[14px] border lg:border-none rounded-[8px] bg-white lg:bg-neutral-100 px-2 lg:px-0 py-2">
                   {user?.phone}
                 </div>
               </div>
-              <Separator />
+              <Separator className='hidden lg:block'/>
             </div>
           </div>
 
 
-          <div className="space-y-4">
-            <h3 className="text-xl font-semibold text-[#111827]">Connected Accounts</h3>
+          <div className="space-y-4 pt-3">
+            <h3 className="lg:text-xl text-base font-semibold text-[#111827]">Connected Accounts</h3>
             <div className=" ">
             <AccountButton  account={ {id: 1, name: "Github", icon: github} } userName={user?.gh_username} api={'gh'} />
             <AccountButton  account={ {id: 1, name: "Google Drive", icon: gdrive} } userName={user?.google_username} api={'google'} />
@@ -92,7 +92,7 @@ function ProfilePage() {
           </div>
 
           <div className="flex justify-end ">
-            <Button className='bg-[#FF0000]' onClick={handleLogout}>
+            <Button className='bg-[#FF0000] w-full lg:w-auto' onClick={handleLogout}>
               <Image
               src={logoutIcon}
               alt='logoutIcon'/>
