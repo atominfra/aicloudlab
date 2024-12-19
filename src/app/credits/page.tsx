@@ -41,12 +41,12 @@ const CreditsPage = () => {
     <div className="min-h-screen bg-neutral-100 lg:p-4 flex justify-center items-start lg:pt-16 ">
       <Card className="w-full max-w-3xl bg-neutral-100 shadow-none border-none">
         <CardHeader>
-          <CardTitle className='text-[24px] font-semibold'>Credits</CardTitle>
+          <CardTitle className='text-lg lg:text-[24px] font-semibold'>Credits</CardTitle>
           <CardDescription className='hidden lg:block'>Manage and add credits</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-2 bg-white p-6 rounded-[8px]">
-            <Label className='text-[#6B7280]'>Available Credits</Label>
+            <Label className='text-[#6B7280] text-[14px] lg:text-base'>Available Credits</Label>
             <div className="text-3xl font-bold text-blue-600 font-sans">
             ₹{user?.credits?.toFixed(2) || '0.00'}
             </div>
