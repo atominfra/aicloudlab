@@ -279,9 +279,7 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
                 onclickhandler={handleSubmit}
                 customCss="w-[50%] bg-red-600 text-white text-[15px] lg:text-[16px]"
                 disabled={loading}
-              >
-                {loading && <CircularProgress size={20} color="inherit" />}
-              </CustomButton>
+              />
             </Box>
           </form>
         </div>
