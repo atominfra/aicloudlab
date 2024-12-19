@@ -55,7 +55,7 @@ export default function NodesPage() {
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-semibold">Nodes</h1>
         <Button className="bg-blue-600" onClick={()=> router.push("/create/node")}>
-          <span className="mr-2">+</span>
+          <span className="">+</span>
           Create
         </Button>
       </div>
