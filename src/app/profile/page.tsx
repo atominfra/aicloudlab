@@ -52,24 +52,24 @@ function ProfilePage() {
           <Separator />
 
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="space-y-4">
-            <h3 className="text-lg font-medium">Personal Information</h3>
-            <div className="space-y-4">
+        <CardContent className="space-y-4">
+          <div className="space-y-1">
+            <h3 className="text-xl font-semibold">Personal Information</h3>
+            <div className="space-y-1">
               <div className="">
                 <span className="text-sm font-medium text-[#6B7280]">Full Name</span>
                 <div className="col-span-2 text-[14px]  py-2">
                   {user?.full_name}
                 </div>
               </div>
-              <Separator />
+              {/* <Separator /> */}
               <div className="">
                 <span className="text-sm font-medium text-[#6B7280]">Email Address</span>
                 <div className="col-span-2 text-[14px]  py-2">
                   {user?.email}
                 </div>
               </div>
-              <Separator />
+              {/* <Separator /> */}
               <div className="">
                 <span className="text-sm font-medium text-[#6B7280]">Phone Number</span>
                 <div className="col-span-2 text-[14px]  py-2">
@@ -82,8 +82,8 @@ function ProfilePage() {
 
 
           <div className="space-y-4">
-            <h3 className="text-lg font-medium text-[#111827]">Connected Accounts</h3>
-            <div className=" py-4">
+            <h3 className="text-xl font-semibold text-[#111827]">Connected Accounts</h3>
+            <div className=" ">
             <AccountButton  account={ {id: 1, name: "Github", icon: github} } userName={user?.gh_username} api={'gh'} />
             <AccountButton  account={ {id: 1, name: "Google Drive", icon: gdrive} } userName={user?.google_username} api={'google'} />
             <AccountButton  account={ {id: 1, name: "Hugging Face", icon: huggingface} } userName={user?.hf_username} api={'hf'} /> 
@@ -91,7 +91,7 @@ function ProfilePage() {
             </div>
           </div>
 
-          <div className="flex justify-end pt-6">
+          <div className="flex justify-end ">
             <Button className='bg-[#FF0000]' onClick={handleLogout}>
               <Image
               src={logoutIcon}
