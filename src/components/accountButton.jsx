@@ -66,7 +66,7 @@ const AccountButton = ({ account , userName, api}) => {
                     <Image src={account.icon} alt={account.icon} width={32} height={32} />
                   </div>
                 <div>
-                <p className="font-medium">{account.name}</p>
+                <p className="font-medium text-sm lg:text:base">{account.name}</p>
               {/* @ts-expect-error  error*/}
               <p className="text-sm text-[#6B7280] ">{userName || 'Not connected'}</p>
                 </div>
