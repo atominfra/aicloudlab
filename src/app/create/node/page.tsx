@@ -300,7 +300,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 required 
                 value={formState.name}
                 onChange={(e) => updateFormState('name', e.target.value)}
-                className="max-w-full"
+                className="max-w-full placeholder:text-black "
               />
             </div>
 
@@ -429,7 +429,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
               {/* Volumes */}
               <AccordionItem value="volumes" disabled>
-                <AccordionTrigger className="px-4 py-2 text-[#e5e5e5] hover:cursor-not-allowed">Volumes (Optional)</AccordionTrigger>
+                <AccordionTrigger className="px-4 py-2 text-[#b5b5b5] font-normal hover:cursor-not-allowed">Volumes (Coming Soon)</AccordionTrigger>
                 <AccordionContent className="px-4 py-2">
                   <div className="space-y-4">
                     {formState.volumes.map((volume, index) => (
@@ -473,7 +473,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
               {/* Security Rules */}
               <AccordionItem value="security-rules " disabled>
-                <AccordionTrigger className="px-4 py-2 text-[#e5e5e5] hover:cursor-not-allowed">Security Rules (Optional)</AccordionTrigger>
+                <AccordionTrigger className="px-4 py-2 text-[#b5b5b5] font-normal hover:cursor-not-allowed">Security Rules (Coming Soon)</AccordionTrigger>
                 <AccordionContent className="px-4 py-2">
                   <div className="space-y-4">
                     {formState.securityRules.map((rule, index) => (
