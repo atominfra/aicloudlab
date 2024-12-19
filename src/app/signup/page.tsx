@@ -129,22 +129,23 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen relative w-full bg-gradient-to-br from-[#DBEAFE] to-white">
-      <div className='p-6 absolute'>
+      <div className='p-4 sm:p-6 absolute hidden lg:block'>
         <Image
           src='https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png'
-          width={40}
-          height={40}
+          width={32}
+          height={32}
           alt="AI Cloud Lab Logo"
+          className="sm:w-10 sm:h-10"
         />
       </div>
-      <div className="container mx-auto min-h-screen flex items-center justify-center px-4">
+      <div className="container mx-auto min-h-screen flex items-center justify-center px-4 py-8 lg:py-16">
         <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-8 items-center">
           {/* Left Section */}
-          <div className="flex flex-col items-center text-center lg:items-start lg:text-left space-y-6">
-            <h1 className="text-2xl lg:text-4xl font-semibold text-gray-900 dark:text-white">
+          <div className="flex flex-col items-center text-center lg:items-start lg:text-left space-y-4 sm:space-y-6">
+            <h1 className="text-xl sm:text-2xl lg:text-4xl font-semibold text-gray-900 dark:text-white">
               Welcome to <span className="font-bold">AI Cloud Lab!</span>
             </h1>
-            <p className="hidden lg:block text-lg text-gray-600 dark:text-gray-300">
+            <p className="text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-300">
               Seamless AI <span className="font-semibold">development,</span>{' '}
               <span className="font-semibold">deployment</span> and{' '}
               <span className="font-semibold">monitoring</span> in Cloud all through one interface!
@@ -152,10 +153,10 @@ export default function Signup() {
           </div>
 
           {/* Right Section - Signup Form */}
-          <div className="w-full max-w-md mx-auto space-y-6 bg-white p-6 rounded-[8px]">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="full_name" className='text-[14px] font-medium'>Full Name</Label>
+          <div className="w-full max-w-md mx-auto space-y-4 sm:space-y-6 bg-white p-4 sm:p-6 rounded-[8px]">
+            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+              <div className="space-y-1 sm:space-y-2">
+                <Label htmlFor="full_name" className='text-[12px] sm:text-[14px] font-medium'>Full Name</Label>
                 <div className="relative flex items-center">
                   <MdPerson className="absolute left-3 text-gray-400" />
                   <Input
@@ -164,19 +165,19 @@ export default function Signup() {
                     type="text"
                     value={formData.full_name}
                     onChange={handleChange}
-                    className={`pl-10 pr-3 py-2 border rounded-md w-full ${
+                    className={`pl-10 pr-3 py-1 sm:py-2 text-sm sm:text-base border rounded-md w-full ${
                       errors.full_name ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Enter your full name"
                   />
                 </div>
                 {errors.full_name && (
-                  <p className="text-sm text-red-500">{errors.full_name}</p>
+                  <p className="text-xs sm:text-sm text-red-500">{errors.full_name}</p>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="email" className='text-[14px] font-medium'>Email</Label>
+              <div className="space-y-1 sm:space-y-2">
+                <Label htmlFor="email" className='text-[12px] sm:text-[14px] font-medium'>Email</Label>
                 <div className="relative flex items-center">
                   <MdEmail className="absolute left-3 text-gray-400" />
                   <Input
@@ -185,19 +186,19 @@ export default function Signup() {
                     type="email"
                     value={formData.email}
                     onChange={handleChange}
-                    className={`pl-10 pr-3 py-2 border rounded-md w-full ${
+                    className={`pl-10 pr-3 py-1 sm:py-2 text-sm sm:text-base border rounded-md w-full ${
                       errors.email ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Enter your email"
                   />
                 </div>
                 {errors.email && (
-                  <p className="text-sm text-red-500">{errors.email}</p>
+                  <p className="text-xs sm:text-sm text-red-500">{errors.email}</p>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="phone" className='text-[14px] font-medium'>Phone Number</Label>
+              <div className="space-y-1 sm:space-y-2">
+                <Label htmlFor="phone" className='text-[12px] sm:text-[14px] font-medium'>Phone Number</Label>
                 <div className="relative flex items-center">
                   <MdPhone className="absolute left-3 text-gray-400" />
                   <Input
@@ -206,19 +207,19 @@ export default function Signup() {
                     type="tel"
                     value={formData.phone}
                     onChange={handleChange}
-                    className={`pl-10 pr-3 py-2 border rounded-md w-full ${
+                    className={`pl-10 pr-3 py-1 sm:py-2 text-sm sm:text-base border rounded-md w-full ${
                       errors.phone ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Enter your phone number"
                   />
                 </div>
                 {errors.phone && (
-                  <p className="text-sm text-red-500">{errors.phone}</p>
+                  <p className="text-xs sm:text-sm text-red-500">{errors.phone}</p>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password" className='text-[14px] font-medium'>Password</Label>
+              <div className="space-y-1 sm:space-y-2">
+                <Label htmlFor="password" className='text-[12px] sm:text-[14px] font-medium'>Password</Label>
                 <div className="relative flex items-center">
                   <MdLock className="absolute left-3 text-gray-400" />
                   <Input
@@ -227,19 +228,19 @@ export default function Signup() {
                     type="password"
                     value={formData.password}
                     onChange={handleChange}
-                    className={`pl-10 pr-3 py-2 border rounded-md w-full ${
+                    className={`pl-10 pr-3 py-1 sm:py-2 text-sm sm:text-base border rounded-md w-full ${
                       errors.password ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Enter your password"
                   />
                 </div>
                 {errors.password && (
-                  <p className="text-sm text-red-500">{errors.password}</p>
+                  <p className="text-xs sm:text-sm text-red-500">{errors.password}</p>
                 )}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="reEnterPassword" className='text-[14px] font-medium'>Re-enter Password</Label>
+              <div className="space-y-1 sm:space-y-2">
+                <Label htmlFor="reEnterPassword" className='text-[12px] sm:text-[14px] font-medium'>Re-enter Password</Label>
                 <div className="relative flex items-center">
                   <MdLock className="absolute left-3 text-gray-400" />
                   <Input
@@ -248,24 +249,24 @@ export default function Signup() {
                     type="password"
                     value={formData.reEnterPassword}
                     onChange={handleChange}
-                    className={`pl-10 pr-3 py-2 border rounded-md w-full ${
+                    className={`pl-10 pr-3 py-1 sm:py-2 text-sm sm:text-base border rounded-md w-full ${
                       errors.reEnterPassword ? "border-red-500" : "border-gray-300"
                     }`}
                     placeholder="Re-enter your password"
                   />
                 </div>
                 {errors.reEnterPassword && (
-                  <p className="text-sm text-red-500">{errors.reEnterPassword}</p>
+                  <p className="text-xs sm:text-sm text-red-500">{errors.reEnterPassword}</p>
                 )}
               </div>
 
               {signupError && (
-                <p className="text-sm text-red-500 text-center">{signupError}</p>
+                <p className="text-xs sm:text-sm text-red-500 text-center">{signupError}</p>
               )}
 
               <Button 
                 type="submit" 
-                className="w-full bg-[#1976D2]" 
+                className="w-full bg-[#1976D2] text-sm sm:text-base py-2 sm:py-3" 
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -292,7 +293,7 @@ export default function Signup() {
 
             <Button
               variant="outline"
-              className="w-full border border-[#1976D2] text-[#1976D2]"
+              className="w-full border border-[#1976D2] text-[#1976D2] text-sm sm:text-base py-2 sm:py-3"
               onClick={() => window.location.href = '/login'}
             >
               Log in

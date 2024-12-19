@@ -54,8 +54,8 @@ export default function MobileTopBar() {
             <Link href="/dashboard" className="flex items-center gap-2" onClick={toggleSidebar}>
               <Image 
                 src={'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png'}
-                width={32}
-                height={32}
+                width={24}
+                height={24}
                 alt="AI Cloud Lab Logo" 
               />
             </Link>

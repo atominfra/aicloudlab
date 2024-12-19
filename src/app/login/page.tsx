@@ -109,7 +109,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen relative w-full bg-gradient-to-br from-[#DBEAFE] to-white ">
-      <div className='p-6 absolute'>
+      <div className='p-6 absolute hidden lg:block'>
       <Image
           src='https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png'
           width={40}
