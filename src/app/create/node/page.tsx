@@ -287,7 +287,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }, [router]);
 
   return (
-    <div className='lg:p-6 bg-neutral-100 lg:min-h-screen min-h-[92vh] flex justify-center items-start'>
+    <div className=' bg-neutral-100 lg:min-h-screen min-h-[92vh] flex justify-center items-center'>
       <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto lg:mt-[10vh]">
         <Card className="bg-neutral-100 shadow-none border-none">
           <CardHeader className="text-center">
