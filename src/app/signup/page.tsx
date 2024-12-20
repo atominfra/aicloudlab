@@ -266,7 +266,7 @@ export default function Signup() {
 
               <Button 
                 type="submit" 
-                className="w-full bg-[#1976D2] text-sm sm:text-base py-2 sm:py-3" 
+                className="w-full bg-[#2563EB] text-sm sm:text-base py-2 sm:py-3" 
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -293,7 +293,7 @@ export default function Signup() {
 
             <Button
               variant="outline"
-              className="w-full border border-[#1976D2] text-[#1976D2] text-sm sm:text-base py-2 sm:py-3"
+              className="w-full border border-[#2563EB] text-[#2563EB] text-sm sm:text-base py-2 sm:py-3"
               onClick={() => window.location.href = '/login'}
             >
               Log in

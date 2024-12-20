@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import CustomButton from './button'
+import trianlgeAlert from "@/assets/trianlge-alert.svg" 
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -171,8 +172,13 @@ export function NotebookCard({ id, name, status, notebook_url, python_version, o
         className="w-full h-full justify-items-center content-center"
       >
         <div className="p-8 bg-white shadow-xl rounded-2xl item-center lg:w-[30vw] m-4">
-          <p className="pr-10 pb-4 text-[18px] lg:text-[22px] font-semibold text-[#111827]">
-            You are deleting &apos;{name}&apos;
+          <p className="pr-10 pb-4 text-[18px] lg:text-[20px] font-semibold text-[#111827]">
+           <Image
+           alt="triangle-alert" 
+           src={trianlgeAlert}
+           className="text-red-700 bg-"/>
+            Delete Notebook
+            {/* You are deleting &apos;{name}&apos; */}
           </p>
           <p className="pb-4 text-gray-600 text-[15px] lg:text-lg">
             If you&apos;re sure, type &apos;{name}&apos; to confirm.

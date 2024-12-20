@@ -183,7 +183,7 @@ export default function Login() {
 
               <Button 
                 type="submit" 
-                className="w-full bg-[#1976D2]" 
+                className="w-full bg-[#2563EB]" 
                 disabled={isLoading}
               >
                 {isLoading ? (
@@ -210,7 +210,7 @@ export default function Login() {
 
             <Button
               variant="outline"
-              className="w-full border border-[#1976D2] text-[#1976D2]"
+              className="w-full border border-[#2563EB] text-[#2563EB]"
               onClick={() => window.location.href = '/signup'}
             >
               Sign up for new account

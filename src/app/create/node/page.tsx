@@ -559,7 +559,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             <Button 
               type="submit" 
               disabled={loading} 
-              className={`bg-[#1976D2] text-white ${loading ? 'opacity-50' : ''}`}
+              className={`bg-[#2563EB] text-white ${loading ? 'opacity-50' : ''}`}
             >
               {loading ? 'Creating...' : 'Create Node'}
             </Button>

@@ -216,7 +216,7 @@ export default function CreateNotebook() {
 
         <div className="flex justify-end space-x-4 pt-4">
           <Button variant="outline" className='text-[14px]' onClick={() => router.push('/dashboard/notebooks')}>Cancel</Button>
-          <Button type="submit" disabled={isLoading} className='bg-[#1976D2] text-[14px]'>
+          <Button type="submit" disabled={isLoading} className='bg-[#2563EB] text-[14px]'>
             {isLoading ? 'Creating...' : 'Create Notebook'}
           </Button>
         </div>

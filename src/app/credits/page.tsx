@@ -38,7 +38,7 @@ const CreditsPage = () => {
   }
 
   return (
-    <div className="lg:min-h-screen min-h-[84vh] bg-neutral-100 lg:p-4 flex justify-center items-start lg:pt-16 ">
+    <div className="lg:min-h-screen min-h-[84vh] bg-neutral-100 lg:p-4 flex justify-center items-center  ">
       <Card className="w-full max-w-3xl bg-neutral-100 shadow-none border-none">
         <CardHeader>
           <CardTitle className='text-lg lg:text-[24px] font-semibold'>Credits</CardTitle>
@@ -84,7 +84,7 @@ const CreditsPage = () => {
             </div>
           </div>
           <Button 
-            className="w-full bg-[#1976D2]" 
+            className="w-full bg-[#2563EB]" 
             onClick={handleClick}
             disabled={isLoading}
           >

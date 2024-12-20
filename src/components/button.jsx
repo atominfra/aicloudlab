@@ -6,7 +6,7 @@ export default function CustomButton({text,onclickhandler,customCss, disabled=fa
     <button
       disabled={disabled}
       color='white'
-      className={`  bg-[#1976D2]  font-semibold font-poppins p-3 rounded-[15px] ${customCss}`}
+      className={`  bg-[#2563EB]  font-semibold font-poppins p-3 rounded-[15px] ${customCss}`}
       onClick={onclickhandler}
       style={{ textTransform: 'none' }}
     >

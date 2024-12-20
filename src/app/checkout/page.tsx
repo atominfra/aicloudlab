@@ -133,7 +133,7 @@ const CheckoutPage = () => {
               <Button
                 onClick={handlePayment}
                 disabled={isPaymentLoading}
-                className='bg-[#1976D2]'
+                className='bg-[#2563EB]'
               >
                 {isPaymentLoading ? (
                   <>
