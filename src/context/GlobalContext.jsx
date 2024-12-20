@@ -1,5 +1,6 @@
 'use client'; 
 
+import axios from 'axios';
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
@@ -10,7 +11,8 @@ export const GlobalProvider = ({ children }) => {
     const [user , setUser] = useState({})
     const [isloading, setIsloading] = useState(true)
     const [auth, setAuth] = useState(null);
-
+    const [node_page_status, setNode_page_status] = useState(false);
+    node_page_status
     useEffect(() => {
       if(typeof window !== "undefined"){
   
@@ -71,6 +73,20 @@ export const GlobalProvider = ({ children }) => {
         console.log("user",user)
       },[user])
 
+      const getNodePageStatus = async() =>{
+        const { data } = await axios.get('/api/getNodePageStatus')
+        const s = data.key
+        setNode_page_status(s)
+      }
+
+      useEffect(()=>{
+        getNodePageStatus()
+      },[])
+      
+      useEffect(()=>{
+        console.log('node_page_status',node_page_status)
+      },[node_page_status])
+
 
       const options = { 
         notebooks, 
@@ -80,7 +96,8 @@ export const GlobalProvider = ({ children }) => {
         fetchUserDetails, 
         isloading, 
         auth,
-        setAuth
+        setAuth,
+        node_page_status
       }
     return (
         <GlobalContext.Provider value={options}>

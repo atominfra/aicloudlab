@@ -14,6 +14,7 @@ import { useGlobalContext } from '@/context/GlobalContext'
 import { CircularProgress } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { Switch } from "@/components/ui/switch"
+import axios from 'axios'
 
 // Types
 interface OSOption {
@@ -77,7 +78,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const [plans, setPlans] = useState<Plan[]>([])
   const [loading, setLoading] = useState(false)
   const [loadingPlans, setLoadingPlans] = useState(false) // Added loadingPlans state
-  const { auth } = useGlobalContext()
+  const { auth, node_page_status } = useGlobalContext()
   const router = useRouter()
   const [error, setError] = useState('')
   useEffect(() => {
@@ -92,7 +93,12 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }
     fetchInitialData()
   }, [auth])
-
+  
+  useEffect(()=>{
+    if(node_page_status === false){
+      router.push("/dashboard/nodes")
+    }
+  },[node_page_status])
   useEffect(() => {
     const selectedOSOption = osOptions.find(os => os.name === formState.os)
     setOSVersions(selectedOSOption?.version || [])
@@ -124,6 +130,11 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }
 
   const handleSubmit = async (event: React.FormEvent) => {
+
+    console.log('node_page_status' ,node_page_status)
+    if(node_page_status !== false){
+
+    
     event.preventDefault()
      // Validate SSH keys
       const hasEmptySSHKeys = formState.sshKeys.some(key => key.key.trim() === '');
@@ -152,6 +163,8 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     } finally {
       setLoading(false)
     }
+
+  }
   }
 
   const findplan = (plans: Plan[], value: string) => {
