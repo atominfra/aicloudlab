@@ -18,12 +18,13 @@ const  NotebooksPage= () => {
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const handleCreateClick = () => {
-    // if (user?.credits < 1) {
-    //   setShowModal(true);
-    // } else {
       router.push('/create/notebook');
-    // }
   };
+
+  // prefetch routes for faster navigation
+  useEffect(() => {
+    router.prefetch('/create/notebook');
+  }, [router]);
 
   const fetchNotebooks = async () => {
     try {

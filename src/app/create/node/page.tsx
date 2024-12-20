@@ -281,6 +281,11 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     ));
   };
 
+    // prefetch routes for faster navigation
+    useEffect(() => {
+      router.prefetch('/dashboard/nodes');
+    }, [router]);
+
   return (
     <div className='lg:p-6 bg-neutral-100 lg:min-h-screen min-h-[84vh] flex justify-center items-start'>
       <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto lg:mt-[10vh]">

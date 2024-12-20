@@ -50,6 +50,11 @@ export default function NodesPage() {
     console.log("nodes", nodes);
   }, [nodes]);
 
+    // prefetch routes for faster navigation
+    useEffect(() => {
+      router.prefetch('/create/node');
+    }, [router]);
+
   return (
     <div className="p-4 lg:p-6 bg-neutral-100 lg:h-screen h-[84vh]  justify-center items-center">
       <div className="flex items-center justify-between lg:mb-6 mb-5 h-[6vh]">

@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { GiHamburgerMenu } from "react-icons/gi"
 import { Book, Cpu, X } from 'lucide-react'
@@ -18,6 +18,13 @@ export default function MobileTopBar() {
     { href: '/dashboard/notebooks', icon: Book, label: 'Notebooks' },
     { href: '/dashboard/nodes', icon: Cpu, label: 'Nodes' },
   ]
+
+
+      // prefetch routes for faster navigation
+    useEffect(() => {
+        router.prefetch('/dashboard/nodes');
+        router.prefetch('/dashboard/notebooks');
+      }, [router]);
 
   return (
     <>
