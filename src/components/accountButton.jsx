@@ -58,17 +58,17 @@ const AccountButton = ({ account , userName, api}) => {
   };
 
   return (
-    <div className="mb-4 lg:mb-8">
+    <div className="mb-4 lg:mb-8 ">
       
       <div className="flex items-center justify-between bg-white lg:bg-neutral-100 p-2 lg:p-0 rounded-[8px] border lg:border-none ">
               <div className="flex items-center gap-3">
-                <div className="h-8 w-8">
-                    <Image src={account.icon} alt={account.icon} width={32} height={32} />
+                <div className="h-8 w-8 flex justify-center items-center">
+                    <Image src={account.icon} alt={account.icon} className="w-[20px] h-[20px] lg:w-[32px] lg:h-[32px]" />
                   </div>
                 <div>
                 <p className="font-medium text-sm lg:text:base">{account.name}</p>
               {/* @ts-expect-error  error*/}
-              <p className="text-sm text-[#6B7280] ">{userName || 'Not connected'}</p>
+              <p className="text-xs font-normal text-[#6B7280] ">{userName || 'Not connected'}</p>
                 </div>
               </div>
               {/* @ts-expect-error  error*/}
