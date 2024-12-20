@@ -62,7 +62,7 @@ export function Sidebar() {
           </div>
           <div className="flex-1">
             <div className="text-sm text-muted-foreground">
-              {user?.full_name}
+              {user?.full_name.split(' ')[0]}
               </div>
           </div>
           <div className="px-3 py-1 bg-blue-600 text-primary-foreground text-white text-sm rounded-[4px] hover:cursor-pointer" onClick={()=> router.push("/credits")}>
