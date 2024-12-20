@@ -176,7 +176,7 @@ export function NotebookCard({ id, name, status, notebook_url, python_version, o
            <Image
            alt="triangle-alert" 
            src={trianlgeAlert}
-           className="text-red-700 bg-"/>
+           className=""/>
             Delete Notebook
             {/* You are deleting &apos;{name}&apos; */}
           </p>
