@@ -302,7 +302,7 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
             <span className='pt-1'>Delete Node</span>
           </p>
           <p className="pb-4 text-[#374151] text-[15px] lg:text-base">
-          This action cannot be undone. Please type the node's name to confirm deletion:
+          This action cannot be undone. Please type the node&apos;s name to confirm deletion:
           </p>
           <div className='mb-4 h-[74px] p-4 lg:w-[535px] border-2 rounded-[4px] bg-[#F9FAFB] border-[#E5E7EB]'>
             <div className='text-[#4B5563] text-sm'>Node name:</div>

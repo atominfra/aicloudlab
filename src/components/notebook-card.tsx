@@ -190,7 +190,7 @@ export function NotebookCard({ id, name, status, notebook_url, python_version, o
             <span className='pt-1'>Delete Notebook</span>
           </p>
           <p className="pb-4 text-[#374151] text-[15px] lg:text-base">
-          This action cannot be undone. Please type the notebook's name to confirm deletion:
+          This action cannot be undone. Please type the notebook&apos;s name to confirm deletion:
           </p>
           <div className='mb-4 h-[74px] p-4 w-[535px] border-2 rounded-[4px] bg-[#F9FAFB] border-[#E5E7EB]'>
             <div className='text-[#4B5563] text-sm'>Notebook name:</div>

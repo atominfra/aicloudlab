@@ -12,7 +12,6 @@ export const GlobalProvider = ({ children }) => {
     const [isloading, setIsloading] = useState(true)
     const [auth, setAuth] = useState(null);
     const [node_page_status, setNode_page_status] = useState(false);
-    node_page_status
     useEffect(() => {
       if(typeof window !== "undefined"){
   
@@ -73,16 +72,20 @@ export const GlobalProvider = ({ children }) => {
         console.log("user",user)
       },[user])
 
-      const getNodePageStatus = async() =>{
-        const { data } = await axios.get('/api/getNodePageStatus')
-        const s = data.key
-        setNode_page_status(s)
-      }
+      useEffect(() => {
+        const getNodePageStatus = async () => {
+          try {
+            const { data } = await axios.get('/api/getNodePageStatus');
+            const s = data.key;
+            setNode_page_status(s);
+          } catch (error) {
+            console.error('Error fetching node page status:', error);
+          }
+        };
+    
+        getNodePageStatus();
+      }, []);
 
-      useEffect(()=>{
-        getNodePageStatus()
-      },[])
-      
       useEffect(()=>{
         console.log('node_page_status',node_page_status)
       },[node_page_status])
