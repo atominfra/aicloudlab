@@ -120,7 +120,7 @@ const CheckoutPage = () => {
           </div>
 
           <div className="flex flex-col lg:flex-row gap-5 items-center justify-between  px-6">
-            <p className="text-[10px] lg:text-xs text-right lg:text-left w-full text-muted-foreground">
+            <p className="text-[10px] lg:text-xs text-center lg:text-left w-full text-muted-foreground">
               By confirming, you agree to our payment policies.
             </p>
             <div className="flex justify-end gap-3">
