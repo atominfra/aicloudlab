@@ -1,17 +1,15 @@
 'use client'
 import { useRouter } from 'next/navigation'
 import React from 'react'
-import withAuth from '@/components/withAuth';
 
+type Props = Record<string, never>;
 
-const Page = (props) => {
+export default function Page(props: Props) {
   const router = useRouter();
 
   React.useEffect(() => {
-    router.push('/dashboard/');
+    router.push('/create/notebook');
   }, [router]);
 
   return <div></div>;
 }
-
-export default withAuth(Page)

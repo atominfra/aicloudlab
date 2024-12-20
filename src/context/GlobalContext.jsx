@@ -1,5 +1,6 @@
-'use client'; // Ensure this is at the top of the file
+'use client'; 
 
+import axios from 'axios';
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
@@ -9,13 +10,22 @@ export const GlobalProvider = ({ children }) => {
     const [notebooks, setNotebooks] = useState([]);
     const [user , setUser] = useState({})
     const [isloading, setIsloading] = useState(true)
-
+    const [auth, setAuth] = useState(null);
+    const [node_page_status, setNode_page_status] = useState(false);
     useEffect(() => {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
-        }
-      }, []);
+      if(typeof window !== "undefined"){
+  
+      const storedToken = localStorage.getItem('access_token');
+      if (storedToken) {
+        setAuth(storedToken);
+      }
+    
+      const storedUser = localStorage.getItem('user');
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+    }
+    }, []); 
   
 
     const fetchUserDetails = async () => {
@@ -25,7 +35,7 @@ export const GlobalProvider = ({ children }) => {
             method: 'GET',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+              'Authorization': `Bearer ${auth}`,
             },
           });
       
@@ -53,12 +63,32 @@ export const GlobalProvider = ({ children }) => {
       };
 
       useEffect(()=>{
-        fetchUserDetails()
-      },[])
+        if(auth){
+          fetchUserDetails()
+        }
+      },[auth])
 
       useEffect(()=>{
         console.log("user",user)
       },[user])
+
+      useEffect(() => {
+        const getNodePageStatus = async () => {
+          try {
+            const { data } = await axios.get('/api/getNodePageStatus');
+            const s = data.key;
+            setNode_page_status(s);
+          } catch (error) {
+            console.error('Error fetching node page status:', error);
+          }
+        };
+    
+        getNodePageStatus();
+      }, []);
+
+      useEffect(()=>{
+        console.log('node_page_status',node_page_status)
+      },[node_page_status])
 
 
       const options = { 
@@ -68,6 +98,9 @@ export const GlobalProvider = ({ children }) => {
         setUser, 
         fetchUserDetails, 
         isloading, 
+        auth,
+        setAuth,
+        node_page_status
       }
     return (
         <GlobalContext.Provider value={options}>

@@ -18,12 +18,13 @@ const  NotebooksPage= () => {
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const handleCreateClick = () => {
-    // if (user?.credits < 1) {
-    //   setShowModal(true);
-    // } else {
-      router.push('/create/');
-    // }
+      router.push('/create/notebook');
   };
+
+  // prefetch routes for faster navigation
+  useEffect(() => {
+    router.prefetch('/create/notebook');
+  }, [router]);
 
   const fetchNotebooks = async () => {
     try {
@@ -49,7 +50,6 @@ const  NotebooksPage= () => {
       
     }
   };
-// @ts-expect-error build
   const handleOperationRequest = async (notebookId, operationName) => {
     try {
       console.log("operationName in dashboard",operationName)
@@ -77,7 +77,6 @@ const  NotebooksPage= () => {
       const result = await response.json();
       console.log('Operation successful:', result);
     } catch (error) {
-      // @ts-expect-error build
       setError(error?.message);
     }
     fetchNotebooks();
@@ -89,16 +88,16 @@ const  NotebooksPage= () => {
   }, []);
 
   return (
-    <div className="p-6 bg-neutral-100 h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-semibold">Notebooks</h1>
+    <div className="p-4 lg:p-6 bg-neutral-100 lg:h-screen h-[92vh]  justify-center items-center">
+      <div className="flex items-center justify-between lg:mb-6 mb-5 h-[6vh]">
+        <h1 className="text-lg lg:text-2xl font-semibold">Notebooks</h1>
         <Button className="bg-blue-600" onClick={handleCreateClick}>
-          <span className="mr-2">+</span>
+          <span className="">+</span>
           Create
         </Button>
       </div>
       {notebooks.length === 0 ? (
-        <Box className="flex flex-col gap-2 justify-center items-center h-[60vh] w-full bg-neutral-100">
+          <Box className="flex flex-col justify-center items-center lg:h-[80vh] h-[70vh] w-full">
           <Image
             src={notebook}
             width={1000}
@@ -111,8 +110,7 @@ const  NotebooksPage= () => {
           </Typography>
         </Box>
       ) : (
-        <div>
-         {/* @ts-expect-error build */}
+        <div className="flex flex-col  items-center lg:h-[80vh] h-[70vh] w-full">
 
           {notebooks.map((notebook) => (
             <NotebookCard

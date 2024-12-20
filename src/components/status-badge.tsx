@@ -1,10 +1,7 @@
 import { cn } from "@/lib/utils"
 
-interface StatusBadgeProps {
-  status: "running" | "stopped" | "error"
-}
 
-export function StatusBadge({ status }: StatusBadgeProps) {
+export function StatusBadge({ status }) {
   return (
     <div className="flex items-center gap-2">
       <div
@@ -12,6 +9,7 @@ export function StatusBadge({ status }: StatusBadgeProps) {
           "bg-green-500": status === "running",
           "bg-gray-500": status === "stopped",
           "bg-red-500": status === "error",
+          "bg-blue-500": status === "creating",
         })}
       />
       <span
@@ -19,6 +17,7 @@ export function StatusBadge({ status }: StatusBadgeProps) {
           "text-green-600": status === "running",
           "text-gray-600": status === "stopped",
           "text-red-600": status === "error",
+          "text-blue-600": status === "creating",
         })}
       >
         {status}

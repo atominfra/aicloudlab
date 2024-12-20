@@ -66,7 +66,7 @@ const NotebookPage = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <Box className="w-full bg-white flex items-center justify-between px-10   py-4 shadow-lg z-[10]">
+      {/* <Box className="w-full bg-white flex items-center justify-between px-10   py-4 shadow-lg z-[10]">
         <Box className="flex items-end"> 
           <Link className="flex items-center" href={`/dashboard`}>
             <Image 
@@ -85,7 +85,7 @@ const NotebookPage = () => {
         </Box>
         <Box className="flex gap-8 items-center">
           <button
-            className={`bg-white hover:bg-[#1976D2] h-[38px]  hover:text-white text-black shadow-none text-[16px] font-semibold rounded-[10px] border px-4 py-1 border-gray-300 flex gap-2 items-center justify-center`}
+            className={`bg-white hover:bg-[#2563EB] h-[38px]  hover:text-white text-black shadow-none text-[16px] font-semibold rounded-[10px] border px-4 py-1 border-gray-300 flex gap-2 items-center justify-center`}
             onClick={() => toast.success('Coming Soon',{position: 'bottom-right'})}
             style={{ textTransform: 'none' }}
           >
@@ -93,7 +93,7 @@ const NotebookPage = () => {
             Sync
           </button>
           <button
-            className={`bg-white   text-black shadow-none text-[16px] font-semibold rounded-[10px] ${open ? "border border-black":"border border-gray-300 hover:bg-[#1976D2] hover:text-white"} px-4 py-1 h-[38px]   flex gap-2 items-center justify-center `}
+            className={`bg-white   text-black shadow-none text-[16px] font-semibold rounded-[10px] ${open ? "border border-black":"border border-gray-300 hover:bg-[#2563EB] hover:text-white"} px-4 py-1 h-[38px]   flex gap-2 items-center justify-center `}
             onClick={() => toast.success('Coming Soon',{position: 'bottom-right'})}
             style={{ textTransform: 'none' }}
           >
@@ -101,7 +101,7 @@ const NotebookPage = () => {
             Deploy
           </button>
           <button
-            className={` bg-[#1976D2] h-[38px] w-[142px] text-white  shadow-none text-[16px] font-semibold rounded-[10px] border px-2 py-1 border-gray-300 flex gap-2 items-center justify-center ml-6`}
+            className={` bg-[#2563EB] h-[38px] w-[142px] text-white  shadow-none text-[16px] font-semibold rounded-[10px] border px-2 py-1 border-gray-300 flex gap-2 items-center justify-center ml-6`}
             onClick={()=> router.push('/dashboard')}
             style={{ textTransform: 'none' }}
           >
@@ -109,7 +109,7 @@ const NotebookPage = () => {
             Dashboard
           </button>
         </Box>
-      </Box>
+      </Box> */}
       <Box className="w-full h-full relative">
         {isLoading && (
           <Box className="absolute inset-0 flex items-center justify-center bg-white">

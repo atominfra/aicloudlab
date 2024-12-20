@@ -2,8 +2,8 @@ import { Sidebar } from "@/components/sidebar";
 
 export default function DashboardLayout({ children }) {
   return <>
-       {/* <div className="flex h-screen bg-background text-foreground"> */}
-          {/* <Sidebar /> */}
+       {/* <div className="flex h-screen bg-background text-foreground">
+          <Sidebar /> */}
           <main className="">
             {children}
           </main>

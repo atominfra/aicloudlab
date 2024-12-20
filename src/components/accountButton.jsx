@@ -24,7 +24,7 @@ const AccountButton = ({ account , userName, api}) => {
     setIsRevoking(true);
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/${api}/revoke`, {
-        method: 'GET',
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
@@ -58,45 +58,48 @@ const AccountButton = ({ account , userName, api}) => {
   };
 
   return (
-    <div style={{ marginBottom: "1rem" }}>
-      <Box className="flex items-center justify-between p-3 border rounded-[10px] h-[70px]">
-              <Box className="flex items-center space-x-2">
-                <Image 
-                src={account.icon}
-                alt="github Icon"
-                width={24}
-                height={24}
-                />
-                <Box>
-                <Typography className='text-[16px]'>{account.name}</Typography>
+    <div className="mb-4 lg:mb-8 ">
+      
+      <div className="flex items-center justify-between bg-white lg:bg-neutral-100 p-2 lg:p-0 rounded-[8px] border lg:border-none ">
+              <div className="flex items-center gap-3">
+                <div className="h-8 w-8 flex justify-center items-center">
+                    <Image src={account.icon} alt={account.icon} className="w-[20px] h-[20px] lg:w-[32px] lg:h-[32px]" />
+                  </div>
+                <div>
+                <p className="font-medium text-sm lg:text:base">{account.name}</p>
               {/* @ts-expect-error  error*/}
-                {userName && <Typography className="text-[12px] text-[rgb(17,24,39,0.6)]">{String(userName)}</Typography>}
-                </Box>
-              </Box>
+              <p className="text-xs font-normal text-[#6B7280] ">{userName || 'Not connected'}</p>
+                </div>
+              </div>
               {/* @ts-expect-error  error*/}
-              {userName?
-                <button
-                disabled={isRevoking}
-                className={`h-[39px]  w-[121px] font-semibold text-black text-[15px] ${isRevoking?'bg-[rgba(17,24,39,0.32)]':'bg-white border-[2px] border-[rgb(17,24,39,0.8)]'}  rounded-[10px]`}
-                style={{ textTransform: 'none' }}
-                onClick={handleDeleteConfirmation}
-                >
-               Remove
-              </button>
-              :<>
-                <Button
-                disabled={isConnecting}
-                className={`h-[39px]  w-[121px] font-semibold text-white text-[15px] ${isConnecting ?`bg-[rgba(17,24,39,0.32)]`:`bg-[#1976D2]`} rounded-[10px]`}
-                style={{ textTransform: 'none' }}
-                onClick={handleConnect}
-                >
-                {isConnecting?
-                   <CircularProgress className="text-white" size={18}/> 
-                    :"Connect"}
-              </Button>
-                </>}
               
-            </Box>
+              {userName?
+                <Button 
+                disabled={isRevoking}
+                variant="ghost" 
+                className={`text-blue-600 hover:text-blue-700  `}
+                onClick={handleDeleteConfirmation}
+                style={{ textTransform: 'none' }}
+
+              >
+                  Disconnect
+                </Button>
+              :<>
+                <Button 
+                disabled={isConnecting}
+                variant="ghost" 
+                className={`text-blue-600   `}
+                onClick={handleConnect}
+                style={{ textTransform: 'none' }}
+
+              >
+                  {isConnecting?
+                   <CircularProgress className="text-black" size={18}/> 
+                    :"Connect"}
+                </Button>
+              </>}
+              
+            </div>
 
       <ConfirmationModal 
         open={isModalOpen} 

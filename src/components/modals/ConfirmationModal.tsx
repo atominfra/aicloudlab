@@ -43,7 +43,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ open, account, on
               </>:
               <>Confirm</>}  
             onclickhandler={onConfirm}
-            customCss="w-[50%] bg-[#1976D2] text-white text-[15px] lg:text-[16px]"
+            customCss="w-[50%] bg-[#2563EB] text-white text-[15px] lg:text-[16px]"
           />
         </Box>
 
