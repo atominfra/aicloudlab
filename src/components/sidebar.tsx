@@ -5,12 +5,18 @@ import { cn } from "@/lib/utils"
 import { usePathname, useRouter } from 'next/navigation'
 import Image from "next/image"
 import { useGlobalContext } from '@/context/GlobalContext';
+import { useEffect } from "react"
 // import { ThemeToggle } from "./theme-toggle"
 export function Sidebar() {
   const pathname = usePathname()
   console.log("pathname",pathname)
   const { user } = useGlobalContext()
   const router = useRouter()
+
+  useEffect(()=>{
+    router.prefetch("/profile")
+    router.prefetch("/credits")
+  },[])
   return (
     <div className="w-60 bg-card border-r border-border  flex-col h-full hidden lg:flex">
         <div className="flex px-4 py-3 border-b">
