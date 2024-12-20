@@ -7,7 +7,7 @@ import { Book, Cpu, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-
+import hameMenu from "@/assets/hammenu.svg"
 export default function MobileTopBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const router = useRouter()
@@ -25,13 +25,18 @@ export default function MobileTopBar() {
         <Link className="flex items-center" href={`/dashboard`}>
           <Image 
             src={'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png'}
-            width={24}
-            height={24}
+            width={27}
+            height={27}
             alt="AI Cloud Lab Logo" 
           />
         </Link>
         <Button variant="ghost" size="icon" onClick={toggleSidebar}>
-          <GiHamburgerMenu size={20} />
+        <Image 
+            src={hameMenu}
+            width={23}
+            height={23}
+            alt="hameMenu" 
+          />
         </Button>
       </Box>
 
