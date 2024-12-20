@@ -56,14 +56,14 @@ function ProfilePage() {
           <div className="space-y-1">
             <h3 className="lg:text-xl text-base font-semibold">Personal Information</h3>
             <div className="space-y-1">
-              <div className="">
+              <div className="border-b pb-1">
                 <span className="text-sm font-medium text-[#6B7280]">Full Name</span>
                 <div className="col-span-2 text-[14px] border lg:border-none rounded-[8px] bg-white lg:bg-neutral-100 px-2 lg:px-0 py-2">
                   {user?.full_name}
                 </div>
               </div>
               {/* <Separator /> */}
-              <div className="">
+              <div className="border-b  pb-1">
                 <span className="text-sm font-medium text-[#6B7280]">Email Address</span>
                 <div className="col-span-2 text-[14px] border lg:border-none rounded-[8px] bg-white lg:bg-neutral-100 px-2 lg:px-0 py-2">
                   {user?.email}
