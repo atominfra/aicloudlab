@@ -11,7 +11,6 @@ import { Box, CircularProgress, Modal, TextField } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
-import CustomButton from './button'
 import trianlgeAlert from "@/assets/trianlge-alert.svg" 
 import {
   DropdownMenu,
@@ -19,6 +18,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Input } from './ui/input'
 
 interface NodeCardProps {
   id: string
@@ -37,6 +37,7 @@ export function NotebookCard({ id, name, status, notebook_url, python_version, o
   const handleClose = () => setOpen(false)
   const [inputValue, setInputValue] = useState("")
   const [isError, setIsError] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
   const router = useRouter()
 
   const handleInputChange = (e) => {
@@ -45,11 +46,20 @@ export function NotebookCard({ id, name, status, notebook_url, python_version, o
     setIsError(value !== name)
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if (inputValue === name) {
-      onOperation(id, "delete")
-      handleClose()
+      setIsDeleting(true)
+      try {
+        await onOperation(id, "delete")
+        toast.success('Notebook deleted successfully')
+        handleClose()
+      } catch (error) {
+        console.error("Delete operation failed:", error)
+        toast.error('Failed to delete notebook')
+      } finally {
+        setIsDeleting(false)
+      }
     } else {
       setIsError(true)
     }
@@ -171,57 +181,47 @@ export function NotebookCard({ id, name, status, notebook_url, python_version, o
         aria-describedby="modal-modal-description"
         className="w-full h-full justify-items-center content-center"
       >
-        <div className="p-8 bg-white shadow-xl rounded-2xl item-center lg:w-[30vw] m-4">
-          <p className="pr-10 pb-4 text-[18px] lg:text-[20px] font-semibold text-[#111827]">
+        <div className="p-6 bg-white shadow-xl rounded-[10px] item-center lg:w-[588px] m-4">
+          <p className=" flex  gap-2 items-center pr-10 pb-4 text-[18px] lg:text-[20px] font-semibold text-[#111827]">
            <Image
            alt="triangle-alert" 
            src={trianlgeAlert}
            className=""/>
-            Delete Notebook
-            {/* You are deleting &apos;{name}&apos; */}
+            <span className='pt-1'>Delete Notebook</span>
           </p>
-          <p className="pb-4 text-gray-600 text-[15px] lg:text-lg">
-            If you&apos;re sure, type &apos;{name}&apos; to confirm.
+          <p className="pb-4 text-[#374151] text-[15px] lg:text-base">
+          This action cannot be undone. Please type the notebook's name to confirm deletion:
           </p>
+          <div className='mb-4 h-[74px] p-4 w-[535px] border-2 rounded-[4px] bg-[#F9FAFB] border-[#E5E7EB]'>
+            <div className='text-[#4B5563] text-sm'>Notebook name:</div>
+            <div className='font-medium text-[#111827] text-base'>{name}</div>
+          </div>
           <form onSubmit={handleSubmit}>
-            <TextField
-              fullWidth
-              label="Confirm Name"
-              value={inputValue}
-              onChange={handleInputChange}
-              variant="outlined"
-              required
-              error={isError}
-              helperText={isError ? "Entered text does not match the name." : ""}
-              InputProps={{
-                className: "bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]",
-              }}
-              InputLabelProps={{
-                sx: {
-                  color: "black",
-                  fontFamily: "poppins",
-                  "&.Mui-focused": { color: "black" },
-                },
-              }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": { borderColor: "black" },
-                  "&:hover fieldset": { borderColor: "black" },
-                  "&.Mui-focused fieldset": { borderColor: "black" },
-                },
-              }}
-            />
-            <Box className="flex w-full justify-between gap-4 pt-4">
-              <CustomButton
-                text="No, cancel"
-                onclickhandler={handleClose}
-                customCss="w-[50%] bg-[#e3e3e3] text-black shadow-none text-[15px] lg:text-[16px]"
+            <Input 
+                id="Confirm Name" 
+                placeholder="Type notebook name to confirm" 
+                required 
+                value={inputValue}
+                onChange={handleInputChange}
+                className="max-w-full placeholder:text-[#9CA3AF] text-sm "
               />
-              <CustomButton
-                text="Delete Notebook"
-                onclickhandler={handleSubmit}
-                customCss="w-[50%] bg-red-600 text-white text-[15px] lg:text-[16px]"
-              />
+            <Box className="flex w-full justify-end gap-4 pt-4">
+              <Button variant="outline" className='bg-[#F3F4F6] text-[#374151]' onClick={handleClose}>Cancel</Button>
+              <Button 
+                variant="outline" 
+                className='bg-[#EF4444] text-neutral-100' 
+                onClick={handleSubmit}
+                disabled={isDeleting}
+              >
+                {isDeleting ? (
+                  <>
+                    <CircularProgress size={16} color="inherit" className="mr-2" />
+                    Deleting...
+                  </>
+                ) : (
+                  'Delete Notebook'
+                )}
+              </Button>
             </Box>
           </form>
         </div>

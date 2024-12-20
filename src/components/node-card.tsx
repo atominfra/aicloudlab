@@ -11,6 +11,8 @@ import { Box, CircularProgress, Modal, TextField } from '@mui/material'
 import CustomButton from './button'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
+import trianlgeAlert from "@/assets/trianlge-alert.svg" 
+import { Input } from './ui/input'
 
 interface NodeCardProps {
   id: number
@@ -226,7 +228,7 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
         </div>
       </div>
 
-      <Modal
+      {/* <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
@@ -280,6 +282,58 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
                 customCss="w-[50%] bg-red-600 text-white text-[15px] lg:text-[16px]"
                 disabled={loading}
               />
+            </Box>
+          </form>
+        </div>
+      </Modal> */}
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+        className="w-full h-full justify-items-center content-center"
+      >
+        <div className="p-6 bg-white shadow-xl rounded-[10px] item-center lg:w-[588px] m-4">
+          <p className=" flex  gap-2 items-center pr-10 pb-4 text-[18px] lg:text-[20px] font-semibold text-[#111827]">
+           <Image
+           alt="triangle-alert" 
+           src={trianlgeAlert}
+           className=""/>
+            <span className='pt-1'>Delete Node</span>
+          </p>
+          <p className="pb-4 text-[#374151] text-[15px] lg:text-base">
+          This action cannot be undone. Please type the node's name to confirm deletion:
+          </p>
+          <div className='mb-4 h-[74px] p-4 w-[535px] border-2 rounded-[4px] bg-[#F9FAFB] border-[#E5E7EB]'>
+            <div className='text-[#4B5563] text-sm'>Node name:</div>
+            <div className='font-medium text-[#111827] text-base'>{name}</div>
+          </div>
+          <form onSubmit={handleSubmit}>
+            <Input 
+                id="Confirm Name" 
+                placeholder="Type node name to confirm" 
+                required 
+                value={inputValue}
+                onChange={handleInputChange}
+                className="max-w-full placeholder:text-[#9CA3AF] text-sm "
+              />
+            <Box className="flex w-full justify-end gap-4 pt-4">
+              <Button variant="outline" className='bg-[#F3F4F6] text-[#374151]' onClick={handleClose}>Cancel</Button>
+              <Button 
+                variant="outline" 
+                className='bg-[#EF4444] text-neutral-100' 
+                onClick={handleSubmit}
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <CircularProgress size={16} color="inherit" className="mr-2" />
+                    Deleting...
+                  </>
+                ) : (
+                  'Delete Notebook'
+                )}
+              </Button>
             </Box>
           </form>
         </div>
