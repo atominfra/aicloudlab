@@ -1,22 +1,24 @@
 import { Box } from '@mui/material'
 import Image from 'next/image'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { GiHamburgerMenu } from "react-icons/gi"
-import { Book, Cpu, X } from 'lucide-react'
+import { Book, Cpu, X, User } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import hameMenu from "@/assets/hammenu.svg"
+import { useGlobalContext } from '@/context/GlobalContext'
 export default function MobileTopBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const router = useRouter()
-
+  const {user} = useGlobalContext()
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen)
 
   const navItems = [
     { href: '/dashboard/notebooks', icon: Book, label: 'Notebooks' },
     { href: '/dashboard/nodes', icon: Cpu, label: 'Nodes' },
+    // { href: '/profile', icon: User, label: 'Profile' },
   ]
 
 
@@ -57,11 +59,12 @@ export default function MobileTopBar() {
       >
         <div
           className={cn(
-            "fixed inset-y-0 right-0 z-50 w-3/4 max-w-xs bg-white shadow-xl transition-transform duration-300 ease-in-out",
+            "fixed inset-y-0 flex justify-between flex-col right-0 z-50 w-3/4 max-w-xs bg-white shadow-xl transition-transform duration-300 ease-in-out",
             sidebarOpen ? "translate-x-0" : "translate-x-full"
           )}
           onClick={(e) => e.stopPropagation()}
         >
+          <div>
           <div className="flex items-center justify-between p-4 border-b">
             <Link href="/dashboard" className="flex items-center gap-2" onClick={toggleSidebar}>
               <Image 
@@ -91,6 +94,23 @@ export default function MobileTopBar() {
               ))}
             </ul>
           </nav>
+          </div>
+          <div className="p-4 border-t border-border">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-neutral-100 border flex items-center justify-center hover:cursor-pointer hover:border-gray-300" onClick={()=> router.push("/profile")}>
+          <span className="text-md font-medium ">{user?.full_name && user?.full_name.split(' ').map(n=> n[0]).join('')}</span>
+          </div>
+          <div className="flex-1">
+            <div className="text-sm text-muted-foreground">
+              {user?.full_name && user?.full_name.split(' ')[0]}
+              </div>
+          </div>
+          <div className="px-3 py-1 bg-blue-600 text-primary-foreground text-white text-sm rounded-[4px] hover:cursor-pointer" onClick={()=> router.push("/credits")}>
+          <span className='font-serif pr-1 text-white'>₹</span>
+            {user?.credits ? user?.credits : 0} 
+          </div>
+        </div>
+      </div>
         </div>
       </div>
     </>

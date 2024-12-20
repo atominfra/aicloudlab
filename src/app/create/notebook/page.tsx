@@ -90,7 +90,7 @@ export default function CreateNotebook() {
   }
 
   return (
-    <div className='lg:p-6 bg-neutral-100 lg:h-screen justify-center items-center h-[84vh]'>
+    <div className='lg:p-6 bg-neutral-100 lg:h-screen justify-center items-center h-[92vh]'>
       <div className="max-w-2xl mx-auto p-4 lg:p-6 lg:mt-[10vh] ">
       <div className="text-center mb-8 relative">
         <h1 className="lg:text-2xl text-lg font-semibold mb-2">Create New Notebook</h1>

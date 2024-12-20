@@ -15,10 +15,10 @@ export default function RootLayoutClient({ children }) {
             {!hideSidebar && <Sidebar />}
             <div className="w-full">
             {!hideMobileNavs && <MobileTopBar/>}
-          <main className={`flex-1 overflow-auto ${hideMobileNavs ? "h-[100vh]":"h-[84vh]"} lg:h-auto `}>
+          <main className={`flex-1 overflow-auto ${hideMobileNavs ? "h-[100vh]":"h-[92vh]"} lg:h-auto `}>
             {children}
           </main>
-          {!hideMobileNavs && <MobileBottomBar/>}
+          {/* {!hideMobileNavs && <MobileBottomBar/>} */}
           </div>
         </div>
         </GlobalProvider>
