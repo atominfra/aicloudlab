@@ -51,7 +51,7 @@ export default function NodesPage() {
   }, [nodes]);
 
   return (
-    <div className="p-4 lg:p-6 bg-neutral-100 lg:h-screen  justify-center items-center">
+    <div className="p-4 lg:p-6 bg-neutral-100 lg:h-screen h-[84vh]  justify-center items-center">
       <div className="flex items-center justify-between lg:mb-6 mb-5 h-[6vh]">
         <h1 className="text-lg lg:text-2xl font-semibold">Nodes</h1>
         <Button className="bg-blue-600" onClick={()=> router.push("/create/node")}>

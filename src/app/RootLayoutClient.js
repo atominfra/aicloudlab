@@ -11,17 +11,11 @@ export default function RootLayoutClient({ children }) {
   const hideMobileNavs = pathname === "/login" || pathname === "/signup";
   return <>
         <GlobalProvider>
-            {/* <div className="flex h-screen bg-background text-foreground">
-              {!hideSidebar && <Sidebar />}
-              <main className="flex-1 overflow-auto">
-                {children}
-              </main>
-            </div> */}
             <div className="flex h-screen bg-background text-foreground">
             {!hideSidebar && <Sidebar />}
             <div className="w-full">
             {!hideMobileNavs && <MobileTopBar/>}
-          <main className={`flex-1 overflow-auto ${hideMobileNavs ? "h-[100vh]":"h-[84vh]"} lg:h-auto`}>
+          <main className={`flex-1 overflow-auto ${hideMobileNavs ? "h-[100vh]":"h-[84vh]"} lg:h-auto `}>
             {children}
           </main>
           {!hideMobileNavs && <MobileBottomBar/>}
