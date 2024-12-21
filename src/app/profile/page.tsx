@@ -92,7 +92,7 @@ function ProfilePage() {
           </div>
 
           <div className="flex justify-end ">
-            <Button className='bg-[#FF0000] w-full lg:w-auto' onClick={handleLogout}>
+            <Button className='bg-[#EF4444] w-full lg:w-auto' onClick={handleLogout}>
               <Image
               src={logoutIcon}
               alt='logoutIcon'/>
