@@ -88,7 +88,7 @@ const  NotebooksPage= () => {
   }, []);
 
   return (
-    <div className="p-4  bg-neutral-100 lg:h-screen h-[92vh]  justify-center items-center">
+    <div className="p-4  bg-neutral-100 lg:h-screen h-[92svh]  justify-center items-center">
       <div className="flex items-center justify-between lg:mb-6 mb-5 h-[6vh]">
         <h1 className="text-lg lg:text-2xl font-semibold">Notebooks</h1>
         <Button className="bg-blue-600" onClick={handleCreateClick}>
