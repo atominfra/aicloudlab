@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import Image from "next/image"
 import { useGlobalContext } from '@/context/GlobalContext';
 import { useEffect } from "react"
+import nodeIcon from "@/assets/node.webp"
 // import { ThemeToggle } from "./theme-toggle"
 export function Sidebar() {
   const pathname = usePathname()
@@ -56,6 +57,9 @@ export function Sidebar() {
               )}
             >
               <Cpu size={20} />
+              {/* <Image
+              alt="nodes"
+              src={nodeIcon}/> */}
               <span>Nodes</span>
             </Link>
           </li>
