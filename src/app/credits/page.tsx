@@ -38,7 +38,7 @@ const CreditsPage = () => {
   }
 
   return (
-    <div className="lg:min-h-screen min-h-[92svh] bg-neutral-100 lg:p-4 flex justify-center items-center  ">
+    <div className="lg:min-h-screen min-h-[92dvh]  bg-neutral-100 lg:p-4 flex justify-center items-center  ">
       <Card className="w-full max-w-3xl bg-neutral-100 shadow-none border-none">
         <CardHeader>
           <CardTitle className='text-lg lg:text-[24px] font-semibold'>Credits</CardTitle>

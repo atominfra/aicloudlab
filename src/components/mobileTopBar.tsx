@@ -30,7 +30,7 @@ export default function MobileTopBar() {
 
   return (
     <>
-      <Box className="lg:hidden w-full flex justify-between items-center select-none px-8 lg:px-10 py-4 shadow-lg bg-white h-[8svh]">
+      <Box className="lg:hidden w-full flex justify-between items-center select-none px-8 lg:px-10 py-4 shadow-lg bg-white h-[8dvh] ">
         <Link className="flex items-center" href={`/dashboard`}>
           <Image 
             src={'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png'}

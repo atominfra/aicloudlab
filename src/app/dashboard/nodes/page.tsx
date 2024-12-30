@@ -58,7 +58,7 @@ export default function NodesPage() {
     }, [router]);
 
   return (
-    <div className="p-4  bg-neutral-100 lg:h-screen h-[92svh]  justify-center items-center">
+    <div className="p-4  bg-neutral-100 lg:h-screen h-[92dvh]   justify-center items-center">
       <div className="flex items-center justify-between lg:mb-6 mb-5 h-[6vh]">
         <h1 className="text-lg lg:text-2xl font-semibold">Nodes</h1>
         <Button className="bg-blue-600" onClick={()=> router.push("/create/node")} disabled={!node_page_status}>
@@ -83,7 +83,7 @@ export default function NodesPage() {
               node.isDeleted === false && <NodeCard key={node.name} {...node} fetchNodes={fetchNodes} />
             )
           ) : (
-            <Box className="flex flex-col gap-2 justify-center items-center lg:h-[80vh] h-[70vh] w-full bg-neutral-100">
+            <Box className="flex flex-col gap-2 justify-center items-center lg:h-[80vh] h-[70dvh]  w-full bg-neutral-100">
               <Image
                 src={noNodesIcon}
                 width={1000}
