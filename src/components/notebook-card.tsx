@@ -52,7 +52,7 @@ export function NotebookCard({ id, name, status, notebook_url, python_version, o
       setIsDeleting(true)
       try {
         await onOperation(id, "delete")
-        toast.success('Notebook deleted successfully')
+        // toast.success('Notebook deleted successfully')
         handleClose()
       } catch (error) {
         console.error("Delete operation failed:", error)
