@@ -8,11 +8,12 @@ import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import hameMenu from "@/assets/hammenu.svg"
-import { useGlobalContext } from '@/context/GlobalContext'
+import { useApp } from '@/context/AppContext'
+import { useAuth } from '@/context/AuthContext'
 export default function MobileTopBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const router = useRouter()
-  const {user} = useGlobalContext()
+  const {user} = useAuth()
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen)
 
   const navItems = [

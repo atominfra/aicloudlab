@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Trash2 } from 'lucide-react'
 import { fetchOSOptions, fetchPlans, createNode } from '@/app/api/nodes/api'
-import { useGlobalContext } from '@/context/GlobalContext'
+import { useApp } from '@/context/AppContext'
 import { CircularProgress } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { Switch } from "@/components/ui/switch"
@@ -78,7 +78,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const [plans, setPlans] = useState<Plan[]>([])
   const [loading, setLoading] = useState(false)
   const [loadingPlans, setLoadingPlans] = useState(false) // Added loadingPlans state
-  const { auth, node_page_status } = useGlobalContext()
+  const { auth, node_page_status } = useApp()
   const router = useRouter()
   const [error, setError] = useState('')
   useEffect(() => {

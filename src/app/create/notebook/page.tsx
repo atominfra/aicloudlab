@@ -14,13 +14,13 @@ import {
 import Image from "next/image"
 import { useRouter } from 'next/navigation'
 import { createNotebook } from '@/app/api/notebooks/api'
-import { useGlobalContext } from '@/context/GlobalContext'
+import { useApp } from '@/context/AppContext'
 import notebookInput from "@/assets/notebookInput.svg"
 import githubInput from "@/assets/githubInput.svg"
 
 export default function CreateNotebook() {
   const router = useRouter()
-  const { auth } = useGlobalContext()
+  const { auth } = useApp()
   const [formData, setFormData] = useState({
     name: '',
     githubURL: '',

@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Separator } from "@/components/ui/separator"
 import { UserCircle2 } from 'lucide-react'
 import withAuth from '@/components/withAuth'
-import { useGlobalContext } from '@/context/GlobalContext'
+import { useApp } from '@/context/AppContext'
 import Loader from '@/components/loader'
 import logoutIcon from "@/assets/logoutIcon.svg"
 // Keep your existing imports for the icons
@@ -18,14 +18,14 @@ import huggingface from "@/assets/huggingface.png"
 
 import profileIcon from "@/assets/profileIcon.svg"
 import AccountButton from '@/components/accountButton'
+import { useAuth } from '@/context/AuthContext'
 
 function ProfilePage() {
-  const { fetchUserDetails, isloading, user } = useGlobalContext()
-
+  const { fetchUserDetails, isloading, setUser } = useApp()
+  const {logout, user} = useAuth()
   const handleLogout = () => {
-    localStorage.clear()
-    document.cookie = `access_token=; path=/; domain=.${window.location.hostname}`
-    window.location.href = "/"
+    logout()
+    setUser(null)
   }
 
   useEffect(() => {

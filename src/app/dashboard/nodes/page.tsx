@@ -7,13 +7,13 @@ import noNodesIcon from "@/assets/noNodesIcon.svg"
 import Image from "next/image";
 import { Router } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useGlobalContext } from "@/context/GlobalContext";
+import { useApp } from "@/context/AppContext";
 export default function NodesPage() {
   const [nodes, setNodes] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const router = useRouter()
-  const {node_page_status} = useGlobalContext()
+  const {node_page_status} = useApp()
   const fetchNodes = async () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/e2e/node`, {

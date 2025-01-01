@@ -2,16 +2,16 @@
 
 import axios from 'axios';
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import toast from 'react-hot-toast';
+import { useAuth } from './AuthContext';
 
-const GlobalContext = createContext();
+const AppContext = createContext();
 
-export const GlobalProvider = ({ children }) => {
+export const AppProvider = ({ children }) => {
     const [notebooks, setNotebooks] = useState([]);
-    const [user , setUser] = useState({})
     const [isloading, setIsloading] = useState(true)
     const [auth, setAuth] = useState(null);
     const [node_page_status, setNode_page_status] = useState(false);
+    const {user, setUser} = useAuth();
     useEffect(() => {
       if(typeof window !== "undefined"){
   
@@ -103,16 +103,16 @@ export const GlobalProvider = ({ children }) => {
         node_page_status
       }
     return (
-        <GlobalContext.Provider value={options}>
+        <AppContext.Provider value={options}>
             {children}
-        </GlobalContext.Provider>
+        </AppContext.Provider>
     );
 };
 
-export const useGlobalContext = () => {
-    const context = useContext(GlobalContext);
+export const useApp = () => {
+    const context = useContext(AppContext);
     if (!context) {
-        throw new Error('useGlobalContext must be used within a GlobalProvider');
+        throw new Error('useApp must be used within a AppProvider');
     }
     return context;
 };

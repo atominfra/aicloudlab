@@ -7,11 +7,12 @@ import Link from 'next/link';
 import { PiUserCircleFill } from 'react-icons/pi';
 import CreditsPill from "@/components/creditsPill"
 import { GiHamburgerMenu } from "react-icons/gi";
-import { useGlobalContext } from '@/context/GlobalContext';
+import { useApp } from '@/context/AppContext';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/AuthContext';
 
 export default function MobileBottomBar() {
-  const { user } = useGlobalContext()
+  const { user } = useAuth()
   const router = useRouter()
   return (
     <div className=" lg:hidden  flex flex-col justify-center  px-4 border-t border-border h-[8dvh]  ">

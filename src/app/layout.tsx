@@ -1,7 +1,7 @@
 import localFont from "next/font/local";
 import Script from "next/script";
 import "./globals.css";
-import RootLayoutClient from '../app/RootLayoutClient';
+import Providers from '../app/Providers';
 import { Toaster } from "react-hot-toast";
 import { Sidebar } from "@/components/sidebar";
 import {Poppins} from "@next/font/google";
@@ -53,9 +53,9 @@ export default function RootLayout({
         </Script>
       </head>
       <body className={`${poppins.className}  antialiased bg-white`}>
-        <RootLayoutClient>
+        <Providers>
           {children}
-        </RootLayoutClient>
+        </Providers>
         <Toaster />
 
       </body>

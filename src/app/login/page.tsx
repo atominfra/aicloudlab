@@ -1,15 +1,14 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { Loader2 } from 'lucide-react'
 import { MdEmail } from "react-icons/md"; 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useTheme } from 'next-themes'
 import { MdLock } from "react-icons/md"; 
+import { useAuth } from '@/context/AuthContext'
 
 interface FormData {
   identifier: string
@@ -23,16 +22,13 @@ interface FormErrors {
 
 export default function Login() {
   const [errors, setErrors] = useState<FormErrors>({})
-  const [loginError, setLoginError] = useState('')
   const [formData, setFormData] = useState<FormData>({
     identifier: '',
     password: '',
   })
 
-  const router = useRouter()
-  const { resolvedTheme } = useTheme()
-  const [auth, setAuth] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
+  const { login, loading, loginError, setLoginError } = useAuth()
+  const [auth, setAuth, ] = useState('')
 
   useEffect(() => {
     const token = localStorage.getItem('access_token')
@@ -76,36 +72,8 @@ export default function Login() {
     if (!validateForm()) {
       return
     }
-
-    setIsLoading(true)
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      })
-
-      const responseData = await response.json()
-
-      if (response.ok) {
-        localStorage.setItem('user', JSON.stringify(responseData.data.user))
-        localStorage.setItem('access_token', responseData.data.access_token)
-        document.cookie = `access_token=Bearer ${responseData.data.access_token}; expires=${new Date(
-          Date.now() + 30 * 24 * 60 * 60 * 1000
-        ).toUTCString()}; path=/; domain=.${window.location.hostname}`
-        window.location.href = '/dashboard/notebooks'
-      } else {
-        setLoginError(responseData.message || 'An unexpected error occurred. Please try again.')
-      }
-    } catch (error) {
-      console.error("Error during login", error)
-      setLoginError('An unexpected error occurred. Please try again.')
-    } finally {
-      setIsLoading(false)
-    }
-  }
+    login(formData)
+}
 
   return (
     <div className="min-h-screen relative w-full bg-gradient-to-br from-[#DBEAFE] to-white ">
@@ -184,9 +152,9 @@ export default function Login() {
               <Button 
                 type="submit" 
                 className="w-full bg-[#2563EB]" 
-                disabled={isLoading}
+                disabled={loading}
               >
-                {isLoading ? (
+                {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Logging in...

@@ -3,16 +3,18 @@ import { Button } from "@/components/ui/button";
 import { NotebookCard } from "@/components/notebook-card";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useGlobalContext } from '@/context/GlobalContext';
+import { useApp } from '@/context/AppContext';
 import CreditsModal from "@/components/modals/creditsModal";
 import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import notebook from "@/assets/notebook.png";
 import withAuth from '@/components/withAuth';
+import { useAuth } from "@/context/AuthContext";
 
 const  NotebooksPage= () => {
   const router = useRouter();
-  const { notebooks, setNotebooks, user, fetchUserDetails,  } = useGlobalContext();
+  const { notebooks, setNotebooks, fetchUserDetails,  } = useApp();
+  const {user} = useAuth()
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [showModal, setShowModal] = useState<boolean>(false);

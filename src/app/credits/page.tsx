@@ -2,17 +2,18 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useGlobalContext } from '@/context/GlobalContext'
+import { useApp } from '@/context/AppContext'
 import withAuth from '@/components/withAuth'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Loader2 } from 'lucide-react'
+import { useAuth } from '@/context/AuthContext'
 
 const CreditsPage = () => {
   const router = useRouter()
-  const { user } = useGlobalContext()
+  const { user } = useAuth()
   const [addCredits, setAddCredits] = useState('')
   const [errors, setErrors] = useState<{[key: string]: string}>({})
   const [isLoading, setIsLoading] = useState(false)
