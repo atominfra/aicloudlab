@@ -106,8 +106,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
             title={isRunning ? 'Pause' : 'Start'}
             className={`text-gray-400 min-w-0 hover:cursor-pointer dark:hover:text-yellow-500 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             onClick={handleToggle}
-            // @ts-expect-error s
-            disabled={loading}
+            // @ts-expect-error error            disabled={loading}
           >
             {loading ? (
               <CircularProgress className="text-black" size={24}/> 
@@ -127,8 +126,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
           </div>
           
             <div
-            // @ts-expect-error s
-              disabled={status !== 'running'}
+            // @ts-expect-error error              disabled={status !== 'running'}
               className={`font-poppins   capitalize flex items-center justify-center hover:cursor-pointer ${status !== 'running' ? "text-[#b0b0b0]":"text-[#111827] hover:text-gray-600"}`}
               onClick={()=>{
                 if(status === 'running'){
@@ -155,8 +153,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
             title={isRunning ? 'Pause' : 'Start'}
             className={`text-gray-400 min-w-0 flex items-center  hover:cursor-pointer dark:hover:text-yellow-500 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             onClick={handleToggle}
-            // @ts-expect-error s
-            disabled={loading}
+            // @ts-expect-error error            disabled={loading}
           >
             {loading ? (
               <div className="w-full flex justify-center items-center">

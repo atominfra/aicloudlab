@@ -48,8 +48,7 @@ export const AppProvider = ({ children }) => {
       
           const responseData = await response.json();
           console.log('responseData', responseData);
-          // @ts-expect-error s
-          setUser((prevUser: User) => ({...prevUser, ...responseData.data}));        } catch (error) {
+          // @ts-expect-error error          setUser((prevUser: User) => ({...prevUser, ...responseData.data}));        } catch (error) {
           // Handle error of type `unknown`
           if (error instanceof Error) {
             console.error('Error fetching user data:', error.message);
