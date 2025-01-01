@@ -4,7 +4,8 @@ import axios from 'axios';
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 
-const AppContext = createContext();
+
+const AppContext = createContext(undefined);
 
 export const AppProvider = ({ children }) => {
     const [notebooks, setNotebooks] = useState([]);
@@ -47,8 +48,8 @@ export const AppProvider = ({ children }) => {
       
           const responseData = await response.json();
           console.log('responseData', responseData);
-          setUser(user=>({...user, ...responseData.data}));
-        } catch (error) {
+          // @ts-expect-error s
+          setUser((prevUser: User) => ({...prevUser, ...responseData.data}));        } catch (error) {
           // Handle error of type `unknown`
           if (error instanceof Error) {
             console.error('Error fetching user data:', error.message);

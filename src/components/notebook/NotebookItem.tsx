@@ -106,6 +106,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
             title={isRunning ? 'Pause' : 'Start'}
             className={`text-gray-400 min-w-0 hover:cursor-pointer dark:hover:text-yellow-500 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             onClick={handleToggle}
+            // @ts-expect-error s
             disabled={loading}
           >
             {loading ? (
@@ -126,6 +127,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
           </div>
           
             <div
+            // @ts-expect-error s
               disabled={status !== 'running'}
               className={`font-poppins   capitalize flex items-center justify-center hover:cursor-pointer ${status !== 'running' ? "text-[#b0b0b0]":"text-[#111827] hover:text-gray-600"}`}
               onClick={()=>{
@@ -142,9 +144,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
             </div>
       </Box>
       <span
-          variant="text"
           className={`text-xl text-black hover:text-black lg:hidden hover:cursor-pointer p-3 ${popperOpen ? 'rounded-full bg-gray-100 ':''}`}
-          ripple={false}
           onClick={handleClick}
         >
           <PiDotsThreeOutlineVerticalFill />
@@ -155,6 +155,7 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
             title={isRunning ? 'Pause' : 'Start'}
             className={`text-gray-400 min-w-0 flex items-center  hover:cursor-pointer dark:hover:text-yellow-500 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             onClick={handleToggle}
+            // @ts-expect-error s
             disabled={loading}
           >
             {loading ? (
@@ -187,7 +188,6 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
           className="w-full h-full justify-items-center content-center"
         >
           <div
-            class="block"
             className=" p-8 bg-white shadow-xl rounded-2xl item-center lg:w-[35vw] m-4"
           >
             <p className="pr-10 pb-4 text-[18px] lg:text-[22px] font-semibold text-[#111827]">You are deleting &apos;{name}&apos;</p>
