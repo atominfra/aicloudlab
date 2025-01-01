@@ -67,16 +67,14 @@ const AccountButton = ({ account , userName, api}) => {
                   </div>
                 <div>
                 <p className="font-medium text-sm lg:text:base">{account.name}</p>
-              {/* @ts-expect-error  error*/}
               <p className="text-xs font-normal text-[#6B7280] ">{userName || 'Not connected'}</p>
                 </div>
               </div>
-              {/* @ts-expect-error  error*/}
               
               {userName?
                 <Button 
                 disabled={isRevoking}
-                variant="ghost" 
+                // variant="ghost" 
                 className={`text-blue-600 hover:text-blue-700  `}
                 onClick={handleDeleteConfirmation}
                 style={{ textTransform: 'none' }}
@@ -87,7 +85,7 @@ const AccountButton = ({ account , userName, api}) => {
               :<>
                 <Button 
                 disabled={isConnecting}
-                variant="ghost" 
+                // variant="ghost" 
                 className={`text-blue-600   `}
                 onClick={handleConnect}
                 style={{ textTransform: 'none' }}
