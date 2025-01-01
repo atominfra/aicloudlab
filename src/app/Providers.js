@@ -12,7 +12,7 @@ export default function Providers({ children }) {
   return <>
         <AuthProvider>
           <AppProvider>
-            <div className="flex h-screen bg-background text-foreground">
+            <div className="flex h-screen bg-neutral-100 text-foreground">
             {!hideSidebar && <Sidebar />}
               <div className="w-full">
               {!hideMobileNavs && <MobileTopBar/>}

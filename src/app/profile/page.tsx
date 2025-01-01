@@ -35,7 +35,7 @@ function ProfilePage() {
   if (isloading) return <Loader />
 
   return (
-    <div className="lg:min-h-screen min-h-[92dvh]  bg-background  lg:p-4  bg-neutral-100">
+    <div className="h-screen min-h-[92dvh]  bg-background  lg:p-4  bg-neutral-100">
       <Card className="mx-auto max-w-2xl border-none shadow-none bg-neutral-100">
         <CardHeader className="space-y-6">
           <div className=" items-center gap-4 lg:flex">
