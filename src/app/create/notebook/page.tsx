@@ -67,7 +67,7 @@ export default function CreateNotebook() {
     let payload = {
       name: formData.name,
       python_version: formData.pythonVersion,
-      packages: [formData.packages],
+      // packages: [formData.packages],
     }
 
     if (formData.githubURL && formData.githubURL !== '') {
