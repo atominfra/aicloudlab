@@ -68,6 +68,7 @@ export default function CreateNotebook() {
       name: formData.name,
       python_version: formData.pythonVersion,
       // packages: [formData.packages],
+      packages: [],
     }
 
     if (formData.githubURL && formData.githubURL !== '') {
