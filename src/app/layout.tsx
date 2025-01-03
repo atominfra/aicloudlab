@@ -22,8 +22,8 @@ const geistMono = localFont({
 });
 
 export const metadata = {
-  title: "AI Cloud Lab",
-  description: "Seamless AI development, deployment and monitoring in Cloud all through one interface!",
+  title: "Atom Infra",
+  description: "Democratising Compute - Seamlessly manage deployments across various providers through a consistent and user-friendly interface",
   icons: {
     icon: '/favicon.ico',
   },
