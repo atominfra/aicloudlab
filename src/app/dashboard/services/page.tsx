@@ -27,7 +27,32 @@ type Service = {
   notebook_url: string
   python_version: string
 }
-
+const mockServices = [
+  {
+    id: "1",
+    name: "InboundJs",
+    status: "running",
+    memory: "500 MB",
+    cpu: "0.5",
+    replicas: 5
+  },
+  {
+    id: "2",
+    name: "AuthService",
+    status: "stopped",
+    memory: "1 GB",
+    cpu: "1.0",
+    replicas: 3
+  },
+  {
+    id: "3",
+    name: "PaymentAPI",
+    status: "error",
+    memory: "2 GB",
+    cpu: "2.0",
+    replicas: 2
+  }
+]
 const ServicesPage = () => {
   const router = useRouter()
   const { setServices, fetchUserDetails } = useApp()
@@ -131,7 +156,7 @@ const ServicesPage = () => {
           Create
         </Button>
       </div>
-      {services.length === 0 ? (
+      {mockServices.length === 0 ? (
         <Box className="flex flex-col justify-center items-center lg:h-[80vh] h-[70dvh] w-full">
           <Router 
             className="w-[100px] h-[100px] text-neutral-300"
@@ -142,7 +167,7 @@ const ServicesPage = () => {
         </Box>
       ) : (
         <div className="flex flex-col items-center lg:h-[80vh] h-[70vh] w-full">
-          {services.map((service) => (
+          {mockServices.map((service) => (
             // @ts-expect-error build
             <ServiceCard
               key={service.id}
