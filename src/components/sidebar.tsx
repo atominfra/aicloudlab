@@ -35,6 +35,22 @@ export function Sidebar() {
         {/* <ThemeToggle /> */}
       <nav className="flex-1 p-4">
         <ul className="space-y-2">
+        <li>
+            <Link
+              href="/dashboard/services"
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-lg text-foreground ",
+                pathname === '/dashboard/services'  ? "bg-blue-600 text-white":"hover:bg-accent",
+
+              )}
+            >
+              <Router size={20} />
+              {/* <Image
+              alt="nodes"
+              src={nodeIcon}/> */}
+              <span>Services</span>
+            </Link>
+          </li>
           <li>
             <Link
               href="/dashboard/notebooks"
@@ -62,22 +78,6 @@ export function Sidebar() {
               alt="nodes"
               src={nodeIcon}/> */}
               <span>Nodes</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/dashboard/services"
-              className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-lg text-foreground ",
-                pathname === '/dashboard/services'  ? "bg-blue-600 text-white":"hover:bg-accent",
-
-              )}
-            >
-              <Router size={20} />
-              {/* <Image
-              alt="nodes"
-              src={nodeIcon}/> */}
-              <span>Services</span>
             </Link>
           </li>
         </ul>
