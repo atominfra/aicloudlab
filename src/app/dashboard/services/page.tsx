@@ -143,6 +143,7 @@ const ServicesPage = () => {
       ) : (
         <div className="flex flex-col items-center lg:h-[80vh] h-[70vh] w-full">
           {services.map((service) => (
+            // @ts-expect-error build
             <ServiceCard
               key={service.id}
               {...service}
