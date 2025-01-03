@@ -10,17 +10,19 @@ import { cn } from "@/lib/utils"
 import hameMenu from "@/assets/hammenu.svg"
 import { useApp } from '@/context/AppContext'
 import { useAuth } from '@/context/AuthContext'
+import navItems from './navbar/navitems'
 export default function MobileTopBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const router = useRouter()
   const {user} = useAuth()
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen)
 
-  const navItems = [
-    { href: '/dashboard/notebooks', icon: Book, label: 'Notebooks' },
-    { href: '/dashboard/nodes', icon: Cpu, label: 'Nodes' },
-    // { href: '/profile', icon: User, label: 'Profile' },
-  ]
+  // const navItems = [
+  //   { href: '/dashboard/notebooks', icon: Book, label: 'Notebooks' },
+  //   { href: '/dashboard/notebooks', icon: Book, label: 'Notebooks' },
+  //   { href: '/dashboard/nodes', icon: Cpu, label: 'Nodes' },
+  //   // { href: '/profile', icon: User, label: 'Profile' },
+  // ]
 
 
       // prefetch routes for faster navigation
