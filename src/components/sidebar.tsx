@@ -64,6 +64,22 @@ export function Sidebar() {
               <span>Nodes</span>
             </Link>
           </li>
+          <li>
+            <Link
+              href="/dashboard/services"
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-lg text-foreground ",
+                pathname === '/dashboard/nodes'  ? "bg-blue-600 text-white":"hover:bg-accent",
+
+              )}
+            >
+              <Router size={20} />
+              {/* <Image
+              alt="nodes"
+              src={nodeIcon}/> */}
+              <span>Services</span>
+            </Link>
+          </li>
         </ul>
       </nav>
       <div className="p-4 border-t border-border">
