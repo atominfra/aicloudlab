@@ -4,7 +4,7 @@ import CustomButton from '../button';
 
 interface ConfirmationModalProps {
   open: boolean;
-  message: string;
+  // message: string;
   onConfirm: () => void;
   onCancel: () => void;
   account: {

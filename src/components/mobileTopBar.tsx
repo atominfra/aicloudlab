@@ -8,11 +8,12 @@ import { useRouter } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import hameMenu from "@/assets/hammenu.svg"
-import { useGlobalContext } from '@/context/GlobalContext'
+import { useApp } from '@/context/AppContext'
+import { useAuth } from '@/context/AuthContext'
 export default function MobileTopBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const router = useRouter()
-  const {user} = useGlobalContext()
+  const {user} = useAuth()
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen)
 
   const navItems = [
@@ -30,7 +31,7 @@ export default function MobileTopBar() {
 
   return (
     <>
-      <Box className="lg:hidden w-full flex justify-between items-center select-none px-8 lg:px-10 py-4 shadow-lg bg-white h-[8vh]">
+      <Box className="lg:hidden w-full flex justify-between items-center select-none px-8 lg:px-10 py-4 shadow-lg bg-white h-[8dvh] ">
         <Link className="flex items-center" href={`/dashboard`}>
           <Image 
             src={'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png'}

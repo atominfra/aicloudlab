@@ -3,16 +3,18 @@ import { Button } from "@/components/ui/button";
 import { NotebookCard } from "@/components/notebook-card";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useGlobalContext } from '@/context/GlobalContext';
+import { useApp } from '@/context/AppContext';
 import CreditsModal from "@/components/modals/creditsModal";
 import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import notebook from "@/assets/notebook.png";
 import withAuth from '@/components/withAuth';
+import { useAuth } from "@/context/AuthContext";
 
 const  NotebooksPage= () => {
   const router = useRouter();
-  const { notebooks, setNotebooks, user, fetchUserDetails,  } = useGlobalContext();
+  const { notebooks, setNotebooks, fetchUserDetails,  } = useApp();
+  const {user} = useAuth()
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -88,7 +90,7 @@ const  NotebooksPage= () => {
   }, []);
 
   return (
-    <div className="p-4 lg:p-6 bg-neutral-100 lg:h-screen h-[92vh]  justify-center items-center">
+    <div className="p-4  bg-neutral-100 lg:h-screen h-[92dvh]   justify-center items-center">
       <div className="flex items-center justify-between lg:mb-6 mb-5 h-[6vh]">
         <h1 className="text-lg lg:text-2xl font-semibold">Notebooks</h1>
         <Button className="bg-blue-600" onClick={handleCreateClick}>
@@ -97,7 +99,7 @@ const  NotebooksPage= () => {
         </Button>
       </div>
       {notebooks.length === 0 ? (
-          <Box className="flex flex-col justify-center items-center lg:h-[80vh] h-[70vh] w-full">
+          <Box className="flex flex-col justify-center items-center lg:h-[80vh] h-[70dvh]  w-full">
           <Image
             src={notebook}
             width={1000}

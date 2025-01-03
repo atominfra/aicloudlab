@@ -14,13 +14,13 @@ import {
 import Image from "next/image"
 import { useRouter } from 'next/navigation'
 import { createNotebook } from '@/app/api/notebooks/api'
-import { useGlobalContext } from '@/context/GlobalContext'
+import { useApp } from '@/context/AppContext'
 import notebookInput from "@/assets/notebookInput.svg"
 import githubInput from "@/assets/githubInput.svg"
 
 export default function CreateNotebook() {
   const router = useRouter()
-  const { auth } = useGlobalContext()
+  const { auth } = useApp()
   const [formData, setFormData] = useState({
     name: '',
     githubURL: '',
@@ -67,7 +67,8 @@ export default function CreateNotebook() {
     let payload = {
       name: formData.name,
       python_version: formData.pythonVersion,
-      packages: [formData.packages],
+      // packages: [formData.packages],
+      packages: [],
     }
 
     if (formData.githubURL && formData.githubURL !== '') {
@@ -90,7 +91,7 @@ export default function CreateNotebook() {
   }
 
   return (
-    <div className='lg:p-6 bg-neutral-100 lg:h-screen flex justify-center items-center h-[92vh]'>
+    <div className='lg:p-6 bg-neutral-100 lg:h-screen flex justify-center items-center h-[92dvh]  '>
       <div className="max-w-2xl mx-auto p-4 lg:p-6 w-full ">
       <div className="text-center mb-8 relative">
         <h1 className="lg:text-2xl text-lg font-semibold mb-2">Create New Notebook</h1>

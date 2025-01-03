@@ -8,13 +8,13 @@ import { Loader2 } from 'lucide-react'
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { useGlobalContext } from '@/context/GlobalContext'
+import { useApp } from '@/context/AppContext'
 import withAuth from '@/components/withAuth'
 import { Separator } from '@/components/ui/separator'
 
 const CheckoutPage = () => {
   const router = useRouter()
-  const { fetchUserDetails } = useGlobalContext()
+  const { fetchUserDetails } = useApp()
   const [isPaymentLoading, setIsPaymentLoading] = useState(false)
   const searchParams = useSearchParams()
   const value = searchParams.get('value')

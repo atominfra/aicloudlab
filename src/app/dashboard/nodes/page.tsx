@@ -7,13 +7,13 @@ import noNodesIcon from "@/assets/noNodesIcon.svg"
 import Image from "next/image";
 import { Router } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useGlobalContext } from "@/context/GlobalContext";
+import { useApp } from "@/context/AppContext";
 export default function NodesPage() {
   const [nodes, setNodes] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const router = useRouter()
-  const {node_page_status} = useGlobalContext()
+  const {node_page_status} = useApp()
   const fetchNodes = async () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/e2e/node`, {
@@ -58,7 +58,7 @@ export default function NodesPage() {
     }, [router]);
 
   return (
-    <div className="p-4 lg:p-6 bg-neutral-100 lg:h-screen h-[92vh]  justify-center items-center">
+    <div className="p-4  bg-neutral-100 lg:h-screen h-[92dvh]   justify-center items-center">
       <div className="flex items-center justify-between lg:mb-6 mb-5 h-[6vh]">
         <h1 className="text-lg lg:text-2xl font-semibold">Nodes</h1>
         <Button className="bg-blue-600" onClick={()=> router.push("/create/node")} disabled={!node_page_status}>
@@ -83,7 +83,7 @@ export default function NodesPage() {
               node.isDeleted === false && <NodeCard key={node.name} {...node} fetchNodes={fetchNodes} />
             )
           ) : (
-            <Box className="flex flex-col gap-2 justify-center items-center lg:h-[80vh] h-[70vh] w-full bg-neutral-100">
+            <Box className="flex flex-col gap-2 justify-center items-center lg:h-[80vh] h-[70dvh]  w-full bg-neutral-100">
               <Image
                 src={noNodesIcon}
                 width={1000}

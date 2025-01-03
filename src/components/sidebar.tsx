@@ -4,13 +4,15 @@ import { Book, Cpu, Router } from 'lucide-react'
 import { cn } from "@/lib/utils"
 import { usePathname, useRouter } from 'next/navigation'
 import Image from "next/image"
-import { useGlobalContext } from '@/context/GlobalContext';
+import { useApp } from '@/context/AppContext';
 import { useEffect } from "react"
+import nodeIcon from "@/assets/node.webp"
+import { useAuth } from "@/context/AuthContext"
 // import { ThemeToggle } from "./theme-toggle"
 export function Sidebar() {
   const pathname = usePathname()
   console.log("pathname",pathname)
-  const { user } = useGlobalContext()
+  const { user } = useAuth()
   const router = useRouter()
 
   useEffect(()=>{
@@ -18,8 +20,8 @@ export function Sidebar() {
     router.prefetch("/credits")
   },[])
   return (
-    <div className="w-60 bg-card border-r border-border  flex-col h-full hidden lg:flex">
-        <div className="flex px-4 py-3 border-b">
+    <div className="w-60 bg-card border-r border-border  flex-col h-screen hidden lg:flex">
+        <div className="flex px-4 pt-4 pb-2 border-b">
         <Link href="/" className="flex items-center gap-2 px-4 py-2 rounded-lg text-foreground">
           <Image 
           src='https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png'
@@ -56,6 +58,9 @@ export function Sidebar() {
               )}
             >
               <Cpu size={20} />
+              {/* <Image
+              alt="nodes"
+              src={nodeIcon}/> */}
               <span>Nodes</span>
             </Link>
           </li>

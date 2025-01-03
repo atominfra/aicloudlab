@@ -1,10 +1,14 @@
 import localFont from "next/font/local";
 import Script from "next/script";
 import "./globals.css";
-import RootLayoutClient from '../app/RootLayoutClient';
+import Providers from '../app/Providers';
 import { Toaster } from "react-hot-toast";
 import { Sidebar } from "@/components/sidebar";
-
+import {Poppins} from "@next/font/google";
+const poppins =Poppins({
+  subsets: ["latin"],
+  weight: ["400"],
+});
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -48,10 +52,10 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}>
-        <RootLayoutClient>
+      <body className={`${poppins.className}  antialiased bg-white`}>
+        <Providers>
           {children}
-        </RootLayoutClient>
+        </Providers>
         <Toaster />
 
       </body>
