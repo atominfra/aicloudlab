@@ -29,9 +29,10 @@ export function Sidebar() {
               width={30}
               height={30}
               alt="Atom Infra Logo"
-              className='h-[30px] w-[30px]'
+              className='h-[27px] w-[27px]'
               priority
-            /> <div className='text-[28px] font-[700] tracking-tight'>
+            />
+             <div className='text-[24px] font-[700] tracking-tight'>
                 tom Infra
               </div>
             </div>
