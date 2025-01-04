@@ -7,7 +7,7 @@ import { Sidebar } from "@/components/sidebar";
 import {Poppins} from "@next/font/google";
 const poppins =Poppins({
   subsets: ["latin"],
-  weight: ["400"],
+  weight: ["400","900","800","700","600","500","400","300","200"],
 });
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
