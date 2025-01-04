@@ -189,7 +189,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       return;
     }
   
-    let deploymentData = {
+    const deploymentData = {
       name: formData.name,
       image_url: formData.image,
       target_port: formData.target_port,
