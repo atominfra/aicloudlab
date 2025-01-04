@@ -125,7 +125,7 @@ export function ServiceCard({
               variant="outline" 
               size="sm"
               className="text-gray-600 hover:text-gray-900 w-full"
-              onClick={()=>router.push(service_url)}
+              onClick={()=>    window.open (service_url, '_ blank')}
             >
               <ExternalLink className="h-4 w-4 mr-1.5" />
               Visit

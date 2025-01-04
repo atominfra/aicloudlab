@@ -75,6 +75,9 @@ const ServicesPage = () => {
       if (response.ok) {
         const responseData = await response.json()
         console.log("responseData.data.services", responseData.data.deployments)
+        if(responseData.data.deployments.length === 0){
+          router.push('/create/service')
+        }
         setServices(responseData.data.deployments)
       } else {
         const errorData = await response.json()
