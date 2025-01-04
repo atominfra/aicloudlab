@@ -14,8 +14,8 @@ import Image from "next/image"
 import { useRouter } from 'next/navigation'
 import { useApp } from '@/context/AppContext'
 import notebookInput from "@/assets/notebookInput.svg"
-import githubInput from "@/assets/githubInput.svg"
-import { GalleryVerticalEnd } from 'lucide-react'
+import { GalleryVerticalEnd, Eye, EyeOff } from 'lucide-react'
+
 interface EnvVariable {
   key: string
   value: string
@@ -28,14 +28,18 @@ export default function CreateService() {
     name: '',
     image: '',
     memoryLimit: '',
+    customMemoryLimit: '',
     cpuLimit: '',
+    customCpuLimit: '',
     registryCredential: '',
+    customRegistryCredential: '',
     replicas: '',
   })
-  const [envVariables, setEnvVariables] = useState([{ key: '', value: '' }])
+  const [envVariables, setEnvVariables] = useState<EnvVariable[]>([{ key: '', value: '' }])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isNameTouched, setIsNameTouched] = useState(false)
+  const [showEnvVariables, setShowEnvVariables] = useState(false)
 
   useEffect(() => {
     return () => {
@@ -50,6 +54,11 @@ export default function CreateService() {
       setIsNameTouched(true)
       setError(null) 
     }
+  }
+
+  const handleNumericChange = (name: string, value: string) => {
+    const numericValue = value.replace(/\D/g, '');
+    setFormData(prev => ({ ...prev, [name]: numericValue }))
   }
 
   const handleEnvVariableChange = (index: number, field: 'key' | 'value', value: string) => {
@@ -101,6 +110,15 @@ export default function CreateService() {
     }
   }
 
+  const handleAddNewRegistry = () => {
+    // Store the current form data in localStorage
+    localStorage.setItem('createServiceFormData', JSON.stringify(formData));
+    localStorage.setItem('createServiceEnvVariables', JSON.stringify(envVariables));
+    
+    // Redirect to the create registry page
+    router.push('/create/registery');
+  }
+
   return (
     <div className='lg:p-6 bg-neutral-100 lg:h-screen h-[92dvh] overflow-auto'>
       <div className="max-w-2xl mx-auto p-4 lg:p-6 w-full mt-4">
@@ -109,7 +127,7 @@ export default function CreateService() {
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
-          {/* <div className="space-y-2">
+          <div className="space-y-2">
             <label htmlFor="service-name" className="text-sm font-medium text-[#374151]">
               Service Name*
             </label>
@@ -138,7 +156,7 @@ export default function CreateService() {
             {isNameTouched && (formData.name.includes('_') || formData.name.includes(' ')) && (
               <p className="text-red-500 text-sm">Name cannot contain an underscore (_) or spaces.</p>
             )}
-          </div> */}
+          </div>
 
           <div className="space-y-2">
             <label htmlFor="image" className="text-sm font-medium text-[#374151]">
@@ -160,32 +178,6 @@ export default function CreateService() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[#374151]">
-              Environment Variables
-            </label>
-            {envVariables.map((variable, index) => (
-              <div key={index} className="flex gap-2">
-                <Input
-                  placeholder="Key"
-                  value={variable.key}
-                  onChange={(e) => handleEnvVariableChange(index, 'key', e.target.value)}
-                />
-                <Input
-                  placeholder="Value"
-                  value={variable.value}
-                  onChange={(e) => handleEnvVariableChange(index, 'value', e.target.value)}
-                />
-                <Button type="button" variant="outline" onClick={() => removeEnvVariable(index)}>
-                  Remove
-                </Button>
-              </div>
-            ))}
-            <Button type="button" variant="outline" onClick={addEnvVariable}>
-              Add Variable
-            </Button>
-          </div>
-
-          <div className="space-y-2">
             <label htmlFor="memory-limit" className="text-sm font-medium text-[#374151]">
               Memory Limit
             </label>
@@ -197,12 +189,22 @@ export default function CreateService() {
                 <SelectValue placeholder="Select memory limit" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="512mb">512 MB</SelectItem>
-                <SelectItem value="1gb">1 GB</SelectItem>
-                <SelectItem value="2gb">2 GB</SelectItem>
-                <SelectItem value="4gb">4 GB</SelectItem>
+                <SelectItem value="512">512 MB</SelectItem>
+                <SelectItem value="1024">1 GB</SelectItem>
+                <SelectItem value="2048">2 GB</SelectItem>
+                <SelectItem value="4096">4 GB</SelectItem>
+                <SelectItem value="custom">Custom</SelectItem>
               </SelectContent>
             </Select>
+            {formData.memoryLimit === 'custom' && (
+              <Input
+                type="text"
+                placeholder="Enter custom memory limit (MB)"
+                value={formData.customMemoryLimit}
+                onChange={(e) => handleNumericChange('customMemoryLimit', e.target.value)}
+                className="mt-2"
+              />
+            )}
           </div>
 
           <div className="space-y-2">
@@ -221,8 +223,18 @@ export default function CreateService() {
                 <SelectItem value="1">1 CPU</SelectItem>
                 <SelectItem value="2">2 CPU</SelectItem>
                 <SelectItem value="4">4 CPU</SelectItem>
+                <SelectItem value="custom">Custom</SelectItem>
               </SelectContent>
             </Select>
+            {formData.cpuLimit === 'custom' && (
+              <Input
+                type="text"
+                placeholder="Enter custom CPU limit (cores)"
+                value={formData.customCpuLimit}
+                onChange={(e) => handleNumericChange('customCpuLimit', e.target.value)}
+                className="mt-2"
+              />
+            )}
           </div>
 
           <div className="space-y-2">
@@ -231,7 +243,13 @@ export default function CreateService() {
             </label>
             <Select 
               value={formData.registryCredential} 
-              onValueChange={(value) => handleChange('registryCredential', value)}
+              onValueChange={(value) => {
+                if (value === 'add_new') {
+                  handleAddNewRegistry();
+                } else {
+                  handleChange('registryCredential', value);
+                }
+              }}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select registry" />
@@ -240,8 +258,19 @@ export default function CreateService() {
                 <SelectItem value="personal">Personal (ghcr.io)</SelectItem>
                 <SelectItem value="docker">Docker Hub</SelectItem>
                 <SelectItem value="gcr">Google Container Registry</SelectItem>
+                <SelectItem value="custom">Custom</SelectItem>
+                <SelectItem value="add_new">Add New</SelectItem>
               </SelectContent>
             </Select>
+            {formData.registryCredential === 'custom' && (
+              <Input
+                type="text"
+                placeholder="Enter custom registry credential"
+                value={formData.customRegistryCredential}
+                onChange={(e) => handleChange('customRegistryCredential', e.target.value)}
+                className="mt-2"
+              />
+            )}
           </div>
 
           <div className="space-y-2">
@@ -260,8 +289,68 @@ export default function CreateService() {
                 <SelectItem value="2">2 Replicas</SelectItem>
                 <SelectItem value="3">3 Replicas</SelectItem>
                 <SelectItem value="4">4 Replicas</SelectItem>
+                <SelectItem value="custom">Custom</SelectItem>
               </SelectContent>
             </Select>
+            {formData.replicas === 'custom' && (
+              <Input
+                type="text"
+                placeholder="Enter custom number of replicas"
+                value={formData.customReplicas}
+                onChange={(e) => handleNumericChange('customReplicas', e.target.value)}
+                className="mt-2"
+              />
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <label className="text-sm font-medium text-[#374151]">
+                Environment Variables
+              </label>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowEnvVariables(!showEnvVariables)}
+                className="flex items-center"
+              >
+                {showEnvVariables ? (
+                  <>
+                    <EyeOff className="mr-2 h-4 w-4" />
+                    Hide
+                  </>
+                ) : (
+                  <>
+                    <Eye className="mr-2 h-4 w-4" />
+                    View
+                  </>
+                )}
+              </Button>
+            </div>
+            {showEnvVariables && (
+              <>
+                {envVariables.map((variable, index) => (
+                  <div key={index} className="flex gap-2">
+                    <Input
+                      placeholder="Key"
+                      value={variable.key}
+                      onChange={(e) => handleEnvVariableChange(index, 'key', e.target.value)}
+                    />
+                    <Input
+                      placeholder="Value"
+                      value={variable.value}
+                      onChange={(e) => handleEnvVariableChange(index, 'value', e.target.value)}
+                    />
+                    <Button type="button" variant="outline" onClick={() => removeEnvVariable(index)}>
+                      Remove
+                    </Button>
+                  </div>
+                ))}
+                <Button type="button" variant="outline" onClick={addEnvVariable}>
+                  Add Variable
+                </Button>
+              </>
+            )}
           </div>
 
           {error && isNameTouched && (
