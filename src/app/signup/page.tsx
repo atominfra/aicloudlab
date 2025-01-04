@@ -52,7 +52,7 @@ export default function Signup() {
 
   useEffect(() => {
     if (auth && auth !== '') {
-      window.location.href = '/dashboard/notebooks'
+      window.location.href = '/dashboard'
     }
   }, [auth])
 
@@ -82,11 +82,10 @@ export default function Signup() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData({ ...formData, [name]: value })
-    // Clear errors when user starts typing
     if (errors[name as keyof FormErrors]) {
       setErrors({ ...errors, [name]: undefined })
     }
-    setSignupError('') // Clear signup error when user makes changes
+    setSignupError('')
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -128,172 +127,164 @@ export default function Signup() {
   }
 
   return (
-    <div className="min-h-screen relative w-full bg-gradient-to-br from-[#DBEAFE] to-white">
-      <div className='p-4 sm:p-6 absolute hidden lg:block'>
-        <Image
-          src='https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png'
-          width={32}
-          height={32}
-          alt="AI Cloud Lab Logo"
-          className="sm:w-10 sm:h-10"
-        />
-      </div>
-      <div className="container mx-auto min-h-screen flex items-center justify-center px-4 py-8 lg:py-16">
-        <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-8 items-center">
-          {/* Left Section */}
-          <div className="flex flex-col items-center text-center lg:items-start lg:text-left space-y-4 sm:space-y-6">
-            <h1 className="text-xl sm:text-2xl lg:text-4xl font-semibold text-gray-900 dark:text-white">
-              Welcome to <span className="font-bold">AI Cloud Lab!</span>
-            </h1>
-            <p className="text-sm sm:text-base lg:text-lg text-gray-600 dark:text-gray-300">
-              Seamless AI <span className="font-semibold">development,</span>{' '}
-              <span className="font-semibold">deployment</span> and{' '}
-              <span className="font-semibold">monitoring</span> in Cloud all through one interface!
-            </p>
+    <div className="min-h-screen relative w-full bg-gradient-to-br from-[#DBEAFE] to-white ">
+      <div className='p-4 lg:absolute'>
+        <div className='flex items-center '>
+          <Image
+            src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
+            width={30}
+            height={30}
+            alt="Atom Infra Logo"
+            className='h-[30px] w-[30px]'
+            priority
+          /> 
+          <div className='text-[28px] font-[700] tracking-tight'>
+            tom Infra
           </div>
-
-          {/* Right Section - Signup Form */}
-          <div className="w-full max-w-md mx-auto space-y-4 sm:space-y-6 bg-white p-4 sm:p-6 rounded-[8px]">
-            <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
-              <div className="space-y-1 sm:space-y-2">
-                <Label htmlFor="full_name" className='text-[12px] sm:text-[14px] font-medium'>Full Name</Label>
-                <div className="relative flex items-center">
-                  <MdPerson className="absolute left-3 text-gray-400" />
-                  <Input
-                    id="full_name"
-                    name="full_name"
-                    type="text"
-                    value={formData.full_name}
-                    onChange={handleChange}
-                    className={`pl-10 pr-3 py-1 sm:py-2 text-sm sm:text-base border rounded-md w-full ${
-                      errors.full_name ? "border-red-500" : "border-gray-300"
-                    }`}
-                    placeholder="Enter your full name"
-                  />
-                </div>
-                {errors.full_name && (
-                  <p className="text-xs sm:text-sm text-red-500">{errors.full_name}</p>
-                )}
+        </div>
+      </div>
+      
+      <div className="container mx-auto min-h-screen flex items-center justify-center px-4">
+        <div className="w-full max-w-md space-y-6 bg-white p-6 rounded-[8px]">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="full_name" className='text-[14px] font-medium'>Full Name</Label>
+              <div className="relative flex items-center">
+                <MdPerson className="absolute left-3 text-gray-400" />
+                <Input
+                  id="full_name"
+                  name="full_name"
+                  type="text"
+                  value={formData.full_name}
+                  onChange={handleChange}
+                  className={`pl-10 pr-3 py-2 border rounded-md w-full ${
+                    errors.full_name ? "border-red-500" : "border-gray-300"
+                  }`}
+                  placeholder="Enter your full name"
+                />
               </div>
-
-              <div className="space-y-1 sm:space-y-2">
-                <Label htmlFor="email" className='text-[12px] sm:text-[14px] font-medium'>Email</Label>
-                <div className="relative flex items-center">
-                  <MdEmail className="absolute left-3 text-gray-400" />
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    className={`pl-10 pr-3 py-1 sm:py-2 text-sm sm:text-base border rounded-md w-full ${
-                      errors.email ? "border-red-500" : "border-gray-300"
-                    }`}
-                    placeholder="Enter your email"
-                  />
-                </div>
-                {errors.email && (
-                  <p className="text-xs sm:text-sm text-red-500">{errors.email}</p>
-                )}
-              </div>
-
-              <div className="space-y-1 sm:space-y-2">
-                <Label htmlFor="phone" className='text-[12px] sm:text-[14px] font-medium'>Phone Number</Label>
-                <div className="relative flex items-center">
-                  <MdPhone className="absolute left-3 text-gray-400" />
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleChange}
-                    className={`pl-10 pr-3 py-1 sm:py-2 text-sm sm:text-base border rounded-md w-full ${
-                      errors.phone ? "border-red-500" : "border-gray-300"
-                    }`}
-                    placeholder="Enter your phone number"
-                  />
-                </div>
-                {errors.phone && (
-                  <p className="text-xs sm:text-sm text-red-500">{errors.phone}</p>
-                )}
-              </div>
-
-              <div className="space-y-1 sm:space-y-2">
-                <Label htmlFor="password" className='text-[12px] sm:text-[14px] font-medium'>Password</Label>
-                <div className="relative flex items-center">
-                  <MdLock className="absolute left-3 text-gray-400" />
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    className={`pl-10 pr-3 py-1 sm:py-2 text-sm sm:text-base border rounded-md w-full ${
-                      errors.password ? "border-red-500" : "border-gray-300"
-                    }`}
-                    placeholder="Enter your password"
-                  />
-                </div>
-                {errors.password && (
-                  <p className="text-xs sm:text-sm text-red-500">{errors.password}</p>
-                )}
-              </div>
-
-              <div className="space-y-1 sm:space-y-2">
-                <Label htmlFor="reEnterPassword" className='text-[12px] sm:text-[14px] font-medium'>Re-enter Password</Label>
-                <div className="relative flex items-center">
-                  <MdLock className="absolute left-3 text-gray-400" />
-                  <Input
-                    id="reEnterPassword"
-                    name="reEnterPassword"
-                    type="password"
-                    value={formData.reEnterPassword}
-                    onChange={handleChange}
-                    className={`pl-10 pr-3 py-1 sm:py-2 text-sm sm:text-base border rounded-md w-full ${
-                      errors.reEnterPassword ? "border-red-500" : "border-gray-300"
-                    }`}
-                    placeholder="Re-enter your password"
-                  />
-                </div>
-                {errors.reEnterPassword && (
-                  <p className="text-xs sm:text-sm text-red-500">{errors.reEnterPassword}</p>
-                )}
-              </div>
-
-              {signupError && (
-                <p className="text-xs sm:text-sm text-red-500 text-center">{signupError}</p>
+              {errors.full_name && (
+                <p className="text-sm text-red-500">{errors.full_name}</p>
               )}
-
-              <Button 
-                type="submit" 
-                className="w-full bg-[#2563EB] text-sm sm:text-base py-2 sm:py-3" 
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing up...
-                  </>
-                ) : (
-                  'Sign up'
-                )}
-              </Button>
-            </form>
-
-            <div className="relative flex items-center justify-center">
-              <span className="flex-1 border-t border-[#6B7280]" />
-              <span className="px-2 text-xs uppercase bg-white text-gray-500">or</span>
-              <span className="flex-1 border-t border-[#6B7280]" />
             </div>
 
-            <Button
-              variant="outline"
-              className="w-full border border-[#2563EB] text-[#2563EB] text-sm sm:text-base py-2 sm:py-3"
-              onClick={() => window.location.href = '/login'}
+            <div className="space-y-2">
+              <Label htmlFor="email" className='text-[14px] font-medium'>Email</Label>
+              <div className="relative flex items-center">
+                <MdEmail className="absolute left-3 text-gray-400" />
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={`pl-10 pr-3 py-2 border rounded-md w-full ${
+                    errors.email ? "border-red-500" : "border-gray-300"
+                  }`}
+                  placeholder="Enter your email"
+                />
+              </div>
+              {errors.email && (
+                <p className="text-sm text-red-500">{errors.email}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone" className='text-[14px] font-medium'>Phone Number</Label>
+              <div className="relative flex items-center">
+                <MdPhone className="absolute left-3 text-gray-400" />
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className={`pl-10 pr-3 py-2 border rounded-md w-full ${
+                    errors.phone ? "border-red-500" : "border-gray-300"
+                  }`}
+                  placeholder="Enter your phone number"
+                />
+              </div>
+              {errors.phone && (
+                <p className="text-sm text-red-500">{errors.phone}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password" className='text-[14px] font-medium'>Password</Label>
+              <div className="relative flex items-center">
+                <MdLock className="absolute left-3 text-gray-400" />
+                <Input
+                  id="password"
+                  name="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className={`pl-10 pr-3 py-2 border rounded-md w-full ${
+                    errors.password ? "border-red-500" : "border-gray-300"
+                  }`}
+                  placeholder="Enter your password"
+                />
+              </div>
+              {errors.password && (
+                <p className="text-sm text-red-500">{errors.password}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="reEnterPassword" className='text-[14px] font-medium'>Re-enter Password</Label>
+              <div className="relative flex items-center">
+                <MdLock className="absolute left-3 text-gray-400" />
+                <Input
+                  id="reEnterPassword"
+                  name="reEnterPassword"
+                  type="password"
+                  value={formData.reEnterPassword}
+                  onChange={handleChange}
+                  className={`pl-10 pr-3 py-2 border rounded-md w-full ${
+                    errors.reEnterPassword ? "border-red-500" : "border-gray-300"
+                  }`}
+                  placeholder="Re-enter your password"
+                />
+              </div>
+              {errors.reEnterPassword && (
+                <p className="text-sm text-red-500">{errors.reEnterPassword}</p>
+              )}
+            </div>
+
+            {signupError && (
+              <p className="text-sm text-red-500 text-center">{signupError}</p>
+            )}
+
+            <Button 
+              type="submit" 
+              className="w-full bg-[#2563EB]" 
+              disabled={isLoading}
             >
-              Log in
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing up...
+                </>
+              ) : (
+                'Sign up'
+              )}
             </Button>
+          </form>
+
+          <div className="relative flex items-center justify-center">
+            <span className="flex-1 border-t border-[#6B7280]" />
+            <span className="px-2 text-xs uppercase bg-white text-gray-500">or</span>
+            <span className="flex-1 border-t border-[#6B7280]" />
           </div>
+          
+          <Button
+            variant="outline"
+            className="w-full border border-[#2563EB] text-[#2563EB]"
+            onClick={() => window.location.href = '/login'}
+          >
+            Log in to existing account
+          </Button>
         </div>
       </div>
     </div>
