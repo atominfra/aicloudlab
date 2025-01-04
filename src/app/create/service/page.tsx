@@ -259,8 +259,8 @@ const CreateService: React.FC<CreateServiceProps> = () => {
     // localStorage.setItem('createServiceEnvVariables', JSON.stringify(env_variables));
     
     // Redirect to the create registry page
-    // router.push('/create/registery');
-    window.open ('/create/registery', '_ blank');
+    // router.push('/create/registry');
+    window.open ('/create/registry', '_ blank');
   }
 
   const refreshRegistries = async () => {
