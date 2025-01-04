@@ -59,8 +59,8 @@ export default function NodesPage() {
 
   return (
     <div className="p-4  bg-neutral-100 lg:h-screen h-[92dvh]   justify-center items-center">
-      <div className="flex items-center justify-between lg:mb-6 mb-5 h-[6vh]">
-        <h1 className="text-lg lg:text-2xl font-semibold">Nodes</h1>
+      <div className="flex items-center justify-end lg:mb-6 mb-5 h-[6vh]">
+        {/* <h1 className="text-lg lg:text-2xl font-semibold">Nodes</h1> */}
         <Button className="bg-blue-600" onClick={()=> router.push("/create/node")} disabled={!node_page_status}>
           <span className="">+</span>
           Create
