@@ -28,14 +28,11 @@ export default function CreateService() {
     name: '',
     image: '',
     memoryLimit: '',
-    customMemoryLimit: '',
     cpuLimit: '',
-    customCpuLimit: '',
     registryCredential: '',
-    customRegistryCredential: '',
     replicas: '',
+    envVariables: [{ key: '', value: '' }]
   })
-  const [envVariables, setEnvVariables] = useState<EnvVariable[]>([{ key: '', value: '' }])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isNameTouched, setIsNameTouched] = useState(false)
@@ -62,17 +59,25 @@ export default function CreateService() {
   }
 
   const handleEnvVariableChange = (index: number, field: 'key' | 'value', value: string) => {
-    const newVariables = [...envVariables]
-    newVariables[index][field] = value
-    setEnvVariables(newVariables)
+    setFormData(prev => {
+      const newEnvVariables = [...prev.envVariables]
+      newEnvVariables[index][field] = value
+      return { ...prev, envVariables: newEnvVariables }
+    })
   }
 
   const addEnvVariable = () => {
-    setEnvVariables([...envVariables, { key: '', value: '' }])
+    setFormData(prev => ({
+      ...prev,
+      envVariables: [...prev.envVariables, { key: '', value: '' }]
+    }))
   }
 
   const removeEnvVariable = (index: number) => {
-    setEnvVariables(envVariables.filter((_, i) => i !== index))
+    setFormData(prev => ({
+      ...prev,
+      envVariables: prev.envVariables.filter((_, i) => i !== index)
+    }))
   }
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -113,10 +118,10 @@ export default function CreateService() {
   const handleAddNewRegistry = () => {
     // Store the current form data in localStorage
     localStorage.setItem('createServiceFormData', JSON.stringify(formData));
-    localStorage.setItem('createServiceEnvVariables', JSON.stringify(envVariables));
+    // localStorage.setItem('createServiceEnvVariables', JSON.stringify(envVariables));
     
     // Redirect to the create registry page
-    router.push('/create/registery');
+    router.push('/create/registry');
   }
 
   return (
@@ -183,7 +188,13 @@ export default function CreateService() {
             </label>
             <Select 
               value={formData.memoryLimit} 
-              onValueChange={(value) => handleChange('memoryLimit', value)}
+              onValueChange={(value) => {
+                if (value === 'custom') {
+                  setFormData(prev => ({ ...prev, memoryLimit: '' }))
+                } else {
+                  handleChange('memoryLimit', value)
+                }
+              }}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select memory limit" />
@@ -196,12 +207,12 @@ export default function CreateService() {
                 <SelectItem value="custom">Custom</SelectItem>
               </SelectContent>
             </Select>
-            {formData.memoryLimit === 'custom' && (
+            {formData.memoryLimit === '' && (
               <Input
                 type="text"
                 placeholder="Enter custom memory limit (MB)"
-                value={formData.customMemoryLimit}
-                onChange={(e) => handleNumericChange('customMemoryLimit', e.target.value)}
+                value={formData.memoryLimit}
+                onChange={(e) => handleNumericChange('memoryLimit', e.target.value)}
                 className="mt-2"
               />
             )}
@@ -213,7 +224,13 @@ export default function CreateService() {
             </label>
             <Select 
               value={formData.cpuLimit} 
-              onValueChange={(value) => handleChange('cpuLimit', value)}
+              onValueChange={(value) => {
+                if (value === 'custom') {
+                  setFormData(prev => ({ ...prev, cpuLimit: '' }))
+                } else {
+                  handleChange('cpuLimit', value)
+                }
+              }}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select CPU limit" />
@@ -226,12 +243,12 @@ export default function CreateService() {
                 <SelectItem value="custom">Custom</SelectItem>
               </SelectContent>
             </Select>
-            {formData.cpuLimit === 'custom' && (
+            {formData.cpuLimit === '' && (
               <Input
                 type="text"
                 placeholder="Enter custom CPU limit (cores)"
-                value={formData.customCpuLimit}
-                onChange={(e) => handleNumericChange('customCpuLimit', e.target.value)}
+                value={formData.cpuLimit}
+                onChange={(e) => handleNumericChange('cpuLimit', e.target.value)}
                 className="mt-2"
               />
             )}
@@ -279,7 +296,13 @@ export default function CreateService() {
             </label>
             <Select 
               value={formData.replicas} 
-              onValueChange={(value) => handleChange('replicas', value)}
+              onValueChange={(value) => {
+                if (value === 'custom') {
+                  setFormData(prev => ({ ...prev, replicas: '' }))
+                } else {
+                  handleChange('replicas', value)
+                }
+              }}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select replicas" />
@@ -292,12 +315,12 @@ export default function CreateService() {
                 <SelectItem value="custom">Custom</SelectItem>
               </SelectContent>
             </Select>
-            {formData.replicas === 'custom' && (
+            {formData.replicas === '' && (
               <Input
                 type="text"
                 placeholder="Enter custom number of replicas"
-                value={formData.customReplicas}
-                onChange={(e) => handleNumericChange('customReplicas', e.target.value)}
+                value={formData.replicas}
+                onChange={(e) => handleNumericChange('replicas', e.target.value)}
                 className="mt-2"
               />
             )}
@@ -329,7 +352,7 @@ export default function CreateService() {
             </div>
             {showEnvVariables && (
               <>
-                {envVariables.map((variable, index) => (
+                {formData.envVariables.map((variable, index) => (
                   <div key={index} className="flex gap-2">
                     <Input
                       placeholder="Key"

@@ -43,60 +43,69 @@ export function ServiceCard({
               <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center mr-3">
                 <Server className="h-5 w-5 text-blue-600" />
               </div>
-              <div>
-                <h3 className="font-medium text-gray-900">{name}</h3>
-                <StatusBadge status={status} />
+              <div className='w-full'>
+               <div className="flex justify-between items-center">
+                  <h3 className="font-medium text-gray-900">{name}</h3>
+                <span className=' block md:hidden'><StatusBadge status={status} /></span>
+               </div>
+               <div className='flex items-center gap-3 pt-2 md:pt-0'>
+                <span className='hidden md:block  w-[75px]'><StatusBadge status={status} /></span>
+                {/* Service Metrics */}
+                <div className="lg:flex flex-col md:flex-row items-center gap-4 w-[45vw]">
+                  <TooltipProvider>
+                    {/* Memory Info */}
+                    <div className="flex  items-center lg:w-[150px] ">
+                    <Tooltip >
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center text-gray-600 hover:text-gray-900">
+                          <Memory className="h-4 w-4 mr-1.5" />
+                          <span className="text-sm">
+                            <span className="font-medium">Memory:</span> {memory}
+                          </span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Memory Limit</p>
+                      </TooltipContent>
+                    </Tooltip>
+                    </div>
+
+                    {/* CPU Info */}
+                    <div className="flex  items-center lg:w-[100px] ">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center text-gray-600 hover:text-gray-900">
+                          <Cpu className="h-4 w-4 mr-1.5" />
+                          <span className="text-sm">
+                            <span className="font-medium">CPU:</span> {cpu}
+                          </span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>CPU Limit</p>
+                      </TooltipContent>
+                    </Tooltip>
+                      </div>
+                    {/* Replicas Info */}
+                    <div className="flex  items-center lg:w-[150px] ">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <div className="flex items-center text-gray-600 hover:text-gray-900">
+                          <Copy className="h-4 w-4 mr-1.5" />
+                          <span className="text-sm">
+                            <span className="font-medium">Replicas:</span> {replicas}
+                          </span>
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Number of Replicas</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                  </TooltipProvider>
+                </div>
+               </div>
               </div>
-            </div>
-
-            {/* Service Metrics */}
-            <div className="flex flex-wrap items-center gap-4">
-              <TooltipProvider>
-                {/* Memory Info */}
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center text-gray-600 hover:text-gray-900">
-                      <Memory className="h-4 w-4 mr-1.5" />
-                      <span className="text-sm">
-                        <span className="font-medium">Memory:</span> {memory}
-                      </span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Memory Limit</p>
-                  </TooltipContent>
-                </Tooltip>
-
-                {/* CPU Info */}
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center text-gray-600 hover:text-gray-900">
-                      <Cpu className="h-4 w-4 mr-1.5" />
-                      <span className="text-sm">
-                        <span className="font-medium">CPU:</span> {cpu}
-                      </span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>CPU Limit</p>
-                  </TooltipContent>
-                </Tooltip>
-
-                {/* Replicas Info */}
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="flex items-center text-gray-600 hover:text-gray-900">
-                      <Copy className="h-4 w-4 mr-1.5" />
-                      <span className="text-sm">
-                        <span className="font-medium">Replicas:</span> {replicas}
-                      </span>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>Number of Replicas</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
             </div>
           </div>
 
