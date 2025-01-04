@@ -7,18 +7,10 @@ import { useRouter } from "next/navigation"
 import { useApp } from '@/context/AppContext'
 import CreditsModal from "@/components/modals/creditsModal"
 import { Box, Typography } from "@mui/material"
-import Image from "next/image"
 import { Router } from 'lucide-react'
 import withAuth from '@/components/withAuth'
 import { useAuth } from "@/context/AuthContext"
-import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+
 
 type Service = {
   id: string
@@ -55,13 +47,12 @@ const mockServices = [
 ]
 const ServicesPage = () => {
   const router = useRouter()
-  const { setServices, fetchUserDetails } = useApp()
+  const {  fetchUserDetails } = useApp()
   const { user } = useAuth()
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [showModal, setShowModal] = useState<boolean>(false)
-  const [services, setServicesState] = useState<Service[]>([])
-  const [envVariables, setEnvVariables] = useState<{ key: string; value: string }[]>([])
+  const [services, setServices] = useState<Service[]>([])
 
   const handleCreateClick = () => {
     router.push('/create/service')
@@ -73,7 +64,7 @@ const ServicesPage = () => {
 
   const fetchServices = async () => {
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/deployment`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -83,8 +74,8 @@ const ServicesPage = () => {
 
       if (response.ok) {
         const responseData = await response.json()
-        setServices(responseData.data.services)
-        setServicesState(responseData.data.services)
+        console.log("responseData.data.services", responseData.data.deployments)
+        setServices(responseData.data.deployments)
       } else {
         const errorData = await response.json()
         setError(errorData.message || 'Failed to fetch services')
@@ -95,19 +86,22 @@ const ServicesPage = () => {
       setLoading(false)
     }
   }
+  useEffect(() => {
+    console.log("services", services)
+  }, [services])
 
   const handleOperationRequest = async (serviceId: string, operationName: string) => {
+    if(operationName === 'delete'){
+      handleDelete(serviceId)
+      return
+    }
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/operation`, {
-        method: 'POST',
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/deployment/${serviceId}/${operationName}`, {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
         },
-        body: JSON.stringify({
-          service_id: serviceId,
-          operation_name: operationName,
-        }),
       })
 
       if (!response.ok) {
@@ -117,7 +111,6 @@ const ServicesPage = () => {
       if (operationName === 'delete') {
         setLoading(true)
         fetchServices()
-        fetchUserDetails()
       }
       const result = await response.json()
       console.log('Operation successful:', result)
@@ -125,7 +118,30 @@ const ServicesPage = () => {
       setError(error?.message)
     }
     fetchServices()
-    fetchUserDetails()
+  }
+
+  const handleDelete = async (serviceId: string) => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/deployment/${serviceId}`, {
+        method: 'Delete',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || 'Operation failed')
+      }
+        setLoading(true)
+        fetchServices()
+      const result = await response.json()
+      console.log('Service Deleted successful:', result)
+    } catch (error) {
+      setError(error?.message)
+    }
+    fetchServices()
   }
 
   useEffect(() => {
@@ -133,19 +149,7 @@ const ServicesPage = () => {
     fetchUserDetails()
   }, [])
 
-  const addEnvVariable = () => {
-    setEnvVariables([...envVariables, { key: '', value: '' }])
-  }
 
-  const removeEnvVariable = (index: number) => {
-    setEnvVariables(envVariables.filter((_, i) => i !== index))
-  }
-
-  const updateEnvVariable = (index: number, field: 'key' | 'value', value: string) => {
-    const newVariables = [...envVariables]
-    newVariables[index][field] = value
-    setEnvVariables(newVariables)
-  }
 
   return (
     <div className="p-4 bg-neutral-100 lg:h-screen h-[92dvh] justify-center items-center">
@@ -156,7 +160,7 @@ const ServicesPage = () => {
           Create
         </Button>
       </div>
-      {mockServices.length === 0 ? (
+      {services.length === 0 ? (
         <Box className="flex flex-col justify-center items-center lg:h-[80vh] h-[70dvh] w-full">
           <Router 
             className="w-[100px] h-[100px] text-neutral-300"
@@ -167,7 +171,7 @@ const ServicesPage = () => {
         </Box>
       ) : (
         <div className="flex flex-col items-center lg:h-[80vh] h-[70vh] w-full">
-          {mockServices.map((service) => (
+          {services.map((service) => (
             // @ts-expect-error build
             <ServiceCard
               key={service.id}

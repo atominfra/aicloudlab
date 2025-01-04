@@ -10,11 +10,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import Image from "next/image"
 import { useRouter } from 'next/navigation'
 import { useApp } from '@/context/AppContext'
-import notebookInput from "@/assets/notebookInput.svg"
-import { Eye, EyeOff, Trash2, GalleryVerticalEnd, Router } from 'lucide-react'
+import { Eye, EyeOff, Trash2, GalleryVerticalEnd, Router, RefreshCw } from 'lucide-react'
+import { useSearchParams } from 'next/navigation'
 
 interface EnvVariable {
   key: string
@@ -22,19 +21,35 @@ interface EnvVariable {
   isVisible: boolean
 }
 
-export default function CreateService() {
+interface RegistryCredential {
+  id: number;
+  name: string;
+}
+
+interface CreateServiceProps {
+  serviceId?: string;
+}
+
+const CreateService: React.FC<CreateServiceProps> = () => {
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const serviceId = searchParams.get('id')
+
   const { auth } = useApp()
   const [formData, setFormData] = useState({
     name: '',
     image: '',
+    target_port:'',
     memoryLimit: '',
     cpuLimit: '',
     registryCredential: '',
     replicas: '',
-    envVariables: [{ key: '', value: '', isVisible: false }] as EnvVariable[]
+    env_variables: [{ key: '', value: '', isVisible: false }] as EnvVariable[]
   })
+  const [registries, setRegistries] = useState<RegistryCredential[]>([]);
   const [isLoading, setIsLoading] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null)
   const [isNameTouched, setIsNameTouched] = useState(false)  
   const [customMemoryLimit, setCustomMemoryLimit] = useState('')
@@ -42,12 +57,72 @@ export default function CreateService() {
   const [customReplicas, setCustomReplicas] = useState('')
 
   useEffect(() => {
-    return () => {
-      setError(null);
-      setIsNameTouched(false);
-    };
-  }, []);
+    if (serviceId) {
+      // Fetch existing service details
+      const fetchServiceDetails = async () => {
+        try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/deployment/${serviceId}`,{
+            method:  'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('access_token')}` // Assuming you have a token in auth
+            },
+            // body: JSON.stringify(deploymentData)
+          });
+          const res =  await response.json();
+          const data = res.data.deployment
+          console.log("Data",data)
+          setFormData({
+            name: data.name,
+            image: data.image_url,
+            target_port: data.target_port,
+            memoryLimit: data.mem_limit,
+            cpuLimit: data.cpu_limit,
+            registryCredential: data.registry_credential_id,
+            replicas: data.replicas.toString(),
+            env_variables: Object.keys(data.env_variables).map(key => ({
+              key,
+              value: data.env_variables[key],
+              isVisible: false,
+            })),
+          });
+        } catch (error) {
+          setError('Failed to fetch service details');
+        }
+      };
 
+      fetchServiceDetails();
+    }
+
+  }, [serviceId]);
+
+  useEffect(() => {
+     const fetchRegistries = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/registry/credential`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+          },
+        });
+
+        if (response.ok) {
+          const responseData = await response.json();
+          setRegistries(responseData.data.credentials);
+        } else {
+          const errorData = await response.json();
+          setError(errorData.message || 'Failed to fetch registries');
+        }
+      } catch (err) {
+        setError('An error occurred while fetching registries');
+      }
+    };
+
+    fetchRegistries();
+  },[])
+
+  
   const handleChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }))
     if (name === 'name' && value.trim() !== '') {
@@ -58,23 +133,23 @@ export default function CreateService() {
 
   const handleEnvVariableChange = (index: number, field: 'key' | 'value', value: string) => {
     setFormData(prev => {
-      const newEnvVariables = [...prev.envVariables]
+      const newEnvVariables = [...prev.env_variables]
       newEnvVariables[index][field] = value
-      return { ...prev, envVariables: newEnvVariables }
+      return { ...prev, env_variables: newEnvVariables }
     })
   }
 
   const addEnvVariable = () => {
     setFormData(prev => ({
       ...prev,
-      envVariables: [...prev.envVariables, { key: '', value: '', isVisible: false }]
+      env_variables: [...prev.env_variables, { key: '', value: '', isVisible: false }]
     }))
   }
 
   const removeEnvVariable = (index: number) => {
     setFormData(prev => ({
       ...prev,
-      envVariables: prev.envVariables.filter((_, i) => i !== index)
+      env_variables: prev.env_variables.filter((_, i) => i !== index)
     }))
   }
 
@@ -85,40 +160,93 @@ export default function CreateService() {
     }
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault()
-    setIsNameTouched(true)
-    setError(null)
-    setIsLoading(true)
-
-    if (formData.name === '') {
-      setError('Please enter a name')
-      setIsLoading(false)
-      return
+  const handleCustomMemoryLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const regex = /^\d+(Mi|Gi|M|G)?$/; 
+    if (value === '' || regex.test(value)) {
+      setCustomMemoryLimit(value);
     }
+  };
 
-    // Add your service creation logic here
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setIsNameTouched(true);
+    setError(null);
+    setIsLoading(true);
+  
+    if (formData.name === '') {
+      setError('Please enter a name');
+      setIsLoading(false);
+      return;
+    }
+  
+    const memoryLimit = formData.memoryLimit === 'custom' ? customMemoryLimit : formData.memoryLimit;
+    const memoryLimitRegex = /^\d+(Mi|Gi)$/;
+  
+    if (!memoryLimitRegex.test(memoryLimit)) {
+      setError('Memory limit must be an integer followed by "Mi" or "Gi"');
+      setIsLoading(false);
+      return;
+    }
+  
+    let deploymentData = {
+      name: formData.name,
+      image_url: formData.image,
+      target_port: formData.target_port,
+      mem_limit: memoryLimit,
+      cpu_limit: formData.cpuLimit === 'custom' ? customCpuLimit : formData.cpuLimit,
+      env_variables: {},
+    };
+
+
+    function removeEmptyStringKeys(obj) {
+      if(typeof obj !== 'string') return {};
+      return Object.fromEntries(
+          Object.entries(obj).filter(([key]) => key !== "")
+
+      );
+  }
+  
+    if (formData.registryCredential) {
+      // @ts-expect-error build error
+      deploymentData.registry_credential_id = formData.registryCredential; 
+    }
+    if (formData.replicas) {
+            // @ts-expect-error build error
+      deploymentData.replicas = formData.replicas === 'custom' ? parseInt(customReplicas, 10) : parseInt(formData.replicas, 10)
+      }
+      if (formData.env_variables) {
+         const newob = removeEmptyStringKeys(formData.env_variables)
+        deploymentData.env_variables = newob
+       }
 
     try {
-      console.log('formData', formData)
-      // Implement your service creation API call here
-      // const response = await createService(auth, formData, envVariables)
-      // if (response) {
-      //   router.push('/dashboard/services')
-      // } else {
-      //   setError('Failed to create service')
-      // }
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/deployment${serviceId ? `/${serviceId}` : ''}`, {
+        method: serviceId ? 'PUT' : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}` // Assuming you have a token in auth
+        },
+        body: JSON.stringify(deploymentData)
+      });
+  
+      if (response.ok) {
+        router.push('/dashboard/services');
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to create service');
+      }
     } catch (err) {
-      setError('An error occurred while creating the service')
+      setError('An error occurred while creating the service');
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const toggleVisibility = (index: number) => {
     setFormData(prev => ({
       ...prev,
-      envVariables: prev.envVariables.map((variable, i) => 
+      env_variables: prev.env_variables.map((variable, i) => 
         i === index ? { ...variable, isVisible: !variable.isVisible } : variable
       )
     }));
@@ -128,17 +256,43 @@ export default function CreateService() {
   const handleAddNewRegistry = () => {
     // Store the current form data in localStorage
     localStorage.setItem('createServiceFormData', JSON.stringify(formData));
-    // localStorage.setItem('createServiceEnvVariables', JSON.stringify(envVariables));
+    // localStorage.setItem('createServiceEnvVariables', JSON.stringify(env_variables));
     
     // Redirect to the create registry page
-    router.push('/create/registery');
+    // router.push('/create/registery');
+    window.open ('/create/registery', '_ blank');
   }
+
+  const refreshRegistries = async () => {
+    setIsRefreshing(true);
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/registry/credential`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        setRegistries(responseData.data.credentials);
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to fetch registries');
+      }
+    } catch (err) {
+      setError('An error occurred while fetching registries');
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   return (
     <div className='lg:p-6 bg-neutral-100 lg:h-screen h-[92dvh] overflow-auto'>
       <div className="max-w-2xl mx-auto p-4 lg:p-6 w-full mt-4">
         <div className="text-center mb-8 relative">
-          <h1 className="lg:text-2xl text-lg font-semibold mb-2">Create New Service</h1>
+          <h1 className="lg:text-2xl text-lg font-semibold mb-2">{serviceId ? 'Edit Service' : 'Create New Service'}</h1>
         </div>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
@@ -195,8 +349,22 @@ export default function CreateService() {
           </div>
 
           <div className="space-y-2">
+            <label htmlFor="target_port" className="text-sm font-medium text-[#374151]">
+              Port
+            </label>
+            <Input
+              id="target_port"
+              name="target_port"
+              value={formData.target_port}
+              onChange={(e) => handleChange('target_port', e.target.value)}
+              placeholder="Enter target_port"
+              className=""
+            />
+          </div>
+
+          <div className="space-y-2">
             <label htmlFor="memory-limit" className="text-sm font-medium text-[#374151]">
-              Memory Limit
+              Memory Limit(Mi or Gi)
             </label>
             <Select 
               value={formData.memoryLimit} 
@@ -208,10 +376,10 @@ export default function CreateService() {
                 <SelectValue placeholder="Select memory limit" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="512">512 Mi</SelectItem>
-                <SelectItem value="1024">1 Gi</SelectItem>
-                <SelectItem value="2048">2 Gi</SelectItem>
-                <SelectItem value="4096">4 Gi</SelectItem>
+                <SelectItem value="512Mi">512 Mi</SelectItem>
+                <SelectItem value="1024Gi">1 Gi</SelectItem>
+                <SelectItem value="2048Gi">2 Gi</SelectItem>
+                <SelectItem value="4096Gi">4 Gi</SelectItem>
                 <SelectItem value="custom">Custom</SelectItem>
               </SelectContent>
             </Select>
@@ -220,7 +388,7 @@ export default function CreateService() {
                 type="text"
                 placeholder="Enter Custom Memory Limit (e.g., 128Mi, 1Gi)"
                 value={customMemoryLimit}
-                onChange={handleCustomInputChange(setCustomMemoryLimit)}
+                onChange={handleCustomMemoryLimitChange}
                 className={`mt-2 `}
               />
             )}
@@ -261,26 +429,40 @@ export default function CreateService() {
             <label htmlFor="registry-credential" className="text-sm font-medium text-[#374151]">
               Registry Credential
             </label>
-            <Select 
-              value={formData.registryCredential} 
-              onValueChange={(value) => {
-                if (value === 'add_new') {
-                  handleAddNewRegistry();
-                } else {
-                  handleChange('registryCredential', value);
-                }
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select registry" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="personal">Personal (ghcr.io)</SelectItem>
-                <SelectItem value="docker">Docker Hub</SelectItem>
-                <SelectItem value="gcr">Google Container Registry</SelectItem>
-                <SelectItem value="add_new">Add New</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex items-center gap-2">
+              <Select 
+                value={formData.registryCredential} 
+                onValueChange={(value) => {
+                  if (value === 'add_new') {
+                    handleAddNewRegistry();
+                  } else {
+                    handleChange('registryCredential', value);
+                  }
+                }}
+                disabled={isRefreshing}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select registry" />
+                </SelectTrigger>
+                <SelectContent>
+                  {registries.map((registry) => (
+                    <SelectItem key={registry.id} value={registry.id.toString()}>
+                      {registry.name}
+                    </SelectItem>
+                  ))}
+                  <SelectItem value="add_new">Add New</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={refreshRegistries} 
+                disabled={isRefreshing}
+                className="p-2"
+              >
+                <RefreshCw size={16} />
+              </Button>
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -322,7 +504,7 @@ export default function CreateService() {
               </label>
             </div>
               <>
-                {formData.envVariables.map((variable, index) => (
+                {formData.env_variables.map((variable, index) => (
                   <div key={index} className="flex gap-2">
                     <Input
                       placeholder="Key"
@@ -343,7 +525,7 @@ export default function CreateService() {
                     >
                       {variable.isVisible ? <EyeOff size={16} /> : <Eye size={16} />}
                     </Button>
-                    {formData.envVariables.length > 1 && (
+                    {formData.env_variables.length > 1 && (
                       <Button 
                         type="button" 
                         variant="outline" 
@@ -368,7 +550,7 @@ export default function CreateService() {
           <div className="flex justify-end space-x-4 pt-4">
             <Button variant="outline" className='text-[14px]' onClick={() => router.push('/dashboard/services')}>Cancel</Button>
             <Button type="submit" disabled={isLoading} className='bg-[#2563EB] text-[14px]'>
-              {isLoading ? 'Creating...' : 'Deploy Service'}
+              {isLoading ? 'Saving...' : serviceId ? 'Update Service' : 'Deploy Service'}
             </Button>
           </div>
         </form>
@@ -376,4 +558,6 @@ export default function CreateService() {
     </div>
   )
 }
+
+export default CreateService;
 

@@ -1,3 +1,4 @@
+"use client"
 import { ExternalLink, Server, Cpu, MemoryStickIcon as Memory, Copy, MoreHorizontal } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { StatusBadge } from './status-badge'
@@ -13,26 +14,35 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useRouter } from 'next/navigation';
 
 interface ServiceCardProps {
   id: string
   name: string
   status: "running" | "stopped" | "error"
-  memory: string
-  cpu: string
+  mem_limit: string
+  cpu_limit: string
   replicas: number
+  service_url: string
   onOperation: (serviceId: string, operationName: string) => Promise<void>
+  
 }
 
 export function ServiceCard({ 
   id, 
   name, 
-  status, 
-  memory, 
-  cpu, 
+  status="running", 
+  mem_limit, 
+  cpu_limit, 
   replicas, 
+  service_url,
   onOperation 
 }: ServiceCardProps) {
+    const router = useRouter();
+  const handleEdit = () => {
+    router.push(`/create/service?id=${id}`);
+  };
+
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 w-full hover:shadow-sm transition-shadow duration-200">
       <div className="flex flex-col space-y-4 sm:space-y-0">
@@ -60,7 +70,7 @@ export function ServiceCard({
                         <div className="flex items-center text-gray-600 hover:text-gray-900">
                           <Memory className="h-4 w-4 mr-1.5" />
                           <span className="text-sm">
-                            <span className="font-medium">Memory:</span> {memory}
+                            <span className="font-medium">Memory:</span> {mem_limit}
                           </span>
                         </div>
                       </TooltipTrigger>
@@ -77,7 +87,7 @@ export function ServiceCard({
                         <div className="flex items-center text-gray-600 hover:text-gray-900">
                           <Cpu className="h-4 w-4 mr-1.5" />
                           <span className="text-sm">
-                            <span className="font-medium">CPU:</span> {cpu}
+                            <span className="font-medium">CPU:</span> {cpu_limit}
                           </span>
                         </div>
                       </TooltipTrigger>
@@ -115,13 +125,14 @@ export function ServiceCard({
               variant="outline" 
               size="sm"
               className="text-gray-600 hover:text-gray-900 w-full"
-              onClick={() => window.open(`/service/${id}`, '_blank')}
+              onClick={()=>router.push(service_url)}
             >
               <ExternalLink className="h-4 w-4 mr-1.5" />
               Visit
             </Button>
 
             <DropdownMenu>
+              
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="text-gray-600 hover:text-gray-900 w-full">
                   <MoreHorizontal className="h-4 w-4" />
@@ -129,14 +140,17 @@ export function ServiceCard({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-[160px]">
+              <DropdownMenuItem 
+                  onClick={handleEdit}
+                  className=" hover:bg-red-50"
+                >
+                  Edit Service
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onOperation(id, 'start')}>
                   Start Service
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onOperation(id, 'stop')}>
                   Stop Service
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onOperation(id, 'restart')}>
-                  Restart Service
                 </DropdownMenuItem>
                 <DropdownMenuItem 
                   onClick={() => onOperation(id, 'delete')}
@@ -144,6 +158,7 @@ export function ServiceCard({
                 >
                   Delete Service
                 </DropdownMenuItem>
+                
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

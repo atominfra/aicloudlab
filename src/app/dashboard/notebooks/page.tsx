@@ -13,7 +13,7 @@ import { useAuth } from "@/context/AuthContext";
 
 const  NotebooksPage= () => {
   const router = useRouter();
-  const { notebooks, setNotebooks, fetchUserDetails,  } = useApp();
+  const { notebooks, setNotebooks, fetchUserDetails } = useApp();
   const {user} = useAuth()
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
