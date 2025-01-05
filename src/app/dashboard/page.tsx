@@ -8,7 +8,7 @@ const Page = (props) => {
   const router = useRouter();
 
   React.useEffect(() => {
-    router.push('/dashboard/notebooks');
+    router.push('/dashboard/services');
   }, [router]);
 
   return <div></div>;

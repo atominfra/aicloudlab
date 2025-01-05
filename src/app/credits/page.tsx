@@ -2,17 +2,18 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { useGlobalContext } from '@/context/GlobalContext'
+import { useApp } from '@/context/AppContext'
 import withAuth from '@/components/withAuth'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Loader2 } from 'lucide-react'
+import { useAuth } from '@/context/AuthContext'
 
 const CreditsPage = () => {
   const router = useRouter()
-  const { user } = useGlobalContext()
+  const { user } = useAuth()
   const [addCredits, setAddCredits] = useState('')
   const [errors, setErrors] = useState<{[key: string]: string}>({})
   const [isLoading, setIsLoading] = useState(false)
@@ -38,7 +39,7 @@ const CreditsPage = () => {
   }
 
   return (
-    <div className="lg:min-h-screen min-h-[92vh] bg-neutral-100 lg:p-4 flex justify-center items-center  ">
+    <div className="lg:min-h-screen min-h-[92dvh]  bg-neutral-100 lg:p-4 flex justify-center items-center  ">
       <Card className="w-full max-w-3xl bg-neutral-100 shadow-none border-none">
         <CardHeader>
           <CardTitle className='text-lg lg:text-[24px] font-semibold'>Credits</CardTitle>

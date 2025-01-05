@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Trash2 } from 'lucide-react'
 import { fetchOSOptions, fetchPlans, createNode } from '@/app/api/nodes/api'
-import { useGlobalContext } from '@/context/GlobalContext'
+import { useApp } from '@/context/AppContext'
 import { CircularProgress } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { Switch } from "@/components/ui/switch"
@@ -78,7 +78,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const [plans, setPlans] = useState<Plan[]>([])
   const [loading, setLoading] = useState(false)
   const [loadingPlans, setLoadingPlans] = useState(false) // Added loadingPlans state
-  const { auth, node_page_status } = useGlobalContext()
+  const { auth, node_page_status } = useApp()
   const router = useRouter()
   const [error, setError] = useState('')
   useEffect(() => {
@@ -300,8 +300,8 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }, [router]);
 
   return (
-    <div className=' bg-neutral-100 lg:min-h-screen min-h-[92vh] flex justify-center items-center'>
-      <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto lg:mt-[10vh]">
+    <div className=' bg-neutral-100 lg:min-h-screen min-h-[92dvh]   flex justify-center '>
+      <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto lg:mt-[5vh]">
         <Card className="bg-neutral-100 shadow-none border-none">
           <CardHeader className="text-center">
             <CardTitle className="text-lg lg:text-2xl font-semibold ">{isEditMode ? 'Edit Node' : 'Create a New Node'}</CardTitle>
@@ -444,8 +444,11 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   </div>
                 </AccordionContent>
               </AccordionItem>
+              </Accordion>
 
               {/* Volumes */}
+              <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
+
               <AccordionItem value="volumes" disabled>
                 <AccordionTrigger className="px-4 py-2 text-[#b5b5b5] font-normal hover:cursor-not-allowed">Volumes (Coming Soon)</AccordionTrigger>
                 <AccordionContent className="px-4 py-2">
@@ -488,8 +491,11 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   </div>
                 </AccordionContent>
               </AccordionItem>
+              </Accordion>
 
               {/* Security Rules */}
+              <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
+
               <AccordionItem value="security-rules " disabled>
                 <AccordionTrigger className="px-4 py-2 text-[#b5b5b5] font-normal hover:cursor-not-allowed">Security Rules (Coming Soon)</AccordionTrigger>
                 <AccordionContent className="px-4 py-2">
