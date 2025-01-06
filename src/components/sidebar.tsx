@@ -7,6 +7,7 @@ import Image from "next/image"
 import { useApp } from '@/context/AppContext';
 import { useEffect } from "react"
 import nodeIcon from "@/assets/node.webp"
+import atomInfra from "@/assets/atom-infra.png"
 import { useAuth } from "@/context/AuthContext"
 // import { ThemeToggle } from "./theme-toggle"
 export function Sidebar() {
@@ -23,19 +24,23 @@ export function Sidebar() {
     <div className="w-[260px] bg-card border-r border-border  flex-col h-screen hidden lg:flex">
         <div className="flex px-4 pt-4 pb-2 border-b">
         <Link href="/" className="flex items-center gap-2 px-4 py-2 rounded-lg text-foreground">
-          <div className='flex items-center '>
-            <Image
-              src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
-              width={30}
-              height={30}
-              alt="Atom Infra Logo"
-              className='h-[27px] w-[27px]'
-              priority
-            />
-             <div className='text-[24px] font-[700] tracking-tight'>
-                tom Infra
-              </div>
-            </div>
+        <div className='flex items-center'>
+          <Image
+            src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
+            width={30}
+            height={30}
+            alt="Atom Infra Logo"
+            className='h-[22px] w-[23px]'
+            priority
+          />
+          <div 
+            className='relative text-[24px] font-[700] tracking-tight l-[30px]' 
+            style={{ left: '-2px' }}
+          >
+            tom Infra
+          </div>
+        </div>
+
         </Link>
         </div>
         {/* <ThemeToggle /> */}

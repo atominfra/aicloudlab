@@ -75,20 +75,22 @@ export default function Login() {
 
   return (
     <div className="min-h-screen relative w-full bg-gradient-to-br from-[#DBEAFE] to-white ">
-      <div className='p-4 absolute'>
-      <div className='flex items-center  '>
-        <Image
-          src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
-          width={30}
-          height={30}
-          alt="Atom Infra Logo"
-          className='h-[30px] w-[30px]'
-          priority
-        /> <div className='text-[28px] font-[700] tracking-tight'>
+        <div className='flex items-center'>
+          <Image
+            src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
+            width={30}
+            height={30}
+            alt="Atom Infra Logo"
+            className='h-[22px] w-[23px]'
+            priority
+          />
+          <div 
+            className='relative text-[24px] font-[700] tracking-tight l-[30px]' 
+            style={{ left: '-2px' }}
+          >
             tom Infra
           </div>
         </div>
-      </div>
       
       <div className="container mx-auto min-h-screen flex items-center justify-center px-4">
         <div className="w-full max-w-md space-y-6 bg-white p-6 rounded-[8px]">
