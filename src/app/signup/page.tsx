@@ -187,7 +187,7 @@ export default function Signup() {
             <div className="bg-white lg:p-12 p-6 rounded-[16px] min-h-[90vh] lg:shadow-xl ">
               <h1 className="text-[28px] font-semibold  text-gray-900">Sign Up</h1>
               <h1 className="text-[15px] font-normal tracking-tight pb-8 text-gray-500" > Already have an account? 
-                <span className="text-blue-600 hover:underline hover:cursor-pointer" onClick={() => window.location.href = '/login'} >Sign In</span></h1>
+                <span className="text-blue-600 hover:underline hover:cursor-pointer pl-1" onClick={() => window.location.href = '/login'} >Sign In</span></h1>
 
               <form onSubmit={handleSubmit} className="space-y-6 flex flex-col justify-center items-center w-full ">
                 <div className="space-y-2 w-[95%]">
@@ -339,7 +339,7 @@ export default function Signup() {
                 Log in to existing account
               </Button> */}
               <div className='pt-8 w-full flex flex-col text-sm items-end text-gray-500'>
-                © 2025 AtomInfra Inc.
+                 © 2025 Ambition Forge Pvt Ltd
               </div>
             </div>
           </div>

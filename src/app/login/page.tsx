@@ -219,7 +219,7 @@ export default function Login() {
                 Sign up for new account
               </Button>
               <div className=' pt-8 w-full flex flex-col text-sm  items-end text-gray-500'>
-                 © 2025 AtomInfra Inc.
+                © 2025 Ambition Forge Pvt Ltd
               </div>
             </div>
           </div>
