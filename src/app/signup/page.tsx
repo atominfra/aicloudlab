@@ -145,11 +145,11 @@ export default function Signup() {
   }
 
   return (
-    <div className="min-h-screen relative w-full bg-gradient-to-br from-[#DBEAFE] to-white">
-      <div className="container mx-auto min-h-screen max-w-[93vw]">
+    <div className="min-h-screen relative w-full bg-white lg:bg-gradient-to-br lg:from-[#DBEAFE] lg:to-white">
+      <div className="container mx-auto min-h-screen lg:max-w-[93vw] ">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 min-h-screen items-center px-8">
           {/* Left side - Features */}
-          <div className="hidden space-y-8 pr-12 h-screen md:flex flex-col justify-evenly">
+          <div className="hidden space-y-8 pr-12 min-h-screen h-full md:flex flex-col justify-evenly">
             <div className="">
               <div className='flex items-center'>
                 <Image
@@ -182,10 +182,9 @@ export default function Signup() {
               description="Choose the most cost-effective provider and save money."
             />
           </div>
-
           {/* Right side - Signup form */}
-          <div className="w-full max-w-xl mx-auto p-6">
-            <div className="bg-white p-12 rounded-[16px] min-h-[90vh] shadow-xl ">
+          <div className="w-full max-w-xl mx-auto lg:p-6 py-4">
+            <div className="bg-white lg:p-12 p-6 rounded-[16px] min-h-[90vh] lg:shadow-xl ">
               <h1 className="text-[28px] font-semibold  text-gray-900">Sign Up</h1>
               <h1 className="text-[15px] font-normal tracking-tight pb-8 text-gray-500" > Already have an account? 
                 <span className="text-blue-600 hover:underline hover:cursor-pointer" onClick={() => window.location.href = '/login'} >Sign In</span></h1>

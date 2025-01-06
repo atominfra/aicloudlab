@@ -92,8 +92,8 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen relative w-full bg-gradient-to-br from-[#DBEAFE] to-white">
-      <div className="container mx-auto min-h-screen max-w-[93vw]">
+    <div className="min-h-screen relative w-full bg-white lg:bg-gradient-to-br from-[#DBEAFE] to-white">
+      <div className="container mx-auto min-h-screen lg:max-w-[93vw]">
         
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 min-h-screen items-center px-8">
@@ -135,7 +135,7 @@ export default function Login() {
 
           {/* Right side - Login form */}
           <div className="w-full max-w-xl  mx-auto">
-            <div className="bg-white p-12 rounded-[16px] h-[90vh] shadow-xl">
+            <div className="bg-white lg:p-12 p-6 rounded-[16px] h-[90vh] lg:shadow-xl">
               <h1 className="text-[28px] font-semibold pb-12 text-gray-900">Sign In</h1>
 
               <form onSubmit={handleLogin} className="space-y-6 flex flex-col justify-center items-center w-full gap-4 ">
