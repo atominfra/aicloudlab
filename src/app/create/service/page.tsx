@@ -386,7 +386,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
               name="target_port"
               value={formData.target_port}
               onChange={(e) => handleChange('target_port', e.target.value)}
-              placeholder="Enter target_port"
+              placeholder="Enter port"
               className=""
             />
           </div>
