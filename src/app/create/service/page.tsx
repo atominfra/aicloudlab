@@ -179,6 +179,38 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       setIsLoading(false);
       return;
     }
+
+    if (formData.image === '') {
+      setError('Please enter a Image');
+      setIsLoading(false);
+      return;
+    }
+
+    if (formData.target_port === '') {
+      setError('Please enter a Port');
+      setIsLoading(false);
+      return;
+    }
+
+    if (formData.memoryLimit === '') {
+      setError('Please enter Memory Limit');
+      setIsLoading(false);
+      return;
+    }
+
+    if (formData.cpuLimit === '') {
+      setError('Please enter Cpu Limit');
+      setIsLoading(false);
+      return;
+    }
+
+    if (formData.replicas === '') {
+      setError('Please enter Replicas');
+      setIsLoading(false);
+      return;
+    }
+  
+  
   
     const memoryLimit = formData.memoryLimit === 'custom' ? customMemoryLimit : formData.memoryLimit;
     const memoryLimitRegex = /^\d+(Mi|Gi)$/;
@@ -289,7 +321,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   };
 
   return (
-    <div className='lg:p-6 bg-neutral-100 lg:h-screen h-[92dvh] overflow-auto'>
+    <div className='lg:p-6 bg-neutral-100 lg:h-screen h-[92dvh] '>
       <div className="max-w-2xl mx-auto p-4 lg:p-6 w-full mt-4">
         <div className="text-center mb-8 relative">
           <h1 className="lg:text-2xl text-lg font-semibold mb-2">{serviceId ? 'Edit Service' : 'Create New Service'}</h1>
@@ -307,7 +339,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
                 value={formData.name}
                 onChange={(e) => handleChange('name', e.target.value)}
                 placeholder="Enter service name"
-                className={`max-w-full ${isNameTouched && formData.name === '' ? 'border-red-500' : ''}`}
+                className={`max-w-full`}
               />
               <div className='flex justify-center items-center bg-white w-[30px] h-[22px] absolute right-3 top-2.5'>
                 {/* <Image
@@ -321,9 +353,6 @@ const CreateService: React.FC<CreateServiceProps> = () => {
 
               </div>
             </div>
-            {isNameTouched && formData.name === '' && (
-              <p className="text-red-500 text-sm">Name cannot be empty.</p>
-            )}
             {isNameTouched && (formData.name.includes(' ')) && (
               <p className="text-red-500 text-sm">Name cannot contain an underscore (_) or spaces.</p>
             )}
@@ -350,21 +379,21 @@ const CreateService: React.FC<CreateServiceProps> = () => {
 
           <div className="space-y-2">
             <label htmlFor="target_port" className="text-sm font-medium text-[#374151]">
-              Port
+              Port*
             </label>
             <Input
               id="target_port"
               name="target_port"
               value={formData.target_port}
               onChange={(e) => handleChange('target_port', e.target.value)}
-              placeholder="Enter target_port"
+              placeholder="Enter port"
               className=""
             />
           </div>
 
           <div className="space-y-2">
             <label htmlFor="memory-limit" className="text-sm font-medium text-[#374151]">
-              Memory Limit(Mi or Gi)
+              Memory Limit(Mi/Gi)*
             </label>
             <Select 
               value={formData.memoryLimit} 
@@ -396,7 +425,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
 
           <div className="space-y-2">
             <label htmlFor="cpu-limit" className="text-sm font-medium text-[#374151]">
-              CPU Limit
+              CPU Limit*
             </label>
             <Select 
               value={formData.cpuLimit} 
@@ -467,7 +496,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
 
           <div className="space-y-2">
             <label htmlFor="replicas" className="text-sm font-medium text-[#374151]">
-              Replicas
+              Replicas*
             </label>
             <Select 
               value={formData.replicas} 
@@ -507,13 +536,13 @@ const CreateService: React.FC<CreateServiceProps> = () => {
                 {formData.env_variables.map((variable, index) => (
                   <div key={index} className="flex gap-2">
                     <Input
-                      placeholder="Key"
+                      style={{display:"none"}}
                       value={variable.key}
                       onChange={(e) => handleEnvVariableChange(index, 'key', e.target.value)}
                     />
                     <Input
+                      style={{display:"none"}}
                       type={variable.isVisible ? "text" : "password"}
-                      placeholder="Value"
                       value={variable.value}
                       onChange={(e) => handleEnvVariableChange(index, 'value', e.target.value)}
                     />
@@ -525,7 +554,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
                     >
                       {variable.isVisible ? <EyeOff size={16} /> : <Eye size={16} />}
                     </Button>
-                    {formData.env_variables.length > 1 && (
+                    {/* {formData.env_variables.length > 1 && ( */}
                       <Button 
                         type="button" 
                         variant="outline" 
@@ -534,7 +563,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
                       >
                         <Trash2 size={16} />
                       </Button>
-                    )}
+                    {/* )} */}
                   </div>
                 ))}
                 <Button type="button" variant="outline" onClick={addEnvVariable}>
