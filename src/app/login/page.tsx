@@ -95,7 +95,7 @@ export default function Login() {
     <div className="min-h-screen relative w-full bg-white lg:bg-gradient-to-br from-[#DBEAFE] to-white">
       <div className="container mx-auto min-h-screen lg:max-w-[93vw]">
         
-        <div className=" h-[10vh] py-12  px-20 p-6 hidden lg:block">
+        <div className=" h-[5vh] pt-10 pb-4  px-20  hidden lg:block">
             <div className='flex items-center'>
               <Image
                 src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
@@ -136,10 +136,12 @@ export default function Login() {
           </div>
 
           {/* Right side - Login form */}
-          <div className="w-full max-w-xl  mx-auto ">
-            <div className="bg-white lg:p-12 p-6 rounded-[16px]  lg:shadow-xl ">
-              <div className="text-[28px] font-semibold pb-12 text-gray-900 h-[10%]">Sign In</div>
-
+          <div className="w-full max-w-xl  mx-auto  flex justify-center items-center">
+            <div className="bg-white lg:p-12 p-6 rounded-[16px]  lg:shadow-xl w-full ">
+              <div className="text-[28px] font-semibold  text-gray-900 h-[10%]">Sign In</div>
+              <h1 className="text-[15px] font-normal tracking-tight pb-12  text-gray-500" > Don’t have an account? 
+                <span className="text-blue-600 hover:underline hover:cursor-pointer pl-1" onClick={() => window.location.href = '/signup'} >Sign Up</span>
+              </h1>
              <div className='h-[90%]  flex flex-col justify-center items-center '>
              <form onSubmit={handleLogin} className="space-y-6 flex flex-col  justify-center items-center w-full gap-4 ">
                 <div className="space-y-2 w-[95%]">
@@ -207,23 +209,6 @@ export default function Login() {
                   )}
                 </Button>
               </form>
-
-              <div className="mt-6 mb-6 relative flex items-center">
-                <div className="flex-grow border-t border-gray-200"></div>
-                <span className="flex-shrink mx-4 text-[12px] text-gray-500">OR</span>
-                <div className="flex-grow border-t border-gray-200"></div>
-              </div>
-
-              <Button
-                variant="outline"
-                className="w-full h-11 border-[#2563EB] text-[#2563EB] hover:bg-[#2563EB]/5 text-[14px]"
-                onClick={() => window.location.href = '/signup'}
-              >
-                Sign up for new account
-              </Button>
-              <div className=' pt-8 w-full flex flex-col text-sm  items-end text-gray-500'>
-                © 2025 Ambition Forge Pvt Ltd
-              </div>
              </div>
             </div>
           </div>

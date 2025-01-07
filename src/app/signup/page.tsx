@@ -1,14 +1,13 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
 import Image from 'next/image'
 import { Loader2, Users, ArrowLeftRight, PiggyBank } from 'lucide-react'
 import { MdEmail, MdLock, MdPerson, MdPhone } from "react-icons/md"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useTheme } from 'next-themes'
+import { useRouter } from 'next/navigation'
 import { toast } from 'react-hot-toast'
 
 interface FormData {
@@ -34,7 +33,7 @@ interface FeatureProps {
 }
 
 const Feature = ({ icon, title, description }: FeatureProps) => (
-  <div className="flex items-start space-x-4 mb-8">
+  <div className="flex items-start space-x-4 mb-8 ">
     <div className="mt-1 p-2 bg-sky-200 rounded-lg relative bottom-[6px]">
       {icon}
     </div>
@@ -57,7 +56,6 @@ export default function Signup() {
   })
 
   const router = useRouter()
-  const { resolvedTheme } = useTheme()
   const [auth, setAuth] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
@@ -145,28 +143,30 @@ export default function Signup() {
   }
 
   return (
-    <div className="min-h-screen relative w-full bg-white lg:bg-gradient-to-br lg:from-[#DBEAFE] lg:to-white">
-      <div className="container mx-auto min-h-screen lg:max-w-[93vw] ">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 min-h-screen items-center px-8">
+    <div className="min-h-screen relative w-full bg-white lg:bg-gradient-to-br from-[#DBEAFE] to-white">
+      <div className="container mx-auto min-h-screen lg:max-w-[93vw]">
+        
+      
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8  items-center px-8">
           {/* Left side - Features */}
-          <div className="hidden space-y-8 pr-12 min-h-screen h-full md:flex flex-col justify-evenly">
-            <div className="">
-              <div className='flex items-center'>
-                <Image
-                  src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
-                  width={30}
-                  height={30}
-                  alt="Atom Infra Logo"
-                  className='h-[47px] w-[48px]'
-                  priority
-                />
-                <div className='relative text-[49px] font-[700] tracking-tight l-[30px]' style={{ left: '-2px' }}>
-                  tom Infra
-                </div>
+          <div className="hidden  pr-12  md:flex flex-col  lg:p-12 p-6" >
+          <div className=" h-[20vh] w-[50vw]   hidden lg:block">
+            <div className='flex items-center'>
+              <Image
+                src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
+                width={30}
+                height={30}
+                alt="Atom Infra Logo"
+                className='h-[47px] w-[48px]'
+                priority
+              />
+              <div className='relative text-[49px] font-[700] tracking-tight l-[30px]' style={{ left: '-2px' }}>
+                tom Infra
               </div>
             </div>
-            
-            <Feature
+          </div>
+           <div className='flex flex-col h-full justify-center  gap-8'>
+           <Feature
               icon={<ArrowLeftRight className="h-6 w-6 text-[#2563EB]" />}
               title="Flexibility"
               description="Switch between compute providers easily as your needs change without being locked in."
@@ -181,15 +181,18 @@ export default function Signup() {
               title="Cost Savings"
               description="Choose the most cost-effective provider and save money."
             />
+           </div>
           </div>
-          {/* Right side - Signup form */}
-          <div className="w-full max-w-xl mx-auto lg:p-6 py-4">
-            <div className="bg-white lg:p-12 p-6 rounded-[16px] min-h-[90vh] lg:shadow-xl ">
-              <h1 className="text-[28px] font-semibold  text-gray-900">Sign Up</h1>
-              <h1 className="text-[15px] font-normal tracking-tight pb-8 text-gray-500" > Already have an account? 
-                <span className="text-blue-600 hover:underline hover:cursor-pointer pl-1" onClick={() => window.location.href = '/login'} >Sign In</span></h1>
 
-              <form onSubmit={handleSubmit} className="space-y-6 flex flex-col justify-center items-center w-full ">
+          {/* Right side - Signup form */}
+          <div className="w-full max-w-xl  mx-auto h-[100vh] overflow-y-scroll no-scrollbar  flex justify-center items-center">
+            <div className="bg-white lg:p-12 p-6 rounded-[16px]  lg:shadow-xl w-full">
+              <div className="text-[28px] font-semibold  text-gray-900 h-[10%]">Sign Up</div>
+              <h1 className="text-[15px] font-normal tracking-tight pb-4  text-gray-500" > Already have an account?  
+                <span className="text-blue-600 hover:underline hover:cursor-pointer pl-1" onClick={() => window.location.href = '/login'} >Sign Up</span>
+              </h1>
+             <div className='h-[100%]  flex flex-col justify-center items-center '>
+             <form onSubmit={handleSubmit} className="  flex flex-col  justify-center items-center w-full gap-4 ">
                 <div className="space-y-2 w-[95%]">
                   <Label htmlFor="full_name" className="text-[16px] font-medium text-gray-700">
                     Full Name
@@ -202,7 +205,7 @@ export default function Signup() {
                       type="text"
                       value={formData.full_name}
                       onChange={handleChange}
-                      className={`pl-10 h-11 border-gray-200 rounded-lg ${
+                      className={`pl-10 h-11  border-gray-200 rounded-lg ${
                         errors.full_name ? "border-red-500" : ""
                       }`}
                       placeholder="Enter your full name"
@@ -225,7 +228,7 @@ export default function Signup() {
                       type="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className={`pl-10 h-11 border-gray-200 rounded-lg ${
+                      className={`pl-10 h-11  border-gray-200 rounded-lg ${
                         errors.email ? "border-red-500" : ""
                       }`}
                       placeholder="Enter your email"
@@ -248,7 +251,7 @@ export default function Signup() {
                       type="tel"
                       value={formData.phone}
                       onChange={handleChange}
-                      className={`pl-10 h-11 border-gray-200 rounded-lg ${
+                      className={`pl-10 h-11  border-gray-200 rounded-lg ${
                         errors.phone ? "border-red-500" : ""
                       }`}
                       placeholder="Enter your phone number"
@@ -271,7 +274,7 @@ export default function Signup() {
                       type="password"
                       value={formData.password}
                       onChange={handleChange}
-                      className={`pl-10 h-11 border-gray-200 rounded-lg ${
+                      className={`pl-10 h-11  border-gray-200 rounded-lg ${
                         errors.password ? "border-red-500" : ""
                       }`}
                       placeholder="Enter your password"
@@ -294,7 +297,7 @@ export default function Signup() {
                       type="password"
                       value={formData.reEnterPassword}
                       onChange={handleChange}
-                      className={`pl-10 h-11 border-gray-200 rounded-lg ${
+                      className={`pl-10 h-11  border-gray-200 rounded-lg ${
                         errors.reEnterPassword ? "border-red-500" : ""
                       }`}
                       placeholder="Re-enter your password"
@@ -324,23 +327,7 @@ export default function Signup() {
                   )}
                 </Button>
               </form>
-{/* 
-              <div className="mt-6 mb-6 relative flex items-center">
-                <div className="flex-grow border-t border-gray-200"></div>
-                <span className="flex-shrink mx-4 text-[12px] text-gray-500">OR</span>
-                <div className="flex-grow border-t border-gray-200"></div>
-              </div>
-
-              <Button
-                variant="outline"
-                className="w-full h-11 border-[#2563EB] text-[#2563EB] hover:bg-[#2563EB]/5 text-[14px]"
-                onClick={() => window.location.href = '/login'}
-              >
-                Log in to existing account
-              </Button> */}
-              <div className='pt-8 w-full flex flex-col text-sm items-end text-gray-500'>
-                 © 2025 Ambition Forge Pvt Ltd
-              </div>
+            </div>
             </div>
           </div>
         </div>
