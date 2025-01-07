@@ -95,28 +95,29 @@ export default function Login() {
     <div className="min-h-screen relative w-full bg-white lg:bg-gradient-to-br from-[#DBEAFE] to-white">
       <div className="container mx-auto min-h-screen lg:max-w-[93vw]">
         
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 min-h-screen items-center px-8">
+        <div className=" h-[10vh] py-12  px-20 p-6 hidden lg:block">
+            <div className='flex items-center'>
+              <Image
+                src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
+                width={30}
+                height={30}
+                alt="Atom Infra Logo"
+                className='h-[47px] w-[48px]'
+                priority
+              />
+              <div className='relative text-[49px] font-[700] tracking-tight l-[30px]' style={{ left: '-2px' }}>
+                tom Infra
+              </div>
+            </div>
+          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 h-[90vh] items-center px-8">
           {/* Left side - Features */}
 
-          <div className="hidden  space-y-8 pr-12 h-screen md:flex flex-col justify-evenly" >
-              <div className="">
-                <div className='flex items-center'>
-                  <Image
-                    src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
-                    width={30}
-                    height={30}
-                    alt="Atom Infra Logo"
-                    className='h-[47px] w-[48px]'
-                    priority
-                  />
-                  <div className='relative text-[49px] font-[700] tracking-tight l-[30px]' style={{ left: '-2px' }}>
-                    tom Infra
-                  </div>
-                </div>
-              </div>
+          <div className="hidden  space-y-8 pr-12  md:flex flex-col  lg:p-12 p-6" >
+              
              
-            <Feature
+           <div className='flex flex-col h-full justify-center  gap-8'>
+           <Feature
               icon={<ArrowLeftRight className="h-6 w-6 text-[#2563EB]" />}
               title="Flexibility"
               description="Switch between compute providers easily as your needs change without being locked in."
@@ -131,14 +132,16 @@ export default function Login() {
               title="Cost Savings"
               description="Choose the most cost-effective provider and save money."
             />
+           </div>
           </div>
 
           {/* Right side - Login form */}
-          <div className="w-full max-w-xl  mx-auto">
-            <div className="bg-white lg:p-12 p-6 rounded-[16px] h-[90vh] lg:shadow-xl">
-              <h1 className="text-[28px] font-semibold pb-12 text-gray-900">Sign In</h1>
+          <div className="w-full max-w-xl  mx-auto ">
+            <div className="bg-white lg:p-12 p-6 rounded-[16px]  lg:shadow-xl ">
+              <div className="text-[28px] font-semibold pb-12 text-gray-900 h-[10%]">Sign In</div>
 
-              <form onSubmit={handleLogin} className="space-y-6 flex flex-col justify-center items-center w-full gap-4 ">
+             <div className='h-[90%]  flex flex-col justify-center items-center '>
+             <form onSubmit={handleLogin} className="space-y-6 flex flex-col  justify-center items-center w-full gap-4 ">
                 <div className="space-y-2 w-[95%]">
                   <Label htmlFor="identifier" className="text-[16px] font-medium text-gray-700">
                     Email or Phone Number
@@ -221,6 +224,7 @@ export default function Login() {
               <div className=' pt-8 w-full flex flex-col text-sm  items-end text-gray-500'>
                 © 2025 Ambition Forge Pvt Ltd
               </div>
+             </div>
             </div>
           </div>
         </div>
