@@ -327,9 +327,9 @@ const CreateService: React.FC<CreateServiceProps> = () => {
           <h1 className="lg:text-2xl text-lg font-semibold mb-2">{serviceId ? 'Edit Service' : 'Create New Service'}</h1>
         </div>
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-2">
-            <label htmlFor="service-name" className="text-sm font-medium text-[#374151]">
+        <form className="" onSubmit={handleSubmit}>
+          <div className="pb-4">
+            <label htmlFor="service-name" className="text-sm pl-2 font-medium text-[#374151]">
               Service Name*
             </label>
             <div className="relative">
@@ -358,8 +358,8 @@ const CreateService: React.FC<CreateServiceProps> = () => {
             )}
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="image" className="text-sm font-medium text-[#374151]">
+          <div className="pb-4">
+            <label htmlFor="image" className="pl-2  text-sm font-medium text-[#374151]">
               Image*
             </label>
             <div className="relative">
@@ -377,8 +377,8 @@ const CreateService: React.FC<CreateServiceProps> = () => {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="target_port" className="text-sm font-medium text-[#374151]">
+          <div className="pb-4">
+            <label htmlFor="target_port" className="pl-2  text-sm font-medium text-[#374151]">
               Port*
             </label>
             <Input
@@ -391,8 +391,8 @@ const CreateService: React.FC<CreateServiceProps> = () => {
             />
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="memory-limit" className="text-sm font-medium text-[#374151]">
+          <div className="pb-4">
+            <label htmlFor="memory-limit" className="pl-2  text-sm font-medium text-[#374151]">
               Memory Limit(Mi/Gi)*
             </label>
             <Select 
@@ -423,8 +423,8 @@ const CreateService: React.FC<CreateServiceProps> = () => {
             )}
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="cpu-limit" className="text-sm font-medium text-[#374151]">
+          <div className="pb-4">
+            <label htmlFor="cpu-limit" className="pl-2  text-sm font-medium text-[#374151]">
               CPU Limit*
             </label>
             <Select 
@@ -454,8 +454,8 @@ const CreateService: React.FC<CreateServiceProps> = () => {
             )}
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="registry-credential" className="text-sm font-medium text-[#374151]">
+          <div className="pb-4">
+            <label htmlFor="registry-credential" className="pl-2  text-sm font-medium text-[#374151]">
               Registry Credential
             </label>
             <div className="flex items-center gap-2">
@@ -494,8 +494,8 @@ const CreateService: React.FC<CreateServiceProps> = () => {
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="replicas" className="text-sm font-medium text-[#374151]">
+          <div className="pb-4">
+            <label htmlFor="replicas" className="pl-2  text-sm font-medium text-[#374151]">
               Replicas*
             </label>
             <Select 
@@ -526,9 +526,9 @@ const CreateService: React.FC<CreateServiceProps> = () => {
             )}
           </div>
 
-          <div className="space-y-2">
+          <div className="pb-4">
             <div className="flex justify-between items-center">
-              <label className="text-sm font-medium text-[#374151]">
+              <label className="pl-2  text-sm font-medium text-[#374151]">
                 Environment Variables
               </label>
             </div>
@@ -566,7 +566,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
                     {/* )} */}
                   </div>
                 ))}
-                <Button type="button" variant="outline" onClick={addEnvVariable}>
+                <Button type="button" variant="outline" onClick={addEnvVariable} className='mt-1'>
                   Add Variable
                 </Button>
               </>
