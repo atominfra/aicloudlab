@@ -17,14 +17,14 @@ export default function Providers({ children }) {
         <AppProvider>
           <div className="flex h-screen bg-neutral-100 text-foreground">
             {!hideSidebar && (
-              <div className="lg:w-[15vw]">
+              <div className="lg:w-[15vw] bg-neutral-100">
                 <Sidebar />
               </div>
             )}
-            <div className={`${hideSidebar ? 'w-full' : 'lg:w-[85vw] w-[100vw]'}`}>
+            <div className={`${hideSidebar ? 'w-full' : 'lg:w-[85vw] w-[100vw]'} bg-neutral-100`}>
               {!hideMobileNavs && <MobileTopBar />}
               <main
-                className={`flex-1 overflow-y-scroll ${
+                className={`flex-1 overflow-y-scroll bg-neutral-100 ${
                   hideMobileNavs ? 'h-[100vh]' : 'h-[92vh]'
                 } lg:h-auto`}
               >
