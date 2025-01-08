@@ -139,7 +139,7 @@ export default function CreateClusterPage() {
                 <SelectContent>
                   {cloudAccounts.map(account => (
                     <SelectItem key={account.name} value={account.name}>
-                      {account.name}
+                      Azure Productions
                     </SelectItem>
                   ))}
                 </SelectContent>

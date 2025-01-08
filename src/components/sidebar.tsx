@@ -21,7 +21,7 @@ export function Sidebar() {
     router.prefetch("/credits")
   },[])
   return (
-    <div className="w-[20vw] bg-card border-r border-border bg-neutral-100  flex-col fixed h-screen hidden lg:flex">
+    <div className=" bg-card border-r border-border bg-neutral-100  flex-col fixed h-screen hidden lg:flex">
         <div className="flex px-4 pt-4 pb-2 border-b">
         <Link href="/" className="flex items-center gap-2 px-4 py-2 rounded-lg text-foreground">
         <div className='flex items-center'>
