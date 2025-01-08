@@ -359,8 +359,8 @@ const CreateService: React.FC<CreateServiceProps> = () => {
         </div>
       </div>
 
-      <form className=" max-w-2xl mx-auto pb-6" onSubmit={handleSubmit}>
-        <div className="pb-4">
+      <form className="space-y-6 max-w-2xl mx-auto pb-6" onSubmit={handleSubmit}>
+        <div className="">
           <label htmlFor="service-name" className="text-sm pl-2 font-medium text-[#374151]">
             Service Name*
           </label>
@@ -440,7 +440,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
           </div>
         </div>
 
-        <div className="pb-4">
+        <div className="">
           <label htmlFor="target_port" className="pl-2 text-sm font-medium text-[#374151]">
             Port*
           </label>
@@ -454,7 +454,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
           />
         </div>
 
-        <div className="pb-4">
+        <div className="">
           <label htmlFor="memory-limit" className="pl-2 text-sm font-medium text-[#374151]">
             Memory Limit(Mi/Gi)*
           </label>
@@ -486,7 +486,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
           )}
         </div>
 
-        <div className="pb-4">
+        <div className="">
           <label htmlFor="cpu-limit" className="pl-2 text-sm font-medium text-[#374151]">
             CPU Limit*
           </label>
@@ -518,7 +518,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
           )}
         </div>
 
-        <div className="pb-4">
+        <div className="">
           <label htmlFor="registry-credential" className="pl-2 text-sm font-medium text-[#374151]">
             Registry Credential
           </label>
