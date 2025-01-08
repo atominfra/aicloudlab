@@ -16,7 +16,7 @@ type User = {
 type AuthContextType = {
   user: User
   setUser: (user: User) => void
-  login: (formdata: formdata) => Promise<void>
+  signin: (formdata: formdata) => Promise<void>
   logout: () => void
   loading: boolean
   loginError: string
@@ -44,10 +44,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(false)
   }, [])
 
-  const login = async (formdata: formdata) => {
+  const signin = async (formdata: formdata) => {
     
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/login`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/user/signin`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setLoginError(responseData.message || 'An unexpected error occurred. Please try again.')
       }
     } catch (error) {
-      console.error("Error during login", error)
+      console.error("Error during signin", error)
       setLoginError('An unexpected error occurred. Please try again.')
     } finally {
       setLoading(false)
@@ -82,7 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, setUser, login, loginError, setLoginError, logout, loading }}>
+    <AuthContext.Provider value={{ user, setUser, signin, loginError, setLoginError, logout, loading }}>
       {children}
     </AuthContext.Provider>
   )

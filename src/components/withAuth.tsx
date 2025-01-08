@@ -13,7 +13,7 @@ const withAuth = (WrappedComponent) => {
 
       // Redirect if not authenticated
       if (!isAuthenticated()) {
-        window.location.href = '/login'; 
+        window.location.href = '/signin'; 
       }
     }, []);
 

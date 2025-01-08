@@ -189,7 +189,7 @@ export default function Signup() {
             <div className="bg-white lg:p-12 p-6 rounded-[16px]  lg:shadow-xl w-full">
               <div className="text-[28px] font-semibold  text-gray-900 h-[10%]">Sign Up</div>
               <h1 className="text-[15px] font-normal tracking-tight pb-4  text-gray-500" > Already have an account?  
-                <span className="text-blue-600 hover:underline hover:cursor-pointer pl-1" onClick={() => window.location.href = '/login'} >Log In</span>
+                <span className="text-blue-600 hover:underline hover:cursor-pointer pl-1" onClick={() => window.location.href = '/signin'} >Log In</span>
               </h1>
              <div className='h-[100%]  flex flex-col justify-center items-center '>
              <form onSubmit={handleSubmit} className="  flex flex-col  justify-center items-center w-full gap-4 ">
