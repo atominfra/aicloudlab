@@ -8,13 +8,14 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Trash2 } from 'lucide-react'
-import { fetchOSOptions, fetchPlans, createNode } from '@/app/api/nodes/api'
+import { Plus, Trash2 } from 'lucide-react'
+import { fetchOSOptions, fetchPlans,fetchCloudAccounts, createNode } from '@/app/api/nodes/api'
 import { useApp } from '@/context/AppContext'
 import { CircularProgress } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { Switch } from "@/components/ui/switch"
 import axios from 'axios'
+import Link from 'next/link'
 
 // Types
 interface OSOption {
@@ -38,6 +39,7 @@ interface Plan {
 
 interface NodeData {
   name: string
+  cloudAccount: string
   os: string
   osVersion: string
   plan: string
@@ -60,8 +62,65 @@ const PLAN_COMMITMENTS = [
   { value: 'yearly', label: 'Yearly' }
 ]
 
+const fakeData = [
+  {
+    provider: 'azure',
+    os: 'Windows',
+    osVersion: '10',
+    plan: {
+      id: "premium",
+      plan:"premium",
+      image: "premium",
+      cpu: 2,
+      cpu_type: 'vCPU',
+      ram: 8,
+      disk: '100GB',
+      gpu_card_details: {
+        name: 'NVIDIA Tesla',
+      },
+    },    planCommitment: '1 year'
+  },
+  {
+    provider: 'azure',
+    os: 'Linux',
+    osVersion: 'Ubuntu 20.04',
+    plan: {
+      id: "Standard",
+      plan:"Standard",
+      image: "Standard",
+      cpu: 2,
+      cpu_type: 'vCPU',
+      ram: 8,
+      disk: '100GB',
+      gpu_card_details: {
+        name: 'NVIDIA Tesla',
+      },
+    },
+    planCommitment: '2 years'
+  },
+  {
+    provider: 'aws',
+    os: 'Linux',
+    osVersion: 'Amazon Linux 2',
+    plan: {
+      id: "premium",
+      plan:"premium",
+      image: "premium",
+      cpu: 2,
+      cpu_type: 'vCPU',
+      ram: 8,
+      disk: '100GB',
+      gpu_card_details: {
+        name: 'NVIDIA Tesla',
+      },
+    },    planCommitment: '3 years'
+  },
+  // Add more data as needed
+];
+
 export default function NodeCreationForm({ initialData, isEditMode = false }: NodeCreationFormProps) {
   const [formState, setFormState] = useState<NodeData>({
+    cloudAccount: initialData?.cloudAccount || '',
     name: initialData?.name || '',
     os: initialData?.os || '',
     osVersion: initialData?.osVersion || '',
@@ -78,6 +137,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const [plans, setPlans] = useState<Plan[]>([])
   const [loading, setLoading] = useState(false)
   const [loadingPlans, setLoadingPlans] = useState(false) // Added loadingPlans state
+  const [cloudAccounts, setCloudAccounts] = useState([]);
+  const [selectedCloudAccount, setSelectedCloudAccount] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
   const { auth, node_page_status } = useApp()
   const router = useRouter()
   const [error, setError] = useState('')
@@ -94,6 +156,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     fetchInitialData()
   }, [auth])
   
+  useEffect(()=>{
+    console.log("plans",plans)
+  },[plans])
   useEffect(()=>{
     if(node_page_status === false){
       router.push("/dashboard/nodes")
@@ -117,13 +182,99 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }
   }
 
-  useEffect(() => {
-    fetchAvailablePlans()
-  }, [formState.os, formState.osVersion, auth])
+  const fetchCloudAccount = async (auth) => {
+    try {
+      const plansData = await fetchCloudAccounts(auth)
+      console.log('plansData',plansData)
+      // setCloudAccounts(plansData)
+    } catch (error) {
+      console.error('Failed to fetch plans:', error)
+    } 
+  }
 
+  useEffect(() => {
+    if(filteredData.length === 0){
+      fetchAvailablePlans()
+    }
+  }, [formState.os, formState.osVersion, auth])
+  
+  useEffect(()=>{
+    fetchCloudAccount(auth)
+  },[auth])
   useEffect(() => {
     console.log("formState updated:", formState)
   }, [formState])
+
+  useEffect(() => {
+    async function loadCloudAccounts() {
+      const accounts = await fetchCloudAccounts(auth);
+      setCloudAccounts(accounts);
+    }
+    loadCloudAccounts();
+  }, []);
+
+  useEffect(() => {
+    if (selectedCloudAccount) {
+      const account = cloudAccounts.find(acc => acc.name === selectedCloudAccount);
+      console.log("account",selectedCloudAccount, account)
+      if (account && account.provider === 'azure') {
+        setFilteredData(fakeData.filter(data => data.provider === 'azure'));
+      } else {
+        setFilteredData([]);
+      }
+    }
+  }, [selectedCloudAccount]);
+  useEffect(() => {
+    if (filteredData.length > 0) {
+      setOSOptions(filteredData.map(data => ({
+        name: data.os,
+        version: [data.osVersion],
+      })));
+  
+      setOSVersions(filteredData.map(data => data.osVersion));
+  
+      setPlans(filteredData.map(data => data.plan));
+    }
+  }, [filteredData]);
+  
+
+  async function fetchCloudAccounts(auth) {
+    try {
+      const response = await fetch('/api/cloud-accounts');
+      if (!response.ok) {
+        throw new Error('Failed to fetch cloud accounts');
+      }
+      const data = await response.json();
+      return [{
+        "id": 2,
+        "name": "Azure Dev",
+        "provider":"azure"
+    },{
+      "id": 1,
+      "name": "Azure Production",
+      "provider":"azure"
+    },{
+      "id": 0,
+      "name": "Default (E2E)",
+      "provider":"e2e"
+    }];
+    } catch (error) {
+      console.error(error);
+      return [{
+        "id": 2,
+        "name": "Azure Dev",
+        "provider":"azure"
+    },{
+      "id": 1,
+      "name": "Azure Production",
+        "provider":"azure"
+    },{
+      "id": 0,
+      "name": "Default (E2E)",
+      "provider":"e2e"
+    }];
+    }
+  }
 
   const updateFormState = (field: keyof NodeData, value) => {
     setFormState(prev => ({ ...prev, [field]: value }))
@@ -181,6 +332,16 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       }))
     }
   }
+
+  const findAccount = (plans: Plan[], value: string) => {
+    return cloudAccounts.find((plan) => plan.name === value)
+  }
+
+
+  const handleCloudAccountChange = (value: string) => {
+    setSelectedCloudAccount(value);
+    updateFormState('cloudAccount', value);
+  };
 
   const addSSHKey = () => {
     setFormState(prev => ({
@@ -285,6 +446,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   //   </div>
   // );
   }
+  
 
   const renderPlanCommitmentOptions = () => {
     return PLAN_COMMITMENTS.map((option) => (
@@ -294,6 +456,8 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     ));
   };
 
+
+  
     // prefetch routes for faster navigation
     useEffect(() => {
       router.prefetch('/dashboard/nodes');
@@ -321,6 +485,39 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 className="max-w-full placeholder:text-black text-sm "
               />
             </div>
+
+            <div className='space-y-2'>
+                <label htmlFor="cloud_account" className="pl-2 text-sm font-medium text-[#374151]">
+                  Select Cloud Account*
+                </label>
+              <div className='flex gap-2'>
+              <Select 
+                  value={cloudAccounts.find(p => p.name === formState.cloudAccount)?.name || ''}
+                  onValueChange={handleCloudAccountChange}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Cloud Account" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {cloudAccounts.map((account) => (
+                      <SelectItem key={account.id} value={account.name}>{account.name}</SelectItem>
+                    ))}
+                    {/* <SelectItem value="e2e">Default (E2E)</SelectItem> */}
+                  </SelectContent>
+                </Select>
+                <Button 
+                variant="outline" 
+                size="icon" 
+                asChild
+                className="flex-shrink-0"
+              >
+                <Link href="/clusters/connect-account">
+                  <Plus className="h-4 w-4" />
+                  <span className="sr-only">Connect Account</span>
+                </Link>
+              </Button>
+              </div>
+              </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">

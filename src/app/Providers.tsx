@@ -13,10 +13,12 @@ export default function Providers({ children }) {
         <AuthProvider>
           <AppProvider>
             <div className="flex h-screen bg-neutral-100 text-foreground">
+            <div className='lg:w-[20vw]'>
             {!hideSidebar && <Sidebar />}
-              <div className="w-full">
+            </div>
+              <div className="lg:w-[80vw] w-[100vw]">
               {!hideMobileNavs && <MobileTopBar/>}
-              <main className={`flex-1 overflow-auto ${hideMobileNavs ? "h-[100vh]":"h-[92vh]"} lg:h-auto `}>
+              <main className={`flex-1 overflow-y-scroll ${hideMobileNavs ? "h-[100vh]":"h-[92vh]"} lg:h-auto `}>
                 {children}
               </main>
               {/* {!hideMobileNavs && <MobileBottomBar/>} */}
