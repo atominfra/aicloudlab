@@ -13,6 +13,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { useRouter } from 'next/navigation'
+import { useApp } from '@/context/AppContext'
+import { fetchCloudAccounts } from '@/app/api/nodes/api'
 
 export default function CreateClusterPage() {
   const router = useRouter()
@@ -25,9 +27,10 @@ export default function CreateClusterPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isNameTouched, setIsNameTouched] = useState(false)
-  const [connectedAccounts] = useState([
-    { id: '1', name: 'Azure Production', type: 'azure' }
-  ])
+  const [cloudAccounts, setCloudAccounts] = useState([]);
+
+    const { auth, node_page_status } = useApp()
+  
 
   useEffect(() => {
     return () => {
@@ -43,6 +46,22 @@ export default function CreateClusterPage() {
       setError(null) 
     }
   }
+
+  
+
+  const fetchCloudAccount = async (auth) => {
+    try {
+      const plansData = await fetchCloudAccounts(auth)
+      console.log('plansData',plansData)
+      setCloudAccounts(plansData)
+    } catch (error) {
+      console.error('Failed to fetch plans:', error)
+    } 
+  }
+
+    useEffect(()=>{
+      fetchCloudAccount(auth)
+    },[auth])
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -97,12 +116,12 @@ export default function CreateClusterPage() {
                 className={`max-w-full ${isNameTouched && formData.name === '' ? 'border-red-500' : ''}`}
               />
             </div>
-            {isNameTouched && formData.name === '' && (
+            {/* {isNameTouched && formData.name === '' && (
               <p className="text-red-500 text-sm">Name cannot be empty.</p>
             )}
             {isNameTouched && (formData.name.includes('_') || formData.name.includes(' ')) && (
               <p className="text-red-500 text-sm">Name cannot contain an underscore (_) or spaces.</p>
-            )}
+            )} */}
           </div>
 
           <div className="space-y-2">
@@ -111,15 +130,15 @@ export default function CreateClusterPage() {
             </label>
             <div className="flex space-x-2">
               <Select 
-                value={formData.account} 
+                  value={formData.account}
                 onValueChange={(value) => handleChange('account', value)}
               >
                 <SelectTrigger className="flex-grow">
                   <SelectValue placeholder="Select cloud account" />
                 </SelectTrigger>
                 <SelectContent>
-                  {connectedAccounts.map(account => (
-                    <SelectItem key={account.id} value={account.id}>
+                  {cloudAccounts.map(account => (
+                    <SelectItem key={account.name} value={account.name}>
                       {account.name}
                     </SelectItem>
                   ))}
@@ -184,7 +203,7 @@ export default function CreateClusterPage() {
           )}
 
           <div className="flex justify-end space-x-4 pt-4">
-            <Button variant="outline" className='text-[14px]' onClick={() => router.push('/clusters')}>Cancel</Button>
+            <Button variant="outline" className='text-[14px]' onClick={() => router.push('/create/service')}>Cancel</Button>
             <Button type="submit" disabled={true} className='bg-[#2563EB] text-[14px]'>
               {isLoading ? 'Creating...' : 'Create Cluster (Coming Soon)'}
             </Button>
