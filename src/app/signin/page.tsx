@@ -83,7 +83,7 @@ export default function Login() {
     setLoginError('')
   }
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSignin = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!validateForm()) {
       return
@@ -136,13 +136,13 @@ export default function Login() {
             <div className="bg-white lg:p-12 p-6 rounded-[16px] lg:shadow-xl w-full">
               <div className="text-[28px] font-semibold text-gray-900 h-[10%]">Sign In</div>
               <h1 className="text-[15px] font-normal tracking-tight pb-4 text-gray-500">
-                Don't have an account?
+                Don&apos;t have an account?
                 <span className="text-blue-600 hover:underline hover:cursor-pointer pl-1" onClick={() => window.location.href = '/signup'}>
                   Sign Up
                 </span>
               </h1>
               <div className='h-[100%] flex flex-col justify-center items-center'>
-                <form onSubmit={handleLogin} className="flex flex-col justify-center items-center w-full gap-8">
+                <form onSubmit={handleSignin} className="flex flex-col justify-center items-center w-full gap-8">
                   <div className="space-y-2 w-[95%]">
                     <Label htmlFor="identifier" className="text-[16px] font-medium text-gray-700">
                       Email or Phone Number
