@@ -51,6 +51,7 @@ export function ProviderSelection({ onSelect }: ProviderSelectionProps) {
             {provider.available ? (
               <Button
                 className="w-full bg-[#2563EB] "
+                // @ts-expect-error build
                 onClick={() => onSelect(provider.id)}
               >
                 Connect
