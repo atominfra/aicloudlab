@@ -182,15 +182,15 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }
   }
 
-  const fetchCloudAccount = async (auth) => {
-    try {
-      const plansData = await fetchCloudAccounts(auth)
-      console.log('plansData',plansData)
-      // setCloudAccounts(plansData)
-    } catch (error) {
-      console.error('Failed to fetch plans:', error)
-    } 
-  }
+  // const fetchCloudAccount = async (auth) => {
+  //   try {
+  //     const plansData = await fetchCloudAccounts(auth)
+  //     console.log('plansData',plansData)
+  //     // setCloudAccounts(plansData)
+  //   } catch (error) {
+  //     console.error('Failed to fetch plans:', error)
+  //   } 
+  // }
 
   useEffect(() => {
     if(filteredData.length === 0){
@@ -198,9 +198,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }
   }, [formState.os, formState.osVersion, auth])
   
-  useEffect(()=>{
-    fetchCloudAccount(auth)
-  },[auth])
+  // useEffect(()=>{
+  //   fetchCloudAccount(auth)
+  // },[auth])
   useEffect(() => {
     console.log("formState updated:", formState)
   }, [formState])
@@ -238,43 +238,43 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }, [filteredData]);
   
 
-  async function fetchCloudAccounts(auth) {
-    try {
-      const response = await fetch('/api/cloud-accounts');
-      if (!response.ok) {
-        throw new Error('Failed to fetch cloud accounts');
-      }
-      const data = await response.json();
-      return [{
-        "id": 2,
-        "name": "Azure Dev",
-        "provider":"azure"
-    },{
-      "id": 1,
-      "name": "Azure Production",
-      "provider":"azure"
-    },{
-      "id": 0,
-      "name": "Default (E2E)",
-      "provider":"e2e"
-    }];
-    } catch (error) {
-      console.error(error);
-      return [{
-        "id": 2,
-        "name": "Azure Dev",
-        "provider":"azure"
-    },{
-      "id": 1,
-      "name": "Azure Production",
-        "provider":"azure"
-    },{
-      "id": 0,
-      "name": "Default (E2E)",
-      "provider":"e2e"
-    }];
-    }
-  }
+  // async function fetchCloudAccounts(auth) {
+  //   try {
+  //     const response = await fetch('/api/cloud-accounts');
+  //     if (!response.ok) {
+  //       throw new Error('Failed to fetch cloud accounts');
+  //     }
+  //     const data = await response.json();
+  //     return [{
+  //       "id": 2,
+  //       "name": "Azure Dev",
+  //       "provider":"azure"
+  //   },{
+  //     "id": 1,
+  //     "name": "Azure Production",
+  //     "provider":"azure"
+  //   },{
+  //     "id": 0,
+  //     "name": "Default (E2E)",
+  //     "provider":"e2e"
+  //   }];
+  //   } catch (error) {
+  //     console.error(error);
+  //     return [{
+  //       "id": 2,
+  //       "name": "Azure Dev",
+  //       "provider":"azure"
+  //   },{
+  //     "id": 1,
+  //     "name": "Azure Production",
+  //       "provider":"azure"
+  //   },{
+  //     "id": 0,
+  //     "name": "Default (E2E)",
+  //     "provider":"e2e"
+  //   }];
+  //   }
+  // }
 
   const updateFormState = (field: keyof NodeData, value) => {
     setFormState(prev => ({ ...prev, [field]: value }))
@@ -499,7 +499,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     <SelectValue placeholder="Select Cloud Account" />
                   </SelectTrigger>
                   <SelectContent>
-                    {cloudAccounts.map((account) => (
+                    {cloudAccounts && cloudAccounts.map((account) => (
                       <SelectItem key={account.id} value={account.name}>{account.name}</SelectItem>
                     ))}
                     {/* <SelectItem value="e2e">Default (E2E)</SelectItem> */}

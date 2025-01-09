@@ -103,13 +103,13 @@ export async function fetchCloudAccounts(auth) {
 
     if (!response.ok) {
       const errorDetails = await response.text();
-      throw new Error(`HTTP Error ${response.status}: ${response.statusText}. Details: ${errorDetails}`);
+      // throw new Error(`HTTP Error ${response.status}: ${response.statusText}. Details: ${errorDetails}`);
     }
 
     return await response.json();
   } catch (error) {
     console.error(`API Request Failed: `, error);
-    throw new Error(error.message || 'An unexpected error occurred');
+    // throw new Error(error.message || 'An unexpected error occurred');
   }
 }
 

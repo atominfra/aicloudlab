@@ -137,10 +137,8 @@ export default function CreateClusterPage() {
                   <SelectValue placeholder="Select cloud account" />
                 </SelectTrigger>
                 <SelectContent>
-                  {cloudAccounts.map(account => (
-                    <SelectItem key={account.name} value={account.name}>
-                      Azure Productions
-                    </SelectItem>
+                  {cloudAccounts && cloudAccounts.map(account => (
+                    <SelectItem key={account.id} value={account.name}>{account.name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
