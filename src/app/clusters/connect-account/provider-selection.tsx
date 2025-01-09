@@ -29,6 +29,12 @@ export function ProviderSelection({ onSelect }: ProviderSelectionProps) {
       description: 'Connect your GCP project',
       available: false,
     },
+    {
+      id: 'e2e' as const,
+      name: 'E2E',
+      description: 'Connect your E2E account',
+      available: false,
+    },
   ]
 
   return (
