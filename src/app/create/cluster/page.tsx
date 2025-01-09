@@ -138,7 +138,7 @@ export default function CreateClusterPage() {
             {isLoadingCloudAccounts ? (
           <div className="flex items-center w-full bg-white text-sm">
             <CircularProgress size={16} className="mx-2 " />
-            Loading plans...
+            Loading accounts...
           </div>
         ) :(
               <Select 
