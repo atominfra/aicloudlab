@@ -7,8 +7,8 @@ import { usePathname } from "next/navigation";
 import { AuthProvider } from '@/context/AuthContext';
 export default function Providers({ children }) {
   const pathname = usePathname();
-  const hideSidebar = pathname === "/signin" || pathname === "/signup";
-  const hideMobileNavs = pathname === "/signin" || pathname === "/signup";
+  const hideSidebar = pathname === "/login" || pathname === "/signup";
+  const hideMobileNavs = pathname === "/login" || pathname === "/signup";
   return <>
         <AuthProvider>
           <AppProvider>

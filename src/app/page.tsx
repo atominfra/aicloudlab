@@ -16,7 +16,7 @@ const Home: React.FC = () => {
     if (auth && auth !== '') {
       window.location.href = '/dashboard/services';
     } else {
-      window.location.href = '/signin';
+      window.location.href = '/login';
     }
   }, [auth]);
 
