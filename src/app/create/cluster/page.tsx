@@ -15,6 +15,7 @@ import {
 import { useRouter } from 'next/navigation'
 import { useApp } from '@/context/AppContext'
 import { fetchCloudAccounts } from '@/app/api/nodes/api'
+import { CircularProgress } from '@mui/material'
 
 export default function CreateClusterPage() {
   const router = useRouter()
@@ -28,9 +29,11 @@ export default function CreateClusterPage() {
   const [error, setError] = useState<string | null>(null)
   const [isNameTouched, setIsNameTouched] = useState(false)
   const [cloudAccounts, setCloudAccounts] = useState([]);
-
+  const [isLoadingCloudAccounts, setIsLoadingCloudAccounts] = useState(true);
     const { auth, node_page_status } = useApp()
   
+
+
 
   useEffect(() => {
     return () => {
@@ -51,9 +54,12 @@ export default function CreateClusterPage() {
 
   const fetchCloudAccount = async (auth) => {
     try {
+      setIsLoadingCloudAccounts(true);
       const plansData = await fetchCloudAccounts(auth)
       console.log('plansData',plansData)
       setCloudAccounts(plansData)
+      setIsLoadingCloudAccounts(false);
+
     } catch (error) {
       console.error('Failed to fetch plans:', error)
     } 
@@ -129,6 +135,12 @@ export default function CreateClusterPage() {
               Cloud Account*
             </label>
             <div className="flex space-x-2">
+            {isLoadingCloudAccounts ? (
+          <div className="flex items-center w-full bg-white text-sm">
+            <CircularProgress size={16} className="mx-2 " />
+            Loading plans...
+          </div>
+        ) :(
               <Select 
                   value={formData.account}
                 onValueChange={(value) => handleChange('account', value)}
@@ -142,6 +154,7 @@ export default function CreateClusterPage() {
                   ))}
                 </SelectContent>
               </Select>
+              )}
               <Button 
                 variant="outline" 
                 size="icon" 
@@ -155,46 +168,6 @@ export default function CreateClusterPage() {
               </Button>
             </div>
           </div>
-
-          {/* <div className="space-y-2">
-            <label htmlFor="vm-size" className="text-sm font-medium text-[#374151]">
-              VM Size
-            </label>
-            <Select 
-              value={formData.vmSize} 
-              onValueChange={(value) => handleChange('vmSize', value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select VM size" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="standard_d2s_v3">Standard_D2s_v3 (2 vCPU, 8 GB RAM)</SelectItem>
-                <SelectItem value="standard_d4s_v3">Standard_D4s_v3 (4 vCPU, 16 GB RAM)</SelectItem>
-                <SelectItem value="standard_d8s_v3">Standard_D8s_v3 (8 vCPU, 32 GB RAM)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div> */}
-
-          {/* <div className="space-y-2">
-            <label htmlFor="node-count" className="text-sm font-medium text-[#374151]">
-              Number of Nodes
-            </label>
-            <Select 
-              value={formData.nodeCount} 
-              onValueChange={(value) => handleChange('nodeCount', value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select number of nodes" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">1 Node</SelectItem>
-                <SelectItem value="2">2 Nodes</SelectItem>
-                <SelectItem value="3">3 Nodes</SelectItem>
-                <SelectItem value="4">4 Nodes</SelectItem>
-                <SelectItem value="5">5 Nodes</SelectItem>
-              </SelectContent>
-            </Select>
-          </div> */}
 
           {error && isNameTouched && (
             <p className="text-red-500 text-sm">{error}</p>
