@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link"
-import { Book, Cpu, Router } from 'lucide-react'
+import { Book, Cpu, FolderOpen, Router } from 'lucide-react'
 import { cn } from "@/lib/utils"
 import { usePathname, useRouter } from 'next/navigation'
 import Image from "next/image"
@@ -46,20 +46,20 @@ export function Sidebar() {
         {/* <ThemeToggle /> */}
       <nav className="flex-1 p-4">
         <ul className="space-y-2">
-        <li>
-            <Link
-              href="/dashboard/services"
+          <li>
+          <Link
+              href="/dashboard/projects"
               className={cn(
                 "flex items-center gap-2 px-4 py-2 rounded-lg text-foreground ",
-                pathname === '/dashboard/services' || pathname ===  '/create/service' ? "bg-blue-600 text-white":"hover:bg-accent",
+                pathname === '/dashboard/projects' || pathname ===  '/create/projects' ? "bg-blue-600 text-white":"hover:bg-accent",
 
               )}
             >
-              <Router size={20} />
+              <FolderOpen size={20} />
               {/* <Image
               alt="nodes"
               src={nodeIcon}/> */}
-              <span>Services</span>
+              <span>Projects</span>
             </Link>
           </li>
           <li>

@@ -61,63 +61,6 @@ const PLAN_COMMITMENTS = [
   { value: 'quarterly', label: 'Quarterly' },
   { value: 'yearly', label: 'Yearly' }
 ]
-
-const fakeData = [
-  {
-    provider: 'azure',
-    os: 'Windows',
-    osVersion: '10',
-    plan: {
-      id: "premium",
-      plan:"premium",
-      image: "premium",
-      cpu: 2,
-      cpu_type: 'vCPU',
-      ram: 8,
-      disk: '100GB',
-      gpu_card_details: {
-        name: 'NVIDIA Tesla',
-      },
-    },    planCommitment: '1 year'
-  },
-  {
-    provider: 'azure',
-    os: 'Linux',
-    osVersion: 'Ubuntu 20.04',
-    plan: {
-      id: "Standard",
-      plan:"Standard",
-      image: "Standard",
-      cpu: 2,
-      cpu_type: 'vCPU',
-      ram: 8,
-      disk: '100GB',
-      gpu_card_details: {
-        name: 'NVIDIA Tesla',
-      },
-    },
-    planCommitment: '2 years'
-  },
-  {
-    provider: 'aws',
-    os: 'Linux',
-    osVersion: 'Amazon Linux 2',
-    plan: {
-      id: "premium",
-      plan:"premium",
-      image: "premium",
-      cpu: 2,
-      cpu_type: 'vCPU',
-      ram: 8,
-      disk: '100GB',
-      gpu_card_details: {
-        name: 'NVIDIA Tesla',
-      },
-    },    planCommitment: '3 years'
-  },
-  // Add more data as needed
-];
-
 export default function NodeCreationForm({ initialData, isEditMode = false }: NodeCreationFormProps) {
   const [formState, setFormState] = useState<NodeData>({
     account: initialData?.account || '',
@@ -139,7 +82,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const [loadingPlans, setLoadingPlans] = useState(false) // Added loadingPlans state
   const [accounts, setAccounts] = useState([]);
   const [selectedCloudAccount, setSelectedCloudAccount] = useState('');
-  const [filteredData, setFilteredData] = useState([]);
   const { auth, node_page_status } = useApp()
   const router = useRouter()
   const [error, setError] = useState('')
@@ -159,11 +101,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   useEffect(()=>{
     console.log("plans",plans)
   },[plans])
-  useEffect(()=>{
-    if(node_page_status === false){
-      router.push("/dashboard/nodes")
-    }
-  },[node_page_status])
+
   useEffect(() => {
     const selectedOSOption = osOptions.find(os => os.name === formState.os)
     setOSVersions(selectedOSOption?.version || [])
@@ -171,36 +109,21 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
   const fetchAvailablePlans = async () => {
     if (!formState.os || !formState.osVersion) return
-    setLoadingPlans(true) // Set loadingPlans to true before fetching
+    setLoadingPlans(true) 
     try {
       const plansData = await fetchPlans(auth, formState.os, formState.osVersion)
       setPlans(plansData.data.plans)
     } catch (error) {
       console.error('Failed to fetch plans:', error)
     } finally {
-      setLoadingPlans(false) // Set loadingPlans to false after fetching (success or failure)
+      setLoadingPlans(false) 
     }
   }
 
-  // const fetchCloudAccount = async (auth) => {
-  //   try {
-  //     const plansData = await fetchCloudAccounts(auth)
-  //     console.log('plansData',plansData)
-  //     // setCloudAccounts(plansData)
-  //   } catch (error) {
-  //     console.error('Failed to fetch plans:', error)
-  //   } 
-  // }
-
   useEffect(() => {
-    if(filteredData.length === 0){
       fetchAvailablePlans()
-    }
   }, [formState.os, formState.osVersion, auth])
   
-  // useEffect(()=>{
-  //   fetchCloudAccount(auth)
-  // },[auth])
   useEffect(() => {
     console.log("formState updated:", formState)
   }, [formState])
@@ -212,69 +135,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }
     loadCloudAccounts();
   }, []);
-
-  useEffect(() => {
-    if (selectedCloudAccount) {
-      const account = accounts.find(acc => acc.name === selectedCloudAccount);
-      console.log("account",selectedCloudAccount, account)
-      if (account && account.provider === 'azure') {
-        setFilteredData(fakeData.filter(data => data.provider === 'azure'));
-      } else {
-        setFilteredData([]);
-      }
-    }
-  }, [selectedCloudAccount]);
-  useEffect(() => {
-    if (filteredData.length > 0) {
-      setOSOptions(filteredData.map(data => ({
-        name: data.os,
-        version: [data.osVersion],
-      })));
   
-      setOSVersions(filteredData.map(data => data.osVersion));
-  
-      setPlans(filteredData.map(data => data.plan));
-    }
-  }, [filteredData]);
-  
-
-  // async function fetchCloudAccounts(auth) {
-  //   try {
-  //     const response = await fetch('/api/cloud-accounts');
-  //     if (!response.ok) {
-  //       throw new Error('Failed to fetch cloud accounts');
-  //     }
-  //     const data = await response.json();
-  //     return [{
-  //       "id": 2,
-  //       "name": "Azure Dev",
-  //       "provider":"azure"
-  //   },{
-  //     "id": 1,
-  //     "name": "Azure Production",
-  //     "provider":"azure"
-  //   },{
-  //     "id": 0,
-  //     "name": "Default (E2E)",
-  //     "provider":"e2e"
-  //   }];
-  //   } catch (error) {
-  //     console.error(error);
-  //     return [{
-  //       "id": 2,
-  //       "name": "Azure Dev",
-  //       "provider":"azure"
-  //   },{
-  //     "id": 1,
-  //     "name": "Azure Production",
-  //       "provider":"azure"
-  //   },{
-  //     "id": 0,
-  //     "name": "Default (E2E)",
-  //     "provider":"e2e"
-  //   }];
-  //   }
-  // }
 
   const updateFormState = (field: keyof NodeData, value) => {
     setFormState(prev => ({ ...prev, [field]: value }))
@@ -314,7 +175,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       router.push('/dashboard/nodes')
     } catch (error) {
       console.error('Failed to create node:', error)
-      // Handle error (e.g., show error message to user)
     } finally {
       setLoading(false)
     }
@@ -335,10 +195,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         image: selectedPlan.image
       }))
     }
-  }
-
-  const findAccount = (plans: Plan[], value: string) => {
-    return accounts.find((plan) => plan.name === value)
   }
 
 
@@ -496,7 +352,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 </label>
               <div className='flex gap-2'>
               <Select 
-                  value={accounts.find(p => p.name === formState.account)?.name || ''}
+                  value={accounts && accounts.find(p => p.name === formState.account)?.name || ''}
                   onValueChange={handleCloudAccountChange}
                 >
                   <SelectTrigger>
