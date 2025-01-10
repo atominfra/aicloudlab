@@ -14,7 +14,7 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (auth && auth !== '') {
-      window.location.href = '/dashboard/services';
+      window.location.href = '/dashboard/projects';
     } else {
       window.location.href = '/login';
     }

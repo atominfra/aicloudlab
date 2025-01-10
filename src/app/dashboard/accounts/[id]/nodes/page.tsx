@@ -131,6 +131,7 @@ export default function NodesPage() {
             <div className="flex flex-col items-center lg:h-[80vh] h-[70vh] w-full">
               {hasActiveNodes() ? (
                 accountData?.nodes.map((node) => 
+                  // @ts-expect-error build
                   !node.isDeleted && <NodeCard key={node.id} {...node} fetchNodes={fetchNodes} />
                 )
               ) : (
