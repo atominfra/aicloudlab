@@ -448,7 +448,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
         </div>
         </div>
 
-        {serviceType === 'kubernetes' && (
+        {serviceType === 'docker-compose' && (
         <div>
           <label htmlFor="node" className="pl-2 text-sm font-medium text-[#374151]">
             Select Node*
@@ -487,7 +487,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
         </div>
       )}
 
-      {serviceType === 'docker-compose' && (
+      {serviceType === 'kubernetes' && (
         <div>
           <label htmlFor="cluster" className="pl-2 text-sm font-medium text-[#374151]">
             Select Cluster*
