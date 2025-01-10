@@ -434,17 +434,6 @@ const CreateService: React.FC<CreateServiceProps> = () => {
               <SelectItem value="docker-compose">Docker Compose </SelectItem>
             </SelectContent>
           </Select>
-          <Button 
-                variant="outline" 
-                size="icon" 
-                asChild
-                className="flex-shrink-0"
-              >
-                <div onClick={handleAddNewCluster}>
-                  <Plus className="h-4 w-4" />
-                  <span className="sr-only">Connect Account</span>
-                </div>
-              </Button>
         </div>
         </div>
 
