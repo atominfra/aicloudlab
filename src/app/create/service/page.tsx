@@ -730,7 +730,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
         )}
 
         <div className="flex justify-end space-x-4 pt-4">
-          <Button variant="outline" className="text-[14px]" onClick={() => router.push('/dashboard/project')}>Cancel</Button>
+          <Button variant="outline" className="text-[14px]" onClick={() => router.push('/dashboard/projects')}>Cancel</Button>
           <Button type="submit" disabled={isLoading} className="bg-[#2563EB] text-[14px]">
             {isLoading ? 'Saving...' : serviceId ? 'Update Service' : 'Deploy Service'}
           </Button>
