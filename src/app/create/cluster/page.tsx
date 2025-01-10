@@ -21,12 +21,14 @@ export default function CreateClusterPage() {
   const router = useRouter()
   const [formData, setFormData] = useState({
     name: '',
+    projectId:'',
     account: '',
     vmSize: '',
     nodeCount: ''
   })
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [projects, setProjects] = useState([])
   const [isNameTouched, setIsNameTouched] = useState(false)
   const [cloudAccounts, setCloudAccounts] = useState([]);
   const [isLoadingCloudAccounts, setIsLoadingCloudAccounts] = useState(true);
@@ -129,6 +131,39 @@ export default function CreateClusterPage() {
               <p className="text-red-500 text-sm">Name cannot contain an underscore (_) or spaces.</p>
             )} */}
           </div>
+
+          <div className='space-y-2'>
+                <label htmlFor="project-id" className="pl-2 text-sm font-medium ">
+                  Select Project *
+                </label>
+              <div className='flex gap-2'>
+              <Select 
+                  value={projects && projects.find(p => p.name === formData.projectId)?.name || ''}
+                  onValueChange={(value) => handleChange('account', value)}
+                  >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Project " />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {projects.length > 0 ? projects.map((project) => (
+                      <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
+                    )): <SelectItem value="no-project-available">No projects Available</SelectItem>}
+                  </SelectContent>
+                </Select>
+                <Button 
+                variant="outline" 
+                size="icon" 
+                asChild
+                className="flex-shrink-0"
+              >
+                <Link href="/create/project">
+                  <Plus className="h-4 w-4" />
+                  <span className="sr-only">Connect Account</span>
+                </Link>
+              </Button>
+              </div>
+              </div>
+
 
           <div className="space-y-2">
             <label htmlFor="cloud-account" className="text-sm font-medium text-[#374151]">
