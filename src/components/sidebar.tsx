@@ -1,6 +1,6 @@
 "use client"
 import Link from "next/link"
-import { Book, Cpu, FolderOpen, Router } from 'lucide-react'
+import { Book, Cloud, Cpu, FolderOpen, Router } from 'lucide-react'
 import { cn } from "@/lib/utils"
 import { usePathname, useRouter } from 'next/navigation'
 import Image from "next/image"
@@ -21,7 +21,7 @@ export function Sidebar() {
     router.prefetch("/credits")
   },[])
   return (
-    <div className=" bg-card border-r border-border bg-neutral-100  flex-col fixed h-screen hidden lg:flex">
+    <div className=" bg-card border-r border-border bg-white rounded-r-2xl shadow-md flex-col fixed h-screen hidden lg:flex">
         <div className="flex px-4 pt-4 pb-2 border-b">
         <Link href="/" className="flex items-center gap-2 px-4 py-2 rounded-lg text-foreground">
         <div className='flex items-center'>
@@ -60,6 +60,22 @@ export function Sidebar() {
               alt="nodes"
               src={nodeIcon}/> */}
               <span>Projects</span>
+            </Link>
+          </li>
+          <li>
+          <Link
+              href="/dashboard/accounts"
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-lg text-foreground ",
+                pathname === '/dashboard/accounts' || pathname ===  '/dashboard/accounts' ? "bg-blue-600 text-white":"hover:bg-accent",
+
+              )}
+            >
+              <Cloud size={20} />
+              {/* <Image
+              alt="nodes"
+              src={nodeIcon}/> */}
+              <span>Accounts</span>
             </Link>
           </li>
         </ul>
