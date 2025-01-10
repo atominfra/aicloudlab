@@ -1,0 +1,130 @@
+'use client'
+
+import React, { useState, useEffect } from 'react'
+import { FolderInput, FolderOpen, Github } from 'lucide-react'
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import Image from "next/image"
+import { useRouter } from 'next/navigation'
+import { createNotebook } from '@/app/api/notebooks/api'
+import { useApp } from '@/context/AppContext'
+import notebookInput from "@/assets/notebookInput.svg"
+import githubInput from "@/assets/githubInput.svg"
+
+export default function CreateNotebook() {
+  const router = useRouter()
+  const { auth } = useApp()
+  const [formData, setFormData] = useState({
+    projectName: '',
+  })
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [isNameTouched, setIsNameTouched] = useState(false)
+
+  useEffect(() => {
+    return () => {
+      setError(null);
+      setIsNameTouched(false);
+    };
+  }, []);
+
+  const handleChange = (name: string, value: string) => {
+    setFormData(prev => ({ ...prev, [name]: value }))
+    if (name === 'name' && value.trim() !== '') {
+      setIsNameTouched(true)
+      setError(null) 
+    }
+  }
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
+    setIsNameTouched(true)
+    setError(null)
+    setIsLoading(true)
+
+    if (formData.projectName.includes('_') || formData.projectName.includes(' ')) {
+      setError('Name cannot contain an underscore (_) or spaces.')
+      setIsLoading(false)
+      return
+    }
+
+    if (formData.projectName === '') {
+      setError('Please enter a name')
+      setIsLoading(false)
+      return
+    }
+
+    const payload = {
+      name: formData.projectName,
+    }
+
+    try {
+      const response = await createNotebook(auth, payload)
+      if (response) {
+        router.push('/dashboard/project')
+      } else {
+        setError('Failed to create project')
+      }
+    } catch (err) {
+      setError('An error occurred while creating the project')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return (
+    <div className='lg:p-6 bg-neutral-100 lg:h-screen flex justify-center  h-[92dvh]  '>
+      <div className="max-w-2xl mx-auto p-4 lg:p-6 w-full ">
+      <div className="text-center mb-8 relative">
+        <h1 className="lg:text-2xl text-lg font-semibold mb-2">Create New Project</h1>
+      </div>
+
+      <form className="space-y-6" onSubmit={handleSubmit}>
+        <div className="space-y-2">
+          <label htmlFor="project-name" className="text-sm font-medium text-[#374151]">
+            Project Name*
+          </label>
+         <div className="relative">
+          <Input
+              id="project-name"
+              name="name"
+              value={formData.projectName}
+              onChange={(e) => handleChange('name', e.target.value)}
+              placeholder="Enter project name"
+              className={`max-w-full ${isNameTouched && formData.projectName === '' ? 'border-red-500' : ''}`}
+            />
+            <div className='flex justify-center items-center bg-white w-[30px] h-[22px] absolute right-3 top-2.5'>
+                <FolderOpen className=" text-muted-foreground h-[15px] w-[15px]"/>
+             </div>
+         </div>
+          {isNameTouched && formData.projectName === '' && (
+            <p className="text-red-500 text-sm">Name cannot be empty.</p>
+          )}
+          {isNameTouched && (formData.projectName.includes('_') || formData.projectName.includes(' ')) && (
+            <p className="text-red-500 text-sm">Name cannot contain an underscore (_) or spaces.</p>
+          )}
+        </div>
+
+        {error && isNameTouched && (
+          <p className="text-red-500 text-sm">{error}</p>
+        )}
+
+        <div className="flex justify-end space-x-4 pt-4">
+          <Button variant="outline" className='text-[14px]' onClick={() => router.push('/project')}>Cancel</Button>
+          <Button type="submit" disabled={isLoading} className='bg-[#2563EB] text-[14px]'>
+            {isLoading ? 'Creating...' : 'Create Project'}
+          </Button>
+        </div>
+      </form>
+    </div>
+    </div>
+  )
+}
+
