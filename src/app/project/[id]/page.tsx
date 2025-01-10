@@ -132,7 +132,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">Project Alpha</h1>
         <Select value={viewType} onValueChange={(value: ViewType) => setViewType(value)}>
-          <SelectTrigger className="w-[140px] bg-white">
+          <SelectTrigger className="w-[180px] bg-white">
             <SelectValue placeholder="View by Services" />
           </SelectTrigger>
           <SelectContent>
