@@ -19,13 +19,13 @@ import { useRouter } from 'next/navigation';
 interface ProjectCardProps {
   id: string
   projectName: string
-  servicesRunning: number
+  services: number
 }
 
 export function ProjectCard({ 
   id, 
   projectName, 
-  servicesRunning, 
+  services, 
 }: ProjectCardProps) {
     const router = useRouter();
   const handleEdit = () => {
@@ -45,22 +45,6 @@ export function ProjectCard({
                <div className="flex justify-between items-center">
                   <h3 className="font-medium text-gray-900">{projectName}</h3>
                </div>
-               <div className='flex items-center gap-3 pt-2 md:pt-0'>
-                <div className="lg:flex flex-col md:flex-row items-center gap-4 ]">
-                  <TooltipProvider>
-                    {/* Memory Info */}
-                    <div className="flex  items-center ] ">
-                    <div className="flex items-center text-gray-500 ">
-                          {/* <Memory className="h-4 w-4 mr-1.5" /> */}
-                          <span className="text-xs">
-                            <span className="font-medium ">Services Running:</span> {servicesRunning}
-                          </span>
-                        </div>
-                    </div>
-
-                </TooltipProvider>
-                </div>
-               </div>
               </div>
             </div>
           </div>
@@ -68,11 +52,11 @@ export function ProjectCard({
           {/* Actions */}
           <div className="flex items-center space-x-2  :mt-0">
             <div 
-              className="text-gray-600 p-2 hover:text-gray-900 hover:cursor-pointer w-full border-l border-none"
+              className="text-gray-600 p-2 hover:text-gray-900 hover:cursor-pointer w-full border-l border-none flex gap-2 items-center"
               onClick={()=> router.push(`/project/${id}/settings`)}
             >
               <Settings className="h-4 w-4 " />
-              
+                Manage
               </div>
           </div>
         </div>
