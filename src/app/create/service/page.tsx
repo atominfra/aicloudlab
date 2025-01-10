@@ -58,7 +58,8 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   const [customCpuLimit, setCustomCpuLimit] = useState('')
   const [customReplicas, setCustomReplicas] = useState('')
   const [clusters, setClusters] = useState([{name:'default (AWS)'}]);
-
+  const [serviceType, setServiceType] =useState('kubernetes')
+  const [nodes,setNodes] = useState([])
   useEffect(() => {
     if (serviceId) {
       // Fetch existing service details
@@ -99,6 +100,31 @@ const CreateService: React.FC<CreateServiceProps> = () => {
     }
 
   }, [serviceId]);
+
+  const fetchNodes = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/e2e/node`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`, 
+        },
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log("responseData.data.nodes", responseData.data.nodes);
+        setNodes(responseData.data.nodes); 
+      } else {
+        const errorData = await response.json();
+        setError(errorData.message || 'Failed to fetch notebooks');
+      }
+    } catch (err) {
+      setError('An error occurred while fetching notebooks');
+    } finally {
+      console.log("nodes")
+    }
+  };
 
   useEffect(() => {
      const fetchRegistries = async () => {
@@ -289,10 +315,17 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   };
 
   const handleAddNewCluster = () =>{
-    localStorage.setItem('createServiceFormData', JSON.stringify(formData));
+    // localStorage.setItem('createServiceFormData', JSON.stringify(formData));
     window.open ('/create/cluster', '_ blank');
   }
+  
+  const handleAddNewNode = () =>{
+    // localStorage.setItem('createServiceFormData', JSON.stringify(formData));
+    window.open ('/create/node', '_ blank');
+  }
 
+
+  
   const handleAddNewRegistry = () => {
     localStorage.setItem('createServiceFormData', JSON.stringify(formData));
     window.open ('/create/registry', '_ blank');
@@ -383,28 +416,22 @@ const CreateService: React.FC<CreateServiceProps> = () => {
         </div>
 
         <div>
-          <label htmlFor="cluster" className="pl-2 text-sm font-medium text-[#374151]">
-            Select Cluster*
+          <label htmlFor="service-type" className="pl-2 text-sm font-medium text-[#374151]">
+            Select Service Type*
           </label>
         <div className='flex gap-2'>
         <Select 
-            value={formData.cluster}
+            value={serviceType}
             onValueChange={(value) => {
-              if (value === 'create_cluster') {
-                handleAddNewCluster();
-              } else {
-                handleChange('cluster', value)
-              }
+             setServiceType(value)
             }}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select a Cluster" />
+              <SelectValue placeholder="Select Service Type" className='text-[#374151]'/>
             </SelectTrigger>
             <SelectContent>
-              {/* {clusters.map((cluster) => (
-                <SelectItem key={cluster.name} value={cluster.name}>{cluster.name}</SelectItem>
-              ))} */}
-              <SelectItem value="aws">Default (AWS)</SelectItem>
+              <SelectItem value="kubernetes">Kubernetes</SelectItem>
+              <SelectItem value="docker-compose">Docker Compose </SelectItem>
             </SelectContent>
           </Select>
           <Button 
@@ -420,6 +447,81 @@ const CreateService: React.FC<CreateServiceProps> = () => {
               </Button>
         </div>
         </div>
+
+        {serviceType === 'kubernetes' && (
+        <div>
+          <label htmlFor="node" className="pl-2 text-sm font-medium text-[#374151]">
+            Select Node*
+          </label>
+          <div className='flex gap-2'>
+            <Select 
+            // @ts-expect-error build error
+              value={formData.node}
+              onValueChange={(value) => {
+                if (value === 'create_node') {
+                  handleAddNewNode();
+                } else {
+                  handleChange('node', value)
+                }
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a node" />
+              </SelectTrigger>
+              <SelectContent>
+                {nodes.length > 0 ? nodes.map((node) =>         
+                  node.isDeleted === false && <SelectItem key={node.id} value={node.id}>{node.name}</SelectItem>
+                ): <SelectItem value="create_node">No node Available</SelectItem>}
+              </SelectContent>
+            </Select>
+            <Button 
+              variant="outline" 
+              size="icon" 
+              onClick={handleAddNewNode}
+              className="flex-shrink-0"
+            >
+              <Plus className="h-4 w-4" />
+              <span className="sr-only">Add New Node</span>
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {serviceType === 'docker-compose' && (
+        <div>
+          <label htmlFor="cluster" className="pl-2 text-sm font-medium text-[#374151]">
+            Select Cluster*
+          </label>
+          <div className='flex gap-2'>
+            <Select 
+              value={formData.cluster}
+              onValueChange={(value) => {
+                if (value === 'create_cluster') {
+                  handleAddNewCluster();
+                } else {
+                  handleChange('cluster', value)
+                }
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a Cluster" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="aws">Default (AWS)</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button 
+              variant="outline" 
+              size="icon" 
+              onClick={handleAddNewCluster}
+              className="flex-shrink-0"
+            >
+              <Plus className="h-4 w-4" />
+              <span className="sr-only">Add New Cluster</span>
+            </Button>
+          </div>
+        </div>
+      )}
 
         <div>
           <label htmlFor="image" className="pl-2 text-sm font-medium text-[#374151]">
@@ -639,7 +741,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
         )}
 
         <div className="flex justify-end space-x-4 pt-4">
-          <Button variant="outline" className="text-[14px]" onClick={() => router.push('/dashboard/services')}>Cancel</Button>
+          <Button variant="outline" className="text-[14px]" onClick={() => router.push('/dashboard/project')}>Cancel</Button>
           <Button type="submit" disabled={isLoading} className="bg-[#2563EB] text-[14px]">
             {isLoading ? 'Saving...' : serviceId ? 'Update Service' : 'Deploy Service'}
           </Button>
