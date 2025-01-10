@@ -62,35 +62,6 @@ export function Sidebar() {
               <span>Projects</span>
             </Link>
           </li>
-          <li>
-            <Link
-              href="/dashboard/notebooks"
-              className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-lg text-foreground ",
-                pathname === '/dashboard/notebooks' || pathname === '/create/notebook'  ? "bg-blue-600 text-white":"hover:bg-accent",
-
-              )}
-            >
-              <Book size={20} />
-              <span>Notebooks</span>
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/dashboard/nodes"
-              className={cn(
-                "flex items-center gap-2 px-4 py-2 rounded-lg text-foreground ",
-                pathname === '/dashboard/nodes' || pathname ===  '/create/node'  ? "bg-blue-600 text-white":"hover:bg-accent",
-
-              )}
-            >
-              <Cpu size={20} />
-              {/* <Image
-              alt="nodes"
-              src={nodeIcon}/> */}
-              <span>Nodes</span>
-            </Link>
-          </li>
         </ul>
       </nav>
       <div className="p-4 border-t border-border ">
