@@ -38,6 +38,7 @@ interface Plan {
 }
 
 interface NodeData {
+  projectId: string
   name: string
   account: string
   os: string
@@ -63,6 +64,7 @@ const PLAN_COMMITMENTS = [
 ]
 export default function NodeCreationForm({ initialData, isEditMode = false }: NodeCreationFormProps) {
   const [formState, setFormState] = useState<NodeData>({
+    projectId: initialData?.projectId || '',
     account: initialData?.account || '',
     name: initialData?.name || '',
     os: initialData?.os || '',
@@ -81,6 +83,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const [loading, setLoading] = useState(false)
   const [loadingPlans, setLoadingPlans] = useState(false) // Added loadingPlans state
   const [accounts, setAccounts] = useState([]);
+  const [projects, setProjects] = useState([]);
   const [selectedCloudAccount, setSelectedCloudAccount] = useState('');
   const { auth, node_page_status } = useApp()
   const router = useRouter()
@@ -157,6 +160,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       }
     const apiData = {
       name: formState.name,
+      projectId: formState.projectId,
       ssh_keys: formState.sshKeys.map(key => key.key),
       plan: formState.plan,
       image: formState.image,
@@ -347,7 +351,39 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             </div>
 
             <div className='space-y-2'>
-                <label htmlFor="cloud_account" className="pl-2 text-sm font-medium text-[#374151]">
+                <label htmlFor="project-id" className="pl-2 text-sm font-medium ">
+                  Select Project *
+                </label>
+              <div className='flex gap-2'>
+              <Select 
+                  value={projects && projects.find(p => p.name === formState.projectId)?.name || ''}
+                  onValueChange={handleCloudAccountChange}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Project " />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {projects.length > 0 ? projects.map((project) => (
+                      <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
+                    )): <SelectItem value="no-project-available">No projects Available</SelectItem>}
+                  </SelectContent>
+                </Select>
+                <Button 
+                variant="outline" 
+                size="icon" 
+                asChild
+                className="flex-shrink-0"
+              >
+                <Link href="/create/project">
+                  <Plus className="h-4 w-4" />
+                  <span className="sr-only">Connect Account</span>
+                </Link>
+              </Button>
+              </div>
+              </div>
+
+            <div className='space-y-2'>
+                <label htmlFor="cloud_account" className="pl-2 text-sm font-medium ">
                   Select Cloud Account*
                 </label>
               <div className='flex gap-2'>
