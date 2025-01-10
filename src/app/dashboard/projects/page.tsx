@@ -55,7 +55,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
         <h1 className="text-2xl font-bold">Project {params.id}</h1>
         <Button onClick={()=> router.push('/create/project')} className="bg-blue-600">Create Project</Button>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2  gap-4">
+      <div className="grid grid-cols-1   gap-4">
         {nodes.map((project) => (
           <ProjectCard key={project.id} {...project}/>
         ))}
