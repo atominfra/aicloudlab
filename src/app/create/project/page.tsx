@@ -68,7 +68,7 @@ export default function CreateNotebook() {
     try {
       const response = await createNotebook(auth, payload)
       if (response) {
-        router.push('/dashboard/project')
+        router.push('/dashboard/projects')
       } else {
         setError('Failed to create project')
       }
@@ -117,7 +117,7 @@ export default function CreateNotebook() {
         )}
 
         <div className="flex justify-end space-x-4 pt-4">
-          <Button variant="outline" className='text-[14px]' onClick={() => router.push('/project')}>Cancel</Button>
+          <Button variant="outline" className='text-[14px]' onClick={() => router.push('/dashboard/projects')}>Cancel</Button>
           <Button type="submit" disabled={isLoading} className='bg-[#2563EB] text-[14px]'>
             {isLoading ? 'Creating...' : 'Create Project'}
           </Button>
