@@ -1,5 +1,5 @@
 "use client"
-import { ExternalLink, Server, Cpu, MemoryStickIcon as Memory, Copy, MoreHorizontal } from 'lucide-react'
+import { ExternalLink, Server, Cpu, MemoryStickIcon as Memory, Copy, MoreHorizontal, Settings } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { StatusBadge } from './status-badge'
 import {
@@ -121,6 +121,13 @@ export function ServiceCard({
 
           {/* Actions */}
           <div className="flex items-center space-x-2 mt-4 sm:mt-0">
+          <div 
+              className="text-gray-600 p-2 hover:text-gray-900 hover:cursor-pointer w-full border-l border-none"
+              onClick={()=> router.push(`/service/${id}/settings`)}
+            >
+              <Settings className="h-4 w-4 " />
+              
+              </div>
             <Button 
               variant="outline" 
               size="sm"
@@ -131,36 +138,6 @@ export function ServiceCard({
               Visit
             </Button>
 
-            <DropdownMenu>
-              
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="text-gray-600 hover:text-gray-900 w-full">
-                  <MoreHorizontal className="h-4 w-4" />
-                  <span className="ml-1.5">Manage</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[160px]">
-              <DropdownMenuItem 
-                  onClick={handleEdit}
-                  className=" hover:bg-red-50"
-                >
-                  Edit Service
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onOperation(id, 'start')}>
-                  Start Service
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onOperation(id, 'stop')}>
-                  Stop Service
-                </DropdownMenuItem>
-                <DropdownMenuItem 
-                  onClick={() => onOperation(id, 'delete')}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                >
-                  Delete Service
-                </DropdownMenuItem>
-                
-              </DropdownMenuContent>
-            </DropdownMenu>
           </div>
         </div>
       </div>
