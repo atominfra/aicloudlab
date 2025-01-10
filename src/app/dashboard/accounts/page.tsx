@@ -89,7 +89,7 @@ export default function CloudAccounts() {
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
-        <Button variant="default" className="bg-blue-600 hover:bg-blue-600/90">
+        <Button variant="default" className="bg-blue-600 hover:bg-blue-600/90" onClick={()=> router.push('/clusters/connect-account')}>
           <Plus className="" />
           Add Account
         </Button>
