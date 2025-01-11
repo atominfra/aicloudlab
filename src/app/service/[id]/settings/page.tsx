@@ -4,10 +4,8 @@ import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Alert, AlertDescription } from "@/components/ui/alert"
 import { RefreshCcw, Trash2 } from 'lucide-react'
-import { Badge } from "@/components/ui/badge"
-import { cn } from '@/lib/utils'
+import { DNSConfigurationDialog } from '@/components/dns-configuration-dialog'
 
 interface Domain {
   name: string
@@ -17,7 +15,7 @@ interface Domain {
 export default function ServiceSettings({ params }: { params: { id: string } }) {
   const [domains, setDomains] = useState<Domain[]>([
     { name: 'example.in', status: 'valid' },
-    { name: 'www.example.in', status: 'configuring' }
+    { name: 'www.example.atominfra.com', status: 'configuring' }
   ])
   const [newDomain, setNewDomain] = useState('')
 
@@ -33,13 +31,12 @@ export default function ServiceSettings({ params }: { params: { id: string } }) 
   }
 
   const handleRefreshDomain = (domainName: string) => {
-    // Implement domain refresh logic here
     console.log('Refreshing domain:', domainName)
   }
 
   return (
     <div className="container mx-auto py-6 max-w-2xl">
-      <div className="flex justify-between  mb-8">
+      <div className="flex justify-between mb-8">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">Service Settings</h1>
           <p className="text-sm text-gray-500 mt-1">Service Name</p>
@@ -61,7 +58,7 @@ export default function ServiceSettings({ params }: { params: { id: string } }) 
               onChange={(e) => setNewDomain(e.target.value)}
               className="w-full"
             />
-            <Button onClick={handleAddDomain} className='bg-blue-600 '>Add Domain</Button>
+            <Button onClick={handleAddDomain} className='bg-blue-600'>Add Domain</Button>
           </div>
 
           <div className="space-y-4">
@@ -70,23 +67,13 @@ export default function ServiceSettings({ params }: { params: { id: string } }) 
                 key={domain.name}
                 className="flex items-center justify-between p-4 border rounded-lg"
               >
-                <div className=" items-center gap-3">
-                  <div>{domain.name}</div>
-                  <Badge
-
-                    className={cn("capitalize border-none bg-transparent", {
-                      "text-green-500": domain.status === "valid",
-                      "text-yellow-300": domain.status === "configuring",
-                    })}
-                    >
-                    <div
-                      className={cn("w-2 h-2 mr-2 rounded-full", {
-                        "bg-green-500": domain.status === "valid",
-                        "bg-yellow-300": domain.status === "configuring",
-                      })}
-                      />
-                    {domain.status === 'valid' ? 'Valid Configuration' : 'Configuring'}
-                  </Badge>
+                <div className="w-[90%] flex items-center gap-3">
+                  <div className='w-[50%]'>{domain.name}</div>
+                  <div className='w-[50%]'>
+                    {domain.status === "configuring" && (
+                      <DNSConfigurationDialog domain={domain.name} nodeIp={domain.nodeIp || "nodeIp"}/>
+                    )}
+                  </div>
                 </div>
                 <div className="flex items-center gap-4">
                   <Button
@@ -94,7 +81,7 @@ export default function ServiceSettings({ params }: { params: { id: string } }) 
                     size="icon"
                     onClick={() => handleRefreshDomain(domain.name)}
                   >
-                    <RefreshCcw className="h-4 w-4" /> <span className=''>Refresh</span>
+                    <RefreshCcw className="h-4 w-4" /> <span>Refresh</span>
                   </Button>
                   <Button
                     variant="ghost"
@@ -110,15 +97,15 @@ export default function ServiceSettings({ params }: { params: { id: string } }) 
         </CardContent>
       </Card>
 
-     <div className="rounded-lg border border-red-300 bg-white p-6 space-y-3">
-                 <h3 className="font-semibold text-destructive">Danger Zone</h3>
-                 <p className="text-sm text-muted-foreground">
-                   Once you delete a project, there is no going back. Please be certain.
-                 </p>
-                 <Button variant="destructive" size="sm">
-                   Delete Project
-                 </Button>
-               </div>
+      <div className="rounded-lg border border-red-300 bg-white p-6 space-y-3">
+        <h3 className="font-semibold text-destructive">Danger Zone</h3>
+        <p className="text-sm text-muted-foreground">
+          Once you delete a project, there is no going back. Please be certain.
+        </p>
+        <Button variant="destructive" size="sm">
+          Delete Project
+        </Button>
+      </div>
     </div>
   )
 }
