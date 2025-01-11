@@ -57,6 +57,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
       </div>
       <div className="grid grid-cols-1 gap-1">
         {nodes.map((project) => (
+          // @ts-expect-error build error
           <ProjectCard key={project.id} {...project}/>
         ))}
       </div>

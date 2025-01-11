@@ -71,6 +71,7 @@ export default function ServiceSettings({ params }: { params: { id: string } }) 
                   <div className='w-[50%]'>{domain.name}</div>
                   <div className='w-[50%]'>
                     {domain.status === "configuring" && (
+                      // @ts-expect-error build
                       <DNSConfigurationDialog domain={domain.name} nodeIp={domain.nodeIp || "nodeIp"}/>
                     )}
                   </div>

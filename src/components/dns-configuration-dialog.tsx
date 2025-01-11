@@ -3,6 +3,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
 import { Info, TriangleAlert } from 'lucide-react'
+import { FaTriangleExclamation } from "react-icons/fa6"
 
 interface DNSConfigurationDialogProps {
   domain: string
@@ -13,8 +14,9 @@ export function DNSConfigurationDialog({ domain, nodeIp }: DNSConfigurationDialo
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div className='text-xs flex items-center gap-1 hover:underline hover:cursor-pointer'>
-          <TriangleAlert className='text-yellow-200' size={18}/>
+        <div className='text-xs flex items-center gap-1 hover:underline hover:cursor-pointer '>
+          {/* <TriangleAlert className='text-yellow-200' size={18}/> */}
+          <FaTriangleExclamation className='text-yellow-200 ' size={18} />
           Awaiting External Expenses
         </div>
       </DialogTrigger>
