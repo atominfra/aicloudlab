@@ -72,8 +72,8 @@ export default function CreateProject() {
     }
 
     const payload = {
-      projectName: formData.projectName,
-      user_id: userId,
+      name: formData.projectName,
+      // user_id: userId,
     }
 
     try {

@@ -18,13 +18,13 @@ import { useRouter } from 'next/navigation';
 
 interface ProjectCardProps {
   id: string
-  projectName: string
+  name: string
   services: number
 }
 
 export function ProjectCard({ 
   id, 
-  projectName, 
+  name, 
   services, 
 }: ProjectCardProps) {
     const router = useRouter();
@@ -43,7 +43,7 @@ export function ProjectCard({
               </div>
               <div className='w-full'>
                <div className="flex justify-between items-center">
-                  <h3 className="font-medium text-gray-900">{projectName}</h3>
+                  <h3 className="font-medium text-gray-900">{name}</h3>
                </div>
               </div>
             </div>

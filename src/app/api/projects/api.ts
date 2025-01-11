@@ -1,7 +1,7 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '/api/projects';
 
 export const getAllProjects = async (auth: string) => {
-  const response = await fetch(`${API_BASE_URL}`, {
+  const response = await fetch(`${API_BASE_URL}/project/`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -17,14 +17,14 @@ export const getAllProjects = async (auth: string) => {
 };
 
 export const createProject = async (auth: string, payload: any) => {
-  const response = await fetch(`${API_BASE_URL}`, {
+  const response = await fetch(`${API_BASE_URL}/project/`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${auth}`,
     },
     body: JSON.stringify(payload),
-  });
+  }); 
 
   if (!response.ok) {
     const errorData = await response.json();
@@ -34,7 +34,7 @@ export const createProject = async (auth: string, payload: any) => {
 };
 
 export const getOneProject = async (auth: string, projectId: string) => {
-  const response = await fetch(`${API_BASE_URL}/${projectId}`, {
+  const response = await fetch(`${API_BASE_URL}/project/${projectId}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -50,8 +50,8 @@ export const getOneProject = async (auth: string, projectId: string) => {
 };
 
 export const updateProject = async (auth: string, projectId: string, payload: any) => {
-  const response = await fetch(`${API_BASE_URL}/${projectId}`, {
-    method: 'PUT',
+  const response = await fetch(`${API_BASE_URL}/project/${projectId}`, {
+    method: 'PATCH',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${auth}`,
@@ -67,7 +67,7 @@ export const updateProject = async (auth: string, projectId: string, payload: an
 };
 
 export const deleteProject = async (auth: string, projectId: string) => {
-  const response = await fetch(`${API_BASE_URL}/${projectId}`, {
+  const response = await fetch(`${API_BASE_URL}/project/${projectId}`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',

@@ -56,7 +56,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
       setLoading(true)
       try {
         const data = await getAllProjects(auth)
-        setProjects(data)
+        setProjects(data.data.projects)
       } catch (error) {
         console.error("Error fetching projects:", error)
       } finally {
