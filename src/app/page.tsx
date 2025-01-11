@@ -1,17 +1,14 @@
 'use client';
 
+import Loader from '@/components/loader';
+import { useApp } from '@/context/AppContext';
 import { useEffect, useState } from 'react';
 
 const Home: React.FC = () => {
-  const [auth, setAuth] = useState<string>('');
-
-  useEffect(() => {
-    const token: string | null = localStorage.getItem('access_token');
-    if (token) {
-      setAuth(token);
-    }
-  }, []);
-
+  const {auth,setAuth} = useApp();
+  if(!auth){
+    <Loader/>
+  }
   useEffect(() => {
     if (auth && auth !== '') {
       window.location.href = '/dashboard/projects';
