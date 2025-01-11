@@ -16,7 +16,7 @@ export const getAllProjects = async (auth: string) => {
   return response.json();
 };
 
-export const createProject = async (auth: string, payload: any) => {
+export const createProject = async (auth: string, payload) => {
   const response = await fetch(`${API_BASE_URL}/project/`, {
     method: 'POST',
     headers: {
@@ -49,7 +49,7 @@ export const getOneProject = async (auth: string, projectId: string) => {
   return response.json();
 };
 
-export const updateProject = async (auth: string, projectId: string, payload: any) => {
+export const updateProject = async (auth: string, projectId: string, payload) => {
   const response = await fetch(`${API_BASE_URL}/project/${projectId}`, {
     method: 'PATCH',
     headers: {
