@@ -14,19 +14,16 @@ export default function RootLayout({children}) {
     const hideSidebar = pathname === "/login" || pathname === "/signup";
     const hideMobileNavs = pathname === "/login" || pathname === "/signup";
 
-    if(!auth || auth === ''){
-      return <Loader/>
-    }
-    else{
+    // if(auth){
       return (
         <div className="flex h-screen bg-neutral-100 text-foreground">
-        {!hideSidebar && (
+        {auth &&!hideSidebar && (
           <div className="lg:w-[15vw] bg-neutral-100">
             <Sidebar />
           </div>
         )}
         <div className={`${hideSidebar ? 'w-full' : 'lg:w-[85vw] w-[100vw]'} bg-neutral-100`}>
-          {!hideMobileNavs && <MobileTopBar />}
+          {auth && !hideMobileNavs && <MobileTopBar />}
           <main
             className={`flex-1 overflow-y-scroll bg-neutral-100 ${
               hideMobileNavs ? 'h-[100vh]' : 'h-[92vh]'
@@ -38,7 +35,7 @@ export default function RootLayout({children}) {
         </div>
       </div>
       )
-    }
+    // }
 
 
 }
