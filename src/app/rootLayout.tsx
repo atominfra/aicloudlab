@@ -17,13 +17,13 @@ export default function RootLayout({children}) {
     // if(auth){
       return (
         <div className="flex h-screen bg-neutral-100 text-foreground">
-        {auth &&!hideSidebar && (
+        {!hideSidebar && (
           <div className="lg:w-[15vw] bg-neutral-100">
             <Sidebar />
           </div>
         )}
         <div className={`${hideSidebar ? 'w-full' : 'lg:w-[85vw] w-[100vw]'} bg-neutral-100`}>
-          {auth && !hideMobileNavs && <MobileTopBar />}
+          { !hideMobileNavs && <MobileTopBar />}
           <main
             className={`flex-1 overflow-y-scroll bg-neutral-100 ${
               hideMobileNavs ? 'h-[100vh]' : 'h-[92vh]'
