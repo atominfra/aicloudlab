@@ -4,21 +4,14 @@ import React, { useState, useEffect } from 'react'
 import { FolderInput, FolderOpen, Github } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import Image from "next/image"
 import { useRouter } from 'next/navigation'
-import { createNotebook } from '@/app/api/notebooks/api'
+import { createProject } from '@/app/api/projects/api'
 import { useApp } from '@/context/AppContext'
 import notebookInput from "@/assets/notebookInput.svg"
 import githubInput from "@/assets/githubInput.svg"
 
-export default function CreateNotebook() {
+export default function CreateProject() {
   const router = useRouter()
   const { auth } = useApp()
   const [formData, setFormData] = useState({
@@ -37,7 +30,7 @@ export default function CreateNotebook() {
 
   const handleChange = (name: string, value: string) => {
     setFormData(prev => ({ ...prev, [name]: value }))
-    if (name === 'name' && value.trim() !== '') {
+    if (name === 'projectName' && value.trim() !== '') {
       setIsNameTouched(true)
       setError(null) 
     }
@@ -61,12 +54,30 @@ export default function CreateNotebook() {
       return
     }
 
+    let userId: string | null = null;
+    try {
+      const userDataString = localStorage.getItem('user');
+      if (userDataString) {
+        const userData = JSON.parse(userDataString);
+        userId = userData.id;
+      }
+      
+      if (!userId) {
+        throw new Error('User ID not found');
+      }
+    } catch (err) {
+      setError('Failed to retrieve user information. Please log in again.');
+      setIsLoading(false);
+      return;
+    }
+
     const payload = {
-      name: formData.projectName,
+      projectName: formData.projectName,
+      user_id: userId,
     }
 
     try {
-      const response = await createNotebook(auth, payload)
+      const response = await createProject(auth, payload)
       if (response) {
         router.push('/dashboard/projects')
       } else {
@@ -94,9 +105,9 @@ export default function CreateNotebook() {
          <div className="relative">
           <Input
               id="project-name"
-              name="name"
+              name="projectName"
               value={formData.projectName}
-              onChange={(e) => handleChange('name', e.target.value)}
+              onChange={(e) => handleChange('projectName', e.target.value)}
               placeholder="Enter project name"
               className={`max-w-full ${isNameTouched && formData.projectName === '' ? 'border-red-500' : ''}`}
             />
@@ -112,7 +123,7 @@ export default function CreateNotebook() {
           )}
         </div>
 
-        {error && isNameTouched && (
+        {error && (
           <p className="text-red-500 text-sm">{error}</p>
         )}
 

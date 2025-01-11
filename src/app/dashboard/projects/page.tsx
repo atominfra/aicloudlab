@@ -6,6 +6,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import withAuth from '@/components/withAuth'
 import { ProjectCard } from "@/components/project-card"
+import Image from "next/image"
+import { Typography } from "@mui/material"
+import { FolderOpen } from "lucide-react"
+import Loader from "@/components/loader"
+import { useApp } from "@/context/AppContext"
+import { getAllProjects } from "@/app/api/projects/api"
 
 interface Node {
   id: string
@@ -13,40 +19,56 @@ interface Node {
   servicesRunning:number
 }
 
+interface Project {
+  id: string
+  projectName: string
+  servicesRunning: number
+}
+
 const ProjectPage = ({ params }: { params: { id: string } }) => {
   const router = useRouter()
   const [nodes, setNodes] = useState<Node[]>([])
   const [loading, setLoading] = useState(true)
+  const [projects, setProjects] = useState<Project[]>([])
+  const {auth} = useApp()
+  // useEffect(() => {
+  //   const fetchProjects = async () => {
+  //     setLoading(true)
+  //     try {
+  //       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/projects`)
+  //       if (!response.ok) {
+  //         throw new Error('Failed to fetch projects')
+  //       }
+  //       const data = await response.json()
+  //       setProjects(data)
+  //     } catch (error) {
+  //       console.error("Error fetching projects:", error)
+  //     } finally {
+  //       setLoading(false)
+  //     }
+  //   }
+
+  //   fetchProjects()
+  // }, [])
 
   useEffect(() => {
-    // Simulating API call to fetch nodes for this project
     const fetchProjects = async () => {
       setLoading(true)
       try {
-        // In a real scenario, this would be an API call using the project ID
-        const fakeNodes = [
-          { id: '1', projectName: "Projects 1", servicesRunning:4 },
-          { id: "2", projectName: "Projects 2", servicesRunning:1 },
-          { id: '3', projectName: "Projects 3", servicesRunning:12 },
-        ]
-        setNodes(fakeNodes)
+        const data = await getAllProjects(auth)
+        setProjects(data)
       } catch (error) {
-        console.error("Error fetching nodes:", error)
+        console.error("Error fetching projects:", error)
       } finally {
         setLoading(false)
       }
     }
 
     fetchProjects()
-  }, [params.id])
-
-  const handleCreateNode = () => {
-    // In a real app, this would navigate to a node creation page or open a modal
-    console.log("Create new node")
-  }
+  }, [])
 
   if (loading) {
-    return <div>Loading...</div>
+    return <Loader/>
   }
 
   return (
@@ -56,10 +78,17 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
         <Button onClick={()=> router.push('/create/project')} className="bg-blue-600">Create Project</Button>
       </div>
       <div className="grid grid-cols-1 gap-1">
-        {nodes.map((project) => (
+        {projects.length>0 ? projects.map((project) => (
           // @ts-expect-error build error
           <ProjectCard key={project.id} {...project}/>
-        ))}
+        )) : <>
+            <div className="flex flex-col justify-center items-center lg:h-[80vh] h-[70dvh]  w-full">
+              <FolderOpen className="w-[100px] h-[100px] text-neutral-200" />
+              <Typography variant="body1" className="text-gray-400 mb-4 px-6">
+                No notebooks yet.
+              </Typography>
+            </div>
+        </>}
       </div>
     </div>
   )
