@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Plus, Trash2 } from 'lucide-react'
+import { Eye, EyeOff, Plus, Trash2 } from 'lucide-react'
 import { fetchOSOptions, fetchPlans, createNode, fetchPrice } from '@/app/api/nodes/api'
 import { getAllProjects } from '@/app/api/projects/api'
 import {fetchAllCloudAccounts, } from '@/app/api/cloud/api'
@@ -47,7 +47,7 @@ interface NodeData {
   plan: string
   image: string
   commitmment: string
-  sshKeys: Array<{ key: string }>
+  sshKeys: { key: string; isVisible: boolean }[];
   volumes: Array<{ name: string; size: string }>
   securityRules: Array<{ type: string; port: string; protocol: string; ipAddresses: string; allowed: boolean }>
 }
@@ -68,7 +68,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     plan: initialData?.plan || '',
     image: initialData?.image || '',
     commitmment: initialData?.commitmment || '',
-    sshKeys: initialData?.sshKeys || [{ key: '' }],
+    sshKeys: initialData?.sshKeys || [{ key: '', isVisible: false }],
     volumes: initialData?.volumes || [],
     securityRules: initialData?.securityRules || [],
   })
@@ -163,7 +163,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 }, [formState.os, formState.osVersion, auth])
 
   const fetchPriceData = async () => {
-    if (!formState.os || !formState.osVersion || !formState.osVersion) return
+    if (!formState.os || !formState.osVersion || !formState.osVersion || !formState.plan) return
     setLoadingPrice(true) 
     try {
       const plansData = await fetchPrice(auth, formState.os, formState.osVersion, formState.location, formState.cloud_account_id,formState.plan)
@@ -239,6 +239,8 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       cloud_account_id:formState.cloud_account_id
     }
 
+    const provider = accounts && accounts.find((p)=>p.id === formState.cloud_account_id)?.provider || ""
+    apiData.image = provider === "azure" ? formState.osVersion : formState.image;
     console.log("API Data:", JSON.stringify(apiData, null, 2))
     try {
       setLoading(true)
@@ -258,42 +260,21 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     return plans.find((plan) => plan.id === value)
   }
 
-  const handlePlanChange = (value: string) => {
-    const selectedPlan = findplan(plans, value)
-    if (selectedPlan) {
-      setFormState(prev => ({
-        ...prev,
-        plan: selectedPlan.plan,
-        image: selectedPlan.image,
-        commitmment:""
-      }))
-    }
-  }
-
-
-
-
   const addSSHKey = () => {
-    setFormState(prev => ({
-      ...prev,
-      sshKeys: [...prev.sshKeys, { key: '' }]
-    }))
-  }
+    setFormState(prev => ({ ...prev, sshKeys: [...prev.sshKeys, { key: '', isVisible: false }] }));
+  };
 
   const removeSSHKey = (index: number) => {
-    setFormState(prev => ({
-      ...prev,
-      sshKeys: prev.sshKeys.filter((_, i) => i !== index)
-    }))
-  }
+    setFormState(prev => ({ ...prev, sshKeys: prev.sshKeys.filter((_, i) => i !== index) }));
+  };
 
   const updateSSHKey = (index: number, value: string) => {
     setFormState(prev => {
-      const newSSHKeys = [...prev.sshKeys]
-      newSSHKeys[index] = { key: value }
-      return { ...prev, sshKeys: newSSHKeys }
-    })
-  }
+      const newSSHKeys = [...prev.sshKeys];
+      newSSHKeys[index] = { ...newSSHKeys[index], key: value };
+      return { ...prev, sshKeys: newSSHKeys };
+    });
+  };
 
   const addVolume = () => {
     setFormState(prev => ({
@@ -347,21 +328,30 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const formatPlanName = (plan: Plan) => {
     return (
       <div className=" items-center justify-center gap-2  w-[full] ">
+
         {plan.cpu && plan.cpu_type && (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ">
+          <span className="inline-flex items-center min-w-[80px] px-2.5 py-0.5 rounded-full text-xs font-medium ">
             {plan.cpu} {plan.cpu_type}
           </span>
         )}
-        
+
+      
         {plan.ram && (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ">
+          <span className="inline-flex items-center px-2.5 min-w-[140px]  py-0.5 rounded-full text-xs font-medium ">
             {plan.ram} GB Memory
           </span>
         )}
+        
   
         {plan.disk_space && (
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ">
-            {plan.disk_space}
+          <span className="inline-flex items-center px-2.5 min-w-[70px] py-0.5 rounded-full text-xs font-medium ">
+            {plan.disk_space} GB
+          </span>
+        )}
+
+        {plan.plan && plan.plan && (
+          <span className="inline-flex items-center min-w-[200px] px-2.5 py-0.5 rounded-full text-xs font-medium ">
+            {plan.plan}
           </span>
         )}
         
@@ -432,7 +422,68 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       projects_id: projects_id,
     }));
   };
-  
+
+  const handleLocationChange = (value) => {
+    setFormState(prev => ({
+      ...prev,
+      location: value,
+      os:"",
+      osVersion:"",
+      plan:"",
+      commitmment:""
+    }));
+    setOSOptions([])
+    setPlans([])
+    setOSVersions([])
+    setPrice([])
+  };
+
+  const handleOsOptionsChange = (value) => {
+    setFormState(prev => ({
+      ...prev,
+      os: value,
+      osVersion:"",
+      plan:"",
+      commitmment:""
+    }));
+    setPlans([])
+    setOSVersions([])
+    setPrice([])
+  };
+
+
+  const handleOsVersionChange = (value) => {
+    setFormState(prev => ({
+      ...prev,
+      osVersion:value,
+      plan:"",
+      commitmment:""
+    }));
+    setPlans([])
+    setPrice([])
+  };
+
+  const handlePlanChange = (value: string) => {
+    const selectedPlan = findplan(plans, value)
+    if (selectedPlan) {
+      setFormState(prev => ({
+        ...prev,
+        plan: selectedPlan.plan,
+        image: selectedPlan.image,
+        commitmment:""
+      }))
+      setPrice([])
+    }
+  }
+
+  const toggleVisibility = (index: number) => {
+    setFormState(prev => ({
+      ...prev,
+      sshKeys: prev.sshKeys.map((key, i) => 
+        i === index ? { ...key, isVisible: !key.isVisible } : key
+      )
+    }));
+  };
   useEffect(() => {
     console.log("accounts",accounts)
   }, [accounts]);
@@ -444,7 +495,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
   return (
     <div className=' bg-neutral-100 lg:min-h-screen min-h-[92dvh]   flex justify-center '>
-      <form onSubmit={handleSubmit} className="w-full max-w-2xl mx-auto lg:mt-[5vh]">
+      <form   className="w-full max-w-2xl mx-auto lg:mt-[5vh]">
         <Card className="bg-neutral-100 shadow-none border-none">
           <CardHeader className="text-center">
             <CardTitle className="text-lg lg:text-2xl font-semibold ">{isEditMode ? 'Edit Node' : 'Create a New Node'}</CardTitle>
@@ -525,7 +576,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     )}
                 </SelectTrigger>
                 <SelectContent>
-                  {accounts.length >0 ? accounts.map((cloud_account_id) => (
+                  {accounts && accounts.length >0 ? accounts.map((cloud_account_id) => (
                     <SelectItem key={cloud_account_id.name} value={cloud_account_id.name}>{cloud_account_id.name} - {capitalizeFirstCharacter(cloud_account_id.provider)}</SelectItem>
                   )):<SelectItem value="no-account-available">No Account Available</SelectItem>}
                 </SelectContent>
@@ -551,11 +602,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               <div className='flex gap-2'>
               <Select 
                 value={formState.location}
-                onValueChange={(value) => setFormState(prev => ({ ...prev, location: value, 
-                  os:"",
-                  osVersion:"",
-                  plan:"",
-                  commitmment:""}))}
+                onValueChange={handleLocationChange}
                 disabled={!formState.cloud_account_id}
               >
                 <SelectTrigger>
@@ -574,13 +621,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               <div className="space-y-2">
                 <Label htmlFor="os">Operating System *</Label>
                 <Select 
-                  onValueChange={(value) => {
-                    updateFormState('os', value)
-                    updateFormState('osVersion', '')
-                    updateFormState('plan', '')
-                    updateFormState('image', '')
-                    updateFormState('commitmment','')
-                  }} 
+                  onValueChange={handleOsOptionsChange} 
                   value={formState.os} 
                   required
                   disabled={osOptions && osOptions.length === 0} 
@@ -606,13 +647,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               <div className="space-y-2">
                 <Label htmlFor="os-version">OS Version *</Label>
                 <Select 
-                  onValueChange={(value) => {
-                    updateFormState('osVersion', value)
-                    updateFormState('plan', '')
-                    updateFormState('image', '')
-                    updateFormState('commitmment', '')
-
-                  }} 
+                  onValueChange={handleOsVersionChange} 
                   value={formState.osVersion} 
                   required
                   disabled={!formState.os}
@@ -649,7 +684,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   </SelectTrigger>
                   <SelectContent>
                     {plans.length>0 ? plans.map((plan) => (
-                      <SelectItem key={plan.id} value={plan.id} className='flex justify-evenly'>{formatPlanName(plan)}</SelectItem>
+                      <SelectItem key={plan.id} value={plan.id} className='flex  border-b'>{formatPlanName(plan)}</SelectItem>
                     )): <SelectItem value="no-plan-available">No Plans Available</SelectItem>}
                   </SelectContent>
                 </Select>
@@ -674,7 +709,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     )}
                   </SelectTrigger>
                   <SelectContent>
-                    {price.length > 0 ? price.map((price) => (
+                    {price && price.length > 0 ? price.map((price) => (
                         <SelectItem key={price.unit} value={price.unit}>{formatPrice(price)}</SelectItem>
                       )): <SelectItem value="no-price-available">No Price Plans Available</SelectItem>}
                   </SelectContent>
@@ -689,21 +724,33 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   <div className="space-y-4">
                     {formState.sshKeys.map((sshKey, index) => (
                       <div key={index} className='flex items-center'>
-                        <Textarea
+                        <Input
+                          autoComplete='new-password'
+                          type={sshKey.isVisible ? "text" : "password"}
                           placeholder="Paste your SSH public key here"
                           value={sshKey.key}
                           onChange={(e) => updateSSHKey(index, e.target.value)}
-                          className="flex-grow mr-2"
+                          className="flex-grow mr-2 no-scrollbar"
                         />
+                       <div className='flex gap-1 items-center'>
+                       <Button 
+                          type="button" 
+                          variant="outline" 
+                          onClick={() => toggleVisibility(index)}
+                          className="p-2 mr-2"
+                        >
+                          {sshKey.isVisible ? <EyeOff size={16} /> : <Eye size={16} />}
+                        </Button>
                         <Button
                           type="button"
-                          variant="ghost"
+                          variant="outline"
                           size="icon"
                           onClick={() => removeSSHKey(index)}
-                          className="mt-2"
+                          className="p-2 mr-2"
                         >
                           <Trash2 className="h-4 w-4" />
                         </Button>
+                       </div>
                       </div>
                     ))}
                     <Button type="button" variant="outline" onClick={addSSHKey} className="mt-2">
@@ -842,11 +889,11 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             )}
           </CardContent>
           <CardFooter className="flex justify-end space-x-4 pt-4">
-            <Button variant="outline" onClick={() => router.push('/dashboard/nodes')}>Cancel</Button>
+            <Button variant="outline" onClick={() => router.push('/dashboard/projects')}>Cancel</Button>
             <Button 
-              type="submit" 
               disabled={loading} 
               className={`bg-[#2563EB] text-white ${loading ? 'opacity-50' : ''}`}
+              onClick={handleSubmit}
             >
               {loading ? 'Creating...' : 'Create Node'}
             </Button>
