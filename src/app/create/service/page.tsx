@@ -496,7 +496,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
                 <SelectValue placeholder="Select a Cluster" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="aws">Default (AWS)</SelectItem>
+                <SelectItem value="">No cluster Available</SelectItem>
               </SelectContent>
             </Select>
             <Button 

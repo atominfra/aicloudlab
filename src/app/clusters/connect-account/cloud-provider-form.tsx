@@ -9,6 +9,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useRouter } from 'next/navigation'
+import { createCloudAccount } from '@/app/api/cloud/api'
+import { useApp } from '@/context/AppContext'
 type CloudProvider = 'aws' | 'gcp' | 'azure'
 
 interface CloudProviderFormProps {
@@ -16,6 +18,7 @@ interface CloudProviderFormProps {
 }
 
 export function CloudProviderForm({ provider }: CloudProviderFormProps) {
+  const { auth } = useApp()
 
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
@@ -55,37 +58,35 @@ export function CloudProviderForm({ provider }: CloudProviderFormProps) {
       [name]: value,
     }))
   }
-
-  const handleAzureSubmit = async (e: React.FormEvent) => {
+  
+  const handelSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/cluster/connect-account`, {
-          method: 'post',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`, 
-          },
-          body: JSON.stringify(azureCredentials),
-        },
-      )
 
-      if (!response.ok) {
-        const errorResponse = await response.json()
-        console.log(errorResponse.message || 'Failed to connect Azure account')
+      let apiData = {
+        name: azureCredentials.name,
+        provider: 'azure',
+        credentials: {
+          tenant_id: azureCredentials.tenant_id,
+          client_id: azureCredentials.client_id,
+          client_secret: azureCredentials.client_secret,
+          subscription_id: azureCredentials.subscription_id,
+        },
       }
 
-      const data = await response.json()
-      console.log('Azure account connected:', data)
+      const res = await createCloudAccount(auth, apiData)
+
+      console.log('Azure account connected:', res)
+      router.push('/dashboard/accounts')
     } catch (error) {
       console.error(error)
       console.log(error instanceof Error ? error.message : 'Unknown error occurred')
     } finally {
-      router.push('/dashboard/services')
       setIsLoading(false)
     }
   }
+
 
   return (
     <Card className="border-none shadow-none">
@@ -95,7 +96,7 @@ export function CloudProviderForm({ provider }: CloudProviderFormProps) {
       <CardContent>
         <div className="pb-4">
           <h2 className="text-lg font-medium text-gray-900">Connect Azure Account</h2>
-          <form onSubmit={handleAzureSubmit} className="space-y-4">
+          <form onSubmit={handelSubmit} className="space-y-4">
             {Object.keys(azureCredentials).map((field) => (
               <div key={field} className="space-y-2">
                 <Label htmlFor={field}>

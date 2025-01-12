@@ -28,7 +28,7 @@ interface NodeCardProps {
   fetchNodes:() => Promise<void>
 }
 
-export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, public_ip_address, gpu, isDeleted, status, fetchNodes }: NodeCardProps) {
+export function NodeCard({id, name="node Name", memory, vcpus, disk, private_ip_address, public_ip_address, gpu, isDeleted, status="Running", fetchNodes }: NodeCardProps) {
   const [copySuccess, setCopySuccess] = useState(false)
   const [loading, setLoading] = useState(false)
   const [isRunning,setIsRunning] = useState(false)
@@ -92,7 +92,7 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
   }
 
   const handleDelete = async (id) => {
-    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/e2e/node/${encodeURIComponent(id)}`
+    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/cloud/node/${encodeURIComponent(id)}`
 
     const response = await fetch(url, {
       method: 'DELETE',
@@ -165,7 +165,6 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
             <MdDelete className="w-[20px] h-[30px] text-red-600" />
           </div>
           <Button              
-            disabled={status !== 'running'}
             variant="outline" 
             className={`text-gray-600 ${status !== 'running' ? "text-[#b0b0b0]":"text-[#111827] hover:text-gray-600"}`} 
           >
@@ -218,7 +217,7 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
             </button>
           </div>
           <Button              
-            disabled={status !== 'running'}
+            // disabled={status}
             variant="secondary" 
             size="sm"
             className={`text-gray-600 ${status !== 'running' ? "opacity-50" : ""}`} 

@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Pencil } from 'lucide-react'
 import React, { useState } from 'react';
-import { fetchCloudAccounts } from '@/app/api/nodes/api';
 
 
 export default function ProjectSettings() {

@@ -9,14 +9,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Plus, Trash2 } from 'lucide-react'
-import { fetchOSOptions, fetchPlans,fetchCloudAccounts, createNode } from '@/app/api/nodes/api'
+import { fetchOSOptions, fetchPlans, createNode, fetchPrice } from '@/app/api/nodes/api'
+import { getAllProjects } from '@/app/api/projects/api'
+import {fetchAllCloudAccounts, } from '@/app/api/cloud/api'
 import { useApp } from '@/context/AppContext'
 import { CircularProgress } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { Switch } from "@/components/ui/switch"
-import axios from 'axios'
 import Link from 'next/link'
-
 // Types
 interface OSOption {
   name: string
@@ -30,7 +30,7 @@ interface Plan {
   cpu?: number
   cpu_type?: string
   ram?: number
-  disk:string
+  disk_space:string
   gpu_card_details?: {
     name?: string
   }
@@ -38,14 +38,15 @@ interface Plan {
 }
 
 interface NodeData {
-  projectId: string
+  projects_id: string
+  location: string
   name: string
-  account: string
+  cloud_account_id: string
   os: string
   osVersion: string
   plan: string
   image: string
-  planCommitment: string
+  commitmment: string
   sshKeys: Array<{ key: string }>
   volumes: Array<{ name: string; size: string }>
   securityRules: Array<{ type: string; port: string; protocol: string; ipAddresses: string; allowed: boolean }>
@@ -56,22 +57,17 @@ interface NodeCreationFormProps {
   isEditMode?: boolean
 }
 
-// Constants
-const PLAN_COMMITMENTS = [
-  { value: 'monthly', label: 'Monthly' },
-  { value: 'quarterly', label: 'Quarterly' },
-  { value: 'yearly', label: 'Yearly' }
-]
 export default function NodeCreationForm({ initialData, isEditMode = false }: NodeCreationFormProps) {
   const [formState, setFormState] = useState<NodeData>({
-    projectId: initialData?.projectId || '',
-    account: initialData?.account || '',
+    projects_id: initialData?.projects_id || '',
+    location: initialData?.location || '',
+    cloud_account_id: initialData?.cloud_account_id || '',
     name: initialData?.name || '',
     os: initialData?.os || '',
     osVersion: initialData?.osVersion || '',
     plan: initialData?.plan || '',
     image: initialData?.image || '',
-    planCommitment: initialData?.planCommitment || '',
+    commitmment: initialData?.commitmment || '',
     sshKeys: initialData?.sshKeys || [{ key: '' }],
     volumes: initialData?.volumes || [],
     securityRules: initialData?.securityRules || [],
@@ -81,25 +77,64 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const [osVersions, setOSVersions] = useState<string[]>([])
   const [plans, setPlans] = useState<Plan[]>([])
   const [loading, setLoading] = useState(false)
-  const [loadingPlans, setLoadingPlans] = useState(false) // Added loadingPlans state
+  const [loadingProjects, setLoadingProjects] = useState(false) 
+  const [loadingAccounts, setLoadingAccounts] = useState(false) 
+  const [loadingOs, setLoadingOs] = useState(false) 
+  const [loadingPlans, setLoadingPlans] = useState(false) 
+  const [loadingPrice, setLoadingPrice] = useState(false) 
+  const [price, setPrice] = useState([]) 
   const [accounts, setAccounts] = useState([]);
   const [projects, setProjects] = useState([]);
-  const [selectedCloudAccount, setSelectedCloudAccount] = useState('');
-  const { auth, node_page_status } = useApp()
+  const [locations, setLocations] = useState([{id:"Delhi", name:"Delhi", provider:"e2e"},{id:"Mumbai", name:"Mumbai", provider:"e2e"},{id:"centralindia", name:"Central India", provider:"azure"}]);
+  const [filteredLocations, setFilteredLocations] = useState([]);
+  const { auth,node_page_status } = useApp()
   const router = useRouter()
   const [error, setError] = useState('')
-  useEffect(() => {
-    const fetchInitialData = async () => {
-      if (!auth) return
+
+  function capitalizeFirstCharacter(provider) {
+    if (provider === "e2e") {
+      return provider;
+    }
+  
+    return provider
+      .split('')
+      .map((char, index) => (index === 0 ? char.toUpperCase() : char))
+      .join('');
+  }
+
+  useEffect(()=>{
+    console.log("formState",formState)
+  },[formState])
+
+  useEffect(()=>{
+    const fetchData = async () => {
+      if (!auth ) return
       try {
-        const osData = await fetchOSOptions(auth)
-        setOSOptions(osData.data.os)
+        setLoadingProjects(true)
+        const data = await getAllProjects(auth)
+        setProjects(data.data.projects)
       } catch (error) {
         console.error('Failed to fetch initial data:', error)
       }
+      setLoadingProjects(false)
     }
-    fetchInitialData()
-  }, [auth])
+    fetchData()
+  },[auth])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!auth ) return
+      try {
+        setLoadingOs(true)
+        const data = await fetchOSOptions(auth, formState.cloud_account_id, formState.location)
+        setOSOptions(data)
+      } catch (error) {
+        console.error('Failed to fetch initial data:', error)
+      }
+      setLoadingOs(false)
+    }
+    fetchData()
+  }, [ formState.location])
   
   useEffect(()=>{
     console.log("plans",plans)
@@ -111,10 +146,10 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }, [formState.os, osOptions])
 
   const fetchAvailablePlans = async () => {
-    if (!formState.os || !formState.osVersion) return
+    if (!formState.os || !formState.osVersion || !formState.location || !formState.cloud_account_id) return
     setLoadingPlans(true) 
     try {
-      const plansData = await fetchPlans(auth, formState.os, formState.osVersion)
+      const plansData = await fetchPlans(auth, formState.os, formState.osVersion, formState.location, formState.cloud_account_id)
       setPlans(plansData.data.plans)
     } catch (error) {
       console.error('Failed to fetch plans:', error)
@@ -124,20 +159,54 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }
 
   useEffect(() => {
-      fetchAvailablePlans()
-  }, [formState.os, formState.osVersion, auth])
+    fetchAvailablePlans()
+}, [formState.os, formState.osVersion, auth])
+
+  const fetchPriceData = async () => {
+    if (!formState.os || !formState.osVersion || !formState.osVersion) return
+    setLoadingPrice(true) 
+    try {
+      const plansData = await fetchPrice(auth, formState.os, formState.osVersion, formState.location, formState.cloud_account_id,formState.plan)
+      setPrice(plansData.data.price)
+    } catch (error) {
+      console.error('Failed to fetch plans:', error)
+    } finally {
+      setLoadingPrice(false) 
+    }
+  }
   
+  useEffect(() => {
+    fetchPriceData()
+}, [ formState.plan])
+
   useEffect(() => {
     console.log("formState updated:", formState)
   }, [formState])
 
+
+    
   useEffect(() => {
-    async function loadCloudAccounts() {
-      const accounts = await fetchCloudAccounts(auth);
-      setAccounts(accounts);
+    console.log("Cloud Acounts:", accounts)
+  }, [accounts])
+
+
+  useEffect(() => {
+    async function loadCloudAccounts() {     
+      try {
+        setLoadingAccounts(true)
+        const accounts = await fetchAllCloudAccounts(auth);
+        setAccounts(accounts?.data?.cloud_accounts);
+      } catch (error) {
+        console.error('Failed to fetch accounts:', error)
+      } finally {
+        setLoadingAccounts(false)
+      }
     }
-    loadCloudAccounts();
-  }, []);
+    console.log("auth",auth)
+    if(auth){
+      loadCloudAccounts();
+    }
+  }, [auth]);
   
 
   const updateFormState = (field: keyof NodeData, value) => {
@@ -160,23 +229,22 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       }
     const apiData = {
       name: formState.name,
-      projectId: formState.projectId,
+      project_id: formState.projects_id.toString(),
       ssh_keys: formState.sshKeys.map(key => key.key),
       plan: formState.plan,
       image: formState.image,
       volumes: formState.volumes,
-      security_rules: formState.securityRules
+      security_rules: formState.securityRules,
+      location:formState.location,
+      cloud_account_id:formState.cloud_account_id
     }
 
-    if(formState.account && formState.account !== 'Default (E2E)'){
-      apiData['account'] = formState.account
-    }
     console.log("API Data:", JSON.stringify(apiData, null, 2))
     try {
       setLoading(true)
       const result = await createNode(auth, apiData)
       console.log('Node created successfully:', result)
-      router.push('/dashboard/nodes')
+      router.push('/dashboard/projects')
     } catch (error) {
       console.error('Failed to create node:', error)
     } finally {
@@ -196,16 +264,14 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       setFormState(prev => ({
         ...prev,
         plan: selectedPlan.plan,
-        image: selectedPlan.image
+        image: selectedPlan.image,
+        commitmment:""
       }))
     }
   }
 
 
-  const handleCloudAccountChange = (value: string) => {
-    setSelectedCloudAccount(value);
-    updateFormState('account', value);
-  };
+
 
   const addSSHKey = () => {
     setFormState(prev => ({
@@ -279,49 +345,98 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }
 
   const formatPlanName = (plan: Plan) => {
-    const parts = []
-    
-    if (plan.cpu && plan.cpu_type) {
-      parts.push(`${plan.cpu} ${plan.cpu_type}`)
+    return (
+      <div className=" items-center justify-center gap-2  w-[full] ">
+        {plan.cpu && plan.cpu_type && (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ">
+            {plan.cpu} {plan.cpu_type}
+          </span>
+        )}
+        
+        {plan.ram && (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ">
+            {plan.ram} GB Memory
+          </span>
+        )}
+  
+        {plan.disk_space && (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ">
+            {plan.disk_space}
+          </span>
+        )}
+        
+        {plan.gpu_card_details && Object.keys(plan.gpu_card_details).length > 0 && plan.gpu_card_details.name && (
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ">
+            {plan.gpu_card_details.name}
+          </span>
+        )}
+      </div>
+    );
+  };
+  
+  
+  
+  const formatPrice = (price) => {
+    if (!price?.currency || !price?.price || !price?.unit) {
+      return '';
     }
-    
-    if (plan.ram) {
-      parts.push(`${plan.ram} GB Memory`)
-    }
-
-    if (plan.disk && Object.keys(plan.disk).length > 0) {
-      parts.push(plan?.disk || 'Disk')
-    }
-    
-    
-    if (plan.gpu_card_details && Object.keys(plan.gpu_card_details).length > 0) {
-      parts.push(plan?.gpu_card_details?.name || 'GPU')
-    }
-    
-    return parts.join(' • ')
-    
-  // return (
-  //   <div className="flex justify-between items-center space-x-4">
-  //     {parts.map((part, index) => (
-  //       <div key={index} className="flex-1 text-center">
-  //         {part+ " •"} 
-  //       </div>
-  //     ))}
-  //   </div>
-  // );
-  }
+  
+    const unitDisplay = price.unit === 'hour' ? 'hourly' : 
+                        price.unit === 'year' ? 'yearly' : 
+                        price.unit === 'month' ? 'monthly' : 
+                        price.unit;
+  
+    return `${price.price} ${price.currency} (${unitDisplay})`;
+  };
   
 
-  const renderPlanCommitmentOptions = () => {
-    return PLAN_COMMITMENTS.map((option) => (
-      <SelectItem key={option.value} value={option.value}>
-        {option.label}
-      </SelectItem>
-    ));
+
+  useEffect(() => {
+    console.log("accountsssss",formState.cloud_account_id )
+    if(formState.cloud_account_id){
+    const selectedAccount = accounts && accounts.find(cloud_account_id => cloud_account_id.id === formState.cloud_account_id);
+    console.log("selectedAccount",selectedAccount)
+    if (selectedAccount) {
+      const filtered = locations.filter(location => location.provider === selectedAccount.provider);
+      setFilteredLocations(filtered);
+    } else {
+      setFilteredLocations([]);
+    }
+  }
+
+  }, [formState.cloud_account_id]);
+
+  const handleAccountChange = (value) => {
+    const accountId= accounts.find((p)=>p.name === value).id || ""
+    setFormState(prev => ({
+      ...prev,
+      cloud_account_id: accountId,
+      location: '' ,
+      os:"",
+      osVersion:"",
+      plan:"",
+      commitmment:""
+    }));
+    setOSOptions([])
+    setPlans([])
+    setOSVersions([])
+    setPrice([])
   };
 
-
+  const handleProjectChange = (value) => {
+    const projects_id= projects.find((p)=>p.name === value).id || ""
+    const projectName = projects.find((p)=>p.id === projects_id).name || ""
+    console.log("projectName found",{value:value,id:projects_id,accounts:accounts, accountName: projectName})
+    setFormState(prev => ({
+      ...prev,
+      projects_id: projects_id,
+    }));
+  };
   
+  useEffect(() => {
+    console.log("accounts",accounts)
+  }, [accounts]);
+
     // prefetch routes for faster navigation
     useEffect(() => {
       router.prefetch('/dashboard/nodes');
@@ -356,15 +471,22 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 </label>
               <div className='flex gap-2'>
               <Select 
-                  value={projects && projects.find(p => p.name === formState.projectId)?.name || ''}
-                  onValueChange={handleCloudAccountChange}
+                  value={projects && projects.find((p)=>p.id === formState.projects_id)?.name || ""}
+                  onValueChange={handleProjectChange}
                 >
                   <SelectTrigger>
+                  {loadingProjects ? (
+                      <div className="flex items-center">
+                        <CircularProgress size={16} className="mr-2" />
+                        Loading Projects...
+                      </div>
+                    ) : (
                     <SelectValue placeholder="Select Project " />
+                    )}
                   </SelectTrigger>
                   <SelectContent>
-                    {projects.length > 0 ? projects.map((project) => (
-                      <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
+                    {projects && projects.length > 0 ? projects.map((project) => (
+                      <SelectItem key={project.id} value={project.name}>{project.name}</SelectItem>
                     )): <SelectItem value="no-project-available">No projects Available</SelectItem>}
                   </SelectContent>
                 </Select>
@@ -376,7 +498,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               >
                 <Link href="/create/project">
                   <Plus className="h-4 w-4" />
-                  <span className="sr-only">Connect Account</span>
+                  <span className="sr-only">Add project</span>
                 </Link>
               </Button>
               </div>
@@ -387,20 +509,27 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   Select Cloud Account*
                 </label>
               <div className='flex gap-2'>
+                
               <Select 
-                  value={accounts && accounts.find(p => p.name === formState.account)?.name || ''}
-                  onValueChange={handleCloudAccountChange}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select Cloud Account" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {accounts && accounts.map((account) => (
-                      <SelectItem key={account.id} value={account.name}>{account.name}</SelectItem>
-                    ))}
-                    <SelectItem value="e2e">Default (E2E)</SelectItem>
-                  </SelectContent>
-                </Select>
+                value={accounts && accounts.find((p)=>p.id === formState.cloud_account_id)?.name || ""}
+                onValueChange={handleAccountChange}
+              >
+                <SelectTrigger>
+                {loadingAccounts ? (
+                      <div className="flex items-center">
+                        <CircularProgress size={16} className="mr-2" />
+                        Loading Accounts...
+                      </div>
+                    ) : (
+                  <SelectValue placeholder="Select Cloud Account" />
+                    )}
+                </SelectTrigger>
+                <SelectContent>
+                  {accounts.length >0 ? accounts.map((cloud_account_id) => (
+                    <SelectItem key={cloud_account_id.name} value={cloud_account_id.name}>{cloud_account_id.name} - {capitalizeFirstCharacter(cloud_account_id.provider)}</SelectItem>
+                  )):<SelectItem value="no-account-available">No Account Available</SelectItem>}
+                </SelectContent>
+              </Select>
                 <Button 
                 variant="outline" 
                 size="icon" 
@@ -415,6 +544,32 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               </div>
               </div>
 
+              <div className='space-y-2'>
+                <label htmlFor="cloud_account" className="pl-2 text-sm font-medium ">
+                  Select Location*
+                </label>
+              <div className='flex gap-2'>
+              <Select 
+                value={formState.location}
+                onValueChange={(value) => setFormState(prev => ({ ...prev, location: value, 
+                  os:"",
+                  osVersion:"",
+                  plan:"",
+                  commitmment:""}))}
+                disabled={!formState.cloud_account_id}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Location" />
+                </SelectTrigger>
+                <SelectContent>
+                  {filteredLocations.map((location) => (
+                    <SelectItem key={location.id} value={location.id}>{location.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              </div>
+              </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="os">Operating System *</Label>
@@ -424,18 +579,26 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     updateFormState('osVersion', '')
                     updateFormState('plan', '')
                     updateFormState('image', '')
+                    updateFormState('commitmment','')
                   }} 
                   value={formState.os} 
                   required
-                  disabled={osOptions.length === 0} 
+                  disabled={osOptions && osOptions.length === 0} 
                 >
                   <SelectTrigger id="os" className="max-w-full">
+                  {loadingOs ? (
+                      <div className="flex items-center">
+                        <CircularProgress size={16} className="mr-2" />
+                        Loading Os Options ...
+                      </div>
+                    ) : (
                     <SelectValue placeholder="Select OS" />
+                    )}
                   </SelectTrigger>
                   <SelectContent>
-                    {osOptions.map((os) => (
+                    {osOptions.length >0 ?osOptions.map((os) => (
                       <SelectItem key={os.name} value={os.name}>{os.name}</SelectItem>
-                    ))}
+                    )): <SelectItem value="no-osOption-available">No Os Options Available</SelectItem>}
                   </SelectContent>
                 </Select>
               </div>
@@ -447,12 +610,15 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     updateFormState('osVersion', value)
                     updateFormState('plan', '')
                     updateFormState('image', '')
+                    updateFormState('commitmment', '')
+
                   }} 
                   value={formState.osVersion} 
                   required
                   disabled={!formState.os}
                 >
                   <SelectTrigger id="os-version" className="max-w-full">
+                    
                     <SelectValue placeholder="Select Version" />
                   </SelectTrigger>
                   <SelectContent>
@@ -468,7 +634,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 <Select 
                   onValueChange={handlePlanChange} 
                   value={plans.find(p => p.plan === formState.plan)?.id || ''}
-                  disabled={plans.length === 0}
+                  disabled={plans && plans.length === 0}
                   required
                 >
                   <SelectTrigger id="plan" className="max-w-full">
@@ -482,26 +648,35 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     )}
                   </SelectTrigger>
                   <SelectContent>
-                    {plans.map((plan) => (
-                      <SelectItem key={plan.id} value={plan.id}>{formatPlanName(plan)}</SelectItem>
-                    ))}
+                    {plans.length>0 ? plans.map((plan) => (
+                      <SelectItem key={plan.id} value={plan.id} className='flex justify-evenly'>{formatPlanName(plan)}</SelectItem>
+                    )): <SelectItem value="no-plan-available">No Plans Available</SelectItem>}
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="plan-commitment">Plan Commitment *</Label>
+                <Label htmlFor="plan-commitment">Reservation *</Label>
                 <Select 
-                  onValueChange={(value) => updateFormState('planCommitment', value)} 
-                  value={formState.planCommitment} 
+                  onValueChange={(value) => updateFormState('commitmment', value)} 
+                  value={formState.commitmment} 
                   required
-                  disabled={true}
+                  disabled={price && price.length === 0}
                 >
                   <SelectTrigger id="plan-commitment" className="max-w-full">
+                  {loadingPrice ? (
+                      <div className="flex items-center">
+                        <CircularProgress size={16} className="mr-2" />
+                        Loading Price Options ...
+                      </div>
+                    ) : (
                     <SelectValue placeholder="Select commitment" />
+                    )}
                   </SelectTrigger>
                   <SelectContent>
-                    {renderPlanCommitmentOptions()}
+                    {price.length > 0 ? price.map((price) => (
+                        <SelectItem key={price.unit} value={price.unit}>{formatPrice(price)}</SelectItem>
+                      )): <SelectItem value="no-price-available">No Price Plans Available</SelectItem>}
                   </SelectContent>
                 </Select>
               </div>

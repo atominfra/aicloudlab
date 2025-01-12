@@ -31,25 +31,6 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
   const [loading, setLoading] = useState(true)
   const [projects, setProjects] = useState<Project[]>([])
   const {auth} = useApp()
-  // useEffect(() => {
-  //   const fetchProjects = async () => {
-  //     setLoading(true)
-  //     try {
-  //       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/projects`)
-  //       if (!response.ok) {
-  //         throw new Error('Failed to fetch projects')
-  //       }
-  //       const data = await response.json()
-  //       setProjects(data)
-  //     } catch (error) {
-  //       console.error("Error fetching projects:", error)
-  //     } finally {
-  //       setLoading(false)
-  //     }
-  //   }
-
-  //   fetchProjects()
-  // }, [])
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -78,7 +59,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
         <Button onClick={()=> router.push('/create/project')} className="bg-blue-600">Create Project</Button>
       </div>
       <div className="grid grid-cols-1 gap-1">
-        {projects.length>0 ? projects.map((project) => (
+        {projects && projects.length>0 ? projects.map((project) => (
           // @ts-expect-error build error
           <ProjectCard key={project.id} {...project}/>
         )) : <>

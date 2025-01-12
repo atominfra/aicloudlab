@@ -8,7 +8,7 @@ import noNodesIcon from "@/assets/noNodesIcon.svg"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useApp } from "@/context/AppContext"
-
+import { fetchNodesForAccount, fetchCloudAccount } from "@/app/api/cloud/api"
 interface Node {
   id: number
   name: string
@@ -28,78 +28,53 @@ interface AccountData {
   nodes: Node[]
 }
 
-export default function NodesPage() {
-  const [accountData, setAccountData] = useState<AccountData | null>(null)
+export default function NodesPage({ params }: { params: { id: string } }) {
+  const [accountData, setAccountData] = useState()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
+  const [nodes, setNodes] = useState<Node[]>([])
+
   const router = useRouter()
-  const { node_page_status } = useApp()
+  const { auth,node_page_status } = useApp()
+    console.log("id",params.id)
 
-  const fetchNodes = async () => {
-    try {
-      // For now, we'll use the fake data
-      const fakeAccountData: AccountData = {
-        cloudName: "Azure",
-        accountName: "John Doe",
-        nodes: [
-          {
-            id: 1,
-            name: "Node-A",
-            memory: "16GB",
-            vcpus: "4 vCPU",
-            disk: "500GB",
-            private_ip_address: "192.168.1.10",
-            public_ip_address: "203.0.113.10",
-            gpu: "NVIDIA Tesla V100",
-            isDeleted: false,
-            status: "running",
-          },
-          {
-            id: 2,
-            name: "Node-B",
-            memory: "32GB",
-            vcpus: "8 vCPU",
-            disk: "1TB",
-            private_ip_address: "192.168.1.11",
-            public_ip_address: "203.0.113.11",
-            gpu: "NVIDIA A100",
-            isDeleted: false,
-            status: "stopped",
-          },
-          {
-            id: 3,
-            name: "Node-C",
-            memory: "64GB",
-            vcpus: "16 vCPU",
-            disk: "2TB",
-            private_ip_address: "192.168.1.12",
-            public_ip_address: "203.0.113.12",
-            gpu: "NVIDIA RTX 3090",
-            isDeleted: true,
-            status: "error",
-          },
-        ]
+  
+      useEffect(()=>{
+        const fetchData = async () => {
+          if (!auth ) return
+          try {
+            setLoading(true)
+            const data = await fetchCloudAccount(auth, params?.id)
+            setAccountData(data.data)
+          } catch (error) {
+            console.error('Failed to fetch initial data:', error)
+          }
+          setLoading(false)
+        }
+        fetchData()
+      },[auth])
+
+      const fetchNodes = async () => {
+        try {
+          setLoading(true)
+          const data = await fetchNodesForAccount(auth, params?.id)
+          setNodes(data.data.nodes)
+        } catch (error) {
+          console.error('Failed to fetch initial data:', error)
+        }
+        setLoading(false)
       }
-
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
-
-      setAccountData(fakeAccountData)
-    } catch (err) {
-      setError('An error occurred while fetching nodes')
-    } finally {
-      setLoading(false)
-    }
-  }
+      useEffect(()=>{
+        if (auth ){
+          fetchNodes()
+        } 
+      },[auth])
 
   // Function to check if there are active nodes
   const hasActiveNodes = () => {
-    return accountData?.nodes.some((node) => !node.isDeleted) ?? false
+    return nodes.some((node) => !node.isDeleted) ?? false
   }
 
-  useEffect(() => {
-    fetchNodes()
-  }, [])
 
   // prefetch routes for faster navigation
   useEffect(() => {
@@ -110,7 +85,7 @@ export default function NodesPage() {
     <div className="p-4 bg-neutral-100 lg:h-screen h-[92dvh] justify-center items-center">
       <div className="flex items-center justify-between lg:mb-6 mb-5 h-[6vh]">
         <div>
-          <h1 className="text-lg lg:text-2xl font-semibold">{accountData?.cloudName} - {accountData?.accountName}</h1>
+          <h1 className="text-lg lg:text-2xl font-semibold">{accountData?.provider} - {accountData?.name}</h1>
         </div>
         <Button className="bg-blue-600" onClick={() => router.push("/create/node")} disabled={!node_page_status}>
           <span className="">+</span>
@@ -130,7 +105,7 @@ export default function NodesPage() {
           ) : (
             <div className="flex flex-col items-center lg:h-[80vh] h-[70vh] w-full">
               {hasActiveNodes() ? (
-                accountData?.nodes.map((node) => 
+                nodes?.map((node) => 
                   // @ts-expect-error build
                   !node.isDeleted && <NodeCard key={node.id} {...node} fetchNodes={fetchNodes} />
                 )
