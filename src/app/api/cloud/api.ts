@@ -1,13 +1,4 @@
-interface CloudAccountData{
-  name: string;
-  provider: string;
-  credentials: {
-    tenant_id: string;
-    client_id: string;
-    client_secret: string;
-    subscription_id: string;
-  };
-}
+
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '/api/dashboard/node';
 
@@ -58,7 +49,7 @@ export async function fetchCloudAccount(auth: string, accountId: string) {
 }
 
 // Create a new cloud account
-export async function createCloudAccount(auth: string, accountData: CloudAccountData) {
+export async function createCloudAccount(auth: string, accountData) {
   try {
     const url = `${API_BASE_URL}/cloud/`;
     const response = await fetch(url, {
