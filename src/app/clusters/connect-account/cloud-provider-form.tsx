@@ -64,7 +64,7 @@ export function CloudProviderForm({ provider }: CloudProviderFormProps) {
     setIsLoading(true)
     try {
 
-      let apiData = {
+      const apiData = {
         name: azureCredentials.name,
         provider: 'azure',
         credentials: {

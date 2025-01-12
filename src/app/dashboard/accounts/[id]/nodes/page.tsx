@@ -23,13 +23,13 @@ interface Node {
 }
 
 interface AccountData {
-  cloudName: string
-  accountName: string
+  name: string
   nodes: Node[]
+  provider:string
 }
 
 export default function NodesPage({ params }: { params: { id: string } }) {
-  const [accountData, setAccountData] = useState()
+  const [accountData, setAccountData] = useState<AccountData>()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
   const [nodes, setNodes] = useState<Node[]>([])

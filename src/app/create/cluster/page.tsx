@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select"
 import { useRouter } from 'next/navigation'
 import { useApp } from '@/context/AppContext'
-import { fetchCloudAccounts } from '@/app/api/cloud/api'
+import { fetchAllCloudAccounts } from '@/app/api/cloud/api'
 import { CircularProgress } from '@mui/material'
 
 export default function CreateClusterPage() {
@@ -57,7 +57,7 @@ export default function CreateClusterPage() {
   const fetchCloudAccount = async (auth) => {
     try {
       setIsLoadingCloudAccounts(true);
-      const plansData = await fetchCloudAccounts(auth)
+      const plansData = await fetchAllCloudAccounts(auth)
       console.log('plansData',plansData)
       setCloudAccounts(plansData)
       setIsLoadingCloudAccounts(false);
