@@ -119,20 +119,21 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
       }
       fetchData()
     },[auth])
-
-    useEffect(()=>{
-      const fetchData = async () => {
-        if (!auth ) return
-        try {
-          setLoading(true)
-          const data = await getAllProjectNodes(auth, params?.id)
-          setNodes(data.data.nodes)
-        } catch (error) {
-          console.error('Failed to fetch initial data:', error)
-        }
-        setLoading(false)
+    
+    const fetchNodes = async () => {
+      if (!auth ) return
+      try {
+        setLoading(true)
+        const data = await getAllProjectNodes(auth, params?.id)
+        setNodes(data.data.nodes)
+      } catch (error) {
+        console.error('Failed to fetch initial data:', error)
       }
-      fetchData()
+      setLoading(false)
+    }
+    useEffect(()=>{
+      
+      fetchNodes()
     },[auth])
 
 
@@ -202,7 +203,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
         ) : (
           nodes.length>0 ? nodes.map((node) => (
             // @ts-expect-error build error
-              <NodeCard key={node.id} {...node} fetchNodes={()=>{}} />
+              <NodeCard key={node.id} {...node} fetchNodes={fetchNodes} />
           )):
             <div className="flex flex-col justify-center items-center lg:h-[80vh] h-[70dvh]  w-full">
                     <Image
