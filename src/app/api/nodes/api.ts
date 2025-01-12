@@ -1,9 +1,9 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '/api/dashboard/node';
 
-export async function fetchOSOptions(auth:string) {
+export async function fetchOSOptions(auth:string, cloudAccountId:string, location:string) {
   console.log("auth",auth)
   try {
-    const url = `${API_BASE_URL}/e2e/os`;
+    const url = `${API_BASE_URL}/cloud/os?cloud_account_id=${cloudAccountId}&location=${location}`;
     const response = await fetch(url,{
         method: 'GET',
         headers: {
@@ -24,9 +24,9 @@ export async function fetchOSOptions(auth:string) {
   }
 }
 
-export async function fetchPlans(auth,os, osVersion) {
+export async function fetchPlans(auth,os, osVersion,location, accountId) {
   try {
-    const url = `${API_BASE_URL}/e2e/plans?os_name=${encodeURIComponent(os)}&os_version=${encodeURIComponent(osVersion)}`;
+    const url = `${API_BASE_URL}/cloud/plans?os_name=${encodeURIComponent(os)}&os_version=${encodeURIComponent(osVersion)}&location=${location}&cloud_account_id=${accountId}`;
     const response = await fetch(url,{
       method: 'GET',
       headers: {
@@ -47,9 +47,33 @@ export async function fetchPlans(auth,os, osVersion) {
   }
 }
 
+
+
+export async function fetchPrice(auth,os, osVersion,location, accountId, plan) {
+  try {
+    const url = `${API_BASE_URL}/cloud/price?os=${encodeURIComponent(os)}&os_version=${encodeURIComponent(osVersion)}&location=${location}&cloud_account_id=${accountId}&plan=${plan}`;
+    const response = await fetch(url,{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${auth}`,
+      }
+  });
+
+    if (!response.ok) {
+      const errorDetails = await response.text();
+      throw new Error(`HTTP Error ${response.status}: ${response.statusText}. Details: ${errorDetails}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(`API Request Failed: `, error);
+    throw new Error(error.message || 'An unexpected error occurred');
+  }
+}
 export async function createNode(auth , nodeData) {
   try {
-    const url = `${API_BASE_URL}/e2e/node`;
+    const url = `${API_BASE_URL}/cloud/node`;
     const response = await fetch(url, {
       method: 'POST',
       headers: {
@@ -73,26 +97,9 @@ export async function createNode(auth , nodeData) {
   }
 }
 
-export async function fetchNodes() {
+export async function fetchNodes(auth) {
   try {
-    const url = `${API_BASE_URL}/e2e/node`;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      const errorDetails = await response.text();
-      throw new Error(`HTTP Error ${response.status}: ${response.statusText}. Details: ${errorDetails}`);
-    }
-
-    return await response.json();
-  } catch (error) {
-    console.error(`API Request Failed: `, error);
-    throw new Error(error.message || 'An unexpected error occurred');
-  }
-}
-
-export async function fetchCloudAccounts(auth) {
-  try {
-    const url = `${API_BASE_URL}/cloud-accounts`;
+    const url = `${API_BASE_URL}/cloud/node`;
     const response = await fetch(url,{
       method: 'GET',
       headers: {
@@ -103,13 +110,13 @@ export async function fetchCloudAccounts(auth) {
 
     if (!response.ok) {
       const errorDetails = await response.text();
-      // throw new Error(`HTTP Error ${response.status}: ${response.statusText}. Details: ${errorDetails}`);
+      throw new Error(`HTTP Error ${response.status}: ${response.statusText}. Details: ${errorDetails}`);
     }
 
     return await response.json();
   } catch (error) {
     console.error(`API Request Failed: `, error);
-    // throw new Error(error.message || 'An unexpected error occurred');
+    throw new Error(error.message || 'An unexpected error occurred');
   }
 }
 
