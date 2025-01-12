@@ -81,3 +81,19 @@ export const deleteProject = async (auth: string, projectId: string) => {
   }
   return response.json();
 };
+
+export const getAllProjectNodes = async (auth: string, projectId: string) => {
+  const response = await fetch(`${API_BASE_URL}/project/${projectId}/node`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${auth}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to delete project');
+  }
+  return response.json();
+};
