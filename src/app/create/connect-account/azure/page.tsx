@@ -11,11 +11,7 @@ import { Label } from '@/components/ui/label'
 import { useRouter } from 'next/navigation'
 import { createCloudAccount } from '@/app/api/cloud/api'
 import { useApp } from '@/context/AppContext'
-type CloudProvider = 'aws' | 'gcp' | 'azure'
 
-interface CloudProviderFormProps {
-  provider: CloudProvider
-}
 
 // const docs = {
 //     title: 'How to get Azure credentials',
@@ -30,7 +26,7 @@ interface CloudProviderFormProps {
 //     ]
 // }
 
-export default function CloudProviderForm({ provider }: CloudProviderFormProps) {
+export default function AzurePage() {
   const { auth } = useApp()
 
   const router = useRouter()
@@ -43,12 +39,11 @@ export default function CloudProviderForm({ provider }: CloudProviderFormProps) 
     subscription_id: '',
   })
 
-  if (provider === 'aws' || provider === 'gcp') {
     return (
       <Card className="border-none shadow-none">
         <CardHeader>
           <CardTitle>
-            {provider === 'aws' ? 'Amazon Web Services' : 'Google Cloud Platform'}
+          Amazon Web Services
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -62,7 +57,7 @@ export default function CloudProviderForm({ provider }: CloudProviderFormProps) 
         </CardContent>
       </Card>
     )
-  }
+  
 
   const handleAzureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target

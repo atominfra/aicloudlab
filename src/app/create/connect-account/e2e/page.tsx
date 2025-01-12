@@ -13,11 +13,8 @@ import { createCloudAccount } from '@/app/api/cloud/api'
 import { useApp } from '@/context/AppContext'
 type CloudProvider = 'aws' | 'gcp' | 'azure'
 
-interface CloudProviderFormProps {
-  provider: CloudProvider
-}
 
-export default function CloudProviderForm({ provider }: CloudProviderFormProps) {
+export default function CloudProviderForm() {
   const { auth } = useApp()
 
   const router = useRouter()
