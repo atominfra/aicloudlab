@@ -153,9 +153,7 @@ export function NodeCard({id, name="node Name", memory, vcpus, disk, private_ip_
             className={`text-gray-400 p-2 hover:cursor-pointer ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             onClick={handleToggle}
           >
-            {loading ? (
-              <CircularProgress className="text-black" size={24}/> 
-            ) : isRunning ? (
+            {isRunning ? (
               <FaPause className="w-[20px] h-[30px] text-gray-400" />
             ) : (
               <FaPlay className="w-[15px] h-[20px] text-gray-400" />

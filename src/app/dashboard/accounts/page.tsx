@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import azureIcon from "@/assets/azure.svg";
 import gcpIcon from "@/assets/gcp.svg";
-import e2eIcon from '@/assets/gcp.svg';
 import awsIcon from "@/assets/aws.svg";
 import { useRouter } from 'next/navigation';
 import { fetchAllCloudAccounts, deleteCloudAccount } from '@/app/api/cloud/api';
@@ -50,7 +49,7 @@ const CloudAccounts = () => {
       case 'aws':
         return awsIcon;
       case 'e2e':
-        return e2eIcon;
+        return 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1736699109/e2eicon_oulyzm.png';
       default:
         return null;
     }
@@ -109,7 +108,7 @@ const CloudAccounts = () => {
           <Button 
             variant="default" 
             className="bg-blue-600 hover:bg-blue-600/90" 
-            onClick={() => router.push('/clusters/connect-account')}
+            onClick={() => router.push('/create/connect-account')}
           >
             <Plus className="mr-2" />
             Add Account

@@ -85,7 +85,9 @@ export default function NodesPage({ params }: { params: { id: string } }) {
     <div className="p-4 bg-neutral-100 lg:h-screen h-[92dvh] justify-center items-center">
       <div className="flex items-center justify-between lg:mb-6 mb-5 h-[6vh]">
         <div>
-          <h1 className="text-lg lg:text-2xl font-semibold">{accountData?.provider} - {accountData?.name}</h1>
+          {accountData && 
+          <h1 className="text-lg lg:text-2xl font-semibold">{accountData?.name} ({accountData?.provider})</h1>
+        }
         </div>
         <Button className="bg-blue-600" onClick={() => router.push("/create/node")} disabled={!node_page_status}>
           <span className="">+</span>
