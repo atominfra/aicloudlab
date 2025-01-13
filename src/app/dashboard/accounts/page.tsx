@@ -1,9 +1,11 @@
 "use client"
+
 import { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import { Eye, Plus, Unplug, Filter } from 'lucide-react';
+import { Eye, Plus, Unplug, Filter, AlertTriangle } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,12 +18,17 @@ import awsIcon from "@/assets/aws.svg";
 import { useRouter } from 'next/navigation';
 import { fetchAllCloudAccounts, deleteCloudAccount } from '@/app/api/cloud/api';
 import { useApp } from '@/context/AppContext';
+import { CircularProgress, Modal } from '@mui/material';
 
 const CloudAccounts = () => {
   const [selectedProvider, setSelectedProvider] = useState('all');
   const router = useRouter();
   const { auth } = useApp();
   const [accounts, setAccounts] = useState([]);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [accountToDelete, setAccountToDelete] = useState(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const providerOptions = [
     { value: 'all', label: 'All Providers' },
@@ -36,6 +43,7 @@ const CloudAccounts = () => {
       setAccounts(accounts?.data?.cloud_accounts);
     }
   }
+
   useEffect(() => {
     fetchAccounts();
   }, [auth]);
@@ -70,14 +78,32 @@ const CloudAccounts = () => {
     }
   };
 
-  const handleDeleteAccount = async (id)=>{
-    if (auth) {
-      const resp = await deleteCloudAccount(auth, id);
-      if(resp){
-        fetchAccounts()
+  const openDeleteModal = (account) => {
+    setAccountToDelete(account);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setAccountToDelete(null);
+    setDeleteConfirmation('');
+  };
+
+  const handleDeleteAccount = async () => {
+    if (deleteConfirmation === accountToDelete?.name) {
+      setIsDeleting(true);
+      try {
+        await deleteCloudAccount(auth, accountToDelete.id);
+        await fetchAccounts();
+        closeDeleteModal();
+      } catch (error) {
+        console.error("Error deleting account:", error);
+        // Handle error (e.g., show error message to user)
+      } finally {
+        setIsDeleting(false);
       }
     }
-  }
+  };
 
   return (
     <div className="container mx-auto py-6">
@@ -151,7 +177,7 @@ const CloudAccounts = () => {
                   variant="ghost" 
                   size="sm" 
                   className="text-red-600 hover:text-red-700 bg-red-100 hover:bg-red-50"
-                  onClick={()=>handleDeleteAccount(account.id)}
+                  onClick={() => openDeleteModal(account)}
                 >
                   <Unplug className="h-4 w-4 mr-2" />
                   Disconnect
@@ -161,8 +187,50 @@ const CloudAccounts = () => {
           </Card>
         ))}
       </div>
+
+      <Modal open={isDeleteModalOpen} onClose={closeDeleteModal} className="w-full h-full justify-items-center content-center">
+        <div className="p-6 bg-white shadow-xl rounded-[10px] w-full max-w-[588px]">
+          <p className="flex gap-2 items-center pb-4 text-[20px] font-semibold text-[#111827]">
+            <AlertTriangle className="text-red-500" />
+            <span>Disconnect Account</span>
+          </p>
+          <p className="pb-4 text-[#374151] text-base">
+            This action cannot be undone. Please type the account name to confirm disconnection:
+          </p>
+          <div className='mb-4 p-4 border-2 rounded-[4px] bg-[#F9FAFB] border-[#E5E7EB]'>
+            <div className='text-[#4B5563] text-sm'>Account name:</div>
+            <div className='font-medium text-[#111827] text-base'>{accountToDelete?.name}</div>
+          </div>
+          <Input 
+            placeholder="Type account name to confirm" 
+            value={deleteConfirmation}
+            onChange={(e) => setDeleteConfirmation(e.target.value)}
+            className="max-w-full placeholder:text-[#9CA3AF] text-sm mb-4"
+          />
+          <div className="flex justify-end gap-4">
+            <Button variant="outline" className='bg-[#F3F4F6] text-[#374151]' onClick={closeDeleteModal}>
+              Cancel
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={handleDeleteAccount}
+              disabled={deleteConfirmation !== accountToDelete?.name || isDeleting}
+            >
+              {isDeleting ? (
+                <>
+                  <CircularProgress size={16} color="inherit" className="mr-2" />
+                  Disconnecting...
+                </>
+              ) : (
+                'Disconnect Account'
+              )}
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
 
 export default CloudAccounts;
+
