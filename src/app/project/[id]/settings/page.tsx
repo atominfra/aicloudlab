@@ -172,7 +172,7 @@ export default function ProjectSettings() {
         </CardContent>
       </Card>
 
-      <Modal open={isDeleteModalOpen} onClose={closeDeleteModal}>
+      <Modal open={isDeleteModalOpen} onClose={closeDeleteModal} className="w-full h-full justify-items-center content-center">
         <div className="p-6 bg-white shadow-xl rounded-[10px] w-full max-w-[588px]">
           <p className="flex gap-2 items-center pb-4 text-[20px] font-semibold text-[#111827]">
             <AlertTriangle className="text-red-500" />
