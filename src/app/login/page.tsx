@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { Loader2, Users, ArrowLeftRight, PiggyBank } from 'lucide-react'
+import { Loader2, Users, ArrowLeftRight, PiggyBank, Eye, EyeOff } from 'lucide-react'
 import { MdEmail, MdLock } from "react-icons/md"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -43,6 +43,7 @@ export default function Login() {
     identifier: '',
     password: '',
   })
+  const [showPassword, setShowPassword] = useState(false)
 
   const { login, loading, loginError, setLoginError } = useAuth()
   const [auth, setAuth] = useState('')
@@ -90,6 +91,8 @@ export default function Login() {
     }
     login(formData)
   }
+
+  const togglePasswordVisibility = () => setShowPassword(!showPassword)
 
   return (
     <div className="min-h-screen relative w-full bg-white lg:bg-gradient-to-br from-[#DBEAFE] to-white">
@@ -175,14 +178,21 @@ export default function Login() {
                       <Input
                         id="password"
                         name="password"
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         value={formData.password}
                         onChange={handleChange}
-                        className={`pl-10 h-11 border-gray-200 rounded-lg ${
+                        className={`pl-10 pr-10 h-11 border-gray-200 rounded-lg ${
                           errors.password ? "border-red-500" : ""
                         }`}
                         placeholder="Enter your password"
                       />
+                      <button
+                        type="button"
+                        onClick={togglePasswordVisibility}
+                        className="absolute right-3 text-gray-400"
+                      >
+                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                      </button>
                     </div>
                     {errors.password && (
                       <p className="text-sm text-red-500">{errors.password}</p>
