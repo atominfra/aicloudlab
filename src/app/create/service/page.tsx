@@ -46,7 +46,6 @@ const CreateService: React.FC<CreateServiceProps> = () => {
     cluster: '',
     cpuLimit: '',
     registryCredential: '',
-    replicas: '',
     env_variables: [{ key: '', value: '', isVisible: false }] as EnvVariable[]
   })
   const [registries, setRegistries] = useState<RegistryCredential[]>([]);
@@ -84,7 +83,6 @@ const CreateService: React.FC<CreateServiceProps> = () => {
             memoryLimit: data.mem_limit,
             cpuLimit: data.cpu_limit,
             registryCredential: data.registry_credential_id,
-            replicas: data.replicas.toString(),
             env_variables: Object.keys(data.env_variables).map(key => ({
               key,
               value: data.env_variables[key],
@@ -234,11 +232,6 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       return;
     }
 
-    if (formData.replicas === '') {
-      setError('Please enter Replicas');
-      setIsLoading(false);
-      return;
-    }
   
   
   
@@ -273,10 +266,6 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       // @ts-expect-error build error
       deploymentData.registry_credential_id = formData.registryCredential; 
     }
-    if (formData.replicas) {
-            // @ts-expect-error build error
-      deploymentData.replicas = formData.replicas === 'custom' ? parseInt(customReplicas, 10) : parseInt(formData.replicas, 10)
-      }
       if (formData.env_variables) {
          const newob = removeEmptyStringKeys(formData.env_variables)
         deploymentData.env_variables = newob
@@ -646,38 +635,6 @@ const CreateService: React.FC<CreateServiceProps> = () => {
               <RefreshCw size={16} />
             </Button>
           </div>
-        </div>
-
-        <div>
-          <label htmlFor="replicas" className="pl-2 text-sm font-medium text-[#374151]">
-            Replicas*
-          </label>
-          <Select 
-            value={formData.replicas} 
-            onValueChange={(value) => {
-                handleChange('replicas', value)
-            }}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select replicas" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1">1</SelectItem>
-              <SelectItem value="2">2</SelectItem>
-              <SelectItem value="3">3</SelectItem>
-              <SelectItem value="4">4</SelectItem>
-              <SelectItem value="custom">Custom</SelectItem>
-            </SelectContent>
-          </Select>
-          {formData.replicas === 'custom' && (
-            <Input
-              type="text"
-              placeholder="Enter Custom Replicas (e.g., 10, 20)"
-              value={customReplicas}
-              onChange={handleCustomInputChange(setCustomReplicas)}
-              className="mt-2"
-            />
-          )}
         </div>
 
         <div>
