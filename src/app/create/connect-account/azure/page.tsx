@@ -39,25 +39,6 @@ export default function AzurePage() {
     subscription_id: '',
   })
 
-    return (
-      <Card className="border-none shadow-none">
-        <CardHeader>
-          <CardTitle>
-          Amazon Web Services
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Alert>
-            <AlertCircle className="h-4 w-4" />
-            <AlertTitle>Coming Soon</AlertTitle>
-            <AlertDescription>
-              This provider integration will be available soon.
-            </AlertDescription>
-          </Alert>
-        </CardContent>
-      </Card>
-    )
-  
 
   const handleAzureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
