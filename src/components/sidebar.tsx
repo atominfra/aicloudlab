@@ -21,9 +21,9 @@ export function Sidebar() {
     router.prefetch("/credits")
   },[])
   return (
-    <div className="lg:w-[13vw] bg-card border-r border-border bg-white  shadow-md flex-col fixed h-screen hidden lg:flex">
+    <div className=" bg-card border-r border-border bg-white rounded-r-2xl shadow-md flex-col fixed h-screen hidden lg:flex">
         <div className="flex px-4 pt-4 pb-2 border-b">
-        <Link href="/" className="flex items-center gap-2 pl-4 py-2 rounded-lg text-foreground">
+        <Link href="/" className="flex items-center gap-2 px-4 py-2 rounded-lg text-foreground">
         <div className='flex items-center'>
           <Image
             src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
@@ -80,15 +80,15 @@ export function Sidebar() {
           </li>
         </ul>
       </nav>
-      <div className="p-4 border-t border-border ">
+      <div className="p-4 border-t border-border w-[13vw]">
         <div className="flex items-center gap-3">
-          <div className="w-full">
-            <div className="w-10 h-10 rounded-full bg-neutral-100 border flex items-center justify-center hover:cursor-pointer hover:border-gray-300" onClick={()=> router.push("/profile")}>
-              <span className="text-md font-medium ">{user?.full_name && user?.full_name.split(' ').map(n=> n[0]).join('')}</span>
-            </div>
+          <div className="w-10 h-10 rounded-full bg-neutral-100 border flex items-center justify-center hover:cursor-pointer hover:border-gray-300" onClick={()=> router.push("/profile")}>
+          <span className="text-md font-medium ">{user?.full_name && user?.full_name.split(' ').map(n=> n[0]).join('')}</span>
           </div>
-          <div className="w-full text-sm text-muted-foreground">
+          <div className="flex-1">
+            <div className="text-sm text-muted-foreground  w-[4vw]">
               {user?.full_name && user?.full_name.split(' ')[0]}
+              </div>
           </div>
           <div className="px-3 py-1 bg-blue-600 text-primary-foreground text-white text-sm rounded-[4px] hover:cursor-pointer" onClick={()=> router.push("/credits")}>
           <span className='font-serif pr-1 text-white'>₹</span>
