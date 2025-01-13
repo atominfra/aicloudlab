@@ -179,7 +179,7 @@ export default function ProjectSettings() {
             <span>Delete Project</span>
           </p>
           <p className="pb-4 text-[#374151] text-base">
-            This action cannot be undone. Please type the project's name to confirm deletion:
+            This action cannot be undone. Please type the project&apos;s name to confirm deletion:
           </p>
           <div className='mb-4 p-4 border-2 rounded-[4px] bg-[#F9FAFB] border-[#E5E7EB]'>
             <div className='text-[#4B5563] text-sm'>Project name:</div>
