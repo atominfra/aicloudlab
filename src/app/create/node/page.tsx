@@ -119,7 +119,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       formState.os !== '' &&
       formState.osVersion !== '' &&
       formState.plan !== '' &&
-      formState.commitmment !== '' &&
+      // formState.commitmment !== '' &&
       formState.sshKeys.length > 0 &&
       formState.sshKeys.every(key => key.key.trim() !== '')
     )
@@ -250,7 +250,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         const field = key as keyof NodeData
         if (field === 'sshKeys') {
           newFieldErrors[field] = formState[field].length === 0 || formState[field].some(key => key.key.trim() === '')
-        } else if (field === 'volumes' || field === 'securityRules') {
+        } else if (field === 'volumes' || field === 'securityRules' || field === 'commitmment') {
           // These fields are optional, so we don't validate them
           newFieldErrors[field] = false
         } else {
