@@ -11,20 +11,7 @@ import { Label } from '@/components/ui/label'
 import { useRouter } from 'next/navigation'
 import { createCloudAccount } from '@/app/api/cloud/api'
 import { useApp } from '@/context/AppContext'
-
-
-// const docs = {
-//     title: 'How to get Azure credentials',
-//     video: '/placeholder.svg?height=315&width=560',
-//     steps: [
-//       'Go to Azure Portal and sign in to your account',
-//       'Navigate to Azure Active Directory',
-//       'Register a new application under App Registrations',
-//       'Get the Tenant ID and Client ID from the app overview',
-//       'Generate a new Client Secret under Certificates & Secrets',
-//       'Get your Subscription ID from Subscriptions page'
-//     ]
-// }
+import { ToggleableInput } from '@/components/ToggleableInput'
 
 export default function AzurePage() {
   const { auth } = useApp()
@@ -32,13 +19,12 @@ export default function AzurePage() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [azureCredentials, setAzureCredentials] = useState({
-    name:'',
+    name: '',
     tenant_id: '',
     client_id: '',
     client_secret: '',
     subscription_id: '',
   })
-
 
   const handleAzureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -48,11 +34,10 @@ export default function AzurePage() {
     }))
   }
   
-  const handelSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
     try {
-
       const apiData = {
         name: azureCredentials.name,
         provider: 'azure',
@@ -76,74 +61,59 @@ export default function AzurePage() {
     }
   }
 
-
   return (
-    <div className='lg:p-6 bg-neutral-100 lg:h-screen flex justify-center items-center h-[92dvh]  '>
-      <div className="max-w-2xl mx-auto p-4 lg:p-6 w-full ">
-      <div className="text-center mb-8 relative">
-        <h1 className="lg:text-2xl text-lg font-semibold mb-2">Microsoft Azure</h1>
-      </div>
+    <div className='lg:p-6 bg-neutral-100 lg:h-screen flex justify-center items-center h-[92dvh]'>
+      <div className="max-w-2xl mx-auto p-4 lg:p-6 w-full">
+        <div className="text-center mb-8 relative">
+          <h1 className="lg:text-2xl text-lg font-semibold mb-2">Microsoft Azure</h1>
+        </div>
 
-      <Card className="border-none shadow-none">
-      <CardContent>
-        <div className="pt-4">
-          <form onSubmit={handelSubmit} className="space-y-4">
-            {Object.keys(azureCredentials).map((field) => (
-              <div key={field} className="space-y-2">
-                <Label htmlFor={field}>
-                  {field
-                    .replace('_', ' ')
-                    .toLowerCase()
-                    .split(' ')
-                    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(' ')}
-                </Label>                
-                <Input
-                  id={field}
-                  name={field}
-                  placeholder={`Enter ${field.replace('_', ' ')}`}
-                  type={field === 'client_secret' ? 'password' : 'text'}
-                  value={azureCredentials[field as keyof typeof azureCredentials]}
-                  onChange={handleAzureChange}
-                  required
-                />
-              </div>
-            ))}
-            <div className='w-full text-end'>
-            <Button type="submit" className=" bg-[#2563EB] " disabled={isLoading}>
-              {isLoading ? 'Connecting...' : 'Connect Account'}
-            </Button>
+        <Card className="border-none shadow-none">
+          <CardContent>
+            <div className="pt-4">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                {Object.entries(azureCredentials).map(([field, value]) => (
+                  <div key={field} className="space-y-2">
+                    <Label htmlFor={field}>
+                      {field
+                        .replace('_', ' ')
+                        .toLowerCase()
+                        .split(' ')
+                        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                        .join(' ')}
+                    </Label>
+                    {field === 'name' ? (
+                      <Input
+                        id={field}
+                        name={field}
+                        placeholder={`Enter ${field.replace('_', ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}`}
+                        value={value}
+                        onChange={handleAzureChange}
+                        required
+                      />
+                    ) : (
+                      <ToggleableInput
+                        id={field}
+                        name={field}
+                        label={field.replace('_', ' ')}
+                        placeholder={`Enter ${field.replace('_', ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}`}
+                        value={value}
+                        onChange={handleAzureChange}
+                        required
+                      />
+                    )}
+                  </div>
+                ))}
+                <div className='w-full text-end'>
+                  <Button type="submit" className="bg-[#2563EB]" disabled={isLoading}>
+                    {isLoading ? 'Connecting...' : 'Connect Account'}
+                  </Button>
+                </div>
+              </form>
             </div>
-          </form>
-        </div>
-      </CardContent>
-    </Card>
-
-    {/* <Card className='border-none shadow-none'>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <CloudIcon className="h-5 w-5" />
-          {docs.title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="aspect-video bg-muted rounded-lg overflow-hidden flex items-center justify-center">
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/JuTRs31CW-k?si=OJWKC5e-GzGBnQbv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-        </div>
-        <div className="space-y-2">
-          <h3 className="font-semibold">Step-by-step guide:</h3>
-          <ol className="list-decimal list-inside space-y-2">
-            {docs.steps.map((step, index) => (
-              <li key={index} className="text-sm text-muted-foreground">
-                {step}
-              </li>
-            ))}
-          </ol>
-        </div>
-      </CardContent>
-    </Card> */}
+          </CardContent>
+        </Card>
+      </div>
     </div>
-    </div>
-    
   )
 }
