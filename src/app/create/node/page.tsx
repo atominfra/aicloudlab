@@ -234,7 +234,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }
   }, [auth])
 
-  const updateFormState = (field: keyof NodeData, value: any) => {
+  const updateFormState = (field: keyof NodeData, value) => {
     setFormState(prev => ({ ...prev, [field]: value }))
     setFieldErrors(prev => ({ ...prev, [field]: false }))
   }
@@ -278,7 +278,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         cloud_account_id: formState.cloud_account_id
       }
 
-      const provider = accounts && accounts.find((p: any) => p.id === formState.cloud_account_id)?.provider || ""
+      const provider = accounts && accounts.find((p) => p.id === formState.cloud_account_id)?.provider || ""
       apiData.image = provider === "azure" ? formState.osVersion : formState.image
 
       console.log("API Data:", JSON.stringify(apiData, null, 2))
@@ -353,7 +353,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }))
   }
 
-  const updateSecurityRule = (index: number, field: keyof NodeData['securityRules'][0], value: any) => {
+  const updateSecurityRule = (index: number, field: keyof NodeData['securityRules'][0], value) => {
     setFormState(prev => {
       const newRules = [...prev.securityRules]
       newRules[index] = { ...newRules[index], [field]: value }
@@ -397,7 +397,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     )
   }
 
-  const formatPrice = (price: any) => {
+  const formatPrice = (price) => {
     if (!price?.currency || !price?.price || !price?.unit) {
       return ''
     }
@@ -413,7 +413,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   useEffect(() => {
     console.log("accountsssss", formState.cloud_account_id)
     if (formState.cloud_account_id) {
-      const selectedAccount = accounts && accounts.find((cloud_account: any) => cloud_account.id === formState.cloud_account_id)
+      const selectedAccount = accounts && accounts.find((cloud_account) => cloud_account.id === formState.cloud_account_id)
       console.log("selectedAccount", selectedAccount)
       if (selectedAccount) {
         const filtered = locations.filter(location => location.provider === selectedAccount.provider)
@@ -425,7 +425,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }, [formState.cloud_account_id])
 
   const handleAccountChange = (value: string) => {
-    const accountId = accounts.find((p: any) => p.name === value)?.id || ""
+    const accountId = accounts.find((p) => p.name === value)?.id || ""
     setFormState(prev => ({
       ...prev,
       cloud_account_id: accountId,
@@ -443,7 +443,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }
 
   const handleProjectChange = (value: string) => {
-    const projects_id = projects.find((p: any) => p.name === value)?.id || ""
+    const projects_id = projects.find((p) => p.name === value)?.id || ""
     setFormState(prev => ({
       ...prev,
       projects_id: projects_id,
@@ -582,7 +582,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               </label>
               <div className='flex gap-2'>
                 <Select
-                  value={projects && projects.find((p: any) => p.id === formState.projects_id)?.name || ""}
+                  value={projects && projects.find((p) => p.id === formState.projects_id)?.name || ""}
                   onValueChange={handleProjectChange}
                 >
                   <SelectTrigger className={fieldErrors.projects_id ? 'border-red-500' : ''}>
@@ -596,7 +596,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     )}
                   </SelectTrigger>
                   <SelectContent>
-                    {projects && projects.length > 0 ? projects.map((project: any) => (
+                    {projects && projects.length > 0 ? projects.map((project) => (
                       <SelectItem key={project.id} value={project.name}>{project.name}</SelectItem>
                     )) : <SelectItem value="no-project-available">No projects Available</SelectItem>}
                   </SelectContent>
@@ -629,7 +629,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               </label>
               <div className='flex gap-2'>
                 <Select
-                  value={accounts && accounts.find((p: any) => p.id === formState.cloud_account_id)?.name || ""}
+                  value={accounts && accounts.find((p) => p.id === formState.cloud_account_id)?.name || ""}
                   onValueChange={handleAccountChange}
                 >
                   <SelectTrigger className={fieldErrors.cloud_account_id ? 'border-red-500' : ''}>
@@ -643,7 +643,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     )}
                   </SelectTrigger>
                   <SelectContent>
-                    {accounts && accounts.length > 0 ? accounts.map((cloud_account: any) => (
+                    {accounts && accounts.length > 0 ? accounts.map((cloud_account) => (
                       <SelectItem key={cloud_account.name} value={cloud_account.name}>{cloud_account.name} - {capitalizeFirstCharacter(cloud_account.provider)}</SelectItem>
                     )) : <SelectItem value="no-account-available">No Account Available</SelectItem>}
                   </SelectContent>
@@ -783,7 +783,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     )}
                   </SelectTrigger>
                   <SelectContent>
-                    {price && price.length > 0 ? price.map((price: any) => (
+                    {price && price.length > 0 ? price.map((price) => (
                       <SelectItem key={price.unit} value={price.unit}>{formatPrice(price)}</SelectItem>
                     )) : <SelectItem value="no-price-available">No Price Plans Available</SelectItem>}
                   </SelectContent>
