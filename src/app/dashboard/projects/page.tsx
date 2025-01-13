@@ -66,7 +66,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
             <div className="flex flex-col justify-center items-center lg:h-[80vh] h-[70dvh]  w-full">
               <FolderOpen className="w-[100px] h-[100px] text-neutral-200" />
               <Typography variant="body1" className="text-gray-400 mb-4 px-6">
-                No notebooks yet.
+                No Projects yet.
               </Typography>
             </div>
         </>}
