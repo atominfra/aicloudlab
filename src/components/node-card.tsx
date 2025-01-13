@@ -328,7 +328,7 @@ export function NodeCard({id, name="node Name", memory, vcpus, disk, private_ip_
                     Deleting...
                   </>
                 ) : (
-                  'Delete Notebook'
+                  'Delete Node'
                 )}
               </Button>
             </Box>
