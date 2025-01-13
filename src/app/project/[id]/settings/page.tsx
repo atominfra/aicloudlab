@@ -25,6 +25,7 @@ export default function ProjectSettings() {
   const [isEditing, setIsEditing] = useState(false)
   const [newProjectName, setNewProjectName] = useState('')
   const [isLoading, setIsLoading] = useState(true)
+  const [isUpdating, setIsUpdating] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
   const [deleteConfirmation, setDeleteConfirmation] = useState('')
@@ -32,41 +33,42 @@ export default function ProjectSettings() {
 
   useEffect(() => {
     if(auth){
-      const fetchProjectData = async () => {
-        setIsLoading(true)
-        setError(null)
-        try {
-          const projectData = await getOneProject(auth, id as string)
-          console.log("projectData", projectData)
-          setProject(projectData.data)
-          setNewProjectName(projectData.data.name)
-        } catch (err) {
-          setError('Failed to fetch project data')
-          console.error(err)
-        } finally {
-          setIsLoading(false)
-        }
-      }
       fetchProjectData()
     }
   }, [id, auth])
+
+  const fetchProjectData = async () => {
+    setIsLoading(true)
+    setError(null)
+    try {
+      const projectData = await getOneProject(auth, id as string)
+      setProject(projectData.data)
+      setNewProjectName(projectData.data.name)
+    } catch (err) {
+      setError('Failed to fetch project data')
+      console.error(err)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   const handleEditClick = () => {
     setIsEditing(true)
   }
   
   const handleSaveClick = async () => {
-    setIsLoading(true)
+    setIsUpdating(true)
     setError(null)
     try {
       const updatedProject = await updateProject(auth, id as string, { name: newProjectName })
-      setProject(updatedProject)
+      setProject(updatedProject.data)
+      setNewProjectName(updatedProject.data.name)
       setIsEditing(false)
     } catch (err) {
       setError('Failed to update project name')
       console.error(err)
     } finally {
-      setIsLoading(false)
+      setIsUpdating(false)
     }
   }
   
@@ -134,10 +136,17 @@ export default function ProjectSettings() {
                 )}
                 {isEditing ? (
                   <div className="flex gap-2">
-                    <Button size="sm" variant="outline" onClick={handleSaveClick} disabled={isLoading}>
-                      Save
+                    <Button size="sm" variant="outline" onClick={handleSaveClick} disabled={isUpdating}>
+                      {isUpdating ? (
+                        <>
+                          <CircularProgress size={16} color="inherit" className="mr-2" />
+                          Saving...
+                        </>
+                      ) : (
+                        'Save'
+                      )}
                     </Button>
-                    <Button size="sm" variant="outline" onClick={handleCancelClick} disabled={isLoading}>
+                    <Button size="sm" variant="outline" onClick={handleCancelClick} disabled={isUpdating}>
                       Cancel
                     </Button>
                   </div>
@@ -163,7 +172,7 @@ export default function ProjectSettings() {
         </CardContent>
       </Card>
 
-      <Modal open={isDeleteModalOpen} onClose={closeDeleteModal} className="w-full h-full justify-items-center content-center">
+      <Modal open={isDeleteModalOpen} onClose={closeDeleteModal}>
         <div className="p-6 bg-white shadow-xl rounded-[10px] w-full max-w-[588px]">
           <p className="flex gap-2 items-center pb-4 text-[20px] font-semibold text-[#111827]">
             <AlertTriangle className="text-red-500" />
