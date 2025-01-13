@@ -314,7 +314,7 @@ export default function Signup() {
 
                 <Button 
                   type="submit" 
-                  className="w-full h-11 bg-[#2563EB] hover:bg-[#2563EB]/90 text-[14px]" 
+                  className="w-full h-11 bg-[#2563EB] hover:bg-[#2563EB]/90 text-[14px] mt-4" 
                   disabled={isLoading}
                 >
                   {isLoading ? (
