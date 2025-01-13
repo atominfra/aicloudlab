@@ -137,9 +137,6 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
     },[auth])
 
 
-  const handleCreateNode = () => {
-    console.log("Create new node")
-  }
   useEffect(()=>{
     console.log("nodes",nodes)
   },[nodes])

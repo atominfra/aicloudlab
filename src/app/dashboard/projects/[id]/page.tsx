@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import withAuth from '@/components/withAuth'
 import { ServiceCard } from "@/components/service-card"
+import Loader from "@/components/loader"
 
 interface Node {
   id: number
@@ -69,13 +70,11 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
     fetchNodes()
   }, [params.id])
 
-  const handleCreateNode = () => {
-    // In a real app, this would navigate to a node creation page or open a modal
-    console.log("Create new node")
-  }
 
   if (loading) {
-    return <div>Loading...</div>
+    return <div>
+      <Loader/>
+    </div>
   }
 
   return (

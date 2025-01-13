@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Pencil } from 'lucide-react'
 import { getOneProject, updateProject, deleteProject } from '@/app/api/projects/api'
 import { useApp } from '@/context/AppContext'
+import Loader from '@/components/loader'
 
 interface Project {
   id: string
@@ -89,7 +90,9 @@ export default function ProjectSettings() {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <div>
+    <Loader/>
+    </div>
   }
 
 
