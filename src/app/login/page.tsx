@@ -44,7 +44,7 @@ export default function Login() {
     password: '',
   })
 
-  const { signin, loading, loginError, setLoginError } = useAuth()
+  const { login, loading, loginError, setLoginError } = useAuth()
   const [auth, setAuth] = useState('')
 
   useEffect(() => {
@@ -83,12 +83,12 @@ export default function Login() {
     setLoginError('')
   }
 
-  const handleSignin = async (e: React.FormEvent) => {
+  const handleLogIn = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!validateForm()) {
       return
     }
-    signin(formData)
+    login(formData)
   }
 
   return (
@@ -134,7 +134,7 @@ export default function Login() {
           {/* Right side - Login form */}
           <div className="w-full max-w-xl mx-auto h-[100vh] overflow-y-scroll no-scrollbar flex justify-center items-center">
             <div className="bg-white lg:p-12 p-6 rounded-[16px] lg:shadow-xl w-full">
-              <div className="text-[28px] font-semibold text-gray-900 h-[10%]">Sign In</div>
+              <div className="text-[28px] font-semibold text-gray-900 h-[10%]">Log In</div>
               <h1 className="text-[15px] font-normal tracking-tight pb-4 text-gray-500">
                 Don&apos;t have an account?
                 <span className="text-blue-600 hover:underline hover:cursor-pointer pl-1" onClick={() => window.location.href = '/signup'}>
@@ -142,7 +142,7 @@ export default function Login() {
                 </span>
               </h1>
               <div className='h-[100%] flex flex-col justify-center items-center'>
-                <form onSubmit={handleSignin} className="flex flex-col justify-center items-center w-full gap-8">
+                <form onSubmit={handleLogIn} className="flex flex-col justify-center items-center w-full gap-8">
                   <div className="space-y-2 w-[95%]">
                     <Label htmlFor="identifier" className="text-[16px] font-medium text-gray-700">
                       Email or Phone Number
@@ -201,10 +201,10 @@ export default function Login() {
                     {loading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Signing in...
+                        Logging in...
                       </>
                     ) : (
-                      'Sign In'
+                      'Log In'
                     )}
                   </Button>
                 </form>
