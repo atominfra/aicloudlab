@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
-import { Eye, Plus, Unplug, Filter, AlertTriangle } from 'lucide-react';
+import { Eye, Plus, Unplug, Filter, AlertTriangle, Cloud } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,7 +18,7 @@ import awsIcon from "@/assets/aws.svg";
 import { useRouter } from 'next/navigation';
 import { fetchAllCloudAccounts, deleteCloudAccount } from '@/app/api/cloud/api';
 import { useApp } from '@/context/AppContext';
-import { CircularProgress, Modal } from '@mui/material';
+import { CircularProgress, Modal, Typography } from '@mui/material';
 
 const CloudAccounts = () => {
   const [selectedProvider, setSelectedProvider] = useState('all');
@@ -141,9 +141,8 @@ const CloudAccounts = () => {
           </Button>
         </div>
       </div>
-
       <div className="space-y-1">
-        {accounts && accounts.map((account) => (
+        {accounts.length >0  ? accounts.map((account) => (
           <Card key={account.id} className="p-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-4">
@@ -185,7 +184,12 @@ const CloudAccounts = () => {
               </div>
             </div>
           </Card>
-        ))}
+        )): <div className="flex flex-col justify-center items-center lg:h-[80vh] h-[70dvh]  w-full">
+        <Cloud className="w-[100px] h-[100px] text-neutral-200" />
+        <Typography variant="body1" className="text-gray-400 mb-4 px-6">
+          No Accounts yet.
+        </Typography>
+      </div>}
       </div>
 
       <Modal open={isDeleteModalOpen} onClose={closeDeleteModal} className="w-full h-full justify-items-center content-center">
