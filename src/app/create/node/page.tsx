@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Eye, EyeOff, Plus, Trash2 } from 'lucide-react'
+import { Eye, EyeOff, Plus, RefreshCw, Trash2 } from 'lucide-react'
 import { fetchOSOptions, fetchPlans, createNode, fetchPrice } from '@/app/api/nodes/api'
 import { getAllProjects } from '@/app/api/projects/api'
 import {fetchAllCloudAccounts, } from '@/app/api/cloud/api'
@@ -79,6 +79,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const [loading, setLoading] = useState(false)
   const [loadingProjects, setLoadingProjects] = useState(false) 
   const [loadingAccounts, setLoadingAccounts] = useState(false) 
+  
   const [loadingOs, setLoadingOs] = useState(false) 
   const [loadingPlans, setLoadingPlans] = useState(false) 
   const [loadingPrice, setLoadingPrice] = useState(false) 
@@ -484,6 +485,41 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       )
     }));
   };
+
+  const handleAddAccount = () => {
+    window.open ('/create/connect-account', '_ blank');
+  }
+  
+  const handleAddProject = () => {
+    window.open ('/create/project', '_ blank');
+  }
+  
+
+  const refreshAccounts = async () => {
+    try {
+      setLoadingAccounts(true)
+      const accounts = await fetchAllCloudAccounts(auth);
+      setAccounts(accounts?.data?.cloud_accounts);
+    } catch (error) {
+      console.error('Failed to fetch accounts:', error)
+    } finally {
+      setLoadingAccounts(false)
+    }
+  };
+
+  const refreshProjects = async () => {
+    try {
+      setLoadingProjects(true)
+      const accounts = await getAllProjects(auth);
+      setProjects(accounts?.data?.cloud_accounts);
+    } catch (error) {
+      console.error('Failed to fetch accounts:', error)
+    } finally {
+      setLoadingProjects(false)
+    }
+  };
+
+
   useEffect(() => {
     console.log("accounts",accounts)
   }, [accounts]);
@@ -546,11 +582,20 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 size="icon" 
                 asChild
                 className="flex-shrink-0"
+                onClick={handleAddProject}
               >
-                <Link href="/create/project">
+                 <div>
                   <Plus className="h-4 w-4" />
                   <span className="sr-only">Add project</span>
-                </Link>
+                 </div>
+              </Button>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={refreshProjects} 
+                className="p-2"
+              >
+                <RefreshCw size={16} />
               </Button>
               </div>
               </div>
@@ -586,11 +631,20 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 size="icon" 
                 asChild
                 className="flex-shrink-0"
+                onClick={handleAddAccount}
               >
-                <Link href="/create/connect-account">
+                 <div>
                   <Plus className="h-4 w-4" />
                   <span className="sr-only">Connect Account</span>
-                </Link>
+                 </div>
+              </Button>
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={refreshAccounts} 
+                className="p-2"
+              >
+                <RefreshCw size={16} />
               </Button>
               </div>
               </div>

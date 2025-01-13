@@ -327,7 +327,6 @@ const CreateService: React.FC<CreateServiceProps> = () => {
 
   
   const handleAddNewRegistry = () => {
-    localStorage.setItem('createServiceFormData', JSON.stringify(formData));
     window.open ('/create/registry', '_ blank');
   }
 
