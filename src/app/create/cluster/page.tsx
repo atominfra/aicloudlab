@@ -196,7 +196,7 @@ export default function CreateClusterPage() {
                 asChild
                 className="flex-shrink-0"
               >
-                <Link href="/clusters/connect-account">
+                <Link href="/create/connect-account">
                   <Plus className="h-4 w-4" />
                   <span className="sr-only">Connect Account</span>
                 </Link>
