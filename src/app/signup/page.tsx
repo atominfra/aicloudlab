@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { Loader2, Users, ArrowLeftRight, PiggyBank } from 'lucide-react'
+import { Loader2, Users, ArrowLeftRight, PiggyBank, Eye, EyeOff } from 'lucide-react'
 import { MdEmail, MdLock, MdPerson, MdPhone } from "react-icons/md"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -54,6 +54,8 @@ export default function Signup() {
     password: '',
     reEnterPassword: '',
   })
+  const [showPassword, setShowPassword] = useState(false)
+  const [showReEnterPassword, setShowReEnterPassword] = useState(false)
 
   const router = useRouter()
   const [auth, setAuth] = useState('')
@@ -142,11 +144,12 @@ export default function Signup() {
     }
   }
 
+  const togglePasswordVisibility = () => setShowPassword(!showPassword)
+  const toggleReEnterPasswordVisibility = () => setShowReEnterPassword(!showReEnterPassword)
+
   return (
     <div className="min-h-screen relative w-full bg-white lg:bg-gradient-to-br from-[#DBEAFE] to-white">
       <div className="container mx-auto min-h-screen lg:max-w-[93vw]">
-        
-      
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8  items-center px-8">
           {/* Left side - Features */}
           <div className="hidden  pr-12  md:flex flex-col  lg:p-12 p-6" >
@@ -271,14 +274,21 @@ export default function Signup() {
                     <Input
                       id="password"
                       name="password"
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       value={formData.password}
                       onChange={handleChange}
-                      className={`pl-10 h-11  border-gray-200 rounded-lg ${
+                      className={`pl-10 pr-10 h-11  border-gray-200 rounded-lg ${
                         errors.password ? "border-red-500" : ""
                       }`}
                       placeholder="Enter your password"
                     />
+                    <button
+                      type="button"
+                      onClick={togglePasswordVisibility}
+                      className="absolute right-3 text-gray-400"
+                    >
+                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
                   </div>
                   {errors.password && (
                     <p className="text-sm text-red-500">{errors.password}</p>
@@ -294,14 +304,21 @@ export default function Signup() {
                     <Input
                       id="reEnterPassword"
                       name="reEnterPassword"
-                      type="password"
+                      type={showReEnterPassword ? "text" : "password"}
                       value={formData.reEnterPassword}
                       onChange={handleChange}
-                      className={`pl-10 h-11  border-gray-200 rounded-lg ${
+                      className={`pl-10 pr-10 h-11  border-gray-200 rounded-lg ${
                         errors.reEnterPassword ? "border-red-500" : ""
                       }`}
                       placeholder="Re-enter your password"
                     />
+                    <button
+                      type="button"
+                      onClick={toggleReEnterPasswordVisibility}
+                      className="absolute right-3 text-gray-400"
+                    >
+                      {showReEnterPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
                   </div>
                   {errors.reEnterPassword && (
                     <p className="text-sm text-red-500">{errors.reEnterPassword}</p>
