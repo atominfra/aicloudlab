@@ -87,7 +87,6 @@ export default function AzurePage() {
       <Card className="border-none shadow-none">
       <CardContent>
         <div className="pt-4">
-          <h2 className="text-lg font-medium text-gray-900">Connect Azure Account</h2>
           <form onSubmit={handelSubmit} className="space-y-4">
             {Object.keys(azureCredentials).map((field) => (
               <div key={field} className="space-y-2">
