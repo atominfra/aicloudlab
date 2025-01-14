@@ -56,7 +56,7 @@ export function ProjectCard({
               onClick={()=> router.push(`/project/${id}/settings`)}
             >
               <Settings className="h-4 w-4 " />
-                Manage
+                <span className='hidden lg:block'>Manage</span>
               </div>
           </div>
         </div>
