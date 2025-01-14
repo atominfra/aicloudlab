@@ -1,14 +1,12 @@
 'use client'
 
 import { useState } from 'react'
-import { AlertCircle, CloudIcon } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useRouter } from 'next/navigation'
 import { createCloudAccount } from '@/app/api/cloud/api'
 import { useApp } from '@/context/AppContext'
 import { ToggleableInput } from '@/components/ToggleableInput'
@@ -25,6 +23,14 @@ export default function AzurePage() {
     client_secret: '',
     subscription_id: '',
   })
+
+  const placeholderMap: Record<string, string> = {
+    name: 'Enter name',
+    tenant_id: 'Enter Tenant ID ',
+    client_id: 'Enter Client ID ',
+    client_secret: 'Enter Client Secret',
+    subscription_id: 'Enter Subscription ID',
+  }
 
   const handleAzureChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -62,7 +68,7 @@ export default function AzurePage() {
   }
 
   return (
-    <div className='lg:p-6 bg-neutral-100 lg:h-screen flex justify-center items-center h-[92dvh]'>
+    <div className='lg:p-6 bg-neutral-100 lg:h-screen flex justify-center h-[92dvh]'>
       <div className="max-w-2xl mx-auto p-4 lg:p-6 w-full">
         <div className="text-center mb-8 relative">
           <h1 className="lg:text-2xl text-lg font-semibold mb-2">Microsoft Azure</h1>
@@ -86,7 +92,7 @@ export default function AzurePage() {
                       <Input
                         id={field}
                         name={field}
-                        placeholder={`Enter ${field.replace('_', ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}`}
+                        placeholder={placeholderMap[field]}
                         value={value}
                         onChange={handleAzureChange}
                         required
@@ -96,7 +102,7 @@ export default function AzurePage() {
                         id={field}
                         name={field}
                         label={field.replace('_', ' ')}
-                        placeholder={`Enter ${field.replace('_', ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}`}
+                        placeholder={placeholderMap[field]}
                         value={value}
                         onChange={handleAzureChange}
                         required

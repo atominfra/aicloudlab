@@ -33,14 +33,25 @@ export default function MobileTopBar() {
 
   return (
     <>
-      <Box className="lg:hidden w-full flex justify-between items-center select-none px-8 lg:px-10 py-4 shadow-lg bg-white h-[8dvh] ">
+      <Box className="lg:hidden w-full flex justify-between items-center select-none px-4 lg:px-10 py-4 shadow-lg bg-white h-[8dvh] ">
         <Link className="flex items-center" href={`/dashboard`}>
-          <Image 
-            src={'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png'}
-            width={27}
-            height={27}
-            alt="AI Cloud Lab Logo" 
-          />
+            <div className='flex items-center'>
+                <Image
+                  src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
+                  width={30}
+                  height={30}
+                  alt="Atom Infra Logo"
+                  className='h-[22px] w-[23px]'
+                  priority
+                />
+                <div 
+                  className='relative text-[24px] font-[700] tracking-tight l-[30px]' 
+                  style={{ left: '-2px' }}
+                >
+                  tom Infra
+                </div>
+              </div>
+          
         </Link>
         <Button variant="ghost" size="icon" onClick={toggleSidebar}>
         <Image 

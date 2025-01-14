@@ -14,7 +14,7 @@ import { getAllProjects } from '@/app/api/projects/api'
 import { fetchAllCloudAccounts } from '@/app/api/cloud/api'
 import { useApp } from '@/context/AppContext'
 import { CircularProgress } from '@mui/material'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { Switch } from "@/components/ui/switch"
 import Link from 'next/link'
 
@@ -91,6 +91,8 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     { id: "Mumbai", name: "Mumbai", provider: "e2e" },
     { id: "centralindia", name: "Central India", provider: "azure" }
   ])
+  const searchParams = useSearchParams()
+  const projectId = searchParams.get('projectId')
   const [filteredLocations, setFilteredLocations] = useState([])
   const { auth } = useApp()
   const router = useRouter()
@@ -285,7 +287,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         setLoading(true)
         const result = await createNode(auth, apiData)
         console.log('Node created successfully:', result)
-        router.push('/dashboard/projects')
+        router.push(`/project/${projectId}`)
       } catch (error) {
         console.error('Failed to create node:', error)
         setError('Failed to create node. Please try again.')
@@ -960,7 +962,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             )}
           </CardContent>
           <CardFooter className="flex justify-end space-x-4 pt-4">
-            <Button variant="outline" onClick={() => router.push('/dashboard/projects')}>Cancel</Button>
+            <Button variant="outline" onClick={() => window.history.back()}>Cancel</Button>
             <Button 
               type="submit"
               disabled={loading || !areAllRequiredFieldsFilled()} 

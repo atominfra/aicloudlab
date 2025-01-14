@@ -18,6 +18,7 @@ import { NodeCard } from "@/components/node-card"
 import { getOneProject, getAllProjectNodes } from "@/app/api/projects/api"
 import { useApp } from "@/context/AppContext"
 import Loader from "@/components/loader"
+import { getAllProjectServices } from "@/app/api/services/api"
 import { Typography } from "@mui/material"
 import Image from "next/image"
 import noNodesIcon from "@/assets/noNodesIcon.svg"
@@ -107,6 +108,7 @@ type ViewType = 'services' | 'nodes'
 const ProjectPage = ({ params }: { params: { id: string } }) => {
   const router = useRouter()
   const [nodes, setNodes] = useState<Node[]>([])
+  const [services, setServices] = useState([])
   const [projectData, setProjectData] = useState([])
   const [loading, setLoading] = useState(false)
   const [viewType, setViewType] = useState<ViewType>('nodes')
@@ -140,21 +142,23 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
       fetchNodes()
     },[auth])
 
-    // const fetchServices = async () => {
-    //   if (!auth ) return
-    //   try {
-    //     setLoading(true)
-    //     const data = await fetchServices(auth, params?.id)
-    //     setNodes(data.data.nodes)
-    //   } catch (error) {
-    //     console.error('Failed to fetch initial data:', error)
-    //   }
-    //   setLoading(false)
-    // }
+    const fetchServices = async () => {
+      if (!auth ) return
+      try {
+        setLoading(true)
+        const data = await getAllProjectServices(auth, params?.id)
+        setServices(data.data.services)
+      } catch (error) {
+        console.error('Failed to fetch initial data:', error)
+      }
+      setLoading(false)
+    }
 
-    // useEffect(()=>{
-    //   fetchServices()
-    // },[auth])
+    useEffect(()=>{
+      if(viewType === 'services'){
+        fetchServices()
+      }
+    },[auth, viewType])
 
   if (loading) {
     return <div>
@@ -168,7 +172,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
         {/* @ts-expect-error build */}
         <h1 className="text-xl sm:text-2xl font-semibold">{projectData?.name}</h1>
         <div className="flex items-center gap-2">
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline"  className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4">
                 {viewType === 'services' ? (
@@ -182,13 +186,13 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[200px]">
-              {/* <DropdownMenuCheckboxItem
+              <DropdownMenuCheckboxItem
                 checked={viewType === 'services'}
                 onCheckedChange={() => setViewType('services')}
               >
                 <Layers className="h-4 w-4 mr-2" />
                 View by Services
-              </DropdownMenuCheckboxItem> */}
+              </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
                 checked={viewType === 'nodes'}
                 onCheckedChange={() => setViewType('nodes')}
@@ -197,11 +201,11 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
                 View by Nodes
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
           <Button 
             variant="default" 
             className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4 bg-blue-600 hover:bg-blue-600/90" 
-            onClick={() => router.push(viewType === 'services' ? '/create/service' : '/create/node')}
+            onClick={() => router.push(viewType === 'services' ? `/create/service?projectId=${params.id}` : `/create/node?projectId=${params.id}`)}
           >
             <Plus className="h-4 w-4 sm:mr-2" />
             <span className="hidden sm:inline">Create {viewType === 'services' ? 'Service' : 'Node'}</span>
@@ -216,13 +220,13 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
       </div>
 
       <div className="flex flex-col gap-2 items-center h-[calc(100vh-180px)] w-full">
-        {viewType === 'services' ? (
-          serviceDatas.length > 0 ? serviceDatas.map((service) => (
+        {viewType === 'services' ? ( services &&
+          services.length > 0 ? services.map((service) => (
             <ServiceCard
               key={service.id}
               {...service}
-              // @ts-expect-error build error
               onOperation={() => {}}
+              projectId={params?.id}
             />
           )) : (
             <div className="flex flex-col justify-center items-center h-full w-full">
@@ -237,7 +241,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
         ) : (
           nodes.length > 0 ? nodes.map((node) => (
             // @ts-expect-error build error
-            <NodeCard key={node.id} {...node} fetchNodes={fetchNodes} />
+            <NodeCard key={node.id} {...node} fetchNodes={fetchNodes} projectId={params.id}  />
           )) : (
             <div className="flex flex-col justify-center items-center h-full w-full">
               <Image
