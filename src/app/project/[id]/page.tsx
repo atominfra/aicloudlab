@@ -18,6 +18,7 @@ import { NodeCard } from "@/components/node-card"
 import { getOneProject, getAllProjectNodes } from "@/app/api/projects/api"
 import { useApp } from "@/context/AppContext"
 import Loader from "@/components/loader"
+import { getAllProjectServices } from "@/app/api/services/api"
 import { Typography } from "@mui/material"
 import Image from "next/image"
 import noNodesIcon from "@/assets/noNodesIcon.svg"
@@ -107,6 +108,7 @@ type ViewType = 'services' | 'nodes'
 const ProjectPage = ({ params }: { params: { id: string } }) => {
   const router = useRouter()
   const [nodes, setNodes] = useState<Node[]>([])
+  const [services, setServices] = useState([])
   const [projectData, setProjectData] = useState([])
   const [loading, setLoading] = useState(false)
   const [viewType, setViewType] = useState<ViewType>('nodes')
@@ -140,21 +142,23 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
       fetchNodes()
     },[auth])
 
-    // const fetchServices = async () => {
-    //   if (!auth ) return
-    //   try {
-    //     setLoading(true)
-    //     const data = await fetchServices(auth, params?.id)
-    //     setNodes(data.data.nodes)
-    //   } catch (error) {
-    //     console.error('Failed to fetch initial data:', error)
-    //   }
-    //   setLoading(false)
-    // }
+    const fetchServices = async () => {
+      if (!auth ) return
+      try {
+        setLoading(true)
+        const data = await getAllProjectServices(auth, params?.id)
+        setServices(data.data.services)
+      } catch (error) {
+        console.error('Failed to fetch initial data:', error)
+      }
+      setLoading(false)
+    }
 
-    // useEffect(()=>{
-    //   fetchServices()
-    // },[auth])
+    useEffect(()=>{
+      if(viewType === 'services'){
+        fetchServices()
+      }
+    },[auth, viewType])
 
   if (loading) {
     return <div>
@@ -182,13 +186,13 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[200px]">
-              {/* <DropdownMenuCheckboxItem
+              <DropdownMenuCheckboxItem
                 checked={viewType === 'services'}
                 onCheckedChange={() => setViewType('services')}
               >
                 <Layers className="h-4 w-4 mr-2" />
                 View by Services
-              </DropdownMenuCheckboxItem> */}
+              </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
                 checked={viewType === 'nodes'}
                 onCheckedChange={() => setViewType('nodes')}
@@ -217,11 +221,10 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
 
       <div className="flex flex-col gap-2 items-center h-[calc(100vh-180px)] w-full">
         {viewType === 'services' ? (
-          serviceDatas.length > 0 ? serviceDatas.map((service) => (
+          services.length > 0 ? services.map((service) => (
             <ServiceCard
               key={service.id}
               {...service}
-              // @ts-expect-error build error
               onOperation={() => {}}
             />
           )) : (

@@ -53,3 +53,26 @@ export const handleOperationRequestAPI = async (auth: string, notebookId: string
 
   return response.json();
 };
+
+export async function getAllProjectServices(auth, projectId ) {
+  try {
+    const url = `${API_BASE_URL}/service/v2/?projectId=${projectId}`;
+    const response = await fetch(url,{
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${auth}`,
+      },
+    });
+
+    if (!response.ok) {
+      const errorDetails = await response.text();
+      throw new Error(`HTTP Error ${response.status}: ${response.statusText}. Details: ${errorDetails}`);
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error(`API Request Failed: `, error);
+    throw new Error(error.message || 'An unexpected error occurred');
+  }
+}
