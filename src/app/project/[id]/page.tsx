@@ -172,7 +172,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
         {/* @ts-expect-error build */}
         <h1 className="text-xl sm:text-2xl font-semibold">{projectData?.name}</h1>
         <div className="flex items-center gap-2">
-          {/* <DropdownMenu>
+          <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline"  className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4">
                 {viewType === 'services' ? (
@@ -201,7 +201,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
                 View by Nodes
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
-          </DropdownMenu> */}
+          </DropdownMenu>
           <Button 
             variant="default" 
             className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4 bg-blue-600 hover:bg-blue-600/90" 
