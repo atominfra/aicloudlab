@@ -172,7 +172,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
         {/* @ts-expect-error build */}
         <h1 className="text-xl sm:text-2xl font-semibold">{projectData?.name}</h1>
         <div className="flex items-center gap-2">
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline"  className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4">
                 {viewType === 'services' ? (
@@ -201,11 +201,11 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
                 View by Nodes
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
           <Button 
             variant="default" 
             className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4 bg-blue-600 hover:bg-blue-600/90" 
-            onClick={() => router.push(viewType === 'services' ? '/create/service' : '/create/node')}
+            onClick={() => router.push(viewType === 'services' ? `/create/service?projectId=${params.id}` : `/create/node?projectId=${params.id}`)}
           >
             <Plus className="h-4 w-4 sm:mr-2" />
             <span className="hidden sm:inline">Create {viewType === 'services' ? 'Service' : 'Node'}</span>
@@ -226,6 +226,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
               key={service.id}
               {...service}
               onOperation={() => {}}
+              projectId={params?.id}
             />
           )) : (
             <div className="flex flex-col justify-center items-center h-full w-full">
@@ -240,7 +241,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
         ) : (
           nodes.length > 0 ? nodes.map((node) => (
             // @ts-expect-error build error
-            <NodeCard key={node.id} {...node} fetchNodes={fetchNodes} />
+            <NodeCard key={node.id} {...node} fetchNodes={fetchNodes} projectId={params.id}  />
           )) : (
             <div className="flex flex-col justify-center items-center h-full w-full">
               <Image

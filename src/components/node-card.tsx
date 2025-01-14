@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import trianlgeAlert from "@/assets/trianlge-alert.svg" 
 import { Input } from './ui/input'
+import Link from 'next/link'
 
 interface NodeCardProps {
   id: number
@@ -26,9 +27,10 @@ interface NodeCardProps {
   isDeleted: true
   status: string
   fetchNodes:() => Promise<void>
+  projectId: string
 }
 
-export function NodeCard({id, name="node Name", memory, vcpus, disk, private_ip_address, public_ip_address, gpu, isDeleted, status="Running", fetchNodes }: NodeCardProps) {
+export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, public_ip_address, gpu, isDeleted, status="Running", fetchNodes, projectId }: NodeCardProps) {
   const [copySuccess, setCopySuccess] = useState(false)
   const [loading, setLoading] = useState(false)
   const [isRunning,setIsRunning] = useState(false)
@@ -123,7 +125,8 @@ export function NodeCard({id, name="node Name", memory, vcpus, disk, private_ip_
     <div className="bg-white border-b rounded-md p-4 w-full">
       {/* Desktop View */}
       <div className="hidden lg:flex items-center justify-between">
-        <div className="flex items-center gap-4">
+        <Link href={`/project/${projectId}/node/${id}?nodeName=${name}`}>
+        <div className="flex items-center gap-4  hover:cursor-pointer" >
           <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center">
             <Image
               alt='nodeIcon'
@@ -148,6 +151,7 @@ export function NodeCard({id, name="node Name", memory, vcpus, disk, private_ip_
             </div>
           </div>
         </div>
+        </Link>
         <div className="flex items-center gap-2">
           {/* <div 
             className={`text-gray-400 p-2 hover:cursor-pointer ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}

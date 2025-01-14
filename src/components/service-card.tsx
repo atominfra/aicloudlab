@@ -24,6 +24,7 @@ interface ServiceCardProps {
   cpu_limit: string
   replicas: number
   service_url: string
+  projectId:string
   onOperation: (serviceId: string, operationName: string) => Promise<void>
   
 }
@@ -36,6 +37,7 @@ export function ServiceCard({
   cpu_limit, 
   replicas, 
   service_url,
+  projectId,
   onOperation 
 }: ServiceCardProps) {
     const router = useRouter();
@@ -123,7 +125,7 @@ export function ServiceCard({
           <div className="flex items-center space-x-2 mt-4 sm:mt-0">
           <div 
               className="text-gray-600 p-2 hover:text-gray-900 hover:cursor-pointer w-full border-l border-none"
-              onClick={()=> router.push(`/service/${id}/settings`)}
+              onClick={()=> router.push(`/service/${id}/settings?projectId=${projectId}&serviceName=${name}`)}
             >
               <Settings className="h-4 w-4 " />
               
