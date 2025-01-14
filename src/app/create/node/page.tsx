@@ -287,7 +287,8 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         setLoading(true)
         const result = await createNode(auth, apiData)
         console.log('Node created successfully:', result)
-        router.push(`/project/${projectId}`)
+        router.push(`/dashboard/accounts/${formState.cloud_account_id}/nodes`)
+        
       } catch (error) {
         console.error('Failed to create node:', error)
         setError('Failed to create node. Please try again.')
@@ -962,7 +963,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             )}
           </CardContent>
           <CardFooter className="flex justify-end space-x-4 pt-4">
-            <Button variant="outline" onClick={() => window.history.back()}>Cancel</Button>
+            <Button variant="outline" onClick={() => router.push('/dashboard/projets')}>Cancel</Button>
             <Button 
               type="submit"
               disabled={loading || !areAllRequiredFieldsFilled()} 
