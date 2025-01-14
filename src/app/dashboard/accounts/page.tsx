@@ -106,17 +106,17 @@ const CloudAccounts = () => {
   };
 
   return (
-    <div className="container mx-auto py-6">
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
       <div className="flex justify-between items-center mb-6">
-        <div className="flex items-center gap-4">
-          <h1 className="text-2xl font-semibold">Cloud Accounts</h1>
-        </div>
-        <div className="flex items-center gap-4">
+        <h1 className="text-xl sm:text-2xl font-semibold">Cloud Accounts</h1>
+        <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-2 py-4">
-                <Filter className="h-4 w-4" />
-                {providerOptions.find(option => option.value === selectedProvider)?.label}
+              <Button variant="outline"  className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4">
+                <Filter className="h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">
+                  {providerOptions.find(option => option.value === selectedProvider)?.label}
+                </span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[250px]">
@@ -133,18 +133,18 @@ const CloudAccounts = () => {
           </DropdownMenu>
           <Button 
             variant="default" 
-            className="bg-blue-600 hover:bg-blue-600/90" 
+            className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4 bg-blue-600 hover:bg-blue-600/90" 
             onClick={() => router.push('/create/connect-account')}
           >
-            <Plus className="mr-2" />
-            Add Account
+            <Plus className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Add Account</span>
           </Button>
         </div>
       </div>
       <div className="space-y-1">
-        {accounts.length >0  ? accounts.map((account) => (
+        {accounts.length > 0 ? accounts.map((account) => (
           <Card key={account.id} className="p-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center space-x-4">
                 <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
                   {getProviderIcon(account.provider) && (
@@ -162,11 +162,11 @@ const CloudAccounts = () => {
                   <p className="text-sm text-gray-500">{getProviderName(account.provider)}</p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
                 <Button 
                   variant="secondary" 
                   size="sm" 
-                  className="text-gray-600"
+                  className="text-gray-600 w-full sm:w-auto"
                   onClick={() => router.push(`/dashboard/accounts/${account.id}/nodes`)}
                 >
                   <Eye className="h-4 w-4 mr-2" />
@@ -175,7 +175,7 @@ const CloudAccounts = () => {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-red-600 hover:text-red-700 bg-red-100 hover:bg-red-50"
+                  className="text-red-600 hover:text-red-700 bg-red-100 hover:bg-red-50 w-full sm:w-auto"
                   onClick={() => openDeleteModal(account)}
                 >
                   <Unplug className="h-4 w-4 mr-2" />
@@ -184,16 +184,18 @@ const CloudAccounts = () => {
               </div>
             </div>
           </Card>
-        )): <div className="flex flex-col justify-center items-center lg:h-[80vh] h-[70dvh]  w-full">
-        <Cloud className="w-[100px] h-[100px] text-neutral-200" />
-        <Typography variant="body1" className="text-gray-400 mb-4 px-6">
-          No Accounts yet.
-        </Typography>
-      </div>}
+        )) : (
+          <div className="flex flex-col justify-center items-center h-[80vh] w-full">
+            <Cloud className="w-16 h-16 text-neutral-200 mb-4" />
+            <Typography variant="body1" className="text-gray-400 text-center">
+              No accounts connected
+            </Typography>
+          </div>
+        )}
       </div>
 
-      <Modal open={isDeleteModalOpen} onClose={closeDeleteModal} className="w-full h-full justify-items-center content-center">
-        <div className="p-6 bg-white shadow-xl rounded-[10px] w-full max-w-[588px]">
+      <Modal open={isDeleteModalOpen} onClose={closeDeleteModal} className="flex items-center justify-center">
+        <div className="p-4 sm:p-6 bg-white shadow-xl rounded-[10px] w-full max-w-[588px] mx-4">
           <p className="flex gap-2 items-center pb-4 text-[20px] font-semibold text-[#111827]">
             <AlertTriangle className="text-red-500" />
             <span>Disconnect Account</span>
