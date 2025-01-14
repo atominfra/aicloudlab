@@ -279,7 +279,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       });
   
       if (response.ok) {
-        router.push(`/project/${projectId}`);
+        window.history.back()
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Failed to create service');
@@ -645,7 +645,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
         )}
 
         <div className="flex justify-end space-x-4 pt-4">
-          <Button variant="outline" className="text-[14px]" onClick={() => router.push(`/project/${projectId}`)}>Cancel</Button>
+          <Button variant="outline" className="text-[14px]" onClick={() => window.history.back()}>Cancel</Button>
           <Button type="submit" disabled={isLoading} className="bg-[#2563EB] text-[14px]">
             {isLoading ? 'Saving...' : serviceId ? 'Update Service' : 'Deploy Service'}
           </Button>

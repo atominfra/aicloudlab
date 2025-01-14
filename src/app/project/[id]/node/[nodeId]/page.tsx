@@ -70,7 +70,7 @@ const NodePage = ({ params }: { params: { nodeId: string } }) => {
     <div className="p-4 bg-neutral-100 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">{nodeName}</h1>
-        <Button onClick={()=> router.push('/create/service')} className="bg-blue-600">Create Service</Button>
+        <Button onClick={()=> router.push(`/create/service`)} className="bg-blue-600">Create Service</Button>
       </div>
       <div className="grid grid-cols-1 gap-1">
         {services && services.length>0 ? services.map((service) => (
