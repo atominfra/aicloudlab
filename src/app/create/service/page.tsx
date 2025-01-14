@@ -183,7 +183,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
 
   const handleCustomMemoryLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    const regex = /^\d+(Mi|Gi|M|G)?$/; 
+    const regex = /^\d+(m|g)?$/; 
     if (value === '' || regex.test(value)) {
       setCustomMemoryLimit(value);
     }
@@ -229,7 +229,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   
   
     const memoryLimit = formData.memoryLimit === 'custom' ? customMemoryLimit : formData.memoryLimit;
-    const memoryLimitRegex = /^\d+(Mi|Gi)$/;
+    const memoryLimitRegex = /^\d+(m|g)$/;
   
     if (!memoryLimitRegex.test(memoryLimit)) {
       setError('Memory limit must be an integer followed by "Mi" or "Gi"');
@@ -516,17 +516,17 @@ const CreateService: React.FC<CreateServiceProps> = () => {
               <SelectValue placeholder="Select memory limit" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="512Mi">512 Mi</SelectItem>
-              <SelectItem value="1024Gi">1 Gi</SelectItem>
-              <SelectItem value="2048Gi">2 Gi</SelectItem>
-              <SelectItem value="4096Gi">4 Gi</SelectItem>
+              <SelectItem value="512m">512m</SelectItem>
+              <SelectItem value="1g">1g</SelectItem>
+              <SelectItem value="2g">2g</SelectItem>
+              <SelectItem value="4g">4g</SelectItem>
               <SelectItem value="custom">Custom</SelectItem>
             </SelectContent>
           </Select>
           {formData.memoryLimit === 'custom' && (
             <Input
               type="text"
-              placeholder="Enter Custom Memory Limit (e.g., 128Mi, 1Gi)"
+              placeholder="Enter Custom Memory Limit (e.g., 128m, 1g)"
               value={customMemoryLimit}
               onChange={handleCustomMemoryLimitChange}
               className="mt-2"
