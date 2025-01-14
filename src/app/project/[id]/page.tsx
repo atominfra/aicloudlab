@@ -140,6 +140,22 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
       fetchNodes()
     },[auth])
 
+    // const fetchServices = async () => {
+    //   if (!auth ) return
+    //   try {
+    //     setLoading(true)
+    //     const data = await fetchServices(auth, params?.id)
+    //     setNodes(data.data.nodes)
+    //   } catch (error) {
+    //     console.error('Failed to fetch initial data:', error)
+    //   }
+    //   setLoading(false)
+    // }
+
+    // useEffect(()=>{
+    //   fetchServices()
+    // },[auth])
+
   if (loading) {
     return <div>
       <Loader/>
@@ -166,13 +182,13 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[200px]">
-              <DropdownMenuCheckboxItem
+              {/* <DropdownMenuCheckboxItem
                 checked={viewType === 'services'}
                 onCheckedChange={() => setViewType('services')}
               >
                 <Layers className="h-4 w-4 mr-2" />
                 View by Services
-              </DropdownMenuCheckboxItem>
+              </DropdownMenuCheckboxItem> */}
               <DropdownMenuCheckboxItem
                 checked={viewType === 'nodes'}
                 onCheckedChange={() => setViewType('nodes')}
