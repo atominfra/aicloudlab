@@ -130,7 +130,7 @@ export function ServiceCard({
               <Settings className="h-4 w-4 " />
               
               </div>
-            <Button 
+            {/* <Button 
               variant="outline" 
               size="sm"
               className="text-gray-600 hover:text-gray-900 w-full"
@@ -138,7 +138,7 @@ export function ServiceCard({
             >
               <ExternalLink className="h-4 w-4 mr-1.5" />
               Visit
-            </Button>
+            </Button> */}
 
           </div>
         </div>
