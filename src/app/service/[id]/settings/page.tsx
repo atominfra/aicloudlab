@@ -1,11 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useSession } from 'next-auth/react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { RefreshCcw, Trash2 } from 'lucide-react'
 import { DNSConfigurationDialog } from '@/components/dns-configuration-dialog'
+import { getServiceDomains, addDomainToService } from '@/app/api/services/api'
+import { useApp } from '@/context/AppContext'
 
 interface Domain {
   name: string
@@ -13,35 +16,57 @@ interface Domain {
 }
 
 export default function ServiceSettings({ params }: { params: { id: string } }) {
-  const [domains, setDomains] = useState<Domain[]>([
-    { name: 'example.in', status: 'valid' },
-    { name: 'www.example.atominfra.com', status: 'configuring' }
-  ])
+  const [domains, setDomains] = useState<Domain[]>([])
   const [newDomain, setNewDomain] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const {auth} =useApp()
 
-  const handleAddDomain = () => {
+  const fetchDomains = async () => {
+    setIsLoading(true)
+    try {
+      const fetchedDomains = await getServiceDomains(auth, params.id)
+      setDomains(fetchedDomains.map((domain: string) => ({ name: domain, status: 'valid' })))
+    } catch (error) {
+      console.error('Failed to fetch domains:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const handleAddDomain = async () => {
     if (newDomain) {
-      setDomains([...domains, { name: newDomain, status: 'configuring' }])
-      setNewDomain('')
+      try {
+        await addDomainToService(auth, params.id, newDomain)
+        setDomains([...domains, { name: newDomain, status: 'configuring' }])
+        setNewDomain('')
+      } catch (error) {
+        console.error('Failed to add domain:', error)
+      }
     }
   }
 
   const handleDeleteDomain = (domainName: string) => {
+    // Implement delete domain API call here
     setDomains(domains.filter(domain => domain.name !== domainName))
   }
 
   const handleRefreshDomain = (domainName: string) => {
+    // Implement refresh domain status API call here
     console.log('Refreshing domain:', domainName)
   }
 
+  useEffect(()=>{
+    if(auth){
+      fetchDomains()
+    }
+  },[])
   return (
     <div className="container mx-auto py-6 max-w-2xl">
       <div className="flex justify-between mb-8">
         <div>
           <h1 className="text-2xl font-semibold text-gray-900">Service Settings</h1>
-          <p className="text-sm text-gray-500 mt-1">Service Name</p>
         </div>
-        <Button variant="default" className="bg-blue-600 hover:bg-blue-700">
+        <Button variant="default" className="bg-blue-600 hover:bg-blue-700" disabled={true}>
           Edit Service
         </Button>
       </div>
@@ -58,43 +83,46 @@ export default function ServiceSettings({ params }: { params: { id: string } }) 
               onChange={(e) => setNewDomain(e.target.value)}
               className="w-full"
             />
-            <Button onClick={handleAddDomain} className='bg-blue-600'>Add Domain</Button>
+            <Button onClick={handleAddDomain} className='bg-blue-600' disabled={isLoading}>Add Domain</Button>
           </div>
 
-          <div className="space-y-4">
-            {domains.map((domain) => (
-              <div
-                key={domain.name}
-                className="flex items-center justify-between p-4 border rounded-lg"
-              >
-                <div className="w-[90%] flex items-center gap-3">
-                  <div className='w-[50%]'>{domain.name}</div>
-                  <div className='w-[50%]'>
-                    {domain.status === "configuring" && (
-                      // @ts-expect-error build
-                      <DNSConfigurationDialog domain={domain.name} nodeIp={domain.nodeIp || "nodeIp"}/>
-                    )}
+          {isLoading ? (
+            <p>Loading domains...</p>
+          ) : (
+            <div className="space-y-4">
+              {domains.map((domain) => (
+                <div
+                  key={domain.name}
+                  className="flex items-center justify-between p-4 border rounded-lg"
+                >
+                  <div className="w-[90%] flex items-center gap-3">
+                    <div className='w-[50%]'>{domain.name}</div>
+                    <div className='w-[50%]'>
+                      {domain.status === "configuring" && (
+                        <DNSConfigurationDialog domain={domain.name} nodeIp="nodeIp" />
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleRefreshDomain(domain.name)}
+                    >
+                      <RefreshCcw className="h-4 w-4" /> <span>Refresh</span>
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDeleteDomain(domain.name)}
+                    >
+                      <Trash2 className="h-4 w-4 text-red-500" />
+                    </Button>
                   </div>
                 </div>
-                <div className="flex items-center gap-4">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleRefreshDomain(domain.name)}
-                  >
-                    <RefreshCcw className="h-4 w-4" /> <span>Refresh</span>
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => handleDeleteDomain(domain.name)}
-                  >
-                    <Trash2 className="h-4 w-4 text-red-500" />
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 
