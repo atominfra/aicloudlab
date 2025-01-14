@@ -7,16 +7,14 @@ export function StatusBadge({ status }) {
       <div
         className={cn("w-2 h-2 rounded-full", {
           "bg-green-500": status === "running",
-          "bg-gray-500": status === "stopped",
-          "bg-red-500": status === "error",
+          "bg-gray-500": status === "stopped" || status === "unknown",
           "bg-blue-500": status === "creating",
         })}
       />
       <span
         className={cn("text-sm capitalize", {
           "text-green-600": status === "running",
-          "text-gray-600": status === "stopped",
-          "text-red-600": status === "error",
+          "text-gray-500": status === "stopped" || status === "unknown",
           "text-blue-600": status === "creating",
         })}
       >

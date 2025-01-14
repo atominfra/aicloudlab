@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { Loader2, Users, ArrowLeftRight, PiggyBank } from 'lucide-react'
+import { Loader2, Users, ArrowLeftRight, PiggyBank, Eye, EyeOff } from 'lucide-react'
 import { MdEmail, MdLock } from "react-icons/md"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -43,8 +43,9 @@ export default function Login() {
     identifier: '',
     password: '',
   })
+  const [showPassword, setShowPassword] = useState(false)
 
-  const { signin, loading, loginError, setLoginError } = useAuth()
+  const { login, loading, loginError, setLoginError } = useAuth()
   const [auth, setAuth] = useState('')
 
   useEffect(() => {
@@ -83,13 +84,15 @@ export default function Login() {
     setLoginError('')
   }
 
-  const handleSignin = async (e: React.FormEvent) => {
+  const handleLogIn = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!validateForm()) {
       return
     }
-    signin(formData)
+    login(formData)
   }
+
+  const togglePasswordVisibility = () => setShowPassword(!showPassword)
 
   return (
     <div className="min-h-screen relative w-full bg-white lg:bg-gradient-to-br from-[#DBEAFE] to-white">
@@ -134,7 +137,7 @@ export default function Login() {
           {/* Right side - Login form */}
           <div className="w-full max-w-xl mx-auto h-[100vh] overflow-y-scroll no-scrollbar flex justify-center items-center">
             <div className="bg-white lg:p-12 p-6 rounded-[16px] lg:shadow-xl w-full">
-              <div className="text-[28px] font-semibold text-gray-900 h-[10%]">Sign In</div>
+              <div className="text-[28px] font-semibold text-gray-900 h-[10%]">Log In</div>
               <h1 className="text-[15px] font-normal tracking-tight pb-4 text-gray-500">
                 Don&apos;t have an account?
                 <span className="text-blue-600 hover:underline hover:cursor-pointer pl-1" onClick={() => window.location.href = '/signup'}>
@@ -142,7 +145,7 @@ export default function Login() {
                 </span>
               </h1>
               <div className='h-[100%] flex flex-col justify-center items-center'>
-                <form onSubmit={handleSignin} className="flex flex-col justify-center items-center w-full gap-8">
+                <form onSubmit={handleLogIn} className="flex flex-col justify-center items-center w-full gap-8">
                   <div className="space-y-2 w-[95%]">
                     <Label htmlFor="identifier" className="text-[16px] font-medium text-gray-700">
                       Email or Phone Number
@@ -175,14 +178,21 @@ export default function Login() {
                       <Input
                         id="password"
                         name="password"
-                        type="password"
+                        type={showPassword ? "text" : "password"}
                         value={formData.password}
                         onChange={handleChange}
-                        className={`pl-10 h-11 border-gray-200 rounded-lg ${
+                        className={`pl-10 pr-10 h-11 border-gray-200 rounded-lg ${
                           errors.password ? "border-red-500" : ""
                         }`}
                         placeholder="Enter your password"
                       />
+                      <button
+                        type="button"
+                        onClick={togglePasswordVisibility}
+                        className="absolute right-3 text-gray-400"
+                      >
+                        {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                      </button>
                     </div>
                     {errors.password && (
                       <p className="text-sm text-red-500">{errors.password}</p>
@@ -201,10 +211,10 @@ export default function Login() {
                     {loading ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Signing in...
+                        Logging in...
                       </>
                     ) : (
-                      'Sign In'
+                      'Log In'
                     )}
                   </Button>
                 </form>

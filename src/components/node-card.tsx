@@ -28,7 +28,7 @@ interface NodeCardProps {
   fetchNodes:() => Promise<void>
 }
 
-export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, public_ip_address, gpu, isDeleted, status, fetchNodes }: NodeCardProps) {
+export function NodeCard({id, name="node Name", memory, vcpus, disk, private_ip_address, public_ip_address, gpu, isDeleted, status="Running", fetchNodes }: NodeCardProps) {
   const [copySuccess, setCopySuccess] = useState(false)
   const [loading, setLoading] = useState(false)
   const [isRunning,setIsRunning] = useState(false)
@@ -92,7 +92,7 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
   }
 
   const handleDelete = async (id) => {
-    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/e2e/node/${encodeURIComponent(id)}`
+    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/cloud/node/${encodeURIComponent(id)}`
 
     const response = await fetch(url, {
       method: 'DELETE',
@@ -149,28 +149,25 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <div 
+          {/* <div 
             className={`text-gray-400 p-2 hover:cursor-pointer ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
             onClick={handleToggle}
           >
-            {loading ? (
-              <CircularProgress className="text-black" size={24}/> 
-            ) : isRunning ? (
+            {isRunning ? (
               <FaPause className="w-[20px] h-[30px] text-gray-400" />
             ) : (
               <FaPlay className="w-[15px] h-[20px] text-gray-400" />
             )}
-          </div>
+          </div> */}
           <div onClick={handleOpen} className='p-2 hover:cursor-pointer'>
             <MdDelete className="w-[20px] h-[30px] text-red-600" />
           </div>
-          <Button              
-            disabled={status !== 'running'}
+          {/* <Button              
             variant="outline" 
             className={`text-gray-600 ${status !== 'running' ? "text-[#b0b0b0]":"text-[#111827] hover:text-gray-600"}`} 
           >
             Manage
-          </Button>
+          </Button> */}
         </div>
       </div>
 
@@ -201,7 +198,7 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
 
         <div className="flex items-center justify-between mt-2">
           <div className="flex items-center gap-4">
-            <button 
+            {/* <button 
               className={`text-gray-400 hover:cursor-pointer ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
               onClick={handleToggle}
             >
@@ -212,13 +209,13 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
               ) : (
                 <FaPlay className="w-4 h-4 text-gray-400" />
               )}
-            </button>
+            </button> */}
             <button onClick={handleOpen} className='text-red-600'>
               <MdDelete className="w-4 h-4" />
             </button>
           </div>
           <Button              
-            disabled={status !== 'running'}
+            // disabled={status}
             variant="secondary" 
             size="sm"
             className={`text-gray-600 ${status !== 'running' ? "opacity-50" : ""}`} 
@@ -228,64 +225,6 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
         </div>
       </div>
 
-      {/* <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-        className="w-full h-full justify-items-center content-center"
-      >
-        <div className="p-8 bg-white shadow-xl rounded-2xl item-center lg:w-[30vw] m-4">
-          <p className="pr-10 pb-4 text-[18px] lg:text-[22px] font-semibold text-[#111827]">
-            You are deleting &apos;{name}&apos;
-          </p>
-          <p className="pb-4 text-gray-600 text-[15px] lg:text-lg">
-            If you&apos;re sure, type &apos;{name}&apos; to confirm.
-          </p>
-          <form onSubmit={handleSubmit}>
-            <TextField
-              fullWidth
-              label="Confirm Name"
-              value={inputValue}
-              onChange={handleInputChange}
-              variant="outlined"
-              required
-              error={isError}
-              helperText={isError ? "Entered text does not match the name." : ""}
-              InputProps={{
-                className: "bg-white dark:bg-gray-800 text-[#111827] dark:text-white rounded-[10px]",
-              }}
-              InputLabelProps={{
-                sx: {
-                  color: "black",
-                  fontFamily: "poppins",
-                  "&.Mui-focused": { color: "black" },
-                },
-              }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": { borderColor: "black" },
-                  "&:hover fieldset": { borderColor: "black" },
-                  "&.Mui-focused fieldset": { borderColor: "black" },
-                },
-              }}
-            />
-            <Box className="flex w-full justify-between gap-4 pt-4">
-              <CustomButton
-                text="No, cancel"
-                onclickhandler={handleClose}
-                customCss="w-[50%] bg-[#e3e3e3] text-black shadow-none text-[15px] lg:text-[16px]"
-              />
-              <CustomButton
-                text={loading ? 'Deleting...' : 'Delete Node'}
-                onclickhandler={handleSubmit}
-                customCss="w-[50%] bg-red-600 text-white text-[15px] lg:text-[16px]"
-                disabled={loading}
-              />
-            </Box>
-          </form>
-        </div>
-      </Modal> */}
       <Modal
         open={open}
         onClose={handleClose}
@@ -331,7 +270,7 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
                     Deleting...
                   </>
                 ) : (
-                  'Delete Notebook'
+                  'Delete Node'
                 )}
               </Button>
             </Box>

@@ -18,6 +18,7 @@ export const AppProvider = ({ children }) => {
   
       const storedToken = localStorage.getItem('access_token');
       if (storedToken) {
+        console.log("atuh")
         setAuth(storedToken);
       }
     
@@ -27,6 +28,10 @@ export const AppProvider = ({ children }) => {
       }
     }
     }, []); 
+
+    useEffect(() => {
+      console.log("auth2",auth)
+    }, [auth]);
   
 
     const fetchUserDetails = async () => {
