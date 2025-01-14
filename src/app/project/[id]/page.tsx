@@ -111,7 +111,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
   const [services, setServices] = useState([])
   const [projectData, setProjectData] = useState([])
   const [loading, setLoading] = useState(false)
-  const [viewType, setViewType] = useState<ViewType>('nodes')
+  const [viewType, setViewType] = useState<ViewType>('services')
 
   const { auth } = useApp()
     useEffect(()=>{
