@@ -16,6 +16,7 @@ import { Eye, EyeOff, Trash2, GalleryVerticalEnd, Router, RefreshCw, Plus } from
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { fetchNodes } from '@/app/api/nodes/api'
+import { CircularProgress } from '@mui/material'
 interface EnvVariable {
   key: string
   value: string
@@ -59,6 +60,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   const [customCpuLimit, setCustomCpuLimit] = useState('')
   const [serviceType, setServiceType] =useState('docker-compose')
   const [nodes,setNodes] = useState([])
+  const projectId = searchParams.get('projectId')
   useEffect(() => {
     if (serviceId) {
       // Fetch existing service details
@@ -277,7 +279,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       });
   
       if (response.ok) {
-        router.push(`/dashboard/projects`);
+        router.push(`/project/${projectId}`);
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Failed to create service');
@@ -339,6 +341,10 @@ const CreateService: React.FC<CreateServiceProps> = () => {
     }
   };
 
+  useEffect(()=>{
+    console.log("form",formData)
+  },[formData])
+
 
   return (
     <div className='bg-neutral-100  py-12 sm:px-6 lg:px-8  '>
@@ -371,28 +377,6 @@ const CreateService: React.FC<CreateServiceProps> = () => {
           )}
         </div>
 
-        {/* <div>
-          <label htmlFor="service-type" className="pl-2 text-sm font-medium text-[#374151]">
-            Select Service Type*
-          </label>
-        <div className='flex gap-2'>
-        <Select 
-            value={serviceType}
-            onValueChange={(value) => {
-             setServiceType(value)
-            }}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select Service Type" className='text-[#374151]'/>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="kubernetes">Kubernetes</SelectItem>
-              <SelectItem value="docker-compose">Docker Compose </SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-        </div> */}
-
         {serviceType === 'docker-compose' && (
         <div>
           <label htmlFor="node" className="pl-2 text-sm font-medium text-[#374151]">
@@ -410,9 +394,14 @@ const CreateService: React.FC<CreateServiceProps> = () => {
               }}
             >
               <SelectTrigger>
-                <SelectValue>
-                  {nodes.find(node => node.id === formData.node_id)?.name || "Select a node"}
-                </SelectValue>
+              {isNodeLoading ? (
+                    <div className="flex items-center">
+                      <CircularProgress size={16} className="mr-2" />
+                      Loading Nodes...
+                    </div>
+                  ) : (
+                    <SelectValue placeholder="Select Node" />
+                  )}
               </SelectTrigger>
               <SelectContent>
                 {nodes.length > 0 ? nodes.map((node) =>         
@@ -656,7 +645,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
         )}
 
         <div className="flex justify-end space-x-4 pt-4">
-          <Button variant="outline" className="text-[14px]" onClick={() => router.push('/dashboard/projects')}>Cancel</Button>
+          <Button variant="outline" className="text-[14px]" onClick={() => router.push(`/project/${projectId}`)}>Cancel</Button>
           <Button type="submit" disabled={isLoading} className="bg-[#2563EB] text-[14px]">
             {isLoading ? 'Saving...' : serviceId ? 'Update Service' : 'Deploy Service'}
           </Button>
