@@ -220,7 +220,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
       </div>
 
       <div className="flex flex-col gap-2 items-center h-[calc(100vh-180px)] w-full">
-        {viewType === 'services' ? (
+        {viewType === 'services' ? ( services &&
           services.length > 0 ? services.map((service) => (
             <ServiceCard
               key={service.id}

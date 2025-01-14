@@ -15,7 +15,7 @@ import { useApp } from '@/context/AppContext'
 import { Eye, EyeOff, Trash2, GalleryVerticalEnd, Router, RefreshCw, Plus } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-
+import { fetchNodes } from '@/app/api/nodes/api'
 interface EnvVariable {
   key: string
   value: string
@@ -41,6 +41,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   const [formData, setFormData] = useState({
     name: '',
     image: '',
+    node_id:'',
     target_port:'',
     memoryLimit: '',
     cluster: '',
@@ -54,10 +55,9 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   const [error, setError] = useState<string | null>(null)
   const [isNameTouched, setIsNameTouched] = useState(false)  
   const [customMemoryLimit, setCustomMemoryLimit] = useState('')
+  const [isNodeLoading,setIsNodeLoading] = useState(false)
   const [customCpuLimit, setCustomCpuLimit] = useState('')
-  const [customReplicas, setCustomReplicas] = useState('')
-  const [clusters, setClusters] = useState([{name:'default (AWS)'}]);
-  const [serviceType, setServiceType] =useState('kubernetes')
+  const [serviceType, setServiceType] =useState('docker-compose')
   const [nodes,setNodes] = useState([])
   useEffect(() => {
     if (serviceId) {
@@ -82,6 +82,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
             target_port: data.target_port,
             memoryLimit: data.mem_limit,
             cpuLimit: data.cpu_limit,
+            node_id:data.node_id,
             registryCredential: data.registry_credential_id,
             env_variables: Object.keys(data.env_variables).map(key => ({
               key,
@@ -99,30 +100,21 @@ const CreateService: React.FC<CreateServiceProps> = () => {
 
   }, [serviceId]);
 
-  const fetchNodes = async () => {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/e2e/node`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`, 
-        },
-      });
-
-      if (response.ok) {
-        const responseData = await response.json();
-        console.log("responseData.data.nodes", responseData.data.nodes);
-        setNodes(responseData.data.nodes); 
-      } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Failed to fetch notebooks');
+ useEffect(() => {
+    const fetchData = async () => {
+      if (!auth) return
+      try {
+        setIsNodeLoading(true)
+        const data = await fetchNodes(auth)
+        console.log("nodes",data)
+        setNodes(data.data.nodes)
+      } catch (error) {
+        console.error('Failed to fetch initial data:', error)
       }
-    } catch (err) {
-      setError('An error occurred while fetching notebooks');
-    } finally {
-      console.log("nodes")
+      setIsNodeLoading(false)
     }
-  };
+    fetchData()
+  }, [auth])
 
   useEffect(() => {
      const fetchRegistries = async () => {
@@ -152,7 +144,8 @@ const CreateService: React.FC<CreateServiceProps> = () => {
 
   
   const handleChange = (name: string, value: string) => {
-    setFormData(prev => ({ ...prev, [name]: value }))
+    const finalValue = name === 'node_id' ? parseInt(value) : value;
+    setFormData(prev => ({ ...prev, [name]: finalValue }))
     if (name === 'name' && value.trim() !== '') {
       setIsNameTouched(true)
       setError(null) 
@@ -249,8 +242,10 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       image_url: formData.image,
       target_port: formData.target_port,
       mem_limit: memoryLimit,
+      node_id: formData.node_id,
       cpu_limit: formData.cpuLimit === 'custom' ? customCpuLimit : formData.cpuLimit,
       env_variables: {},
+      replicas: 1
     };
 
 
@@ -272,17 +267,17 @@ const CreateService: React.FC<CreateServiceProps> = () => {
        }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/deployment${serviceId ? `/${serviceId}` : ''}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/v2/`, {
         method: serviceId ? 'PUT' : 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}` // Assuming you have a token in auth
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}` 
         },
         body: JSON.stringify(deploymentData)
       });
   
       if (response.ok) {
-        router.push('/dashboard/services');
+        router.push(`/dashboard/projects`);
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Failed to create service');
@@ -344,33 +339,6 @@ const CreateService: React.FC<CreateServiceProps> = () => {
     }
   };
 
-  async function fetchClusters() {
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/clusters`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-        },
-      });
-      if (!response.ok) {
-        throw new Error('Failed to fetch clusters');
-      }
-      const data = await response.json();
-      return data.clusters;
-    } catch (error) {
-      console.error(error);
-      return [];
-    }
-  }
-
-  useEffect(() => {
-    async function loadClusters() {
-      const fetchedClusters = await fetchClusters();
-      setClusters(fetchedClusters);
-    }
-    loadClusters();
-  }, []);
 
   return (
     <div className='bg-neutral-100  py-12 sm:px-6 lg:px-8  '>
@@ -380,7 +348,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
         </div>
       </div>
 
-      <form className="space-y-6 max-w-2xl mx-auto pb-6 mx-4" onSubmit={handleSubmit}>
+      <form className="space-y-6 max-w-2xl md:mx-auto pb-6 mx-4" onSubmit={handleSubmit}>
         <div className="">
           <label htmlFor="service-name" className="text-sm pl-2 font-medium text-[#374151]">
             Service Name*
@@ -403,7 +371,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
           )}
         </div>
 
-        <div>
+        {/* <div>
           <label htmlFor="service-type" className="pl-2 text-sm font-medium text-[#374151]">
             Select Service Type*
           </label>
@@ -423,7 +391,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
             </SelectContent>
           </Select>
         </div>
-        </div>
+        </div> */}
 
         {serviceType === 'docker-compose' && (
         <div>
@@ -432,22 +400,23 @@ const CreateService: React.FC<CreateServiceProps> = () => {
           </label>
           <div className='flex gap-2'>
             <Select 
-            // @ts-expect-error build error
-              value={formData.node}
+              value={formData.node_id?.toString()}
               onValueChange={(value) => {
                 if (value === 'create_node') {
                   handleAddNewNode();
                 } else {
-                  handleChange('node', value)
+                  handleChange('node_id', value)
                 }
               }}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select a node" />
+                <SelectValue>
+                  {nodes.find(node => node.id === formData.node_id)?.name || "Select a node"}
+                </SelectValue>
               </SelectTrigger>
               <SelectContent>
                 {nodes.length > 0 ? nodes.map((node) =>         
-                  node.isDeleted === false && <SelectItem key={node.id} value={node.id}>{node.name}</SelectItem>
+                  <SelectItem key={node.id} value={node.id.toString()}>{node.name}</SelectItem>
                 ): <SelectItem value="create_node">No node Available</SelectItem>}
               </SelectContent>
             </Select>
