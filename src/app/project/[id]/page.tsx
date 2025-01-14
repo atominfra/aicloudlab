@@ -111,7 +111,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
   const [loading, setLoading] = useState(false)
   const [viewType, setViewType] = useState<ViewType>('nodes')
 
-  const { auth,node_page_status } = useApp()
+  const { auth } = useApp()
     useEffect(()=>{
       const fetchData = async () => {
         if (!auth ) return

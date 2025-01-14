@@ -92,7 +92,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     { id: "centralindia", name: "Central India", provider: "azure" }
   ])
   const [filteredLocations, setFilteredLocations] = useState([])
-  const { auth, node_page_status } = useApp()
+  const { auth } = useApp()
   const router = useRouter()
   const [error, setError] = useState('')
   const [fieldErrors, setFieldErrors] = useState<{ [key in keyof NodeData]: boolean }>({
@@ -241,7 +241,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    if (node_page_status !== false) {
       // Validate all fields
       const newFieldErrors = { ...fieldErrors }
       let hasError = false
@@ -293,7 +292,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       } finally {
         setLoading(false)
       }
-    }
+    // }
   }
 
   const findplan = (plans: Plan[], value: string) => {

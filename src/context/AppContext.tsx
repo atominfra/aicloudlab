@@ -11,7 +11,6 @@ export const AppProvider = ({ children }) => {
     const [notebooks, setNotebooks] = useState([]);
     const [isloading, setIsloading] = useState(true)
     const [auth, setAuth] = useState(null);
-    const [node_page_status, setNode_page_status] = useState(false);
     const {user, setUser} = useAuth();
     useEffect(() => {
       if(typeof window !== "undefined"){
@@ -84,7 +83,6 @@ export const AppProvider = ({ children }) => {
           try {
             const { data } = await axios.get('/api/getNodePageStatus');
             const s = data.key;
-            setNode_page_status(s);
           } catch (error) {
             console.error('Error fetching node page status:', error);
           }
@@ -92,10 +90,6 @@ export const AppProvider = ({ children }) => {
     
         getNodePageStatus();
       }, []);
-
-      useEffect(()=>{
-        console.log('node_page_status',node_page_status)
-      },[node_page_status])
 
 
       const options = { 
@@ -107,7 +101,6 @@ export const AppProvider = ({ children }) => {
         isloading, 
         auth,
         setAuth,
-        node_page_status
       }
     return (
         <AppContext.Provider value={options}>

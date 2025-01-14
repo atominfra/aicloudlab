@@ -35,7 +35,7 @@ export default function NodesPage({ params }: { params: { id: string } }) {
   const [nodes, setNodes] = useState<Node[]>([])
 
   const router = useRouter()
-  const { auth,node_page_status } = useApp()
+  const { auth } = useApp()
     console.log("id",params.id)
 
   
@@ -89,17 +89,11 @@ export default function NodesPage({ params }: { params: { id: string } }) {
           <h1 className="text-lg lg:text-2xl font-semibold">{accountData?.name} ({accountData?.provider})</h1>
         }
         </div>
-        <Button className="bg-blue-600" onClick={() => router.push("/create/node")} disabled={!node_page_status}>
+        <Button className="bg-blue-600" onClick={() => router.push("/create/node")} >
           <span className="">+</span>
           Create
         </Button>
       </div>
-      {node_page_status === false ? 
-        <div className='flex justify-center items-center lg:h-[80vh] h-[70vh] w-full'>
-          <div className="text-neutral-200 font-extrabold font-sans text-7xl">Coming Soon</div>   
-        </div>
-      :
-        <>
           {loading ? (
             <div className="flex flex-col justify-center items-center lg:h-[80vh] h-[70vh] w-full">
               <CircularProgress className="text-black" size={30} /> 
@@ -127,8 +121,6 @@ export default function NodesPage({ params }: { params: { id: string } }) {
               )}
             </div>
           )}
-        </>
-      }
     </div>
   )
 }

@@ -13,7 +13,6 @@ export default function NodesPage() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const router = useRouter()
-  const {node_page_status} = useApp()
   const fetchNodes = async () => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/e2e/node`, {
@@ -61,17 +60,11 @@ export default function NodesPage() {
     <div className="p-4  bg-neutral-100 lg:h-screen h-[92dvh]   justify-center items-center">
       <div className="flex items-center justify-end lg:mb-6 mb-5 h-[6vh]">
         {/* <h1 className="text-lg lg:text-2xl font-semibold">Nodes</h1> */}
-        <Button className="bg-blue-600" onClick={()=> router.push("/create/node")} disabled={!node_page_status}>
+        <Button className="bg-blue-600" onClick={()=> router.push("/create/node")} >
           <span className="">+</span>
           Create
         </Button>
       </div>
-      {node_page_status === false ? 
-      <div className='flex justify-center items-center lg:h-[80vh] h-[70vh] w-full'>
-      <div className="text-neutral-200 font-extrabold font-sans text-7xl">Coming Soon</div>   
-    </div>
-    :
-      <>
       {loading ? (
         <div className="flex flex-col justify-center items-center lg:h-[80vh] h-[70vh] w-full">
           <CircularProgress className="text-black" size={30} /> 
@@ -98,8 +91,6 @@ export default function NodesPage() {
           )}
         </div>
       )}
-      </>
-    }
     </div>
   );
 }

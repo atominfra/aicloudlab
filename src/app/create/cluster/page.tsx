@@ -32,7 +32,7 @@ export default function CreateClusterPage() {
   const [isNameTouched, setIsNameTouched] = useState(false)
   const [cloudAccounts, setCloudAccounts] = useState([]);
   const [isLoadingCloudAccounts, setIsLoadingCloudAccounts] = useState(true);
-    const { auth, node_page_status } = useApp()
+    const { auth } = useApp()
   
 
 
