@@ -142,7 +142,7 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
     <div className="bg-white border-b rounded-md p-4 w-full">
       {/* Desktop View */}
       <div className="hidden lg:flex items-center justify-between ">
-        <Link href={`/project/${projectId}/node/${id}?projectId=${projectId}`} className="w-full">
+        <Link href={`/project/${projectId}/node/${id}?projectId=${projectId}`} className="w-full  ">
         <div className="flex items-center gap-4  hover:cursor-pointer " >
           <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center">
             <Image
@@ -180,6 +180,7 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
               <FaPlay className="w-[15px] h-[20px] text-gray-400" />
             )}
           </div> */}
+
           <div className='w-[200px] rounded-full bg-gray-200 py-1 px-2 flex gap-2 items-center justify-center hover:bg-gray-300 hover:cursor-pointer' onClick={()=>handleSSHCopy(location)}>
               <Image
                 alt='copyIcon'
@@ -201,6 +202,8 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
 
       {/* Mobile View */}
       <div className="lg:hidden flex flex-col gap-2 ">
+      <Link href={`/project/${projectId}/node/${id}?projectId=${projectId}`} className="w-full  ">
+
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center">
@@ -223,7 +226,7 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
         <div className="text-sm text-gray-500">
           {specs}
         </div>
-
+        </Link>
         <div className="flex items-center justify-between mt-2">
           <div className="flex items-center gap-4">
             {/* <button 
