@@ -76,6 +76,7 @@ export const getAllProjectServices = async (auth: string, projectId: string) => 
     throw new Error(error.message || 'An unexpected error occurred');
   }
 };
+
 export const getAllNodeServices = async (auth: string, nodeId: string) => {
   try {
     const url = `${API_BASE_URL}/service/v2/?node_id=${nodeId}`;

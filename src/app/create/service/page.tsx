@@ -12,12 +12,13 @@ import {
 } from "@/components/ui/select"
 import { useRouter } from 'next/navigation'
 import { useApp } from '@/context/AppContext'
-import { Eye, EyeOff, Trash2, GalleryVerticalEnd, Router, RefreshCw, Plus } from 'lucide-react'
+import { Eye, EyeOff, Trash2, GalleryVerticalEnd, Router, RefreshCw, Plus, FolderOpen } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { fetchNodes } from '@/app/api/nodes/api'
 import { CircularProgress } from '@mui/material'
 import { useFormState } from 'react-dom'
+import { getOneProject } from '@/app/api/projects/api'
 interface EnvVariable {
   key: string
   value: string
@@ -61,7 +62,28 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   const [customCpuLimit, setCustomCpuLimit] = useState('')
   const [serviceType, setServiceType] =useState('docker-compose')
   const [nodes,setNodes] = useState([])
+  const [projectData, setProjectData] = useState([])
+  const [loadingProject, setLoadingProject] = useState(true)
   const projectId = searchParams.get('projectId')
+
+
+  const fethcProjectData = async () => {
+    if (!auth) return
+    try {
+      setLoadingProject(true)
+      const data = await getOneProject(auth,projectId)
+      setProjectData(data.data)
+    } catch (error) {
+      console.error('Failed to fetch initial data:', error)
+    }
+    setLoadingProject(false)
+  }
+
+  useEffect(() => {
+    if(projectId)
+      fethcProjectData()
+  }, [auth])
+
   useEffect(() => {
     if (serviceId) {
       // Fetch existing service details
@@ -378,6 +400,30 @@ const CreateService: React.FC<CreateServiceProps> = () => {
           )}
         </div>
 
+        <div className="">
+          <label htmlFor="service-name" className="text-sm pl-2 font-medium text-[#374151]">
+            Selected Project*
+          </label>
+          {!loadingProject ? 
+          <div className="relative">
+            <Input
+              disabled={true}
+              id="service-name"
+              name="name"
+              value={projectData.name}
+              // onChange={(e) => handleChange('name', e.target.value)}
+              placeholder="Enter service name"
+              className="max-w-full"
+            />
+            <div className='flex justify-center items-center bg-white w-[30px] h-[22px] absolute right-3 top-2.5'>
+              <FolderOpen size={18} />
+            </div>
+          </div>
+          : <div className="flex items-center border bg-white p-2 rounded-md text-sm text-gray-500">
+              <CircularProgress size={16} className="mr-2 " />
+              Loading Project Details..
+            </div> }
+        </div>
         {serviceType === 'docker-compose' && (
         <div>
           <label htmlFor="node" className="pl-2 text-sm font-medium text-[#374151]">
