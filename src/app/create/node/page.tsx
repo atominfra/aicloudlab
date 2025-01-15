@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Eye, EyeOff, Plus, RefreshCw, Trash2 } from 'lucide-react'
+import { Eye, EyeOff, FolderOpen, Plus, RefreshCw, Trash2 } from 'lucide-react'
 import { fetchOSOptions, fetchPlans, createNode, fetchPrice } from '@/app/api/nodes/api'
 import { getAllProjects } from '@/app/api/projects/api'
 import { fetchAllCloudAccounts } from '@/app/api/cloud/api'
@@ -17,6 +17,7 @@ import { CircularProgress } from '@mui/material'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Switch } from "@/components/ui/switch"
 import Link from 'next/link'
+import { getOneProject } from '@/app/api/projects/api'
 
 // Types
 interface OSOption {
@@ -73,7 +74,8 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     volumes: initialData?.volumes || [],
     securityRules: initialData?.securityRules || [],
   })
-
+  const [projectData, setProjectData] = useState([])
+  const [loadingProject, setLoadingProject] = useState(true)
   const [osOptions, setOSOptions] = useState<OSOption[]>([])
   const [osVersions, setOSVersions] = useState<string[]>([])
   const [plans, setPlans] = useState<Plan[]>([])
@@ -115,7 +117,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const areAllRequiredFieldsFilled = () => {
     return (
       formState.name !== '' &&
-      formState.projects_id !== '' &&
+      // formState.projects_id !== '' &&
       formState.cloud_account_id !== '' &&
       formState.location !== '' &&
       formState.os !== '' &&
@@ -251,7 +253,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         const field = key as keyof NodeData
         if (field === 'sshKeys') {
           newFieldErrors[field] = formState[field].length === 0 || formState[field].some(key => key.key.trim() === '')
-        } else if (field === 'volumes' || field === 'securityRules' || field === 'commitmment') {
+        } else if (field === 'volumes' || field === 'securityRules' || field === 'commitmment' || field === 'projects_id') {
           // These fields are optional, so we don't validate them
           newFieldErrors[field] = false
         } else {
@@ -269,7 +271,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
       const apiData = {
         name: formState.name,
-        project_id: formState.projects_id.toString(),
+        project_id: projectId,
         ssh_keys: formState.sshKeys.map(key => key.key),
         plan: formState.plan,
         image: formState.image,
@@ -287,7 +289,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         setLoading(true)
         const result = await createNode(auth, apiData)
         console.log('Node created successfully:', result)
-        router.push(`/dashboard/accounts/${formState.cloud_account_id}/nodes`)
+        router.push(`/project/${projectId}`)
       } catch (error) {
         console.error('Failed to create node:', error)
         setError('Failed to create node. Please try again.')
@@ -317,6 +319,24 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     })
     setFieldErrors(prev => ({ ...prev, sshKeys: false }))
   }
+
+    const fethcProjectData = async () => {
+      if (!auth) return
+      try {
+        setLoadingProject(true)
+        const data = await getOneProject(auth,projectId)
+        setProjectData(data.data)
+      } catch (error) {
+        console.error('Failed to fetch initial data:', error)
+      }
+      setLoadingProject(false)
+    }
+  
+    useEffect(() => {
+      if(projectId)
+        fethcProjectData()
+    }, [auth])
+
 
   const addVolume = () => {
     setFormState(prev => ({
@@ -565,19 +585,33 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             <CardTitle className="text-lg lg:text-2xl font-semibold">{isEditMode ? 'Edit Node' : 'Create a New Node'}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-6">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name *</Label>
-              <Input
-                id="name"
-                placeholder="Enter node name"
-                required
-                value={formState.name}
-                onChange={(e) => updateFormState('name', e.target.value)}
-                className={`max-w-full placeholder:text-black text-sm ${fieldErrors.name ? 'border-red-500' : ''}`}
-              />
+         {projectId &&  <div className="">
+          <label htmlFor="service-name" className="text-sm pl-2 font-medium text-[#374151]">
+             Project*
+          </label>
+          {!loadingProject ? 
+          <div className="relative">
+            <Input
+              disabled={true}
+              id="service-name"
+              name="name"
+              // @ts-expect-error build
+              value={projectData.name}
+              // onChange={(e) => handleChange('name', e.target.value)}
+              placeholder="Enter service name"
+              className="max-w-full"
+            />
+            <div className='flex justify-center items-center bg-white w-[30px] h-[22px] absolute right-3 top-2.5'>
+              <FolderOpen size={18} />
             </div>
+          </div>
+          : <div className="flex items-center border bg-white p-2 rounded-md text-sm text-gray-500">
+              <CircularProgress size={16} className="mr-2 " />
+              Loading Project Details..
+            </div> }
+        </div>}
 
-            <div className='space-y-2'>
+            {!projectId && <div className='space-y-2'>
               <label htmlFor="project-id" className="pl-2 text-sm font-medium">
                 Select Project *
               </label>
@@ -622,6 +656,18 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   <RefreshCw size={16} />
                 </Button>
               </div>
+            </div>}
+
+            <div className="space-y-2">
+              <Label htmlFor="name">Name *</Label>
+              <Input
+                id="name"
+                placeholder="Enter node name"
+                required
+                value={formState.name}
+                onChange={(e) => updateFormState('name', e.target.value)}
+                className={`max-w-full placeholder:text-black text-sm ${fieldErrors.name ? 'border-red-500' : ''}`}
+              />
             </div>
 
             <div className='space-y-2'>

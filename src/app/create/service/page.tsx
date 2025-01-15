@@ -334,7 +334,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   
   const handleAddNewNode = () =>{
     // localStorage.setItem('createServiceFormData', JSON.stringify(formData));
-    window.open ('/create/node', '_ blank');
+    window.open (`/create/node?projectId=${projectId}`, '_ blank');
   }
 
 
