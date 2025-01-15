@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation';
 import { fetchAllCloudAccounts, deleteCloudAccount } from '@/app/api/cloud/api';
 import { useApp } from '@/context/AppContext';
 import { CircularProgress, Modal, Typography } from '@mui/material';
+import Link from 'next/link';
 
 const CloudAccounts = () => {
   const [selectedProvider, setSelectedProvider] = useState('all');
@@ -143,9 +144,10 @@ const CloudAccounts = () => {
       </div>
       <div className="space-y-1">
         {accounts.length > 0 ? accounts.map((account) => (
-          <Card key={account.id} className="p-4">
+          <Card key={account.id} className="p-4"  >
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div className="flex items-center space-x-4">
+            <Link href={`/dashboard/accounts/${account.id}/nodes`} className="w-full">
+              <div className="flex items-center space-x-4 w-full ">
                 <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
                   {getProviderIcon(account.provider) && (
                     <Image
@@ -162,8 +164,9 @@ const CloudAccounts = () => {
                   <p className="text-sm text-gray-500">{getProviderName(account.provider)}</p>
                 </div>
               </div>
+              </Link>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
-                <Button 
+                {/* <Button 
                   variant="secondary" 
                   size="sm" 
                   className="text-gray-600 w-full sm:w-auto"
@@ -171,7 +174,7 @@ const CloudAccounts = () => {
                 >
                   <Eye className="h-4 w-4 mr-2" />
                   View Nodes
-                </Button>
+                </Button> */}
                 <Button 
                   variant="ghost" 
                   size="sm" 
