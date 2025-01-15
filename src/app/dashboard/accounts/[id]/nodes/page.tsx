@@ -9,6 +9,8 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useApp } from "@/context/AppContext"
 import { fetchNodesForAccount, fetchCloudAccount } from "@/app/api/cloud/api"
+import loader from '@/assets/LoaderAtomInfra.gif';
+
 interface Node {
   id: number
   name: string
@@ -89,14 +91,27 @@ export default function NodesPage({ params }: { params: { id: string } }) {
           <h1 className="text-lg lg:text-2xl font-semibold">{accountData?.name} ({accountData?.provider})</h1>
         }
         </div>
+             
+       
         <Button className="bg-blue-600" onClick={() => router.push("/create/node")} >
           <span className="">+</span>
           Create
         </Button>
       </div>
+       <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-medium text-[#111827]">
+         Nodes Running
+        </h2>
+      </div>
           {loading ? (
             <div className="flex flex-col justify-center items-center lg:h-[80vh] h-[70vh] w-full">
-              <CircularProgress className="text-black" size={30} /> 
+              <Image 
+                src={loader} 
+                alt="Loading..." 
+                width={50} // Adjust width based on your design
+                height={50} // Adjust height based on your design
+                priority={true} // Ensures the loader is prioritized for loading
+              />
             </div>
           ) : (
             <div className="flex flex-col items-center lg:h-[80vh] h-[70vh] w-full">
