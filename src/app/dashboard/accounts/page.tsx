@@ -146,7 +146,7 @@ const CloudAccounts = () => {
         {accounts.length > 0 ? accounts.map((account) => (
           <Card key={account.id} className="p-4"  >
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            {/* <Link href={`/dashboard/accounts/${account.id}/nodes`} className="w-full"> */}
+            <Link href={`/dashboard/accounts/${account.id}/nodes`} className="w-full">
               <div className="flex items-center space-x-4 w-full ">
                 <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
                   {getProviderIcon(account.provider) && (
@@ -164,7 +164,7 @@ const CloudAccounts = () => {
                   <p className="text-sm text-gray-500">{getProviderName(account.provider)}</p>
                 </div>
               </div>
-              {/* </Link> */}
+              </Link>
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
                 {/* <Button 
                   variant="secondary" 

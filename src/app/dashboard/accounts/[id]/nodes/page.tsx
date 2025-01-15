@@ -88,15 +88,13 @@ export default function NodesPage({ params }: { params: { id: string } }) {
       <div className="flex items-center justify-between lg:mb-6 mb-5 h-[6vh]">
         <div>
           {accountData && 
-          <h1 className="text-lg lg:text-2xl font-semibold">{accountData?.name} ({accountData?.provider})</h1>
+          <h1 className="text-lg lg:text-2xl font-semibold">Cloud: {accountData?.name} ({accountData?.provider})</h1>
         }
         </div>
-             
-       
-        <Button className="bg-blue-600" onClick={() => router.push("/create/node")} >
+        {/* <Button className="bg-blue-600" onClick={() => router.push("/create/node")} >
           <span className="">+</span>
           Create
-        </Button>
+        </Button> */}
       </div>
        <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-medium text-[#111827]">
@@ -118,7 +116,7 @@ export default function NodesPage({ params }: { params: { id: string } }) {
               {hasActiveNodes() ? (
                 nodes?.map((node) => 
                   // @ts-expect-error build
-                  !node.isDeleted && <NodeCard key={node.id} {...node} fetchNodes={fetchNodes} />
+                  !node.isDeleted && <NodeCard key={node.id} {...node} fetchNodes={fetchNodes}  projectId={node.project_id} />
                 )
               ) : (
                 <Box className="flex flex-col gap-2 justify-center items-center lg:h-[80vh] h-[70dvh] w-full bg-neutral-100">
