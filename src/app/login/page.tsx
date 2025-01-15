@@ -95,7 +95,7 @@ export default function Login() {
   const togglePasswordVisibility = () => setShowPassword(!showPassword)
 
   return (
-    <div className="min-h-screen relative w-full bg-white bg-gradient-to-br from-[#DBEAFE] to-white">
+    <div className="min-h-screen relative w-full bg-[#DBEAFE] md:bg-gradient-to-br from-[#DBEAFE] to-white">
       <div className="container mx-auto min-h-screen lg:max-w-[93vw]">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-8">
           {/* Left side - Features */}
