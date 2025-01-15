@@ -106,7 +106,7 @@ const CloudAccounts = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="container mx-auto px-4 sm:px-6  pt-6">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-xl sm:text-2xl font-semibold">Cloud Accounts</h1>
         <div className="flex items-center gap-2">
@@ -136,7 +136,7 @@ const CloudAccounts = () => {
             className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4 bg-blue-600 hover:bg-blue-600/90" 
             onClick={() => router.push('/create/connect-account')}
           >
-            <Plus className="h-4 w-4 sm:mr-2" />
+            <Plus className="h-4 w-4 " />
             <span className="hidden sm:inline">Add Account</span>
           </Button>
         </div>
@@ -153,7 +153,7 @@ const CloudAccounts = () => {
                       alt={account.provider}
                       width={40}
                       height={40}
-                      className="w-6 h-6"
+                      className="w-6 h-6 object-contain"
                     />
                   )}
                 </div>
