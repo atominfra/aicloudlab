@@ -288,7 +288,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         const result = await createNode(auth, apiData)
         console.log('Node created successfully:', result)
         router.push(`/dashboard/accounts/${formState.cloud_account_id}/nodes`)
-        
       } catch (error) {
         console.error('Failed to create node:', error)
         setError('Failed to create node. Please try again.')
