@@ -12,11 +12,13 @@ import {
 } from "@/components/ui/select"
 import { useRouter } from 'next/navigation'
 import { useApp } from '@/context/AppContext'
-import { Eye, EyeOff, Trash2, GalleryVerticalEnd, Router, RefreshCw, Plus } from 'lucide-react'
+import { Eye, EyeOff, Trash2, GalleryVerticalEnd, Router, RefreshCw, Plus, FolderOpen } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { fetchNodes } from '@/app/api/nodes/api'
 import { CircularProgress } from '@mui/material'
+import { useFormState } from 'react-dom'
+import { getOneProject } from '@/app/api/projects/api'
 interface EnvVariable {
   key: string
   value: string
@@ -51,6 +53,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
     env_variables: [{ key: '', value: '', isVisible: false }] as EnvVariable[]
   })
   const [registries, setRegistries] = useState<RegistryCredential[]>([]);
+  const [isRegistriesLoading, setIdRegistriesLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null)
@@ -60,7 +63,28 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   const [customCpuLimit, setCustomCpuLimit] = useState('')
   const [serviceType, setServiceType] =useState('docker-compose')
   const [nodes,setNodes] = useState([])
+  const [projectData, setProjectData] = useState([])
+  const [loadingProject, setLoadingProject] = useState(true)
   const projectId = searchParams.get('projectId')
+
+
+  const fethcProjectData = async () => {
+    if (!auth) return
+    try {
+      setLoadingProject(true)
+      const data = await getOneProject(auth,projectId)
+      setProjectData(data.data)
+    } catch (error) {
+      console.error('Failed to fetch initial data:', error)
+    }
+    setLoadingProject(false)
+  }
+
+  useEffect(() => {
+    if(projectId)
+      fethcProjectData()
+  }, [auth])
+
   useEffect(() => {
     if (serviceId) {
       // Fetch existing service details
@@ -121,6 +145,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   useEffect(() => {
      const fetchRegistries = async () => {
       try {
+        setIdRegistriesLoading(true)
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/registry/credential`, {
           method: 'GET',
           headers: {
@@ -138,6 +163,8 @@ const CreateService: React.FC<CreateServiceProps> = () => {
         }
       } catch (err) {
         setError('An error occurred while fetching registries');
+      } finally{
+        setIdRegistriesLoading(false)
       }
     };
 
@@ -279,7 +306,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       });
   
       if (response.ok) {
-        window.history.back()
+        router.push(`/project/${projectId}`)
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Failed to create service');
@@ -355,6 +382,32 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       </div>
 
       <form className="space-y-6 max-w-2xl md:mx-auto pb-6 mx-4" onSubmit={handleSubmit}>
+      <div className="">
+          <label htmlFor="service-name" className="text-sm pl-2 font-medium text-[#374151]">
+            Selected Project*
+          </label>
+          {!loadingProject ? 
+          <div className="relative">
+            <Input
+              disabled={true}
+              id="service-name"
+              name="name"
+              // @ts-expect-error build
+              value={projectData.name}
+              // onChange={(e) => handleChange('name', e.target.value)}
+              placeholder="Enter service name"
+              className="max-w-full"
+            />
+            <div className='flex justify-center items-center bg-white w-[30px] h-[22px] absolute right-3 top-2.5'>
+              <FolderOpen size={18} />
+            </div>
+          </div>
+          : <div className="flex items-center border bg-white p-2 rounded-md text-sm text-gray-500">
+              <CircularProgress size={16} className="mr-2 " />
+              Loading Project Details..
+            </div> }
+        </div>
+
         <div className="">
           <label htmlFor="service-name" className="text-sm pl-2 font-medium text-[#374151]">
             Service Name*
@@ -376,7 +429,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
             <p className="text-red-500 text-sm">Name can`no`t contain an underscore (_) or spaces.</p>
           )}
         </div>
-
+        
         {serviceType === 'docker-compose' && (
         <div>
           <label htmlFor="node" className="pl-2 text-sm font-medium text-[#374151]">
@@ -405,7 +458,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
               </SelectTrigger>
               <SelectContent>
                 {nodes.length > 0 ? nodes.map((node) =>         
-                  <SelectItem key={node.id} value={node.id.toString()}>{node.name}</SelectItem>
+                  <SelectItem key={node.id} value={node.id.toString()}>{node.name}  {node.location === 'centralIndia' ? '(Azure)' : '(E2E)'}</SelectItem>
                 ): <SelectItem value="create_node">No node Available</SelectItem>}
               </SelectContent>
             </Select>
@@ -572,17 +625,32 @@ const CreateService: React.FC<CreateServiceProps> = () => {
               disabled={isRefreshing}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select registry" />
+              {isRegistriesLoading ? (
+                    <div className="flex items-center">
+                      <CircularProgress size={16} className="mr-2" />
+                      Loading Registries...
+                    </div>
+                  ) : (
+                    <SelectValue placeholder="Select registry" />
+                  )}
               </SelectTrigger>
               <SelectContent>
-                {registries.map((registry) => (
+              {registries.length > 0 ? registries.map((registry) =>         
                   <SelectItem key={registry.id} value={registry.id.toString()}>
-                    {registry.name}
-                  </SelectItem>
-                ))}
-                <SelectItem value="add_new">Add New</SelectItem>
+                  {registry.name}
+                </SelectItem>
+                ): <SelectItem value="create_node">No Registry Available</SelectItem>}
               </SelectContent>
             </Select>
+            <Button 
+              variant="outline" 
+              size="icon" 
+              onClick={handleAddNewRegistry}
+              className="flex-shrink-0"
+            >
+              <Plus className="h-4 w-4" />
+              <span className="sr-only">Add New Node</span>
+            </Button>
             <Button 
               type="button" 
               variant="outline" 
@@ -643,14 +711,14 @@ const CreateService: React.FC<CreateServiceProps> = () => {
         {error && isNameTouched && (
           <p className="text-red-500 text-sm">{error}</p>
         )}
-
-        <div className="flex justify-end space-x-4 pt-4">
+      </form>
+        <div className="flex justify-end space-x-4 pt-4 max-w-2xl md:mx-auto">
           <Button variant="outline" className="text-[14px]" onClick={() => window.history.back()}>Cancel</Button>
           <Button type="submit" disabled={isLoading} className="bg-[#2563EB] text-[14px]">
             {isLoading ? 'Saving...' : serviceId ? 'Update Service' : 'Deploy Service'}
           </Button>
         </div>
-      </form>
+      
     </div>
   )
 }

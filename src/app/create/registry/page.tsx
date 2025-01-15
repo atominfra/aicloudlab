@@ -64,7 +64,7 @@ export default function AddRegistryCredential() {
         throw new Error(errorData.message || 'Failed to create registry credential')
       }
 
-      router.push('/dashboard/service')
+      router.push('/dashboard/projects')
     } catch (error) {
       setError(error.message)
     } finally {

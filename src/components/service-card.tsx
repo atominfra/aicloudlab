@@ -41,9 +41,7 @@ export function ServiceCard({
   onOperation 
 }: ServiceCardProps) {
     const router = useRouter();
-  const handleEdit = () => {
-    router.push(`/create/service?id=${id}`);
-  };
+
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 w-full hover:shadow-sm transition-shadow duration-200">

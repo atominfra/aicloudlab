@@ -21,6 +21,7 @@ export default function CloudProviderForm() {
   const { auth } = useApp();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
   const [data, setData] = useState<FormData>({
     name: '',
     api_key: '',
@@ -62,11 +63,7 @@ export default function CloudProviderForm() {
       router.push('/dashboard/accounts');
     } catch (error) {
       console.error('Error connecting account:', error);
-      alert(
-        error instanceof Error
-          ? error.message
-          : 'An unknown error occurred while connecting the account.'
-      );
+      setError('An error occurred while creating the cluster')
     } finally {
       setIsLoading(false);
     }
@@ -118,6 +115,9 @@ export default function CloudProviderForm() {
                     )}
                   </div>
                 ))}
+                   {error && (
+                      <p className="text-red-500 text-sm">{error}</p>
+                    )}  
                 <div className="w-full text-end">
                   <Button type="submit" className="bg-[#2563EB]" disabled={isLoading}>
                     {isLoading ? 'Connecting...' : 'Connect Account'}

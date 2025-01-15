@@ -53,7 +53,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
   }
 
   return (
-    <div className="p-4 bg-neutral-100 min-h-screen">
+    <div className="px-4 pt-6 bg-neutral-100 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold">Project {params.id}</h1>
         <Button onClick={()=> router.push('/create/project')} className="bg-blue-600">Create Project</Button>

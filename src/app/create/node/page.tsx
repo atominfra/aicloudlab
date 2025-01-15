@@ -645,7 +645,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   </SelectTrigger>
                   <SelectContent>
                     {accounts && accounts.length > 0 ? accounts.map((cloud_account) => (
-                      <SelectItem key={cloud_account.name} value={cloud_account.name}>{cloud_account.name} - {capitalizeFirstCharacter(cloud_account.provider)}</SelectItem>
+                      <SelectItem key={cloud_account.name} value={cloud_account.name}>{`${cloud_account.name} (${capitalizeFirstCharacter(cloud_account.provider)})`}</SelectItem>
                     )) : <SelectItem value="no-account-available">No Account Available</SelectItem>}
                   </SelectContent>
                 </Select>
@@ -962,7 +962,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             )}
           </CardContent>
           <CardFooter className="flex justify-end space-x-4 pt-4">
-            <Button variant="outline" onClick={() => router.push('/dashboard/projets')}>Cancel</Button>
+            <Button variant="outline" onClick={() => router.push('/dashboard/projects')}>Cancel</Button>
             <Button 
               type="submit"
               disabled={loading || !areAllRequiredFieldsFilled()} 

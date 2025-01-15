@@ -115,12 +115,6 @@ export default function CreateProject() {
                 <FolderOpen className=" text-muted-foreground h-[15px] w-[15px]"/>
              </div>
          </div>
-          {isNameTouched && formData.projectName === '' && (
-            <p className="text-red-500 text-sm">Name cannot be empty.</p>
-          )}
-          {isNameTouched && (formData.projectName.includes('_') || formData.projectName.includes(' ')) && (
-            <p className="text-red-500 text-sm">Name cannot contain an underscore (_) or spaces.</p>
-          )}
         </div>
 
         {error && (
