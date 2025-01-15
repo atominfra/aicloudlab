@@ -119,7 +119,7 @@ export async function fetchNodes(auth) {
   }
 }
 
-export async function fethcNode(auth,nodeId) {
+export async function fetchNode(auth,nodeId) {
   try {
     const url = `${API_BASE_URL}/cloud/node/${nodeId}`;
     const response = await fetch(url,{
