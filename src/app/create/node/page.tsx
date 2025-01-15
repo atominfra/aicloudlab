@@ -962,7 +962,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             )}
           </CardContent>
           <CardFooter className="flex justify-end space-x-4 pt-4">
-            <Button variant="outline" onClick={() => router.push('/dashboard/projets')}>Cancel</Button>
+            <Button variant="outline" onClick={() => router.push('/dashboard/projects')}>Cancel</Button>
             <Button 
               type="submit"
               disabled={loading || !areAllRequiredFieldsFilled()} 
