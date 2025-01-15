@@ -76,7 +76,7 @@ export default function ServiceSettings({ params }: { params: { id: string } }) 
     try {
       const data = await verifyDomain(auth, domainId)
       console.log(data)
-      if(data.error="true"){
+      if(data.error==="true"){
         toast.error("Domain not Connected")
       }else{
         toast.success("Domain Connected")
