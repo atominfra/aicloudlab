@@ -148,7 +148,7 @@ export default function Login() {
                 <form onSubmit={handleLogIn} className="flex flex-col justify-center items-center w-full gap-8">
                   <div className="space-y-2 w-[95%]">
                     <Label htmlFor="identifier" className="text-[16px] font-medium text-gray-700">
-                      Email or Phone Number
+                      Email 
                     </Label>
                     <div className="relative flex items-center">
                       <MdEmail className="absolute left-3 text-gray-400 h-5 w-5" />
@@ -161,7 +161,7 @@ export default function Login() {
                         className={`pl-10 h-11 border-gray-200 rounded-lg ${
                           errors.identifier ? "border-red-500" : ""
                         }`}
-                        placeholder="Enter your email or phone"
+                        placeholder="Enter your email "
                       />
                     </div>
                     {errors.identifier && (
