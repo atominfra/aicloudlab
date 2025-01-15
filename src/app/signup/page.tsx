@@ -148,7 +148,7 @@ export default function Signup() {
   const toggleReEnterPasswordVisibility = () => setShowReEnterPassword(!showReEnterPassword)
 
   return (
-    <div className="min-h-screen relative w-full bg-white lg:bg-gradient-to-br from-[#DBEAFE] to-white">
+    <div className="min-h-screen relative w-full bg-white bg-gradient-to-br from-[#DBEAFE] to-white">
       <div className="container mx-auto min-h-screen lg:max-w-[93vw]">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8  items-center px-8">
           {/* Left side - Features */}
@@ -186,9 +186,26 @@ export default function Signup() {
             />
            </div>
           </div>
-
+            <div className='flex md:hidden justify-center pt-12'> 
+              <div className='flex items-center'>
+                        <Image
+                          src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
+                          width={30}
+                          height={30}
+                          alt="Atom Infra Logo"
+                          className='h-[22px] w-[23px]'
+                          priority
+                        />
+                        <div 
+                          className='relative text-[24px] font-[700] tracking-tight l-[30px]' 
+                          style={{ left: '-2px' }}
+                        >
+                          tom Infra
+                        </div>
+                      </div>
+            </div>
           {/* Right side - Signup form */}
-          <div className="w-full max-w-xl  mx-auto h-[100vh] overflow-y-scroll no-scrollbar  flex justify-center items-center">
+          <div className="w-full max-w-xl  mx-auto h-[100vh] overflow-y-scroll no-scrollbar   flex justify-center items-center">
             <div className="bg-white lg:p-12 p-6 rounded-[16px]  lg:shadow-xl w-full">
               <div className="text-[28px] font-semibold  text-gray-900 h-[10%]">Sign Up</div>
               <h1 className="text-[15px] font-normal tracking-tight pb-4  text-gray-500" > Already have an account?  
