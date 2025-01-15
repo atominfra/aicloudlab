@@ -382,29 +382,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       </div>
 
       <form className="space-y-6 max-w-2xl md:mx-auto pb-6 mx-4" onSubmit={handleSubmit}>
-        <div className="">
-          <label htmlFor="service-name" className="text-sm pl-2 font-medium text-[#374151]">
-            Service Name*
-          </label>
-          <div className="relative">
-            <Input
-              id="service-name"
-              name="name"
-              value={formData.name}
-              onChange={(e) => handleChange('name', e.target.value)}
-              placeholder="Enter service name"
-              className="max-w-full"
-            />
-            <div className='flex justify-center items-center bg-white w-[30px] h-[22px] absolute right-3 top-2.5'>
-              <Router size={18} />
-            </div>
-          </div>
-          {isNameTouched && (formData.name.includes(' ')) && (
-            <p className="text-red-500 text-sm">Name can`no`t contain an underscore (_) or spaces.</p>
-          )}
-        </div>
-
-        <div className="">
+      <div className="">
           <label htmlFor="service-name" className="text-sm pl-2 font-medium text-[#374151]">
             Selected Project*
           </label>
@@ -429,6 +407,29 @@ const CreateService: React.FC<CreateServiceProps> = () => {
               Loading Project Details..
             </div> }
         </div>
+
+        <div className="">
+          <label htmlFor="service-name" className="text-sm pl-2 font-medium text-[#374151]">
+            Service Name*
+          </label>
+          <div className="relative">
+            <Input
+              id="service-name"
+              name="name"
+              value={formData.name}
+              onChange={(e) => handleChange('name', e.target.value)}
+              placeholder="Enter service name"
+              className="max-w-full"
+            />
+            <div className='flex justify-center items-center bg-white w-[30px] h-[22px] absolute right-3 top-2.5'>
+              <Router size={18} />
+            </div>
+          </div>
+          {isNameTouched && (formData.name.includes(' ')) && (
+            <p className="text-red-500 text-sm">Name can`no`t contain an underscore (_) or spaces.</p>
+          )}
+        </div>
+        
         {serviceType === 'docker-compose' && (
         <div>
           <label htmlFor="node" className="pl-2 text-sm font-medium text-[#374151]">
@@ -457,7 +458,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
               </SelectTrigger>
               <SelectContent>
                 {nodes.length > 0 ? nodes.map((node) =>         
-                  <SelectItem key={node.id} value={node.id.toString()}>{node.name}</SelectItem>
+                  <SelectItem key={node.id} value={node.id.toString()}>{node.name}  {node.location === 'centralIndia' ? '(Azure)' : '(E2E)'}</SelectItem>
                 ): <SelectItem value="create_node">No node Available</SelectItem>}
               </SelectContent>
             </Select>
@@ -710,14 +711,14 @@ const CreateService: React.FC<CreateServiceProps> = () => {
         {error && isNameTouched && (
           <p className="text-red-500 text-sm">{error}</p>
         )}
-
-        <div className="flex justify-end space-x-4 pt-4">
+      </form>
+        <div className="flex justify-end space-x-4 pt-4 max-w-2xl md:mx-auto">
           <Button variant="outline" className="text-[14px]" onClick={() => window.history.back()}>Cancel</Button>
           <Button type="submit" disabled={isLoading} className="bg-[#2563EB] text-[14px]">
             {isLoading ? 'Saving...' : serviceId ? 'Update Service' : 'Deploy Service'}
           </Button>
         </div>
-      </form>
+      
     </div>
   )
 }
