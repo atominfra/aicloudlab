@@ -53,6 +53,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
     env_variables: [{ key: '', value: '', isVisible: false }] as EnvVariable[]
   })
   const [registries, setRegistries] = useState<RegistryCredential[]>([]);
+  const [isRegistriesLoading, setIdRegistriesLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null)
@@ -144,6 +145,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   useEffect(() => {
      const fetchRegistries = async () => {
       try {
+        setIdRegistriesLoading(true)
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/registry/credential`, {
           method: 'GET',
           headers: {
@@ -161,6 +163,8 @@ const CreateService: React.FC<CreateServiceProps> = () => {
         }
       } catch (err) {
         setError('An error occurred while fetching registries');
+      } finally{
+        setIdRegistriesLoading(false)
       }
     };
 
@@ -410,6 +414,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
               disabled={true}
               id="service-name"
               name="name"
+              // @ts-expect-error build
               value={projectData.name}
               // onChange={(e) => handleChange('name', e.target.value)}
               placeholder="Enter service name"
@@ -619,17 +624,32 @@ const CreateService: React.FC<CreateServiceProps> = () => {
               disabled={isRefreshing}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select registry" />
+              {isRegistriesLoading ? (
+                    <div className="flex items-center">
+                      <CircularProgress size={16} className="mr-2" />
+                      Loading Registries...
+                    </div>
+                  ) : (
+                    <SelectValue placeholder="Select registry" />
+                  )}
               </SelectTrigger>
               <SelectContent>
-                {registries.map((registry) => (
+              {registries.length > 0 ? registries.map((registry) =>         
                   <SelectItem key={registry.id} value={registry.id.toString()}>
-                    {registry.name}
-                  </SelectItem>
-                ))}
-                <SelectItem value="add_new">Add New</SelectItem>
+                  {registry.name}
+                </SelectItem>
+                ): <SelectItem value="create_node">No Registry Available</SelectItem>}
               </SelectContent>
             </Select>
+            <Button 
+              variant="outline" 
+              size="icon" 
+              onClick={handleAddNewRegistry}
+              className="flex-shrink-0"
+            >
+              <Plus className="h-4 w-4" />
+              <span className="sr-only">Add New Node</span>
+            </Button>
             <Button 
               type="button" 
               variant="outline" 
