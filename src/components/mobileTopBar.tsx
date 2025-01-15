@@ -111,11 +111,15 @@ export default function MobileTopBar() {
           </div>
           <div className="p-4 border-t border-border">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full bg-neutral-100 border flex items-center justify-center hover:cursor-pointer hover:border-gray-300" onClick={()=> router.push("/profile")}>
+          <div className="w-10 h-10 rounded-full bg-neutral-100 border flex items-center justify-center hover:cursor-pointer hover:border-gray-300" 
+          onClick={()=>{ 
+            router.push("/profile")
+            toggleSidebar()
+            }}>
           <span className="text-md font-medium ">{user?.full_name && user?.full_name.split(' ').map(n=> n[0]).join('')}</span>
           </div>
           <div className="flex-1">
-            <div className="text-sm text-muted-foreground">
+            <div className="text-sm text-muted-foreground" >
               {user?.full_name && user?.full_name.split(' ')[0]}
               </div>
           </div>
