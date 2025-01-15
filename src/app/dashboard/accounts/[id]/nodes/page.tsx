@@ -6,7 +6,7 @@ import { Box, CircularProgress, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import noNodesIcon from "@/assets/noNodesIcon.svg"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useApp } from "@/context/AppContext"
 import { fetchNodesForAccount, fetchCloudAccount } from "@/app/api/cloud/api"
 import loader from '@/assets/LoaderAtomInfra.gif';
@@ -35,7 +35,9 @@ export default function NodesPage({ params }: { params: { id: string } }) {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
   const [nodes, setNodes] = useState<Node[]>([])
-
+  const searchParams = useSearchParams()
+  const accountName = searchParams.get('accountName')
+  const accountProvider = searchParams.get('accountProvider')
   const router = useRouter()
   const { auth } = useApp()
     console.log("id",params.id)
@@ -87,9 +89,9 @@ export default function NodesPage({ params }: { params: { id: string } }) {
     <div className="p-4 bg-neutral-100 lg:h-screen h-[92dvh] justify-center items-center">
       <div className="flex items-center justify-between lg:mb-6 mb-5 h-[6vh]">
         <div>
-          {accountData && 
-          <h1 className="text-lg lg:text-2xl font-semibold">Cloud: {accountData?.name} ({accountData?.provider})</h1>
-        }
+          {/* {accountData &&  */}
+          <h1 className="text-lg lg:text-2xl font-semibold">Cloud: {accountName} {`(${accountProvider})`}</h1>
+        {/* } */}
         </div>
         {/* <Button className="bg-blue-600" onClick={() => router.push("/create/node")} >
           <span className="">+</span>
