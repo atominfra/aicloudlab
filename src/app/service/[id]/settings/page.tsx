@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { RefreshCcw, Trash2, AlertTriangle } from 'lucide-react'
+import { RefreshCcw, Trash2, AlertTriangle, ExternalLink } from 'lucide-react'
 import { DNSConfigurationDialog } from '@/components/dns-configuration-dialog'
 import { getServiceDomains, addDomainToService, verifyDomain, deleteService } from '@/app/api/services/api'
 import { useApp } from '@/context/AppContext'
@@ -52,7 +52,6 @@ export default function ServiceSettings({ params }: { params: { id: string } }) 
         await addDomainToService(auth, params.id, newDomain)
         await fetchDomains()
         setNewDomain('')
-        toast.success('Domain added successfully')
       } catch (error) {
         console.error('Failed to add domain:', error)
         toast.error('Failed to add domain')
@@ -77,11 +76,14 @@ export default function ServiceSettings({ params }: { params: { id: string } }) 
     try {
       const data = await verifyDomain(auth, domainId)
       console.log(data)
-      toast.success("Domain Connected")
+      if(data.error="true"){
+        toast.error("Domain not Connected")
+      }else{
+        toast.success("Domain Connected")
+      }
       await fetchDomains()
     } catch (error) {
       console.error('Failed to verify domain:', error)
-      toast.error("Domain not Connected")
     } finally {
       setIsRefreshing(false)
     }
@@ -145,14 +147,14 @@ export default function ServiceSettings({ params }: { params: { id: string } }) 
                     className="flex items-center justify-between p-4 border rounded-lg"
                   >
                     <div className="w-[90%] flex items-center gap-3">
-                      <div className='w-[50%]'>{domain.domain_name}</div>
+                      <div className='w-[50%] flex items-center gap-1'>{domain.domain_name} {domain.status === true && <div className='text-blue-700 hover:cursor:pointer ' onClick={() => window.open(`https://${domain.domain_name}`, '_blank')}><ExternalLink size={14}  /></div>} </div> 
                       <div className='w-[50%]'>
                         {domain.status === false && (
                           <DNSConfigurationDialog domain={domain.domain_name} nodeIp={domain.public_ip_address} />
                         )}
                       </div>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
                       <Button
                         variant="ghost"
                         onClick={() => handleRefreshDomain(domain.id)}

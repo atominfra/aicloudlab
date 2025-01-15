@@ -24,13 +24,14 @@ interface NodeCardProps {
   private_ip_address: string,
   public_ip_address: string,
   gpu: string
+  location:string
   isDeleted: true
   status: string
   fetchNodes:() => Promise<void>
   projectId: string
 }
 
-export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, public_ip_address, gpu, isDeleted, status="Running", fetchNodes, projectId }: NodeCardProps) {
+export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, public_ip_address, gpu, isDeleted, status="Running", fetchNodes, projectId, location }: NodeCardProps) {
   const [copySuccess, setCopySuccess] = useState(false)
   const [loading, setLoading] = useState(false)
   const [isRunning,setIsRunning] = useState(false)
@@ -121,6 +122,22 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
     gpu
   ].filter(Boolean).join(' • ')
 
+  const  handleSSHCopy = async(location)=>{
+      try {
+        if(location === 'centralIndia'){
+          await navigator.clipboard.writeText(`ssh root@${public_ip_address}`)
+        }else{
+          await navigator.clipboard.writeText(`ssh ubuntu@${public_ip_address}`)
+        }
+        setCopySuccess(true)
+        toast.success('SSH command copied ')
+        setTimeout(() => setCopySuccess(false), 2000)
+      } catch (err) {
+        console.error("Failed to copy text:", err)
+        toast.error('Failed to copy IP')
+      }
+  }
+
   return (
     <div className="bg-white border-b rounded-md p-4 w-full">
       {/* Desktop View */}
@@ -163,6 +180,13 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
               <FaPlay className="w-[15px] h-[20px] text-gray-400" />
             )}
           </div> */}
+          <div className='w-[200px] rounded-full bg-gray-200 py-1 px-2 flex gap-2 items-center justify-center hover:bg-gray-300 hover:cursor-pointer' onClick={()=>handleSSHCopy(location)}>
+              <Image
+                alt='copyIcon'
+                src={copyIcon}
+              />
+              <span className='text-sm text-gray-700'>Copy SSH Command</span>
+            </div>
           <div onClick={handleOpen} className='p-2 hover:cursor-pointer'>
             <MdDelete className="w-[20px] h-[30px] text-red-600" />
           </div>
@@ -218,14 +242,14 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
               <MdDelete className="w-4 h-4" />
             </button>
           </div>
-          <Button              
+          {/* <Button              
             // disabled={status}
             variant="secondary" 
             size="sm"
             className={`text-gray-600 ${status !== 'running' ? "opacity-50" : ""}`} 
           >
             Manage
-          </Button>
+          </Button> */}
         </div>
       </div>
 
