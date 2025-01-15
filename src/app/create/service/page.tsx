@@ -17,6 +17,7 @@ import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { fetchNodes } from '@/app/api/nodes/api'
 import { CircularProgress } from '@mui/material'
+import { useFormState } from 'react-dom'
 interface EnvVariable {
   key: string
   value: string
@@ -279,7 +280,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       });
   
       if (response.ok) {
-        window.history.back()
+        router.push(`/project/${projectId}`)
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Failed to create service');

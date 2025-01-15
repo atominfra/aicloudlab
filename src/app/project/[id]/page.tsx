@@ -34,74 +34,6 @@ interface Node {
   name: string
 }
 
-const serviceDatas = [
-  {
-    id: "1",
-    name: "Authentication Service",
-    status: "running",
-    mem_limit: "512MB",
-    cpu_limit: "1.5 ",
-    replicas: 3,
-    service_url: "https://auth.example.com",
-  },
-  {
-    id: "2",
-    name: "Payment Gateway",
-    status: "stopped",
-    mem_limit: "1GB",
-    cpu_limit: "2 ",
-    replicas: 2,
-    service_url: "https://payments.example.com",
-  },
-  {
-    id: "3",
-    name: "Notification Service",
-    status: "error",
-    mem_limit: "256MB",
-    cpu_limit: "1 ",
-    replicas: 1,
-    service_url: "https://notify.example.com",
-  },
-]
-
-const nodesData = [
-  {
-    id: 1,
-    name: "Node-A",
-    memory: "16GB",
-    vcpus: "4 vCPU",
-    disk: "500GB",
-    private_ip_address: "192.168.1.10",
-    public_ip_address: "203.0.113.10",
-    gpu: "NVIDIA Tesla V100",
-    isDeleted: false,
-    status: "running",
-  },
-  {
-    id: 2,
-    name: "Node-B",
-    memory: "32GB",
-    vcpus: "8 vCPU",
-    disk: "1TB",
-    private_ip_address: "192.168.1.11",
-    public_ip_address: "203.0.113.11",
-    gpu: "NVIDIA A100",
-    isDeleted: false,
-    status: "stopped",
-  },
-  {
-    id: 3,
-    name: "Node-C",
-    memory: "64GB",
-    vcpus: "16 vCPU",
-    disk: "2TB",
-    private_ip_address: "192.168.1.12",
-    public_ip_address: "203.0.113.12",
-    gpu: "NVIDIA RTX 3090",
-    isDeleted: true,
-    status: "error",
-  },
-];
 
 type ViewType = 'services' | 'nodes'
 
@@ -110,48 +42,58 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
   const [nodes, setNodes] = useState<Node[]>([])
   const [services, setServices] = useState([])
   const [projectData, setProjectData] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [loadingNodes, setLoadingNodes] = useState(false)
+  const [loadingServices, setLoadingServices] = useState(false)
+  const [loadingProjects, setLoadingProjects] = useState(false)
   const [viewType, setViewType] = useState<ViewType>('services')
 
   const { auth } = useApp()
+
+  const fetchProjectDetails = async () => {
+    if (!auth ) return
+    try {
+      setLoadingProjects(true)
+      const data = await getOneProject(auth,params?.id)
+      setProjectData(data.data)
+    } catch (error) {
+      console.error('Failed to fetch initial data:', error)
+    } finally{
+      setLoadingProjects(false)
+    }
+  }
+
     useEffect(()=>{
-      const fetchData = async () => {
-        if (!auth ) return
-        try {
-          const data = await getOneProject(auth,params?.id)
-          setProjectData(data.data)
-        } catch (error) {
-          console.error('Failed to fetch initial data:', error)
-        }
-      }
-      fetchData()
+      fetchProjectDetails()
     },[auth])
     
     const fetchNodes = async () => {
       if (!auth ) return
       try {
-        setLoading(true)
+        setLoadingNodes(true)
         const data = await getAllProjectNodes(auth, params?.id)
         setNodes(data.data.nodes)
       } catch (error) {
-        console.error('Failed to fetch initial data:', error)
+        console.error('Failed to fetch nodes:', error)
       }
-      setLoading(false)
+      setLoadingNodes(false)
     }
+
     useEffect(()=>{
-      fetchNodes()
-    },[auth])
+      if(viewType === 'nodes'){
+        fetchNodes()
+      }
+    },[auth, viewType])
 
     const fetchServices = async () => {
       if (!auth ) return
       try {
-        setLoading(true)
+        setLoadingServices(true)
         const data = await getAllProjectServices(auth, params?.id)
         setServices(data.data.services)
       } catch (error) {
-        console.error('Failed to fetch initial data:', error)
+        console.error('Failed to fetch services:', error)
       }
-      setLoading(false)
+      setLoadingServices(false)
     }
 
     useEffect(()=>{
@@ -159,12 +101,6 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
         fetchServices()
       }
     },[auth, viewType])
-
-  if (loading) {
-    return <div>
-      <Loader/>
-    </div>
-  }
 
   return (
     <div className="p-4 bg-neutral-100 min-h-screen">
@@ -213,22 +149,28 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
         </div>
       </div>
       
-      <div className="flex justify-between items-center mb-4">
+      {!loadingProjects && <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-medium text-[#111827]">
           {viewType === 'services' ? 'Services Running' : 'Available Nodes'}
         </h2>
-      </div>
+      </div>}
 
       <div className="flex flex-col gap-2 items-center h-[calc(100vh-180px)] w-full">
-        {viewType === 'services' ? ( services &&
-          services.length > 0 ? services.map((service) => (
-            <ServiceCard
-              key={service.id}
-              {...service}
-              onOperation={() => {}}
-              projectId={params?.id}
-            />
-          )) : (
+        {viewType === 'services' ? (
+          loadingServices ? (
+            <div className="flex justify-center items-center h-full w-full">
+              <Loader />
+            </div>
+          ) : services && services.length > 0 ? (
+            services.map((service) => (
+              <ServiceCard
+                key={service.id}
+                {...service}
+                onOperation={() => {}}
+                projectId={params?.id}
+              />
+            ))
+          ) : (
             <div className="flex flex-col justify-center items-center h-full w-full">
               <Router 
                 className="w-16 h-16 text-neutral-200 mb-4"
@@ -238,24 +180,28 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
               </Typography>
             </div>
           )
+        ) : loadingNodes ? (
+          <div className="flex justify-center items-center h-full w-full">
+            <Loader />
+          </div>
+        ) : nodes.length > 0 ? (
+          nodes.map((node) => (
+            // @ts-expect-error build
+            <NodeCard key={node.id} {...node} fetchNodes={fetchNodes} projectId={params.id} />
+          ))
         ) : (
-          nodes.length > 0 ? nodes.map((node) => (
-            // @ts-expect-error build error
-            <NodeCard key={node.id} {...node} fetchNodes={fetchNodes} projectId={params.id}  />
-          )) : (
-            <div className="flex flex-col justify-center items-center h-full w-full">
-              <Image
-                src={noNodesIcon}
-                width={1000}
-                height={1000}
-                className="w-16 h-16 text-neutral-100 mb-4"
-                alt="AI Cloud Lab Logo"
-              />
-              <Typography variant="body1" className="text-gray-400 text-center">
-                No nodes yet
-              </Typography>
-            </div>
-          )
+          <div className="flex flex-col justify-center items-center h-full w-full">
+            <Image
+              src={noNodesIcon || "/placeholder.svg"}
+              width={1000}
+              height={1000}
+              className="w-16 h-16 text-neutral-100 mb-4"
+              alt="AI Cloud Lab Logo"
+            />
+            <Typography variant="body1" className="text-gray-400 text-center">
+              No nodes yet
+            </Typography>
+          </div>
         )}
       </div>
     </div>
