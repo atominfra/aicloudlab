@@ -334,7 +334,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   
   const handleAddNewNode = () =>{
     // localStorage.setItem('createServiceFormData', JSON.stringify(formData));
-    window.open ('/create/node', '_ blank');
+    window.open (`/create/node?projectId=${projectId}`, '_ blank');
   }
 
 
@@ -384,7 +384,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       <form className="space-y-6 max-w-2xl md:mx-auto pb-6 mx-4" onSubmit={handleSubmit}>
       <div className="">
           <label htmlFor="service-name" className="text-sm pl-2 font-medium text-[#374151]">
-            Selected Project*
+             Project*
           </label>
           {!loadingProject ? 
           <div className="relative">
@@ -426,7 +426,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
             </div>
           </div>
           {isNameTouched && (formData.name.includes(' ')) && (
-            <p className="text-red-500 text-sm">Name can`no`t contain an underscore (_) or spaces.</p>
+            <p className="text-red-500 text-sm">Name cannot contain an underscore (_) or spaces.</p>
           )}
         </div>
         

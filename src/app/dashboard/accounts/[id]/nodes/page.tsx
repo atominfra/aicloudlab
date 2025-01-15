@@ -6,9 +6,11 @@ import { Box, CircularProgress, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import noNodesIcon from "@/assets/noNodesIcon.svg"
 import Image from "next/image"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useApp } from "@/context/AppContext"
 import { fetchNodesForAccount, fetchCloudAccount } from "@/app/api/cloud/api"
+import loader from '@/assets/LoaderAtomInfra.gif';
+
 interface Node {
   id: number
   name: string
@@ -33,7 +35,9 @@ export default function NodesPage({ params }: { params: { id: string } }) {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(true)
   const [nodes, setNodes] = useState<Node[]>([])
-
+  const searchParams = useSearchParams()
+  const accountName = searchParams.get('accountName')
+  const accountProvider = searchParams.get('accountProvider')
   const router = useRouter()
   const { auth } = useApp()
     console.log("id",params.id)
@@ -85,25 +89,36 @@ export default function NodesPage({ params }: { params: { id: string } }) {
     <div className="p-4 bg-neutral-100 lg:h-screen h-[92dvh] justify-center items-center">
       <div className="flex items-center justify-between lg:mb-6 mb-5 h-[6vh]">
         <div>
-          {accountData && 
-          <h1 className="text-lg lg:text-2xl font-semibold">{accountData?.name} ({accountData?.provider})</h1>
-        }
+          {/* {accountData &&  */}
+          <h1 className="text-lg lg:text-2xl font-semibold">Cloud: {accountName} {`(${accountProvider})`}</h1>
+        {/* } */}
         </div>
-        <Button className="bg-blue-600" onClick={() => router.push("/create/node")} >
+        {/* <Button className="bg-blue-600" onClick={() => router.push("/create/node")} >
           <span className="">+</span>
           Create
-        </Button>
+        </Button> */}
+      </div>
+       <div className="flex justify-between items-center mb-4">
+        <h2 className="text-lg font-medium text-[#111827]">
+         Nodes Running
+        </h2>
       </div>
           {loading ? (
             <div className="flex flex-col justify-center items-center lg:h-[80vh] h-[70vh] w-full">
-              <CircularProgress className="text-black" size={30} /> 
+              <Image 
+                src={loader} 
+                alt="Loading..." 
+                width={50} // Adjust width based on your design
+                height={50} // Adjust height based on your design
+                priority={true} // Ensures the loader is prioritized for loading
+              />
             </div>
           ) : (
             <div className="flex flex-col items-center lg:h-[80vh] h-[70vh] w-full">
               {hasActiveNodes() ? (
                 nodes?.map((node) => 
                   // @ts-expect-error build
-                  !node.isDeleted && <NodeCard key={node.id} {...node} fetchNodes={fetchNodes} />
+                  !node.isDeleted && <NodeCard key={node.id} {...node} fetchNodes={fetchNodes}  projectId={node.project_id} />
                 )
               ) : (
                 <Box className="flex flex-col gap-2 justify-center items-center lg:h-[80vh] h-[70dvh] w-full bg-neutral-100">

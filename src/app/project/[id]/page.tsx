@@ -106,7 +106,9 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
     <div className="p-4 bg-neutral-100 min-h-screen">
       <div className="flex justify-between items-center mb-6">
         {/* @ts-expect-error build */}
-        <h1 className="text-xl sm:text-2xl font-semibold">{projectData?.name}</h1>
+        
+        {projectData?.name && <h1 className="text-xl sm:text-2xl font-semibold">Project: {projectData?.name}</h1>}
+
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
