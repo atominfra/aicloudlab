@@ -426,7 +426,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
             </div>
           </div>
           {isNameTouched && (formData.name.includes(' ')) && (
-            <p className="text-red-500 text-sm">Name can`no`t contain an underscore (_) or spaces.</p>
+            <p className="text-red-500 text-sm">Name cannot contain an underscore (_) or spaces.</p>
           )}
         </div>
         

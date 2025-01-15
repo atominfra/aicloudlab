@@ -141,9 +141,9 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
   return (
     <div className="bg-white border-b rounded-md p-4 w-full">
       {/* Desktop View */}
-      <div className="hidden lg:flex items-center justify-between">
-        <Link href={`/project/${projectId}/node/${id}?projectId=${projectId}`}>
-        <div className="flex items-center gap-4  hover:cursor-pointer" >
+      <div className="hidden lg:flex items-center justify-between ">
+        <Link href={`/project/${projectId}/node/${id}?projectId=${projectId}`} className="w-full">
+        <div className="flex items-center gap-4  hover:cursor-pointer " >
           <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center">
             <Image
               alt='nodeIcon'
