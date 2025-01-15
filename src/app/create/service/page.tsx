@@ -384,7 +384,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       <form className="space-y-6 max-w-2xl md:mx-auto pb-6 mx-4" onSubmit={handleSubmit}>
       <div className="">
           <label htmlFor="service-name" className="text-sm pl-2 font-medium text-[#374151]">
-            Selected Project*
+             Project*
           </label>
           {!loadingProject ? 
           <div className="relative">
