@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select"
 import withAuth from '@/components/withAuth'
 import { ServiceCard } from "@/components/service-card"
-import { ChevronDown, Router, Plus, Layers, Server } from 'lucide-react'
+import { ChevronDown, Router, Plus, Layers, Server, RefreshCw } from 'lucide-react'
 import { NodeCard } from "@/components/node-card"
 import { getOneProject, getAllProjectNodes } from "@/app/api/projects/api"
 import { useApp } from "@/context/AppContext"
@@ -46,6 +46,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
   const [loadingServices, setLoadingServices] = useState(false)
   const [loadingProjects, setLoadingProjects] = useState(false)
   const [viewType, setViewType] = useState<ViewType>('services')
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const { auth } = useApp()
 
@@ -65,6 +66,21 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
     useEffect(()=>{
       fetchProjectDetails()
     },[auth])
+
+    const refreshRegistries = async () => {
+      setIsRefreshing(true);
+      try {
+        if (viewType==="nodes"){
+          const data = await fetchNodes()
+        }else{
+          const data = await fetchServices()
+        }
+      } catch (err) {
+        console.log("refresh failed")
+      } finally {
+        setIsRefreshing(false);
+      }
+    };
     
     const fetchNodes = async () => {
       if (!auth ) return
@@ -140,6 +156,15 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
+          <Button 
+              type="button" 
+              variant="outline" 
+              onClick={refreshRegistries} 
+              disabled={isRefreshing}
+              className="p-2"
+            >
+              <RefreshCw size={16} />
+            </Button>
           <Button 
             variant="default" 
             className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4 bg-blue-600 hover:bg-blue-600/90" 
