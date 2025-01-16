@@ -25,7 +25,6 @@ function ProfilePage() {
   const {logout, user} = useAuth()
   const handleLogout = () => {
     logout()
-    setUser(null)
   }
 
   useEffect(() => {

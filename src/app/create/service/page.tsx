@@ -503,16 +503,16 @@ const CreateService: React.FC<CreateServiceProps> = () => {
                       value={node.id.toString()}
                       disabled={node.status !== 'running'} 
                     >
-                     <div className='flex gap-2'>
+                     <div className='flex gap-3 items-center'>
                      {getProviderIcon(node.provider) && (
-                                         <Image
-                                           src={getProviderIcon(node.provider)}
-                                           alt={node.provider}
-                                           width={40}
-                                           height={40}
-                                           className="w-6 h-6 object-contain"
-                                         />
-                                       )} {node.name}  {node.status==='creating' &&'(Not Running)' } 
+                          <Image
+                            src={getProviderIcon(node.provider)}
+                            alt={node.provider}
+                            width={40}
+                            height={40}
+                            className="w-6 h-6 object-contain"
+                          />
+                        )} {node.name}  {node.status !=="running" && <span className='capitalize'>{node.status}</span>   } 
                      </div>
                     </SelectItem>
                   ))
