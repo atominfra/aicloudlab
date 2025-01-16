@@ -17,6 +17,7 @@ import Link from 'next/link'
 import azureIcon from "@/assets/azure.svg";
 import gcpIcon from "@/assets/gcp.svg";
 import awsIcon from "@/assets/aws.svg";
+
 interface NodeCardProps {
   id: number
   name: string
@@ -26,54 +27,47 @@ interface NodeCardProps {
   private_ip_address: string,
   public_ip_address: string,
   gpu: string
-  location:string
-  isDeleted: true
+  location: string
+  isDeleted: boolean
   status: string
-  fetchNodes:() => Promise<void>
+  fetchNodes: () => Promise<void>
   projectId: string
-  provider:string
+  provider: string
 }
 
-export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, public_ip_address, gpu, isDeleted, status="Running", fetchNodes, projectId, location, provider  }: NodeCardProps) {
+export function NodeCard({
+  id, name, memory, vcpus, disk, private_ip_address, public_ip_address, gpu, isDeleted, status = "Running",
+  fetchNodes, projectId, location, provider
+}: NodeCardProps) {
   const [copySuccess, setCopySuccess] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [isRunning,setIsRunning] = useState(false)
   const [open, setOpen] = useState(false)
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
   const [isError, setIsError] = useState(false)
   const [inputValue, setInputValue] = useState("")
 
   const router = useRouter()
 
-  const handleToggle = async () => {
-    setLoading(true)
-    try {
-      // await onOperation(id, operationName)
-    } catch (error) {
-      console.error("Operation failed:", error)
-    } finally {
-      setLoading(false)
-      setIsRunning(!isRunning)
+  const handleOpen = () => setOpen(true)
+  const handleClose = () => setOpen(false)
+
+  const getProviderIcon = (provider: string) => {
+    switch (provider.toLowerCase()) {
+      case 'azure':
+        return azureIcon;
+      case 'gcp':
+        return gcpIcon;
+      case 'aws':
+        return awsIcon;
+      case 'e2e':
+        return 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1736699109/e2eicon_oulyzm.png';
+      default:
+        return null;
     }
-  }
+  };
 
-    const getProviderIcon = (provider) => {
-      switch (provider.toLowerCase()) {
-        case 'azure':
-          return azureIcon;
-        case 'gcp':
-          return gcpIcon;
-        case 'aws':
-          return awsIcon;
-        case 'e2e':
-          return 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1736699109/e2eicon_oulyzm.png';
-        default:
-          return null;
-      }
-    };
-
-  const handleCopy = async () => {
+  const handleCopy = async (event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
     try {
       await navigator.clipboard.writeText(public_ip_address)
       setCopySuccess(true)
@@ -85,7 +79,7 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
     }
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (inputValue === name) {
       setLoading(true)
@@ -102,17 +96,17 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
     }
   }
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setInputValue(value)
     setIsError(value !== name)
   }
 
-  if(isDeleted === true){
+  if (isDeleted) {
     return null
   }
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: number) => {
     const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/cloud/node/${encodeURIComponent(id)}`
 
     const response = await fetch(url, {
@@ -140,141 +134,137 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
     gpu
   ].filter(Boolean).join(' • ')
 
-  const  handleSSHCopy = async(provider)=>{
-      try {
-        if(provider === 'e2e'){
-          await navigator.clipboard.writeText(`ssh root@${public_ip_address}`)
-        }else{
-          await navigator.clipboard.writeText(`ssh ubuntu@${public_ip_address}`)
-        }
-        setCopySuccess(true)
-        toast.success('SSH command copied ')
-        setTimeout(() => setCopySuccess(false), 2000)
-      } catch (err) {
-        console.error("Failed to copy text:", err)
-        toast.error('Failed to copy IP')
-      }
+  const handleSSHCopy = async (event: React.MouseEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+    try {
+      const sshCommand = provider === 'e2e' ? `ssh root@${public_ip_address}` : `ssh ubuntu@${public_ip_address}`
+      await navigator.clipboard.writeText(sshCommand)
+      setCopySuccess(true)
+      toast.success('SSH command copied')
+      setTimeout(() => setCopySuccess(false), 2000)
+    } catch (err) {
+      console.error("Failed to copy text:", err)
+      toast.error('Failed to copy SSH command')
+    }
   }
 
   return (
     <div className="bg-white border-b rounded-md p-4 w-full">
       {/* Desktop View */}
-      <div className="hidden lg:flex items-center justify-between ">
-        <Link href={`/project/${projectId}/node/${id}?projectId=${projectId}`} className="w-full  ">
-        <div className="flex items-center gap-4  hover:cursor-pointer " >
-          <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
-            {getProviderIcon(provider) && (
-                                <Image
-                                  src={getProviderIcon(provider)}
-                                  alt={provider}
-                                  width={40}
-                                  height={40}
-                                  className="w-6 h-6 object-contain"
-                                />
-                              )}
-          </div>
-          <div>
-            <h3 className="font-medium">{name}</h3>
-            <div className="flex items-center gap-4 text-sm text-gray-500">
-              <StatusBadge status={status.toLowerCase()} />
-              <span>IP: {public_ip_address}</span>
-              <button onClick={handleCopy}>
+      <div className="hidden lg:flex items-center justify-between">
+        <Link href={`/project/${projectId}/node/${id}?projectId=${projectId}`} className="w-full">
+          <div className="flex items-center gap-4 hover:cursor-pointer">
+            <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
+              {getProviderIcon(provider) && (
                 <Image
-                  alt='copyIcon'
-                  src={copyIcon}
+                  src={getProviderIcon(provider) || "/placeholder.svg"}
+                  alt={provider}
+                  width={40}
+                  height={40}
+                  className="w-6 h-6 object-contain"
                 />
-              </button>
-              <div className='flex gap-2'>
-                {specs}
+              )}
+            </div>
+            <div>
+              <h3 className="font-medium">{name}</h3>
+              <div className="flex items-center gap-4 text-sm text-gray-500">
+                <StatusBadge status={status.toLowerCase()} />
+                <span>IP: {public_ip_address}</span>
+                <button
+                  onClick={handleCopy}
+                  className="h-full w-4 focus:outline-none"
+                  aria-label="Copy IP address"
+                >
+                  <Image
+                    alt='copyIcon'
+                    src={copyIcon || "/placeholder.svg"}
+                    width={16}
+                    height={16}
+                  />
+                </button>
+                <div className='flex gap-2'>
+                  {specs}
+                </div>
               </div>
             </div>
           </div>
-        </div>
         </Link>
         <div className="flex items-center gap-2">
-          {/* <div 
-            className={`text-gray-400 p-2 hover:cursor-pointer ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-            onClick={handleToggle}
+          <button
+            className='w-[200px] rounded-full bg-gray-200 py-1 px-2 flex gap-2 items-center justify-center hover:bg-gray-300 hover:cursor-pointer'
+            onClick={handleSSHCopy}
           >
-            {isRunning ? (
-              <FaPause className="w-[20px] h-[30px] text-gray-400" />
-            ) : (
-              <FaPlay className="w-[15px] h-[20px] text-gray-400" />
-            )}
-          </div> */}
-
-          <div className='w-[200px] rounded-full bg-gray-200 py-1 px-2 flex gap-2 items-center justify-center hover:bg-gray-300 hover:cursor-pointer' onClick={()=>handleSSHCopy(location)}>
-              <Image
-                alt='copyIcon'
-                src={copyIcon}
-              />
-              <span className='text-sm text-gray-700'>Copy SSH Command</span>
-            </div>
-          <div onClick={handleOpen} className='p-2 hover:cursor-pointer'>
+            <Image
+              alt='copyIcon'
+              src={copyIcon || "/placeholder.svg"}
+              width={16}
+              height={16}
+            />
+            <span className='text-sm text-gray-700'>Copy SSH Command</span>
+          </button>
+          <button onClick={handleOpen} className='p-2 hover:cursor-pointer'>
             <MdDelete className="w-[20px] h-[30px] text-red-600" />
-          </div>
-          {/* <Button              
-            variant="outline" 
-            className={`text-gray-600 ${status !== 'running' ? "text-[#b0b0b0]":"text-[#111827] hover:text-gray-600"}`} 
-          >
-            Manage
-          </Button> */}
+          </button>
         </div>
       </div>
 
       {/* Mobile View */}
-      <div className="lg:hidden flex flex-col gap-2 ">
-      <Link href={`/project/${projectId}/node/${id}?projectId=${projectId}`} className="w-full  ">
-
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center">
+      <div className="lg:hidden flex flex-col gap-2">
+        <Link href={`/project/${projectId}/node/${id}?projectId=${projectId}`} className="w-full">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center">
+                <Image
+                  alt='nodeIcon'
+                  src={nodeIcon || "/placeholder.svg"}
+                  width={16}
+                  height={16}
+                />
+              </div>
+              <h3 className="font-medium text-sm">{name}</h3>
+            </div>
+            <StatusBadge status={status.toLowerCase()} />
+          </div>
+          
+          <div className="text-sm text-gray-500 flex items-center gap-2">
+            IP: {public_ip_address}
+            <button
+              onClick={handleCopy}
+              className="focus:outline-none"
+              aria-label="Copy IP address"
+            >
               <Image
-                alt='nodeIcon'
-                src={nodeIcon}
+                alt='copyIcon'
+                src={copyIcon || "/placeholder.svg"}
                 width={16}
                 height={16}
               />
-            </div>
-            <h3 className="font-medium text-sm">{name}</h3>
+            </button>
           </div>
-          <StatusBadge status={status.toLowerCase()} />
-        </div>
-        
-        <div className="text-sm text-gray-500">
-          IP: {public_ip_address}
-        </div>
-        
-        <div className="text-sm text-gray-500">
-          {specs}
-        </div>
+          
+          <div className="text-sm text-gray-500">
+            {specs}
+          </div>
         </Link>
         <div className="flex items-center justify-between mt-2">
           <div className="flex items-center gap-4">
-            {/* <button 
-              className={`text-gray-400 hover:cursor-pointer ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
-              onClick={handleToggle}
-            >
-              {loading ? (
-                <CircularProgress className="text-black" size={20}/> 
-              ) : isRunning ? (
-                <FaPause className="w-4 h-4 text-gray-400" />
-              ) : (
-                <FaPlay className="w-4 h-4 text-gray-400" />
-              )}
-            </button> */}
             <button onClick={handleOpen} className='text-red-600'>
               <MdDelete className="w-4 h-4" />
             </button>
           </div>
-          {/* <Button              
-            // disabled={status}
-            variant="secondary" 
-            size="sm"
-            className={`text-gray-600 ${status !== 'running' ? "opacity-50" : ""}`} 
+          <button
+            className='rounded-full bg-gray-200 py-1 px-2 flex gap-2 items-center justify-center hover:bg-gray-300 hover:cursor-pointer'
+            onClick={handleSSHCopy}
           >
-            Manage
-          </Button> */}
+            <Image
+              alt='copyIcon'
+              src={copyIcon || "/placeholder.svg"}
+              width={16}
+              height={16}
+            />
+            <span className='text-sm text-gray-700'>Copy SSH</span>
+          </button>
         </div>
       </div>
 
@@ -286,15 +276,17 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
         className="w-full h-full justify-items-center content-center"
       >
         <div className="p-6 bg-white shadow-xl rounded-[10px] item-center lg:w-[588px] m-4">
-          <p className=" flex  gap-2 items-center pr-10 pb-4 text-[18px] lg:text-[20px] font-semibold text-[#111827]">
+          <p className="flex gap-2 items-center pr-10 pb-4 text-[18px] lg:text-[20px] font-semibold text-[#111827]">
            <Image
-           alt="triangle-alert" 
-           src={trianlgeAlert}
-           className=""/>
+             alt="triangle-alert" 
+             src={trianlgeAlert || "/placeholder.svg"}
+             width={24}
+             height={24}
+           />
             <span className='pt-1'>Delete Node</span>
           </p>
           <p className="pb-4 text-[#374151] text-[15px] lg:text-base">
-          This action cannot be undone. Please type the node&apos;s name to confirm deletion:
+            This action cannot be undone. Please type the node&apos;s name to confirm deletion:
           </p>
           <div className='mb-4 h-[74px] p-4 lg:w-[535px] border-2 rounded-[4px] bg-[#F9FAFB] border-[#E5E7EB]'>
             <div className='text-[#4B5563] text-sm'>Node name:</div>
@@ -302,19 +294,19 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
           </div>
           <form onSubmit={handleSubmit}>
             <Input 
-                id="Confirm Name" 
-                placeholder="Type node name to confirm" 
-                required 
-                value={inputValue}
-                onChange={handleInputChange}
-                className="max-w-full placeholder:text-[#9CA3AF] text-sm "
-              />
+              id="Confirm Name" 
+              placeholder="Type node name to confirm" 
+              required 
+              value={inputValue}
+              onChange={handleInputChange}
+              className="max-w-full placeholder:text-[#9CA3AF] text-sm"
+            />
             <Box className="flex w-full justify-end gap-4 pt-4">
               <Button variant="outline" className='bg-[#F3F4F6] text-[#374151]' onClick={handleClose}>Cancel</Button>
               <Button 
                 variant="outline" 
                 className='bg-[#EF4444] text-neutral-100' 
-                onClick={handleSubmit}
+                type="submit"
                 disabled={loading}
               >
                 {loading ? (
