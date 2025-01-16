@@ -99,7 +99,7 @@ export default function ServiceSettings({ params }: { params: { id: string } }) 
       try {
         await deleteService(auth, params.id)
         closeDeleteModal()
-        router.push(`/project/${projectId}`)
+        router.push(`/project/${projectId}?viewType=services`)
       } catch (error) {
         console.error('Failed to delete service:', error)
       } finally {

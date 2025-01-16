@@ -309,7 +309,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       });
   
       if (response.ok) {
-        router.push(`/project/${projectId}`)
+        router.push(`/project/${projectId}?viewType=services`)
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Failed to create service');

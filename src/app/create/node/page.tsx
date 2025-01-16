@@ -289,7 +289,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         setLoading(true)
         const result = await createNode(auth, apiData)
         console.log('Node created successfully:', result)
-        router.push(`/project/${projectId}`)
+        router.push(`/project/${projectId}?viewType=nodes`)
       } catch (error) {
         console.error('Failed to create node:', error)
         setError('Failed to create node. Please try again.')

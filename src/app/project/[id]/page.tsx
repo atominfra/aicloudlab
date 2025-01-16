@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -47,21 +47,20 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
   const [viewType, setViewType] = useState<ViewType>(null)
   const [isRefreshing, setIsRefreshing] = useState(false)
 
-  useEffect(() => {
-    const savedViewType = localStorage.getItem('viewType') as ViewType
-    if (savedViewType) {
-      setViewType(savedViewType)
-    }else{
-      setViewType('services')
+  const searchParams = useSearchParams()
+  const view = searchParams.get('viewType')
 
+  useEffect(() => {
+    console.log("viewType",view)
+    if (view === 'services') {
+      setViewType('services')
+    }else if (view === 'nodes'){
+      setViewType('nodes')
+    }
+    else{
+      setViewType('services')
     }
   }, [])
-
-  useEffect(() => {
-    if (viewType !== null) {
-      localStorage.setItem('viewType', viewType)
-    }
-  }, [viewType])
 
   const { auth } = useApp()
 

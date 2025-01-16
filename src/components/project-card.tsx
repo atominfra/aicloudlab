@@ -33,7 +33,7 @@ export function ProjectCard({
   return (
     <div className="bg-white rounded-lg border border-gray-200  p-4 w-full hover:shadow-md transition-shadow duration-200" >
         <div className="flex flex-row items-center justify-between ">
-          <div className=" w-full flex space-y-4 flex-row items-center space-x-4 hover:cursor-pointer" onClick={()=> router.push(`/project/${id}`)}>
+          <div className=" w-full flex space-y-4 flex-row items-center space-x-4 hover:cursor-pointer" onClick={()=> router.push(`/project/${id}?viewType=services`)}>
             {/* Service Name with Icon */}
             <div className="flex items-center ">
               <div className=" p-2 bg-blue-50 rounded-lg flex items-center justify-center mr-3">
