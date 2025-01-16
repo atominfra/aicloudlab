@@ -574,7 +574,8 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }, [accounts])
 
   useEffect(() => {
-    router.prefetch('/dashboard/nodes')
+    router.prefetch('/dashboard/projects')
+    router.prefetch(`/project/${projectId}?viewType=nodes`)
   }, [router])
 
   return (

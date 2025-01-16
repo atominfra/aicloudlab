@@ -405,6 +405,12 @@ const CreateService: React.FC<CreateServiceProps> = () => {
     console.log("form",formData)
   },[formData])
 
+  useEffect(() => {
+    router.prefetch('/create/node');
+    router.prefetch(`/project/${projectId}?viewType=services`)
+
+  }, [router]);
+
 
   return (
     <div className='bg-neutral-100  py-12 sm:px-6 lg:px-8  '>
