@@ -34,8 +34,7 @@ interface Node {
   name: string
 }
 
-
-type ViewType = 'services' | 'nodes'
+type ViewType = 'services' | 'nodes' | null
 
 const ProjectPage = ({ params }: { params: { id: string } }) => {
   const router = useRouter()
@@ -45,90 +44,103 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
   const [loadingNodes, setLoadingNodes] = useState(false)
   const [loadingServices, setLoadingServices] = useState(false)
   const [loadingProjects, setLoadingProjects] = useState(false)
-  const [viewType, setViewType] = useState<ViewType>('services')
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [viewType, setViewType] = useState<ViewType>(null)
+  const [isRefreshing, setIsRefreshing] = useState(false)
+
+  useEffect(() => {
+    const savedViewType = localStorage.getItem('viewType') as ViewType
+    if (savedViewType) {
+      setViewType(savedViewType)
+    }
+  }, [])
+
+  useEffect(() => {
+    if (viewType !== null) {
+      localStorage.setItem('viewType', viewType)
+    }
+  }, [viewType])
 
   const { auth } = useApp()
 
   const fetchProjectDetails = async () => {
-    if (!auth ) return
+    if (!auth) return
     try {
       setLoadingProjects(true)
-      const data = await getOneProject(auth,params?.id)
+      const data = await getOneProject(auth, params?.id)
       setProjectData(data.data)
     } catch (error) {
       console.error('Failed to fetch initial data:', error)
-    } finally{
+    } finally {
       setLoadingProjects(false)
     }
   }
 
-    useEffect(()=>{
-      fetchProjectDetails()
-    },[auth])
+  useEffect(() => {
+    fetchProjectDetails()
+  }, [auth])
 
-    const refreshRegistries = async () => {
-      setIsRefreshing(true);
-      try {
-        if (viewType==="nodes"){
-          const data = await fetchNodes()
-        }else{
-          const data = await fetchServices()
-        }
-      } catch (err) {
-        console.log("refresh failed")
-      } finally {
-        setIsRefreshing(false);
+  const refreshRegistries = async () => {
+    setIsRefreshing(true)
+    try {
+      if (viewType === "nodes") {
+        const data = await fetchNodes()
+      } else {
+        const data = await fetchServices()
       }
-    };
-    
-    const fetchNodes = async () => {
-      if (!auth ) return
-      try {
-        setLoadingNodes(true)
-        const data = await getAllProjectNodes(auth, params?.id)
-        setNodes(data.data.nodes)
-      } catch (error) {
-        console.error('Failed to fetch nodes:', error)
-      }
-      setLoadingNodes(false)
+    } catch (err) {
+      console.log("refresh failed")
+    } finally {
+      setIsRefreshing(false)
     }
+  }
 
-    useEffect(()=>{
-      if(viewType === 'nodes'){
-        fetchNodes()
-      }
-    },[auth, viewType])
-
-    const fetchServices = async () => {
-      if (!auth ) return
-      try {
-        setLoadingServices(true)
-        const data = await getAllProjectServices(auth, params?.id)
-        setServices(data.data.services)
-      } catch (error) {
-        console.error('Failed to fetch services:', error)
-      }
-      setLoadingServices(false)
+  const fetchNodes = async () => {
+    if (!auth) return
+    try {
+      setLoadingNodes(true)
+      const data = await getAllProjectNodes(auth, params?.id)
+      setNodes(data.data.nodes)
+    } catch (error) {
+      console.error('Failed to fetch nodes:', error)
     }
+    setLoadingNodes(false)
+  }
 
-    useEffect(()=>{
-      if(viewType === 'services'){
-        fetchServices()
-      }
-    },[auth, viewType])
+  useEffect(() => {
+    if (viewType === 'nodes') {
+      fetchNodes()
+    }
+  }, [auth, viewType])
+
+  const fetchServices = async () => {
+    if (!auth) return
+    try {
+      setLoadingServices(true)
+      const data = await getAllProjectServices(auth, params?.id)
+      setServices(data.data.services)
+    } catch (error) {
+      console.error('Failed to fetch services:', error)
+    }
+    setLoadingServices(false)
+  }
+
+  useEffect(() => {
+    if (viewType === 'services') {
+      fetchServices()
+    }
+  }, [auth, viewType])
 
   return (
     <div className="p-4 bg-neutral-100 min-h-screen">
       <div className="flex justify-between items-center mb-6">
-         <h1 className="text-xl sm:text-2xl font-semibold">
-        {/* @ts-expect-error build */}
-         {projectData?.name && <span>Project: {projectData?.name}</span>}
+        <h1 className="text-xl sm:text-2xl font-semibold">
+          {/* @ts-expect-error build */}
+          {projectData?.name && <span>Project: {projectData?.name}</span>}
         </h1>
         <div className="flex items-center gap-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline"  className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4">
+              <Button variant="outline" className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4">
                 {viewType === 'services' ? (
                   <Layers className="h-4 w-4 sm:mr-2" />
                 ) : (
@@ -156,31 +168,39 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button 
-              type="button" 
-              variant="outline" 
-              onClick={refreshRegistries} 
-              disabled={isRefreshing}
-              className="p-2"
-            >
-              <RefreshCw size={16} />
-            </Button>
-          <Button 
-            variant="default" 
-            className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4 bg-blue-600 hover:bg-blue-600/90" 
-            onClick={() => router.push(viewType === 'services' ? `/create/service?projectId=${params.id}` : `/create/node?projectId=${params.id}`)}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={refreshRegistries}
+            disabled={isRefreshing}
+            className="p-2"
+          >
+            <RefreshCw size={16} />
+          </Button>
+          <Button
+            variant="default"
+            className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4 bg-blue-600 hover:bg-blue-600/90"
+            onClick={() =>
+              router.push(
+                viewType === 'services'
+                  ? `/create/service?projectId=${params.id}`
+                  : `/create/node?projectId=${params.id}`
+              )
+            }
           >
             <Plus className="h-4 w-4 sm:mr-2" />
             <span className="hidden sm:inline">Create {viewType === 'services' ? 'Service' : 'Node'}</span>
           </Button>
         </div>
       </div>
-      
-      {!loadingProjects && <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-medium text-[#111827]">
-          {viewType === 'services' ? 'Services Running' : 'Available Nodes'}
-        </h2>
-      </div>}
+
+      {!loadingProjects && (
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-lg font-medium text-[#111827]">
+            {viewType === 'services' ? 'Services Running' : 'Available Nodes'}
+          </h2>
+        </div>
+      )}
 
       <div className="flex flex-col gap-2 items-center h-[calc(100vh-180px)] w-full">
         {viewType === 'services' ? (
@@ -199,9 +219,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
             ))
           ) : (
             <div className="flex flex-col justify-center items-center h-full w-full">
-              <Router 
-                className="w-16 h-16 text-neutral-200 mb-4"
-              />
+              <Router className="w-16 h-16 text-neutral-200 mb-4" />
               <Typography variant="body1" className="text-gray-400 text-center">
                 No services yet
               </Typography>
@@ -236,4 +254,3 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
 }
 
 export default withAuth(ProjectPage)
-
