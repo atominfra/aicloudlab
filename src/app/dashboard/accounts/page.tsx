@@ -114,7 +114,7 @@ const CloudAccounts = () => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline"  className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4">
-                <Filter className="h-4 w-4 sm:mr-2" />
+                <Filter className="h-4 w-4 " />
                 <span className="hidden sm:inline">
                   {providerOptions.find(option => option.value === selectedProvider)?.label}
                 </span>

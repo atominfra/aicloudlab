@@ -154,9 +154,9 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4">
                 {viewType === 'services' ? (
-                  <Layers className="h-4 w-4 sm:mr-2" />
+                  <Layers className="h-4 w-4 " />
                 ) : (
-                  <Server className="h-4 w-4 sm:mr-2" />
+                  <Server className="h-4 w-4 " />
                 )}
                 <span className="hidden sm:inline">
                   {viewType === 'services' ? 'View by Services' : 'View by Nodes'}
@@ -192,7 +192,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
               )
             }
           >
-            <Plus className="h-4 w-4 sm:mr-2" />
+            <Plus className="h-4 w-4" />
             <span className="hidden sm:inline">Create {viewType === 'services' ? 'Service' : 'Node'}</span>
           </Button>
         </div>
