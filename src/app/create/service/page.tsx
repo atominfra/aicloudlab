@@ -711,14 +711,13 @@ const CreateService: React.FC<CreateServiceProps> = () => {
         {error && isNameTouched && (
           <p className="text-red-500 text-sm">{error}</p>
         )}
-      </form>
-        <div className="flex justify-end space-x-4 pt-4 max-w-2xl md:mx-auto">
+         <div className="flex justify-end space-x-4 pt-4 max-w-2xl md:mx-auto">
           <Button variant="outline" className="text-[14px]" onClick={() => window.history.back()}>Cancel</Button>
           <Button type="submit" disabled={isLoading} className="bg-[#2563EB] text-[14px]">
             {isLoading ? 'Saving...' : serviceId ? 'Update Service' : 'Deploy Service'}
           </Button>
         </div>
-      
+      </form>
     </div>
   )
 }
