@@ -141,6 +141,15 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
           {projectData?.name && <span>Project: {projectData?.name}</span>}
         </h1>
         <div className="flex items-center gap-2">
+        <Button
+            type="button"
+            variant="outline"
+            onClick={refreshRegistries}
+            disabled={isRefreshing}
+            className="p-2"
+          >
+            <RefreshCw size={16} /> <span>Refresh {viewType==='services'? "Services":"Nodes"}</span>
+          </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4">
@@ -171,15 +180,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
               </DropdownMenuCheckboxItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <Button
-            type="button"
-            variant="outline"
-            onClick={refreshRegistries}
-            disabled={isRefreshing}
-            className="p-2"
-          >
-            <RefreshCw size={16} />
-          </Button>
+          
           <Button
             variant="default"
             className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4 bg-blue-600 hover:bg-blue-600/90"
