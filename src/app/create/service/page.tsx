@@ -19,6 +19,10 @@ import { CircularProgress } from '@mui/material'
 import { useFormState } from 'react-dom'
 import { getOneProject } from '@/app/api/projects/api'
 import { getAllProjectNodes } from '@/app/api/projects/api'
+import azureIcon from "@/assets/azure.svg";
+import gcpIcon from "@/assets/gcp.svg";
+import awsIcon from "@/assets/aws.svg";
+import Image from 'next/image'
 
 interface EnvVariable {
   key: string
@@ -255,9 +259,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       setError('Please enter Cpu Limit');
       setIsLoading(false);
       return;
-    }
-
-  
+    }  
   
   
     const memoryLimit = formData.memoryLimit === 'custom' ? customMemoryLimit : formData.memoryLimit;
@@ -384,6 +386,21 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       }
     }
 
+    const getProviderIcon = (provider) => {
+      switch (provider.toLowerCase()) {
+        case 'azure':
+          return azureIcon;
+        case 'gcp':
+          return gcpIcon;
+        case 'aws':
+          return awsIcon;
+        case 'e2e':
+          return 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1736699109/e2eicon_oulyzm.png';
+        default:
+          return null;
+      }
+    };
+
   useEffect(()=>{
     console.log("form",formData)
   },[formData])
@@ -472,10 +489,30 @@ const CreateService: React.FC<CreateServiceProps> = () => {
                     <SelectValue placeholder="Select Node" />
                   )}
               </SelectTrigger>
-              <SelectContent>
-                {nodes.length > 0 ? nodes.map((node) =>         
-                  <SelectItem key={node.id} value={node.id.toString()}>{node.name}  {node.provider === 'azure' ? '(Azure)' : '(E2E)'}</SelectItem>
-                ): <SelectItem value="create_node">No node Available</SelectItem>}
+              <SelectContent >
+                {nodes.length > 0 ? (
+                  nodes.map((node) => (
+                    <SelectItem
+                      key={node.id}
+                      value={node.id.toString()}
+                      disabled={node.status !== 'running'} 
+                    >
+                     <div className='flex gap-2'>
+                     {getProviderIcon(node.provider) && (
+                                         <Image
+                                           src={getProviderIcon(node.provider)}
+                                           alt={node.provider}
+                                           width={40}
+                                           height={40}
+                                           className="w-6 h-6 object-contain"
+                                         />
+                                       )} {node.name}  {node.status==='creating' &&'(Not Running)' } 
+                     </div>
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value="create_node">No node Available</SelectItem>
+                )}
               </SelectContent>
             </Select>
             <Button 
