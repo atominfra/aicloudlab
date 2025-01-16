@@ -18,7 +18,10 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Switch } from "@/components/ui/switch"
 import Link from 'next/link'
 import { getOneProject } from '@/app/api/projects/api'
-
+import azureIcon from "@/assets/azure.svg";
+import gcpIcon from "@/assets/gcp.svg";
+import awsIcon from "@/assets/aws.svg";
+import Image from 'next/image'
 // Types
 interface OSOption {
   name: string
@@ -113,6 +116,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     volumes: false,
     securityRules: false,
   })
+
 
   const areAllRequiredFieldsFilled = () => {
     return (
@@ -569,6 +573,21 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }
   }
 
+  const getProviderIcon = (provider) => {
+    switch (provider.toLowerCase()) {
+      case 'azure':
+        return azureIcon;
+      case 'gcp':
+        return gcpIcon;
+      case 'aws':
+        return awsIcon;
+      case 'e2e':
+        return 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1736699109/e2eicon_oulyzm.png';
+      default:
+        return null;
+    }
+  };
+
   useEffect(() => {
     console.log("accounts", accounts)
   }, [accounts])
@@ -692,7 +711,20 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   </SelectTrigger>
                   <SelectContent>
                     {accounts && accounts.length > 0 ? accounts.map((cloud_account) => (
-                      <SelectItem key={cloud_account.name} value={cloud_account.name}>{`${cloud_account.name} (${capitalizeFirstCharacter(cloud_account.provider)})`}</SelectItem>
+                      <SelectItem key={cloud_account.name} value={cloud_account.name}>
+                        <div className='flex gap-3 items-center'>
+                          {getProviderIcon(cloud_account.provider) && (
+                              <Image
+                                src={getProviderIcon(cloud_account.provider)}
+                                alt={cloud_account.provider}
+                                width={40}
+                                height={40}
+                                className="w-6 h-6 object-contain"
+                              />
+                            )}
+                        {`${cloud_account.name}`}
+                        </div>
+                        </SelectItem>
                     )) : <SelectItem value="no-account-available">No Account Available</SelectItem>}
                   </SelectContent>
                 </Select>
