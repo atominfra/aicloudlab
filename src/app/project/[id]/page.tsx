@@ -51,6 +51,9 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
     const savedViewType = localStorage.getItem('viewType') as ViewType
     if (savedViewType) {
       setViewType(savedViewType)
+    }else{
+      setViewType('services')
+
     }
   }, [])
 
