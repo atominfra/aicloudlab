@@ -1,5 +1,5 @@
 "use client"
-import { ExternalLink, Server, Cpu, MemoryStickIcon as Memory, Copy, MoreHorizontal, Settings } from 'lucide-react'
+import { ExternalLink, Server, Cpu, MemoryStickIcon as Memory, Copy, MoreHorizontal, Settings, Pause, Play } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { StatusBadge } from './status-badge'
 import {
@@ -15,7 +15,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { useRouter } from 'next/navigation';
-
+import { changeServiceStatus } from '@/app/api/services/api'
+import { useState } from 'react'
+import { useApp } from '@/context/AppContext'
+import Link from 'next/link'
 interface ServiceCardProps {
   id: string
   name: string
@@ -25,7 +28,6 @@ interface ServiceCardProps {
   replicas: number
   service_url: string
   projectId:string
-  onOperation: (serviceId: string, operationName: string) => Promise<void>
   
 }
 
@@ -38,18 +40,27 @@ export function ServiceCard({
   replicas, 
   service_url,
   projectId,
-  onOperation 
 }: ServiceCardProps) {
     const router = useRouter();
-
+    const [isRunning, setIsRunning] = useState(status === "running");
+    const {auth} = useApp();
+    const handlePlayPause = async () => {
+      try {
+        const newStatus = isRunning ? "stop" : "start";
+        await changeServiceStatus(auth, id, newStatus);
+        setIsRunning(!isRunning);
+      } catch (error) {
+        console.error("Failed to change service status:", error);
+      }
+    }
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 w-full hover:shadow-sm transition-shadow duration-200">
       <div className="flex flex-col space-y-4 sm:space-y-0">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:space-x-4">
+        <Link className="flex flex-col sm:flex-row sm:items-center sm:justify-between  w-full" href={`/service/${id}/settings?projectId=${projectId}&serviceName=${name}`}>
+          <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:space-x-4 ">
             {/* Service Name with Icon */}
-            <div className="flex items-center">
+            <div className="flex items-center ">
               <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center mr-3">
                 <Server className="h-5 w-5 text-blue-600" />
               </div>
@@ -121,6 +132,14 @@ export function ServiceCard({
 
           {/* Actions */}
           <div className="flex items-center space-x-2 mt-4 sm:mt-0">
+              {/* <Button
+              variant="ghost"
+              size="icon"
+              onClick={handlePlayPause}
+              className="ml-2"
+            >
+              {isRunning ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+            </Button> */}
           <div 
               className="text-gray-600 p-2 hover:text-gray-900 hover:cursor-pointer w-full border-l border-none"
               onClick={()=> router.push(`/service/${id}/settings?projectId=${projectId}&serviceName=${name}`)}
@@ -139,7 +158,7 @@ export function ServiceCard({
             </Button> */}
 
           </div>
-        </div>
+        </Link>
       </div>
     </div>
   )

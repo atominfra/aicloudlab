@@ -148,8 +148,24 @@ export const verifyDomain = async (auth: string, domainId: number) => {
   return response.json();
 };
 
-export const deleteService = async (auth: string, domainId: string) => {
-  const response = await fetch(`${API_BASE_URL}/service/v2/${domainId}/verify`, {
+export const deleteService = async (auth: string, serviceId: string) => {
+  const response = await fetch(`${API_BASE_URL}/service/v2/${serviceId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${auth}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to add domain to service');
+  }
+  return response.json();
+};
+
+export const changeServiceStatus = async (auth: string, serviceId: string, action:string) => {
+  const response = await fetch(`${API_BASE_URL}/service/v2/${serviceId}/${action}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

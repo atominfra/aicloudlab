@@ -188,33 +188,33 @@ export default function Signup() {
           </div>
             <div className='flex md:hidden justify-center pt-12'> 
               <div className='flex items-center'>
-                        <Image
-                          src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
-                          width={30}
-                          height={30}
-                          alt="Atom Infra Logo"
-                          className='h-[22px] w-[23px]'
-                          priority
-                        />
-                        <div 
-                          className='relative text-[24px] font-[700] tracking-tight l-[30px]' 
-                          style={{ left: '-2px' }}
-                        >
-                          tom Infra
-                        </div>
-                      </div>
+                  <Image
+                    src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
+                    width={30}
+                    height={30}
+                    alt="Atom Infra Logo"
+                    className='h-[29px] w-[30px]'
+                    priority
+                  />
+                  <div 
+                    className='relative text-[29px] font-[700] tracking-tight l-[30px]' 
+                    style={{ left: '-2px' }}
+                  >
+                    tom Infra
+                  </div>
+                </div>
             </div>
           {/* Right side - Signup form */}
-          <div className="w-full max-w-xl  mx-auto h-[100vh] overflow-y-scroll no-scrollbar   flex justify-center items-center">
+          <div className="w-full max-w-xl  mx-auto h-[80vh] md:h-[100vh] overflow-y-scroll no-scrollbar   flex justify-center items-center">
             <div className="bg-white lg:p-12 p-6 rounded-[16px]  lg:shadow-xl w-full">
-              <div className="text-[28px] font-semibold  text-gray-900 h-[10%]">Sign Up</div>
+              <div className=" text-[22px] md:text-[28px] font-semibold  text-gray-900 h-[10%]">Sign Up</div>
               <h1 className="text-[15px] font-normal tracking-tight pb-4  text-gray-500" > Already have an account?  
                 <span className="text-blue-600 hover:underline hover:cursor-pointer pl-1" onClick={() => window.location.href = '/login'} >Log In</span>
               </h1>
              <div className='h-[100%]  flex flex-col justify-center items-center '>
              <form onSubmit={handleSubmit} className="  flex flex-col  justify-center items-center w-full gap-4 ">
                 <div className="space-y-2 w-[95%]">
-                  <Label htmlFor="full_name" className="text-[16px] font-medium text-gray-700">
+                  <Label htmlFor="full_name" className="hidden md:block text-[16px] font-medium text-gray-700">
                     Full Name
                   </Label>
                   <div className="relative flex items-center">
@@ -237,7 +237,7 @@ export default function Signup() {
                 </div>
 
                 <div className="space-y-2 w-[95%]">
-                  <Label htmlFor="email" className="text-[16px] font-medium text-gray-700">
+                  <Label htmlFor="email" className="hidden md:block text-[16px] font-medium text-gray-700">
                     Email
                   </Label>
                   <div className="relative flex items-center">
@@ -260,7 +260,7 @@ export default function Signup() {
                 </div>
 
                 <div className="space-y-2 w-[95%]">
-                  <Label htmlFor="phone" className="text-[16px] font-medium text-gray-700">
+                  <Label htmlFor="phone" className="text-[16px] hidden md:block font-medium text-gray-700">
                     Phone Number
                   </Label>
                   <div className="relative flex items-center">
@@ -283,7 +283,7 @@ export default function Signup() {
                 </div>
 
                 <div className="space-y-2 w-[95%]">
-                  <Label htmlFor="password" className="text-[16px] font-medium text-gray-700">
+                  <Label htmlFor="password" className="text-[16px] hidden md:block font-medium text-gray-700">
                     Password
                   </Label>
                   <div className="relative flex items-center">
@@ -313,7 +313,7 @@ export default function Signup() {
                 </div>
 
                 <div className="space-y-2 w-[95%]">
-                  <Label htmlFor="reEnterPassword" className="text-[16px] font-medium text-gray-700">
+                  <Label htmlFor="reEnterPassword" className="text-[16px] hidden md:block font-medium text-gray-700">
                     Re-enter Password
                   </Label>
                   <div className="relative flex items-center">

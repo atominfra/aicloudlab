@@ -14,7 +14,9 @@ import toast from 'react-hot-toast'
 import trianlgeAlert from "@/assets/trianlge-alert.svg" 
 import { Input } from './ui/input'
 import Link from 'next/link'
-
+import azureIcon from "@/assets/azure.svg";
+import gcpIcon from "@/assets/gcp.svg";
+import awsIcon from "@/assets/aws.svg";
 interface NodeCardProps {
   id: number
   name: string
@@ -29,9 +31,10 @@ interface NodeCardProps {
   status: string
   fetchNodes:() => Promise<void>
   projectId: string
+  provider:string
 }
 
-export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, public_ip_address, gpu, isDeleted, status="Running", fetchNodes, projectId, location }: NodeCardProps) {
+export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, public_ip_address, gpu, isDeleted, status="Running", fetchNodes, projectId, location, provider  }: NodeCardProps) {
   const [copySuccess, setCopySuccess] = useState(false)
   const [loading, setLoading] = useState(false)
   const [isRunning,setIsRunning] = useState(false)
@@ -54,6 +57,21 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
       setIsRunning(!isRunning)
     }
   }
+
+    const getProviderIcon = (provider) => {
+      switch (provider.toLowerCase()) {
+        case 'azure':
+          return azureIcon;
+        case 'gcp':
+          return gcpIcon;
+        case 'aws':
+          return awsIcon;
+        case 'e2e':
+          return 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1736699109/e2eicon_oulyzm.png';
+        default:
+          return null;
+      }
+    };
 
   const handleCopy = async () => {
     try {
@@ -122,9 +140,9 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
     gpu
   ].filter(Boolean).join(' • ')
 
-  const  handleSSHCopy = async(location)=>{
+  const  handleSSHCopy = async(provider)=>{
       try {
-        if(location === 'centralIndia'){
+        if(provider === 'e2e'){
           await navigator.clipboard.writeText(`ssh root@${public_ip_address}`)
         }else{
           await navigator.clipboard.writeText(`ssh ubuntu@${public_ip_address}`)
@@ -144,12 +162,16 @@ export function NodeCard({id, name, memory, vcpus, disk, private_ip_address, pub
       <div className="hidden lg:flex items-center justify-between ">
         <Link href={`/project/${projectId}/node/${id}?projectId=${projectId}`} className="w-full  ">
         <div className="flex items-center gap-4  hover:cursor-pointer " >
-          <div className="w-8 h-8 bg-gray-100 rounded flex items-center justify-center">
-            <Image
-              alt='nodeIcon'
-              src={nodeIcon}
-              className=''
-            />
+          <div className="w-8 h-8 bg-white rounded flex items-center justify-center">
+            {getProviderIcon(provider) && (
+                                <Image
+                                  src={getProviderIcon(provider)}
+                                  alt={provider}
+                                  width={40}
+                                  height={40}
+                                  className="w-6 h-6 object-contain"
+                                />
+                              )}
           </div>
           <div>
             <h3 className="font-medium">{name}</h3>

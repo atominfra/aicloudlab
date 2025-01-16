@@ -111,7 +111,7 @@ const CloudAccounts = () => {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-xl sm:text-2xl font-semibold">Cloud Accounts</h1>
         <div className="flex items-center gap-2">
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline"  className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4">
                 <Filter className="h-4 w-4 " />
@@ -131,7 +131,7 @@ const CloudAccounts = () => {
                 </DropdownMenuCheckboxItem>
               ))}
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
           <Button 
             variant="default" 
             className="h-10 w-10 sm:h-auto sm:w-auto sm:px-4 bg-blue-600 hover:bg-blue-600/90" 
@@ -148,7 +148,7 @@ const CloudAccounts = () => {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <Link href={`/dashboard/accounts/${account.id}/nodes?accountName=${account.name.toString()}&accountProvider=${account.provider.toString()}`} className="w-full">
               <div className="flex items-center space-x-4 w-full ">
-                <div className="w-10 h-10 rounded-lg overflow-hidden bg-gray-100 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg overflow-hidden bg-white flex items-center justify-center">
                   {getProviderIcon(account.provider) && (
                     <Image
                       src={getProviderIcon(account.provider)}

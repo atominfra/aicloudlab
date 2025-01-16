@@ -15,10 +15,11 @@ import { useApp } from '@/context/AppContext'
 import { Eye, EyeOff, Trash2, GalleryVerticalEnd, Router, RefreshCw, Plus, FolderOpen } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { fetchNodes } from '@/app/api/nodes/api'
 import { CircularProgress } from '@mui/material'
 import { useFormState } from 'react-dom'
 import { getOneProject } from '@/app/api/projects/api'
+import { getAllProjectNodes } from '@/app/api/projects/api'
+
 interface EnvVariable {
   key: string
   value: string
@@ -65,8 +66,8 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   const [nodes,setNodes] = useState([])
   const [projectData, setProjectData] = useState([])
   const [loadingProject, setLoadingProject] = useState(true)
+  const [loadingNodes, setLoadingNodes] = useState(false)
   const projectId = searchParams.get('projectId')
-
 
   const fethcProjectData = async () => {
     if (!auth) return
@@ -126,20 +127,22 @@ const CreateService: React.FC<CreateServiceProps> = () => {
 
   }, [serviceId]);
 
- useEffect(() => {
-    const fetchData = async () => {
-      if (!auth) return
-      try {
-        setIsNodeLoading(true)
-        const data = await fetchNodes(auth)
-        console.log("nodes",data)
-        setNodes(data.data.nodes)
-      } catch (error) {
-        console.error('Failed to fetch initial data:', error)
-      }
-      setIsNodeLoading(false)
+  const fetchNodeData = async () => {
+    if (!auth) return
+    try {
+      setIsNodeLoading(true)
+      const data = await getAllProjectNodes(auth,projectId )
+      console.log("nodes",data)
+      setNodes(data.data.nodes)
+    } catch (error) {
+      console.error('Failed to fetch initial data:', error)
     }
-    fetchData()
+    setIsNodeLoading(false)
+  }
+
+ useEffect(() => {
+    
+    fetchNodeData()
   }, [auth])
 
   useEffect(() => {
@@ -261,7 +264,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
     const memoryLimitRegex = /^\d+(m|g)$/;
   
     if (!memoryLimitRegex.test(memoryLimit)) {
-      setError('Memory limit must be an integer followed by "Mi" or "Gi"');
+      setError('Memory limit must be an integer followed by "m" or "g"');
       setIsLoading(false);
       return;
     }
@@ -368,6 +371,19 @@ const CreateService: React.FC<CreateServiceProps> = () => {
     }
   };
 
+
+
+    const refreshNodes = async () => {
+      try {
+        setLoadingNodes(true)
+        const data = await fetchNodeData()
+      } catch (error) {
+        console.error('Failed to fetch nodes:', error)
+      } finally {
+        setLoadingNodes(false)
+      }
+    }
+
   useEffect(()=>{
     console.log("form",formData)
   },[formData])
@@ -458,7 +474,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
               </SelectTrigger>
               <SelectContent>
                 {nodes.length > 0 ? nodes.map((node) =>         
-                  <SelectItem key={node.id} value={node.id.toString()}>{node.name}  {node.location === 'centralIndia' ? '(Azure)' : '(E2E)'}</SelectItem>
+                  <SelectItem key={node.id} value={node.id.toString()}>{node.name}  {node.provider === 'azure' ? '(Azure)' : '(E2E)'}</SelectItem>
                 ): <SelectItem value="create_node">No node Available</SelectItem>}
               </SelectContent>
             </Select>
@@ -470,6 +486,15 @@ const CreateService: React.FC<CreateServiceProps> = () => {
             >
               <Plus className="h-4 w-4" />
               <span className="sr-only">Add New Node</span>
+            </Button>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={refreshNodes} 
+              disabled={loadingNodes}
+              className="p-2"
+            >
+              <RefreshCw size={16} />
             </Button>
           </div>
         </div>
@@ -546,7 +571,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
 
         <div className="">
           <label htmlFor="memory-limit" className="pl-2 text-sm font-medium text-[#374151]">
-            Memory Limit(Mi/Gi)*
+            Memory Limit (m/g)*
           </label>
           <Select 
             value={formData.memoryLimit} 
@@ -714,7 +739,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
          <div className="flex justify-end space-x-4 pt-4 max-w-2xl md:mx-auto">
           <Button variant="outline" className="text-[14px]" onClick={() => window.history.back()}>Cancel</Button>
           <Button type="submit" disabled={isLoading} className="bg-[#2563EB] text-[14px]">
-            {isLoading ? 'Saving...' : serviceId ? 'Update Service' : 'Deploy Service'}
+            {isLoading ? 'Creating...' : serviceId ? 'Update Service' : 'Deploy Service'}
           </Button>
         </div>
       </form>

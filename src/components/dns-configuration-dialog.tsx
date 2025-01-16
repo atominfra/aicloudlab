@@ -14,9 +14,9 @@ export function DNSConfigurationDialog({ domain, nodeIp }: DNSConfigurationDialo
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <div className='text-xs flex items-center gap-1 hover:underline hover:cursor-pointer '>
+        <div className='text-xs flex items-center gap-1 hover:underline hover:cursor-pointer underline'>
           {/* <TriangleAlert className='text-yellow-200' size={18}/> */}
-          <FaTriangleExclamation className='text-yellow-200 ' size={18} />
+          <FaTriangleExclamation className='text-orange-300 ' size={14} />
           Awaiting External DNS
         </div>
       </DialogTrigger>

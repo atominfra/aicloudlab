@@ -95,7 +95,7 @@ return (
       <div className="grid grid-cols-1 gap-1">
         {services && services.length>0 ? services.map((service) => (
           // @ts-expect-error build error
-          <ServiceCard key={service.id} {...service}/>
+          <ServiceCard key={service.id} {...service} projectId={projectId}/>
         )) : <>
             <div className="flex flex-col justify-center items-center lg:h-[80vh] h-[70dvh]  w-full">
               <Server className="w-[100px] h-[100px] text-neutral-200" />

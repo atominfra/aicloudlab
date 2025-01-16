@@ -40,7 +40,7 @@ export default function ConnectAccount() {
     <div className="bg-neutral-100 min-h-screen flex  justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl w-full space-y-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold text-gray-900">Create New Notebook</h1>
+          <h1 className="text-3xl font-bold text-gray-900">Connect Account</h1>
         </div>
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {providers.map((provider) => (
