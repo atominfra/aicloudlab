@@ -51,16 +51,17 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
   const view = searchParams.get('viewType')
 
   useEffect(() => {
-    console.log("viewType",view)
-    if (view === 'services') {
+    const view = searchParams.get('viewType')
+    if (view === 'services' || view === 'nodes') {
+      setViewType(view)
+    } else {
       setViewType('services')
-    }else if (view === 'nodes'){
-      setViewType('nodes')
+      const currentParams = new URLSearchParams(window.location.search)
+      currentParams.set('viewType', 'services')
+      const newUrl = `${window.location.pathname}?${currentParams.toString()}`
+      router.push(newUrl)
     }
-    else{
-      setViewType('services')
-    }
-  }, [])
+  }, [searchParams, router])
 
   const { auth } = useApp()
 
@@ -108,12 +109,6 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
     setLoadingNodes(false)
   }
 
-  useEffect(() => {
-    if (viewType === 'nodes') {
-      fetchNodes()
-    }
-  }, [auth, viewType])
-
   const fetchServices = async () => {
     if (!auth) return
     try {
@@ -127,10 +122,19 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
   }
 
   useEffect(() => {
-    if (viewType === 'services') {
+    if (viewType === 'nodes') {
+      fetchNodes()
+    } else if (viewType === 'services') {
       fetchServices()
     }
-  }, [auth, viewType])
+  }, [viewType, auth])
+
+  const handleViewTypeChange = (newViewType: ViewType) => {
+    const currentParams = new URLSearchParams(window.location.search)
+    currentParams.set('viewType', newViewType)
+    const newUrl = `${window.location.pathname}?${currentParams.toString()}`
+    router.push(newUrl)
+  }
 
   return (
     <div className="p-4 bg-neutral-100 min-h-screen">
@@ -165,14 +169,14 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
             <DropdownMenuContent align="end" className="w-[200px]">
               <DropdownMenuCheckboxItem
                 checked={viewType === 'services'}
-                onCheckedChange={() => setViewType('services')}
+                onCheckedChange={() => handleViewTypeChange('services')}
               >
                 <Layers className="h-4 w-4 mr-2" />
                 View by Services
               </DropdownMenuCheckboxItem>
               <DropdownMenuCheckboxItem
                 checked={viewType === 'nodes'}
-                onCheckedChange={() => setViewType('nodes')}
+                onCheckedChange={() => handleViewTypeChange('nodes')}
               >
                 <Server className="h-4 w-4 mr-2" />
                 View by Nodes
@@ -257,3 +261,4 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
 }
 
 export default withAuth(ProjectPage)
+
