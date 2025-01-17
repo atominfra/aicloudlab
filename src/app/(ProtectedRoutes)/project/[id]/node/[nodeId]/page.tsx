@@ -85,7 +85,7 @@ return (
       <div className="flex justify-between items-center mb-6">
         {/* @ts-expect-error build error */}
         {nodeData?.name && <h1 className="text-2xl font-semibold"> Node: {nodeData?.name}</h1>}
-        <Button onClick={()=> router.push(`/create/service?projectId=${projectId}`)} className="bg-blue-600">Create Service</Button>
+        <Button onClick={()=> router.push(`/create/service?projectId=${projectId}&node-id=${params.nodeId}`)} className="bg-blue-600">Create Service</Button>
       </div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-lg font-medium text-[#111827]">

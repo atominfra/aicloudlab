@@ -151,7 +151,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
             disabled={isRefreshing}
             className="p-2"
           >
-            <RefreshCw size={16} /> <span>Refresh {viewType==='services'? "Services":"Nodes"}</span>
+            <RefreshCw size={16} /> <span className="hidden lg:block">Refresh {viewType==='services'? "Services":"Nodes"}</span>
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

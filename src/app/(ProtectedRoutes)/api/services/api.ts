@@ -148,6 +148,22 @@ export const verifyDomain = async (auth: string, domainId: number) => {
   return response.json();
 };
 
+export const deleteDomain = async (auth: string,serviceId: string, domainId: number) => {
+  const response = await fetch(`${API_BASE_URL}/service/v2/${serviceId}/domain/${domainId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${auth}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to delete domain');
+  }
+  return response.json();
+};
+
 export const deleteService = async (auth: string, serviceId: string) => {
   const response = await fetch(`${API_BASE_URL}/service/v2/${serviceId}`, {
     method: 'DELETE',

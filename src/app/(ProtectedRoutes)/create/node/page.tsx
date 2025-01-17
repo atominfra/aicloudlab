@@ -98,6 +98,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   ])
   const searchParams = useSearchParams()
   const projectId = searchParams.get('projectId')
+  const nodeID = searchParams.get('node-id')
   const [filteredLocations, setFilteredLocations] = useState([])
   const { auth } = useApp()
   const router = useRouter()
