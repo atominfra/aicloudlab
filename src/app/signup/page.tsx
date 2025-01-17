@@ -186,6 +186,24 @@ export default function Signup() {
                       </div>
                     </div>
           {/* Right side - Signup form */}
+           <div className='flex md:hidden justify-center pt-12'> 
+                        <div className='flex items-center'>
+                            <Image
+                              src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
+                              width={30}
+                              height={30}
+                              alt="Atom Infra Logo"
+                              className='h-[29px] w-[30px]'
+                              priority
+                            />
+                            <div 
+                              className='relative text-[29px] font-[700] tracking-tight l-[30px]' 
+                              style={{ left: '-2px' }}
+                            >
+                              tom Infra
+                            </div>
+                          </div>
+                      </div>
           <div className="w-full max-w-xl  mx-auto   overflow-y-scroll no-scrollbar  py-6  flex justify-center items-center">
             <div className="bg-white lg:p-12 p-6 rounded-[16px]  lg:shadow-xl w-full">
               <div className=" text-[22px] md:text-[28px] font-semibold  text-gray-900 h-[10%]">Sign Up</div>
