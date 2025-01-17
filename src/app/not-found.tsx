@@ -1,8 +1,12 @@
+'use client'
 import { Button } from '@/components/ui/button'
+import { useApp } from '@/context/AppContext'
 import Image from 'next/image'
 import Link from 'next/link'
  
 export default function NotFound() {
+  const {auth} = useApp()
+
   return (
     <div className="min-h-screen flex flex-col">
 
@@ -15,6 +19,7 @@ export default function NotFound() {
         Page Not Found
       </h2>
       <div className="flex flex-col sm:flex-row gap-4">
+        {auth ? 
         <Button asChild className='bg-blue-700 text-white'>
           <Link href="/dashboard">
             <svg
@@ -34,11 +39,13 @@ export default function NotFound() {
             Go to Dashboard
           </Link>
         </Button>
+        :
         <Button variant="outline" asChild className='text-blue-700 border border-blue-700'>
           <Link href="/login">
             Login/ Signup
           </Link>
         </Button>
+        }
       </div>
     </main>
 
