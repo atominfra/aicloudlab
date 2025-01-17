@@ -158,7 +158,7 @@ const CloudAccounts = () => {
           // </div>
         ) : accounts.length > 0 ? (
           accounts.map((account) => (
-            <Card key={account.id} className="p-4"  >
+            <Card key={account.id} className="p-4 hover:shadow-md transition-shadow"  >
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <Link href={`/dashboard/accounts/${account.id}/nodes?accountName=${account.name.toString()}&accountProvider=${account.provider.toString()}`} className="w-full">
                   <div className="flex items-center space-x-4 w-full ">
