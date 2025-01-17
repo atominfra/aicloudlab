@@ -20,6 +20,7 @@ import { fetchAllCloudAccounts, deleteCloudAccount } from '@/app/api/cloud/api';
 import { useApp } from '@/context/AppContext';
 import { CircularProgress, Modal, Typography } from '@mui/material';
 import Link from 'next/link';
+import Loader from "@/components/loader"
 
 const CloudAccounts = () => {
   const [selectedProvider, setSelectedProvider] = useState('all');
@@ -30,6 +31,7 @@ const CloudAccounts = () => {
   const [accountToDelete, setAccountToDelete] = useState(null);
   const [deleteConfirmation, setDeleteConfirmation] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const providerOptions = [
     { value: 'all', label: 'All Providers' },
@@ -40,8 +42,15 @@ const CloudAccounts = () => {
 
   async function fetchAccounts() {
     if (auth) {
-      const accounts = await fetchAllCloudAccounts(auth);
-      setAccounts(accounts?.data?.cloud_accounts);
+      setIsLoading(true);
+      try {
+        const accounts = await fetchAllCloudAccounts(auth);
+        setAccounts(accounts?.data?.cloud_accounts);
+      } catch (error) {
+        console.error("Error fetching accounts:", error);
+      } finally {
+        setIsLoading(false);
+      }
     }
   }
 
@@ -143,51 +152,57 @@ const CloudAccounts = () => {
         </div>
       </div>
       <div className="space-y-1">
-        {accounts.length > 0 ? accounts.map((account) => (
-          <Card key={account.id} className="p-4"  >
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <Link href={`/dashboard/accounts/${account.id}/nodes?accountName=${account.name.toString()}&accountProvider=${account.provider.toString()}`} className="w-full">
-              <div className="flex items-center space-x-4 w-full ">
-                <div className="w-10 h-10 rounded-lg overflow-hidden bg-white flex items-center justify-center">
-                  {getProviderIcon(account.provider) && (
-                    <Image
-                      src={getProviderIcon(account.provider)}
-                      alt={account.provider}
-                      width={40}
-                      height={40}
-                      className="w-6 h-6 object-contain"
-                    />
-                  )}
-                </div>
-                <div>
-                  <h3 className="font-medium">{account.name}</h3>
-                  <p className="text-sm text-gray-500">{getProviderName(account.provider)}</p>
+        {isLoading ? (
+          // <div className="flex justify-center items-center h-[60vh]">
+            <Loader />
+          // </div>
+        ) : accounts.length > 0 ? (
+          accounts.map((account) => (
+            <Card key={account.id} className="p-4"  >
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <Link href={`/dashboard/accounts/${account.id}/nodes?accountName=${account.name.toString()}&accountProvider=${account.provider.toString()}`} className="w-full">
+                  <div className="flex items-center space-x-4 w-full ">
+                    <div className="w-10 h-10 rounded-lg overflow-hidden bg-white flex items-center justify-center">
+                      {getProviderIcon(account.provider) && (
+                        <Image
+                          src={getProviderIcon(account.provider) || "/placeholder.svg"}
+                          alt={account.provider}
+                          width={40}
+                          height={40}
+                          className="w-6 h-6 object-contain"
+                        />
+                      )}
+                    </div>
+                    <div>
+                      <h3 className="font-medium">{account.name}</h3>
+                      <p className="text-sm text-gray-500">{getProviderName(account.provider)}</p>
+                    </div>
+                  </div>
+                </Link>
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
+                  {/* <Button 
+                    variant="secondary" 
+                    size="sm" 
+                    className="text-gray-600 w-full sm:w-auto"
+                    onClick={() => router.push(`/dashboard/accounts/${account.id}/nodes`)}
+                  >
+                    <Eye className="h-4 w-4 mr-2" />
+                    View Nodes
+                  </Button> */}
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-red-600 hover:text-red-700 bg-red-100 hover:bg-red-50 w-full sm:w-auto"
+                    onClick={() => openDeleteModal(account)}
+                  >
+                    <Unplug className="h-4 w-4 mr-2" />
+                    Disconnect
+                  </Button>
                 </div>
               </div>
-              </Link>
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 w-full sm:w-auto">
-                {/* <Button 
-                  variant="secondary" 
-                  size="sm" 
-                  className="text-gray-600 w-full sm:w-auto"
-                  onClick={() => router.push(`/dashboard/accounts/${account.id}/nodes`)}
-                >
-                  <Eye className="h-4 w-4 mr-2" />
-                  View Nodes
-                </Button> */}
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="text-red-600 hover:text-red-700 bg-red-100 hover:bg-red-50 w-full sm:w-auto"
-                  onClick={() => openDeleteModal(account)}
-                >
-                  <Unplug className="h-4 w-4 mr-2" />
-                  Disconnect
-                </Button>
-              </div>
-            </div>
-          </Card>
-        )) : (
+            </Card>
+          ))
+        ) : (
           <div className="flex flex-col justify-center items-center h-[80vh] w-full">
             <Cloud className="w-16 h-16 text-neutral-200 mb-4" />
             <Typography variant="body1" className="text-gray-400 text-center">
