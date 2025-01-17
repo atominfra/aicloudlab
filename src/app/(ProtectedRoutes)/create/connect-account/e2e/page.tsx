@@ -11,36 +11,14 @@ import { createCloudAccount } from '@/app/(ProtectedRoutes)/api/cloud/api';
 import { useApp } from '@/context/AppContext';
 import { ToggleableInput } from '@/components/ToggleableInput';
 
-type FormData = {
-  name: string;
-  api_key: string;
-  jwt_token: string;
-};
-
 export default function CloudProviderForm() {
   const { auth } = useApp();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [data, setData] = useState<FormData>({
-    name: '',
-    api_key: '',
-    jwt_token: '',
-  });
-
-  const placeholderMap: Record<string, string> = {
-    name: 'Enter name',
-    api_key: 'Enter API key ',
-    jwt_token: 'Enter  JWT token ',
-  };
-
-  const handleDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const [name, setName] = useState('');
+  const [apiKey, setApiKey] = useState('');
+  const [jwtToken, setJwtToken] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,12 +26,12 @@ export default function CloudProviderForm() {
 
     try {
       const apiData = {
-        name: data.name,
+        name,
         provider: 'e2e',
         providerText: 'E2E Networks',
         credentials: {
-          api_key: data.api_key,
-          jwt_token: data.jwt_token,
+          api_key: apiKey,
+          jwt_token: jwtToken,
         },
       };
 
@@ -63,7 +41,7 @@ export default function CloudProviderForm() {
       router.push('/dashboard/accounts');
     } catch (error) {
       console.error('Error connecting account:', error);
-      setError('An error occurred while creating the cluster')
+      setError('An error occurred while creating the cluster');
     } finally {
       setIsLoading(false);
     }
@@ -80,44 +58,44 @@ export default function CloudProviderForm() {
           <CardContent>
             <div className="pt-4">
               <form onSubmit={handleSubmit} className="space-y-4">
-                {Object.entries(data).map(([field, value]) => (
-                  <div key={field} className="space-y-2">
-                    <Label htmlFor={field}>
-                      {field
-                        .replace('_', ' ')
-                        .split(' ')
-                        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                        .join(' ')}
-                    </Label>
-                    {field === 'api_key' || field === 'jwt_token' ? (
-                      <ToggleableInput
-                        id={field}
-                        name={field}
-                        label={field
-                          .replace('_', ' ')
-                          .split(' ')
-                          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-                          .join(' ')}
-                        placeholder={placeholderMap[field]}
-                        value={value}
-                        onChange={handleDataChange}
-                        required
-                      />
-                    ) : (
-                      <Input
-                        id={field}
-                        name={field}
-                        placeholder={placeholderMap[field]}
-                        value={value}
-                        onChange={handleDataChange}
-                        required
-                      />
-                    )}
-                  </div>
-                ))}
-                   {error && (
-                      <p className="text-red-500 text-sm">{error}</p>
-                    )}  
+                <div className="space-y-2">
+                  <Label htmlFor="name">Name</Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    placeholder="Enter name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="api_key">API Key</Label>
+                  <ToggleableInput
+                    id="api_key"
+                    name="api_key"
+                    placeholder="Enter API key"
+                    value={apiKey}
+                    onChange={(e) => setApiKey(e.target.value)}
+                    required
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="jwt_token">JWT Token</Label>
+                  <ToggleableInput
+                    id="jwt_token"
+                    name="jwt_token"
+                    placeholder="Enter JWT token"
+                    value={jwtToken}
+                    onChange={(e) => setJwtToken(e.target.value)}
+                    required
+                  />
+                </div>
+
+                {error && <p className="text-red-500 text-sm">{error}</p>}
+
                 <div className="w-full text-end">
                   <Button type="submit" className="bg-[#2563EB]" disabled={isLoading}>
                     {isLoading ? 'Connecting...' : 'Connect Account'}
