@@ -150,62 +150,43 @@ export default function Signup() {
   return (
     <div className="min-h-screen relative w-full bg-[#DBEAFE] md:bg-gradient-to-br from-[#DBEAFE] to-white">
       <div className="container mx-auto min-h-screen lg:max-w-[93vw]">
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8  items-center px-8">
-          {/* Left side - Features */}
-          <div className="hidden  pr-12  md:flex flex-col  lg:p-12 p-6" >
-          <div className=" h-[20vh] w-[50vw]   hidden lg:block">
-            <div className='flex items-center'>
-              <Image
-                src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
-                width={30}
-                height={30}
-                alt="Atom Infra Logo"
-                className='h-[47px] w-[48px]'
-                priority
-              />
-              <div className='relative text-[49px] font-[700] tracking-tight l-[30px]' style={{ left: '-2px' }}>
-                tom Infra
-              </div>
-            </div>
-          </div>
-           <div className='flex flex-col h-full justify-center  gap-8'>
-           <Feature
-              icon={<ArrowLeftRight className="h-6 w-6 text-[#2563EB]" />}
-              title="Flexibility"
-              description="Switch between compute providers easily as your needs change without being locked in."
-            />
-            <Feature
-              icon={<Users className="h-6 w-6 text-[#2563EB]" />}
-              title="User-Friendly Interface"
-              description="Manage deployments through a simple interface built for humans, not just engineers."
-            />
-            <Feature
-              icon={<PiggyBank className="h-6 w-6 text-[#2563EB]" />}
-              title="Cost Savings"
-              description="Choose the most cost-effective provider and save money."
-            />
-           </div>
-          </div>
-            <div className='flex md:hidden justify-center pt-12'> 
-              <div className='flex items-center'>
-                  <Image
-                    src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
-                    width={30}
-                    height={30}
-                    alt="Atom Infra Logo"
-                    className='h-[29px] w-[30px]'
-                    priority
-                  />
-                  <div 
-                    className='relative text-[29px] font-[700] tracking-tight l-[30px]' 
-                    style={{ left: '-2px' }}
-                  >
-                    tom Infra
-                  </div>
-                </div>
-            </div>
+             <div className="hidden pr-12 md:flex flex-col lg:p-12 p-6">
+                      <div className='flex flex-col  justify-center gap-8'>
+                        {/* <Feature
+                          icon={<ArrowLeftRight className="h-6 w-6 text-[#2563EB]" />}
+                          title="Vercel for AI Deployment"
+                          description="Seamlessly manage deployments across various providers through a consistent and user-friendly interface"
+                        /> */}
+                          <div className='flex items-center justify-center '>
+                        <Image
+                          src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
+                          width={30}
+                          height={30}
+                          alt="Atom Infra Logo"
+                          className='h-[47px] w-[48px]'
+                          priority
+                        />
+                        <div className='relative text-[49px] font-[700] tracking-tight l-[30px]' style={{ left: '-2px' }}>
+                          tom Infra
+                        </div>
+                      </div>
+                        <div className='text-center text-[35px] font-semibold text-gray-900 '>Vercel for AI Deployments</div>
+                        {/* <Feature
+                          icon={<Users className="h-6 w-6 text-[#2563EB]" />}
+                          title="User-Friendly Interface"
+                          description="Manage deployments through a simple interface built for humans, not just engineers."
+                        />
+                        <Feature
+                          icon={<PiggyBank className="h-6 w-6 text-[#2563EB]" />}
+                          title="Cost Savings"
+                          description="Choose the most cost-effective provider and save money."
+                        /> */}
+                      </div>
+                    </div>
           {/* Right side - Signup form */}
-          <div className="w-full max-w-xl  mx-auto h-[80vh] md:h-[100vh] overflow-y-scroll no-scrollbar   flex justify-center items-center">
+          <div className="w-full max-w-xl  mx-auto   overflow-y-scroll no-scrollbar  py-6  flex justify-center items-center">
             <div className="bg-white lg:p-12 p-6 rounded-[16px]  lg:shadow-xl w-full">
               <div className=" text-[22px] md:text-[28px] font-semibold  text-gray-900 h-[10%]">Sign Up</div>
               <h1 className="text-[15px] font-normal tracking-tight pb-4  text-gray-500" > Already have an account?  

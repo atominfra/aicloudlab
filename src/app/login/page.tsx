@@ -26,10 +26,10 @@ interface FeatureProps {
 }
 
 const Feature = ({ icon, title, description }: FeatureProps) => (
-  <div className="flex items-start space-x-4 mb-8 ">
-    <div className="mt-1 p-2 bg-sky-200 rounded-lg relative bottom-[6px]">
+  <div className="flex items-start space-x-4 mb-2 ">
+    {/* <div className="mt-1 p-2 bg-sky-200 rounded-lg relative bottom-[6px]">
       {icon}
-    </div>
+    </div> */}
     <div>
       <h3 className="text-2xl font-semibold text-gray-900 mb-1">{title}</h3>
       <p className="text-lg text-gray-600 leading-relaxed">{description}</p>
@@ -97,11 +97,18 @@ export default function Login() {
   return (
     <div className="min-h-screen relative w-full bg-[#DBEAFE] md:bg-gradient-to-br from-[#DBEAFE] to-white">
       <div className="container mx-auto min-h-screen lg:max-w-[93vw]">
+    
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center px-8">
+          
           {/* Left side - Features */}
           <div className="hidden pr-12 md:flex flex-col lg:p-12 p-6">
-          <div className="h-[20vh] w-[50vw] hidden lg:block">
-            <div className='flex items-center'>
+            <div className='flex flex-col  justify-center gap-8'>
+              {/* <Feature
+                icon={<ArrowLeftRight className="h-6 w-6 text-[#2563EB]" />}
+                title="Vercel for AI Deployment"
+                description="Seamlessly manage deployments across various providers through a consistent and user-friendly interface"
+              /> */}
+                <div className='flex items-center justify-center '>
               <Image
                 src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
                 width={30}
@@ -114,14 +121,8 @@ export default function Login() {
                 tom Infra
               </div>
             </div>
-          </div>
-            <div className='flex flex-col h-full justify-center gap-8'>
-              <Feature
-                icon={<ArrowLeftRight className="h-6 w-6 text-[#2563EB]" />}
-                title="Flexibility"
-                description="Switch between compute providers easily as your needs change without being locked in."
-              />
-              <Feature
+              <div className='text-center text-[35px] font-semibold text-gray-900 '>Vercel for AI Deployments</div>
+              {/* <Feature
                 icon={<Users className="h-6 w-6 text-[#2563EB]" />}
                 title="User-Friendly Interface"
                 description="Manage deployments through a simple interface built for humans, not just engineers."
@@ -130,7 +131,7 @@ export default function Login() {
                 icon={<PiggyBank className="h-6 w-6 text-[#2563EB]" />}
                 title="Cost Savings"
                 description="Choose the most cost-effective provider and save money."
-              />
+              /> */}
             </div>
           </div>
 
