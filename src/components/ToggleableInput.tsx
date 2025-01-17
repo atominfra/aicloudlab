@@ -5,11 +5,8 @@ import { Eye, EyeOff } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 
-interface ToggleableInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label: string;
-}
 
-export function ToggleableInput({ label, ...props }: ToggleableInputProps) {
+export function ToggleableInput({...props }) {
   const [showInput, setShowInput] = useState(false)
 
   return (

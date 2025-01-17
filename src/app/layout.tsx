@@ -9,17 +9,7 @@ const poppins =Poppins({
   subsets: ["latin"],
   weight: ["400","900","800","700","600","500","400","300","200"],
 });
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
 
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
 
 export const metadata = {
   title: "Atom Infra | Democratising Compute",
