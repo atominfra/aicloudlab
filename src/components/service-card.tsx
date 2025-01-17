@@ -15,7 +15,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { useRouter } from 'next/navigation';
-import { changeServiceStatus } from '@/app/api/services/api'
+import { changeServiceStatus } from '@/app/(ProtectedRoutes)/api/services/api'
 import { useState } from 'react'
 import { useApp } from '@/context/AppContext'
 import Link from 'next/link'

@@ -10,9 +10,9 @@ export default function Providers({ children }) {
     <>
       <AuthProvider>
         <AppProvider>
-          <RootLayout>
+          {/* <RootLayout> */}
             {children}
-          </RootLayout>
+          {/* </RootLayout> */}
         </AppProvider>
       </AuthProvider>
     </>
