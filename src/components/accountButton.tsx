@@ -7,6 +7,7 @@ import ConfirmationModal from "./modals/ConfirmationModal";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useApp } from "@/context/AppContext";
+import { DeleteModal } from "./delete-modal";
 const AccountButton = ({ account , userName, api}) => {
   const [isConnecting, setIsConnecting] = useState(false);
   const [isRevoking, setIsRevoking] = useState(false);
@@ -108,6 +109,14 @@ const AccountButton = ({ account , userName, api}) => {
         account={account} 
         onConfirm={handleRevoke}
         isRevoking={isRevoking}/>
+        <DeleteModal
+        isOpen={isModalOpen}
+        onDelete={handleRevoke}
+        isLoading={isRevoking}
+        name={userName}
+        onClose={()=>setIsModalOpen(false)}
+        type="Account"
+        />
     </div>
   );
 };

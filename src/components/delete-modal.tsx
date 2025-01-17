@@ -16,7 +16,7 @@ interface DeleteNodeModalProps {
   type:string
 }
 
-export function DeleteNodeModal({ isOpen, onClose, onDelete, name, isLoading, type }: DeleteNodeModalProps) {
+export function DeleteModal({ isOpen, onClose, onDelete, name, isLoading, type }: DeleteNodeModalProps) {
   const [inputValue, setInputValue] = useState('')
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -50,16 +50,16 @@ export function DeleteNodeModal({ isOpen, onClose, onDelete, name, isLoading, ty
          <span className='pt-1 capitalize'>Delete {type}</span>
        </p>
        <p className="pb-4 text-[#374151] text-[15px] lg:text-base">
-       This action cannot be undone. Please type the node&apos;s name to confirm deletion:
+       This action cannot be undone. Please type the {type}&apos;s name to confirm deletion:
        </p>
        <div className='mb-4 h-[74px] p-4 lg:w-[535px] border-2 rounded-[4px] bg-[#F9FAFB] border-[#E5E7EB]'>
-         <div className='text-[#4B5563] text-sm'>Node name:</div>
+         <div className='text-[#4B5563] text-sm'>{type} name:</div>
          <div className='font-medium text-[#111827] text-base'>{name}</div>
        </div>
        <form onSubmit={handleSubmit}>
          <Input 
              id="Confirm Name" 
-             placeholder="Type node name to confirm" 
+             placeholder={`Type ${type} name to confirm`} 
              required 
              value={inputValue}
              onChange={handleInputChange}
