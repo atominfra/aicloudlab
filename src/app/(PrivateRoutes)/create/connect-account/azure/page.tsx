@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { createCloudAccount } from '@/app/(ProtectedRoutes)/api/cloud/api';
+import { createCloudAccount } from '@/app/(PrivateRoutes)/api/cloud/api';
 import { useApp } from '@/context/AppContext';
 import { ToggleableInput } from '@/components/ToggleableInput';
 

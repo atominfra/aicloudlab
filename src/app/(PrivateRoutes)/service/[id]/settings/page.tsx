@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { RefreshCcw, Trash2, ExternalLink } from 'lucide-react'
 import { DNSConfigurationDialog } from '@/components/dns-configuration-dialog'
-import { getServiceDomains, addDomainToService, verifyDomain, deleteService } from '@/app/(ProtectedRoutes)/api/services/api'
+import { getServiceDomains, addDomainToService, verifyDomain, deleteService } from '@/app/(PrivateRoutes)/api/services/api'
 import { useApp } from '@/context/AppContext'
 import { toast } from 'react-hot-toast'
 import { DeleteModal } from '@/components/delete-modal'
-import { deleteDomain } from '@/app/(ProtectedRoutes)/api/services/api'
+import { deleteDomain } from '@/app/(PrivateRoutes)/api/services/api'
 interface Domain {
   domain_name: string
   status: boolean

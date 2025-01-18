@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Pencil, AlertTriangle } from 'lucide-react'
-import { getOneProject, updateProject, deleteProject } from '@/app/(ProtectedRoutes)/api/projects/api'
+import { getOneProject, updateProject, deleteProject } from '@/app/(PrivateRoutes)/api/projects/api'
 import { useApp } from '@/context/AppContext'
 import Loader from '@/components/loader'
 import { CircularProgress, Modal } from '@mui/material'

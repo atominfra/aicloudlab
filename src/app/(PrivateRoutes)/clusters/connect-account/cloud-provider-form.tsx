@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useRouter } from 'next/navigation'
-import { createCloudAccount } from '@/app/(ProtectedRoutes)/api/cloud/api'
+import { createCloudAccount } from '@/app/(PrivateRoutes)/api/cloud/api'
 import { useApp } from '@/context/AppContext'
 type CloudProvider = 'aws' | 'gcp' | 'azure'
 

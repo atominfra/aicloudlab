@@ -16,7 +16,7 @@ import azureIcon from "@/assets/azure.svg";
 import gcpIcon from "@/assets/gcp.svg";
 import awsIcon from "@/assets/aws.svg";
 import { useRouter } from 'next/navigation';
-import { fetchAllCloudAccounts, deleteCloudAccount } from '@/app/(ProtectedRoutes)/api/cloud/api';
+import { fetchAllCloudAccounts, deleteCloudAccount } from '@/app/(PrivateRoutes)/api/cloud/api';
 import { useApp } from '@/context/AppContext';
 import { CircularProgress, Modal, Typography } from '@mui/material';
 import Link from 'next/link';

@@ -15,10 +15,10 @@ import withAuth from '@/components/withAuth'
 import { ServiceCard } from "@/components/service-card"
 import { ChevronDown, Router, Plus, Layers, Server, RefreshCw } from 'lucide-react'
 import { NodeCard } from "@/components/node-card"
-import { getOneProject, getAllProjectNodes } from "@/app/(ProtectedRoutes)/api/projects/api"
+import { getOneProject, getAllProjectNodes } from "@/app/(PrivateRoutes)/api/projects/api"
 import { useApp } from "@/context/AppContext"
 import Loader from "@/components/loader"
-import { getAllProjectServices } from "@/app/(ProtectedRoutes)/api/services/api"
+import { getAllProjectServices } from "@/app/(PrivateRoutes)/api/services/api"
 import { Typography } from "@mui/material"
 import Image from "next/image"
 import noNodesIcon from "@/assets/noNodesIcon.svg"

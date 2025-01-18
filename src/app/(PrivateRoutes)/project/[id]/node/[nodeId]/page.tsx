@@ -10,8 +10,8 @@ import { Typography } from "@mui/material"
 import { FolderOpen, Server } from "lucide-react"
 import Loader from "@/components/loader"
 import { useApp } from "@/context/AppContext"
-import { getAllNodeServices } from "@/app/(ProtectedRoutes)/api/services/api"
-import { fetchNode } from "@/app/(ProtectedRoutes)/api/nodes/api"
+import { getAllNodeServices } from "@/app/(PrivateRoutes)/api/services/api"
+import { fetchNode } from "@/app/(PrivateRoutes)/api/nodes/api"
 import { ServiceCard } from "@/components/service-card"
 
 interface Node {

@@ -9,15 +9,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Eye, EyeOff, FolderOpen, Plus, RefreshCw, Trash2 } from 'lucide-react'
-import { fetchOSOptions, fetchPlans, createNode, fetchPrice } from '@/app/(ProtectedRoutes)/api/nodes/api'
-import { getAllProjects } from '@/app/(ProtectedRoutes)/api/projects/api'
-import { fetchAllCloudAccounts } from '@/app/(ProtectedRoutes)/api/cloud/api'
+import { fetchOSOptions, fetchPlans, createNode, fetchPrice } from '@/app/(PrivateRoutes)/api/nodes/api'
+import { getAllProjects } from '@/app/(PrivateRoutes)/api/projects/api'
+import { fetchAllCloudAccounts } from '@/app/(PrivateRoutes)/api/cloud/api'
 import { useApp } from '@/context/AppContext'
 import { CircularProgress } from '@mui/material'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Switch } from "@/components/ui/switch"
 import Link from 'next/link'
-import { getOneProject } from '@/app/(ProtectedRoutes)/api/projects/api'
+import { getOneProject } from '@/app/(PrivateRoutes)/api/projects/api'
 import azureIcon from "@/assets/azure.svg";
 import gcpIcon from "@/assets/gcp.svg";
 import awsIcon from "@/assets/aws.svg";

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/select"
 import { useRouter } from 'next/navigation'
 import { useApp } from '@/context/AppContext'
-import { fetchAllCloudAccounts } from '@/app/(ProtectedRoutes)/api/cloud/api'
+import { fetchAllCloudAccounts } from '@/app/(PrivateRoutes)/api/cloud/api'
 import { CircularProgress } from '@mui/material'
 
 export default function CreateClusterPage() {

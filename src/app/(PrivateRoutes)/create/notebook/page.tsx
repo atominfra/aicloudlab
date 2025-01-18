@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select"
 import Image from "next/image"
 import { useRouter } from 'next/navigation'
-import { createNotebook } from '@/app/(ProtectedRoutes)/api/notebooks/api'
+import { createNotebook } from '@/app/(PrivateRoutes)/api/notebooks/api'
 import { useApp } from '@/context/AppContext'
 import notebookInput from "@/assets/notebookInput.svg"
 import githubInput from "@/assets/githubInput.svg"

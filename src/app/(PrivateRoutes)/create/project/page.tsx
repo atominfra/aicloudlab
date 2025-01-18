@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
 import { useRouter } from 'next/navigation'
-import { createProject } from '@/app/(ProtectedRoutes)/api/projects/api'
+import { createProject } from '@/app/(PrivateRoutes)/api/projects/api'
 import { useApp } from '@/context/AppContext'
 import notebookInput from "@/assets/notebookInput.svg"
 import githubInput from "@/assets/githubInput.svg"

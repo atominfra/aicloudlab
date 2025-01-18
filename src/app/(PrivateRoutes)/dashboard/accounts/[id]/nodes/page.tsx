@@ -8,7 +8,7 @@ import noNodesIcon from "@/assets/noNodesIcon.svg"
 import Image from "next/image"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useApp } from "@/context/AppContext"
-import { fetchNodesForAccount, fetchCloudAccount } from "@/app/(ProtectedRoutes)/api/cloud/api"
+import { fetchNodesForAccount, fetchCloudAccount } from "@/app/(PrivateRoutes)/api/cloud/api"
 import loader from '@/assets/LoaderAtomInfra.gif';
 
 interface Node {

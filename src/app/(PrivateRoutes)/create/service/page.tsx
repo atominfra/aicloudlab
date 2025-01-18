@@ -17,8 +17,8 @@ import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { CircularProgress } from '@mui/material'
 import { useFormState } from 'react-dom'
-import { getOneProject } from '@/app/(ProtectedRoutes)/api/projects/api'
-import { getAllProjectNodes } from '@/app/(ProtectedRoutes)/api/projects/api'
+import { getOneProject } from '@/app/(PrivateRoutes)/api/projects/api'
+import { getAllProjectNodes } from '@/app/(PrivateRoutes)/api/projects/api'
 import azureIcon from "@/assets/azure.svg";
 import gcpIcon from "@/assets/gcp.svg";
 import awsIcon from "@/assets/aws.svg";
