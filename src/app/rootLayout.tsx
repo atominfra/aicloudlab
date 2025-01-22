@@ -29,8 +29,8 @@ export default function RootLayout({children}) {
               hideMobileNavs ? 'h-[100vh]' : 'h-[92vh]'
             } lg:h-auto`}
           >
-            {children}
           </main>
+            {children}
           {/* {!hideMobileNavs && <MobileBottomBar/>} */}
         </div>
       </div>

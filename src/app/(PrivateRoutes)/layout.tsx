@@ -1,7 +1,9 @@
 'use client';
+import { DashboardSidebar } from '@/components/dashboard-sidebar';
 import Loader from '@/components/loader';
 import MobileTopBar from '@/components/mobileTopBar';
 import { Sidebar } from '@/components/sidebar';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import withAuth from '@/components/withAuth';
 import { useApp } from '@/context/AppContext';
 import { usePathname } from 'next/navigation';
@@ -16,12 +18,16 @@ const  Layout = ({children}) => {
 
       return (
         <div className="flex h-screen bg-neutral-100 text-foreground">
-        {!hideSidebar && (
+           <SidebarProvider>
+          <DashboardSidebar />
+          <SidebarInset>{children}</SidebarInset>
+        </SidebarProvider>
+        {/* {!hideSidebar && (
           <div className="lg:w-[15vw] bg-neutral-100">
             <Sidebar />
           </div>
-        )}
-        <div className={`${hideSidebar ? 'w-full' : 'lg:w-[85vw] w-[100vw]'} bg-neutral-100`}>
+        )} */}
+        {/* <div className={`${hideSidebar ? 'w-full' : 'lg:w-[85vw] w-[100vw]'} bg-neutral-100`}>
           { !hideMobileNavs && <MobileTopBar />}
           <main
             className={`flex-1 overflow-y-scroll bg-neutral-100 ${
@@ -30,8 +36,7 @@ const  Layout = ({children}) => {
           >
             {children}
           </main>
-          {/* {!hideMobileNavs && <MobileBottomBar/>} */}
-        </div>
+        </div> */}
       </div>
       )
 
