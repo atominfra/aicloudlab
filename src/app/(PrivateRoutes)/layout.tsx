@@ -18,7 +18,7 @@ const  Layout = ({children}) => {
 
       return (
         <div className="flex h-screen bg-neutral-100 text-foreground">
-           <SidebarProvider>
+          <SidebarProvider>
           <DashboardSidebar />
           <SidebarInset>{children}</SidebarInset>
         </SidebarProvider>

@@ -30,12 +30,12 @@ const navigation = [
                 href={item.href}
                 className={`
                   group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors
-                  ${isActive ? "bg-blue-50 text-blue-600" : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"}
+                  ${isActive ? "bg-blue-600 text-white" : "text-gray-700 hover:bg-gray-100"}
                 `}
               >
                 <Icon
                   className={`h-5 w-5 flex-shrink-0 ${
-                    isActive ? "text-blue-600" : "text-gray-500 group-hover:text-gray-900"
+                    isActive ? "bg-blue-600 text-white" : "text-gray-700 hover:bg-gray-100"
                   }`}
                 />
                 {item.name}

@@ -19,6 +19,7 @@ import { changeServiceStatus } from '@/app/(PrivateRoutes)/api/services/api'
 import { useState } from 'react'
 import { useApp } from '@/context/AppContext'
 import Link from 'next/link'
+import { useSidebar } from './ui/sidebar'
 interface ServiceCardProps {
   id: string
   name: string
@@ -41,6 +42,7 @@ export function ServiceCard({
   service_url,
   projectId,
 }: ServiceCardProps) {
+  const { toggleSidebar, state } = useSidebar()
     const router = useRouter();
     const [isRunning, setIsRunning] = useState(status === "running");
     const {auth} = useApp();
@@ -53,11 +55,16 @@ export function ServiceCard({
         console.error("Failed to change service status:", error);
       }
     }
-
+    const handleCLick = ()=>{
+      if(state === 'expanded'){
+        toggleSidebar()
+      }
+      router.push(`/service/dashboard`)
+    }
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 w-full hover:shadow-sm transition-shadow duration-200">
       <div className="flex  space-y-4 sm:space-y-0 w-full">
-        <Link className="flex flex-col sm:flex-row sm:items-center sm:justify-between  w-full " href={`/service/dashboard`}>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between  w-full hover:cursor-pointer"  onClick={handleCLick}>
           <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:space-x-4 ">
             {/* Service Name with Icon */}
             <div className="flex items-center ">
@@ -131,7 +138,7 @@ export function ServiceCard({
           </div>
 
           {/* Actions */}
-        </Link>
+        </div>
         <div className="flex items-center space-x-2 mt-4 sm:mt-0">
               {/* <Button
               variant="ghost"
