@@ -56,8 +56,8 @@ export function ServiceCard({
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 w-full hover:shadow-sm transition-shadow duration-200">
-      <div className="flex flex-col space-y-4 sm:space-y-0">
-        <Link className="flex flex-col sm:flex-row sm:items-center sm:justify-between  w-full" href={`/service/${id}/settings?projectId=${projectId}&serviceName=${name}`}>
+      <div className="flex  space-y-4 sm:space-y-0 w-full">
+        <Link className="flex flex-col sm:flex-row sm:items-center sm:justify-between  w-full " href={`/service/dashboard`}>
           <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:space-x-4 ">
             {/* Service Name with Icon */}
             <div className="flex items-center ">
@@ -131,7 +131,8 @@ export function ServiceCard({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center space-x-2 mt-4 sm:mt-0">
+        </Link>
+        <div className="flex items-center space-x-2 mt-4 sm:mt-0">
               {/* <Button
               variant="ghost"
               size="icon"
@@ -158,8 +159,8 @@ export function ServiceCard({
             </Button> */}
 
           </div>
-        </Link>
       </div>
+      
     </div>
   )
 }
