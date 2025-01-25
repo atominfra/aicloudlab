@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { createCloudAccount } from '@/app/(PrivateRoutes)/api/cloud/api';
 import { useApp } from '@/context/AppContext';
 import { ToggleableInput } from '@/components/ToggleableInput';
+import { Documentation } from '@/components/documetation';
 
 export default function AzurePage() {
   const { auth } = useApp();
@@ -133,6 +134,9 @@ export default function AzurePage() {
             </div>
           </CardContent>
         </Card>
+        <div className="py-4">
+          <Documentation  provider='azure'/>
+        </div>
       </div>
     </div>
   );

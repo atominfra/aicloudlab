@@ -1,55 +1,56 @@
-'use client';
+"use client"
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { createCloudAccount } from '@/app/(PrivateRoutes)/api/cloud/api';
-import { useApp } from '@/context/AppContext';
-import { ToggleableInput } from '@/components/ToggleableInput';
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { createCloudAccount } from "@/app/(PrivateRoutes)/api/cloud/api"
+import { useApp } from "@/context/AppContext"
+import { ToggleableInput } from "@/components/ToggleableInput"
+import { Documentation } from "@/components/documetation"
 
 export default function CloudProviderForm() {
-  const { auth } = useApp();
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [name, setName] = useState('');
-  const [access_key, setAccess_key] = useState('');
-  const [secret_key, setSecret_key] = useState('');
+  const { auth } = useApp()
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+  const [name, setName] = useState("")
+  const [access_key, setAccess_key] = useState("")
+  const [secret_key, setSecret_key] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+    e.preventDefault()
+    setIsLoading(true)
 
     try {
       const apiData = {
         name,
-        provider: 'aws',
-        providerText: 'Aws',
+        provider: "aws",
+        providerText: "Aws",
         credentials: {
           access_key: access_key,
           secret_key: secret_key,
         },
-      };
+      }
 
-      const res = await createCloudAccount(auth, apiData);
-      console.log('Aws Networks account connected:', res);
+      const res = await createCloudAccount(auth, apiData)
+      console.log("Aws Networks account connected:", res)
 
-      router.push('/dashboard/accounts');
+      router.push("/dashboard/accounts")
     } catch (error) {
-      console.error('Error connecting account:', error);
-      setError('An error occurred while creating the cluster');
+      console.error("Error connecting account:", error)
+      setError("An error occurred while creating the cluster")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div className="lg:p-6 bg-neutral-100 lg:h-screen flex justify-center h-[92vh]">
-      <div className="max-w-2xl mx-auto p-4 lg:p-6 w-full">
+      <div className="max-w-2xl mx-auto p-4 lg:p-6 w-full ">
         <div className="text-center mb-8">
           <h1 className="lg:text-2xl text-lg font-semibold mb-2">Connect AWS Account</h1>
         </div>
@@ -98,14 +99,24 @@ export default function CloudProviderForm() {
 
                 <div className="w-full text-end">
                   <Button type="submit" className="bg-[#2563EB]" disabled={isLoading}>
-                    {isLoading ? 'Connecting...' : 'Connect Account'}
+                    {isLoading ? "Connecting..." : "Connect Account"}
                   </Button>
                 </div>
               </form>
+
+              <div className="mt-8">
+              </div>
             </div>
+            
           </CardContent>
         </Card>
+        <div className="py-4">
+        <Documentation  provider='aws'/>
+        </div>
+        
       </div>
+      
     </div>
-  );
+  )
 }
+
