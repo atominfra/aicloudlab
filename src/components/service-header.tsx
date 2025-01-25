@@ -8,7 +8,7 @@ interface ServiceHeaderProps {
   name: string
   status: string
   memory: string
-  cpu: number
+  cpu: string
   replicas: number
   nodeName: string
   url: string

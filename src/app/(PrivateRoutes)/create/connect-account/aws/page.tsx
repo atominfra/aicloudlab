@@ -51,7 +51,7 @@ export default function CloudProviderForm() {
     <div className="lg:p-6 bg-neutral-100 lg:h-screen flex justify-center h-[92vh]">
       <div className="max-w-2xl mx-auto p-4 lg:p-6 w-full">
         <div className="text-center mb-8">
-          <h1 className="lg:text-2xl text-lg font-semibold mb-2">Aws Networks</h1>
+          <h1 className="lg:text-2xl text-lg font-semibold mb-2">Connect AWS Account</h1>
         </div>
 
         <Card className="border-none shadow-none">
@@ -71,11 +71,11 @@ export default function CloudProviderForm() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="api_key">API Key</Label>
+                  <Label htmlFor="access_key">Access key</Label>
                   <ToggleableInput
-                    id="api_key"
-                    name="api_key"
-                    placeholder="Enter API key"
+                    id="access_key"
+                    name="access_key"
+                    placeholder="Enter Access key"
                     value={access_key}
                     onChange={(e) => setAccess_key(e.target.value)}
                     required
@@ -83,11 +83,11 @@ export default function CloudProviderForm() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="jwt_token">JWT Token</Label>
+                  <Label htmlFor="secret_key">Secret Key</Label>
                   <ToggleableInput
-                    id="jwt_token"
-                    name="jwt_token"
-                    placeholder="Enter JWT token"
+                    id="secret_key"
+                    name="secret_key"
+                    placeholder="Enter Secret Key"
                     value={secret_key}
                     onChange={(e) => setSecret_key(e.target.value)}
                     required

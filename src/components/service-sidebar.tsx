@@ -5,16 +5,16 @@ import { BarChart, Bell, Users, Globe, GitBranch, Settings } from "lucide-react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 
-export function ServiceSidebar() {
+export function ServiceSidebar({id, name}) {
   const pathname = usePathname()
 
   const [navigation, setNavigation] = useState([
-    { name: "Dashboard", href: "/service/dashboard", icon: BarChart },
-    { name: "Deployments", href: "/service/dashboard/deployments", icon: GitBranch },
-    { name: "Environment", href: "/service/dashboard/environment", icon: Settings },
-    { name: "Domains", href: "/service/dashboard/domains", icon: Globe },
-    { name: "Alerts", href: "/service/dashboard/alerts", icon: Bell },
-    { name: "Users", href: "/service/dashboard/users", icon: Users },
+    { name: "Dashboard", href: `/service/dashboard?service-id=${id}&service-name=${name}`, icon: BarChart },
+    { name: "Deployments", href: `/service/dashboard/deployments?service-id=${id}&service-name=${name}`, icon: GitBranch },
+    { name: "Environment", href: `/service/dashboard/environment?service-id=${id}&service-name=${name}`, icon: Settings },
+    { name: "Domains", href: `/service/dashboard/domains?service-id=${id}&service-name=${name}`, icon: Globe },
+    { name: "Alerts", href: `/service/dashboard/alerts?service-id=${id}&service-name=${name}`, icon: Bell },
+    { name: "Users", href: `/service/dashboard/users?service-id=${id}&service-name=${name}`, icon: Users },
   ])
 
   useEffect(() => {
