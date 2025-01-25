@@ -26,7 +26,7 @@ export default function ConnectAccount() {
       id: 'aws',
       name: 'Amazon Web Services',
       description: 'Connect your AWS account',
-      available: false,
+      available: true,
     },
     {
       id: 'gcp',

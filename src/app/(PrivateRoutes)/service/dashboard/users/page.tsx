@@ -62,7 +62,7 @@ export default function UsersPage() {
         <CardTitle>Access Control</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 lg:gap-4">
           <Input
             placeholder="Enter email"
             className="flex-1"
@@ -70,7 +70,7 @@ export default function UsersPage() {
             onChange={(e) => setNewEmail(e.target.value)}
           />
           <Select value={selectedRole} onValueChange={(value) => setSelectedRole(value as "Admin" | "Developer")}>
-            <SelectTrigger className="w-[140px]">
+            <SelectTrigger className="w-[120px]">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -78,12 +78,12 @@ export default function UsersPage() {
               <SelectItem value="Developer">Developer</SelectItem>
             </SelectContent>
           </Select>
-          <Button onClick={addUser}>Add User</Button>
+          <Button onClick={addUser} className="bg-blue-600">+ <span className="hidden lg:block">Add User</span></Button>
         </div>
 
         <div className="grid gap-4">
           {users.map((user) => (
-            <div key={user.id} className="flex items-center justify-between rounded-lg border p-4">
+            <div key={user.id} className="flex flex-col lg:flex-row gap-3  justify-between rounded-lg border p-4">
               <div className="flex items-center gap-4">
                 <Avatar>
                   <AvatarImage src={user.avatar} />
@@ -99,12 +99,12 @@ export default function UsersPage() {
                   <p className="text-sm text-muted-foreground">{user.email}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex items-center justify-between gap-4 w-full lg:w-auto">
                 <Select
                   value={user.role.toLowerCase()}
                   onValueChange={(value) => updateUserRole(user.id, value as "Admin" | "Developer")}
                 >
-                  <SelectTrigger className="w-[140px]">
+                  <SelectTrigger className="w-[120px]">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -113,7 +113,7 @@ export default function UsersPage() {
                   </SelectContent>
                 </Select>
                 <Button variant="ghost" size="icon" onClick={() => deleteUser(user.id)}>
-                  <Trash2 className="size-4" />
+                  <Trash2 className="size-4 text-red-500" />
                 </Button>
               </div>
             </div>

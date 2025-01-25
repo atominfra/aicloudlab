@@ -94,7 +94,8 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const [locations, setLocations] = useState([
     { id: "Delhi", name: "Delhi", provider: "e2e" },
     { id: "Mumbai", name: "Mumbai", provider: "e2e" },
-    { id: "centralindia", name: "Central India", provider: "azure" }
+    { id: "centralindia", name: "Central India", provider: "azure" },
+    { id: "us-east-1", name: "US East", provider: "aws" }
   ])
   const searchParams = useSearchParams()
   const projectId = searchParams.get('projectId')
@@ -287,7 +288,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       }
 
       const provider = accounts && accounts.find((p) => p.id === formState.cloud_account_id)?.provider || ""
-      apiData.image = provider === "azure" ? formState.osVersion : formState.image
+      apiData.image = (provider === "azure" || provider === "aws") ? formState.osVersion : formState.image
 
       console.log("API Data:", JSON.stringify(apiData, null, 2))
       try {
@@ -430,6 +431,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
     const unitDisplay = price.unit === 'hour' ? 'hourly' :
                         price.unit === 'year' ? 'yearly' :
+                        price.unit === 'hrs' ? 'hourly' :
                         price.unit === 'month' ? 'monthly' :
                         price.unit
 

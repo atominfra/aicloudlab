@@ -156,7 +156,7 @@ const CloudAccounts = () => {
           // <div className="flex justify-center items-center h-[60vh]">
             <Loader />
           // </div>
-        ) : accounts.length > 0 ? (
+        ) : accounts && accounts.length > 0 ? (
           accounts.map((account) => (
             <Card key={account.id} className="p-4 hover:shadow-md transition-shadow"  >
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">

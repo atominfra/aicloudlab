@@ -10,6 +10,7 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  SidebarMenu,
   SidebarMenuItem,
   SidebarTrigger,
   useSidebar,
@@ -24,92 +25,89 @@ const navItems = [
 export function DashboardSidebar({ ...props }) {
   const pathname = usePathname()
   const router = useRouter()
-  const { state } = useSidebar()
+  const { state, isMobile, setOpenMobile } = useSidebar()
   const { user } = useAuth()
+
+  // Determine if we should show the expanded view
+  const showExpanded = isMobile || state === "expanded"
+
+  const handleNavigation = (href: string) => {
+    router.push(href)
+    // if (isMobile) {
+      setOpenMobile(false)
+    // }
+  }
+
   return (
     <Sidebar
-      collapsible="icon"
+      collapsible={"icon"}
       {...props}
-      className={cn(
-        "bg-white border-r border-border flex-col fixed h-screen hidden lg:flex",
-        state === "collapsed"&& "w-16" ,
-      )}
+      className={cn("bg-white border-r border-border flex-col fixed h-screen hidden lg:flex", !showExpanded && "w-16")}
     >
-      <SidebarHeader className="flex px-4 pt-4 pb-2 border-b">
-        <Link href="/" className="flex items-center justify-center w-full">
-          <div className={cn("flex items-center justify-center", state === "collapsed" ? "h-[30px]" : "w-full")}>
-            {/* <Image
-              src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png"
-              width={30}
-              height={30}
-              alt="Atom Infra Logo"
-              className={cn(
-                "transition-all duration-300 ease-in-out",
-                state === "collapsed" ? "w-[30px]" : "w-[22px] ",
-              )}
-              priority
-            /> */}
-            {state === "expanded" ? (
-             <div className='flex items-center'>
-                <Image
-                  src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
-                  width={30}
-                  height={30}
-                  alt="Atom Infra Logo"
-                  className='h-[22px] w-[23px]'
-                  priority
-                />
-                <div 
-                  className='relative text-[24px] font-[700] tracking-tight l-[30px]' 
-                  style={{ left: '-2px' }}
-                >
-                  tom Infra
+      <SidebarHeader className="flex items-center justify-center py-4 bg-white border-b">
+        <SidebarMenu>
+          <SidebarMenuItem className={`flex ${showExpanded ? "justify-between" : "justify-center"} items-center`}>
+            {showExpanded ? (
+              <Link href="/">
+                <div className="flex items-center">
+                  <Image
+                    src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png"
+                    width={30}
+                    height={30}
+                    alt="Atom Infra Logo"
+                    className="h-[22px] w-[23px]"
+                    priority
+                  />
+                  <div className="relative text-[24px] font-[700] tracking-tight l-[30px]" style={{ left: "-2px" }}>
+                    tom Infra
+                  </div>
                 </div>
-              </div>
-            ):<Image
-            src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
-            width={30}
-            height={30}
-            alt="Atom Infra Logo"
-            className=' w-[23px]'
-            priority
-          />}
-          </div>
-        </Link>
-   
-          
+              </Link>
+            ) : (
+              <Image
+                src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png"
+                width={30}
+                height={30}
+                alt="Atom Infra Logo"
+                className="h-[22px] w-[23px]"
+                priority
+              />
+            )}
+            {showExpanded && !isMobile && <SidebarTrigger />}
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent className={cn("flex-1", state === "expanded" ? "p-4" : "p-2")}>
+      <SidebarContent className={cn("flex-1", showExpanded ? "p-4" : "p-2")}>
         <nav>
           <ul className="space-y-2">
             {navItems.map((item) => {
               const isActive = pathname === item.href
-              return  <li key={item.href}>
-              <Link
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 rounded-lg text-sm font-medium",
-                  isActive ? "bg-blue-600 text-white" : "text-gray-700 hover:bg-gray-100",
-                  state === "collapsed" ? "justify-center p-2" : "px-3 py-2",
-                )}
-              >
-                <item.icon size={20} />
-                {state === "expanded" && <span>{item.label}</span>}
-              </Link>
-            </li>
+              return (
+                <li key={item.href}>
+                  <button
+                    onClick={() => handleNavigation(item.href)}
+                    className={cn(
+                      "flex items-center gap-3 rounded-lg text-sm font-medium w-full",
+                      isActive ? "bg-blue-600 text-white" : "text-gray-700 hover:bg-gray-100",
+                      !showExpanded ? "justify-center p-2" : "px-3 py-2",
+                    )}
+                  >
+                    <item.icon size={20} />
+                    {showExpanded && <span>{item.label}</span>}
+                  </button>
+                </li>
+              )
             })}
           </ul>
         </nav>
       </SidebarContent>
-      <SidebarFooter className={cn("border-t border-border", state === "expanded" ? "p-4" : "p-2")}>
-      <SidebarTrigger className=" w-full" />
-
-        {state === "expanded" ? (
-          <>
+      <SidebarFooter className={cn("border-t border-border", showExpanded ? "p-4" : "p-2")}>
+        {!showExpanded && <SidebarTrigger className="w-full" />}
+        {showExpanded ? (
           <div className="flex items-center gap-3">
-            <div
+            <button
               className="w-10 h-10 rounded-full bg-neutral-100 border flex items-center justify-center hover:cursor-pointer hover:border-gray-300"
-              onClick={() => router.push("/profile")}
+              onClick={() => handleNavigation("/profile")}
             >
               <span className="text-sm font-medium">
                 {user.full_name
@@ -117,37 +115,29 @@ export function DashboardSidebar({ ...props }) {
                   .map((n) => n[0])
                   .join("")}
               </span>
-            </div>
+            </button>
             <div className="flex-1">
               <div className="text-sm font-medium text-gray-900">{user.full_name.split(" ")[0]}</div>
             </div>
-            <div
-          className="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:cursor-pointer"
-          onClick={() => router.push("/credits")}
-        >
-          <span className="font-serif pr-1">₹</span>
-          {user.credits}
-        </div>
-          </div>
-          </>
-        ) : (
-          <div className="flex flex-col items-center">
-            <div
-              className="w-10 h-10 rounded-lg bg-neutral-100 border flex items-center justify-center hover:cursor-pointer hover:border-gray-300"
-              onClick={() => router.push("/profile")}
-            >
-              {user.full_name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")}
-            </div>
-            <div
-              className="mt-2 px-2 py-1 bg-blue-600 text-white text-xs rounded-md hover:cursor-pointer"
-              onClick={() => router.push("/credits")}
+            <button
+              className="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:cursor-pointer"
+              onClick={() => handleNavigation("/credits")}
             >
               <span className="font-serif pr-1">₹</span>
               {user.credits}
-            </div>
+            </button>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center">
+            <button
+              className="w-10 h-10 rounded-lg bg-neutral-100 border flex items-center justify-center hover:cursor-pointer hover:border-gray-300"
+              onClick={() => handleNavigation("/profile")}
+            >
+              {user.full_name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")}
+            </button>
           </div>
         )}
       </SidebarFooter>

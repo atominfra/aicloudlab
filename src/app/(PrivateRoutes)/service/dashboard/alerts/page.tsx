@@ -40,10 +40,10 @@ export default function AlertsPage() {
         <CardHeader>
           <CardTitle>Add Alert</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid gap-6 sm:grid-cols-2">
+        <CardContent className="flex flex-col items-end">
+          <div className="grid gap-6 sm:grid-cols-2 w-full">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Alert type</label>
+              <label className="text-sm font-medium text-[#374151]">Alert type</label>
               <Select onValueChange={setNewAlertType}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select type" />
@@ -56,7 +56,7 @@ export default function AlertsPage() {
               </Select>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium">Set Limit</label>
+              <label className="text-sm font-medium text-[#374151]">Set Limit</label>
               <Select onValueChange={setNewAlertThreshold}>
                 <SelectTrigger>
                   <SelectValue placeholder="Set Limit" />
@@ -69,9 +69,10 @@ export default function AlertsPage() {
               </Select>
             </div>
           </div>
-          <Button className="mt-6" onClick={addAlert}>
-            Add
-          </Button>
+          <Button className="bg-blue-600 mt-6 w-full lg:w-[120px] " onClick={addAlert}>
+          <span className="">+</span>
+          Create
+        </Button>
         </CardContent>
       </Card>
 
@@ -82,7 +83,7 @@ export default function AlertsPage() {
         <CardContent>
           <div className="grid gap-4">
             {alerts.map((alert) => (
-              <div key={alert.id} className="flex items-center justify-between rounded-lg border p-4">
+              <div key={alert.id} className="flex items-center justify-between rounded-lg py-2 px-6 bg-[#F9FAFB]">
                 <div>
                   <h3 className="font-medium">{alert.type}</h3>
                   <p className="text-sm text-muted-foreground">{alert.threshold}</p>
@@ -92,7 +93,7 @@ export default function AlertsPage() {
                     <Pencil className="size-4" />
                   </Button>
                   <Button variant="ghost" size="icon" onClick={() => deleteAlert(alert.id)}>
-                    <Trash2 className="size-4" />
+                    <Trash2 className="size-4 text-red-500" />
                   </Button>
                 </div>
               </div>

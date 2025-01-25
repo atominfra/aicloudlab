@@ -46,8 +46,8 @@ export default function EnvironmentPage() {
         <CardHeader>
           <CardTitle>Add Environment variables</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid gap-6 sm:grid-cols-2">
+        <CardContent className="flex  flex-col  items-end">
+          <div className="grid gap-6 sm:grid-cols-2 w-full">
             <div className="space-y-2">
               <label className="text-sm font-medium">Key</label>
               <Input placeholder="Enter Key" value={newKey} onChange={(e) => setNewKey(e.target.value)} />
@@ -57,9 +57,10 @@ export default function EnvironmentPage() {
               <Input placeholder="Enter Value" value={newValue} onChange={(e) => setNewValue(e.target.value)} />
             </div>
           </div>
-          <Button className="mt-6" onClick={addEnvVar}>
-            Add
-          </Button>
+          <Button className="bg-blue-600 w-[120px]  mt-6 " onClick={addEnvVar}>
+          <span className="">+</span>
+          Add 
+        </Button>
         </CardContent>
       </Card>
 
@@ -70,11 +71,11 @@ export default function EnvironmentPage() {
         <CardContent>
           <div className="grid gap-4">
             {envVars.map((envVar) => (
-              <div key={envVar.id} className="flex items-center justify-between rounded-lg border p-4">
-                <div className="grid grid-cols-2 gap-4 flex-1">
+              <div key={envVar.id} className="flex  lg:items-center justify-between rounded-lg border p-4">
+                <div className="grid grid-col-1 lg:grid-cols-2 gap-4 flex-1">
                   <h3 className="font-medium truncate">{envVar.key}</h3>
                   <div className="flex items-center gap-2">
-                    <p className="font-mono text-sm text-muted-foreground flex-1 truncate">
+                    <p className="font-mono text-sm text-muted-foreground flex-1 truncate max-w-[30vw]">
                       {showValue[envVar.id] ? envVar.value : "••••••••"}
                     </p>
                     <Button variant="ghost" size="icon" onClick={() => toggleShowValue(envVar.id)}>
@@ -87,7 +88,7 @@ export default function EnvironmentPage() {
                     <Pencil className="size-4" />
                   </Button>
                   <Button variant="ghost" size="icon" onClick={() => deleteEnvVar(envVar.id)}>
-                    <Trash2 className="size-4" />
+                    <Trash2 className="size-4 text-red-600" />
                   </Button>
                 </div>
               </div>

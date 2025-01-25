@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import { ExternalLink, RefreshCw, Trash2 } from "lucide-react"
+import { CircleCheck, ExternalLink, RefreshCw, Trash2 } from "lucide-react"
 import Link from "next/link"
 import { DNSConfigurationDialog } from "@/components/dns-configuration-dialog"
 
@@ -66,21 +66,24 @@ export default function DomainsPage() {
         <div className="flex gap-4">
           <Input
             placeholder="Add your Domain.."
-            className="max-w-xl"
+            className="w-full"
             value={newDomain}
             onChange={(e) => setNewDomain(e.target.value)}
           />
-          <Button onClick={addDomain}>Add Domain</Button>
+          <Button className="bg-blue-600 w-[120px] " onClick={addDomain}>
+          <span className="">+</span>
+          Add Domain
+        </Button>
         </div>
 
         <div className="grid gap-4">
           {domains.map((domain) => (
-            <div key={domain.id} className="flex items-center justify-between rounded-lg border p-4">
+            <div key={domain.id} className="flex items-center gap-4 justify-between rounded-lg border p-4">
               <div className="space-y-1">
                 <div className="flex items-center md:items-start gap-2">
-                  <span className="font-medium">{domain.name}</span>
+                  <span className="font-medium truncate">{domain.name}</span>
                   {domain.status === "Valid Configuration" && (
-                    <Link href={`https://${domain.name}`} target="_blank" rel="noopener noreferrer">
+                    <Link href={`https://${domain.name}`} target="_blank" rel="noopener noreferrer" className="text-blue-700">
                       <ExternalLink className="size-4" />
                     </Link>
                   )}
@@ -88,15 +91,18 @@ export default function DomainsPage() {
                 {domain.status === "Awaiting external DNS" ? (
                   <DNSConfigurationDialog domain={domain.name} nodeIp={domain.nodeIp} />
                 ) : (
-                  <p className="text-sm text-green-500">{domain.status}</p>
+                  <p className="text-sm text-green-500 flex gap-1 items-center">
+                    <CircleCheck className='text-green-500 ' size={14} />
+                    {domain.status}</p>
                 )}
               </div>
               <div className="flex gap-2">
                 <Button variant="ghost" size="icon" onClick={() => refreshDomain(domain.id)}>
-                  <RefreshCw className="size-4" />
+                  <RefreshCw className="size-4 text-[#374151]" />
+                  <span className="text-[#374151] hidden lg:block">Refresh</span>
                 </Button>
                 <Button variant="ghost" size="icon" onClick={() => deleteDomain(domain.id)}>
-                  <Trash2 className="size-4" />
+                <Trash2 className="size-4 text-red-500" />
                 </Button>
               </div>
             </div>

@@ -48,7 +48,7 @@ const alerts = [
 export default function DashboardPage() {
   return (
     <div className="space-y-4 ">
-      <LogViewer logs={sampleLogs} />
+      <LogViewer containerName='nginx' />
       <AlertsSection alerts={alerts} />
     </div>
   )

@@ -42,7 +42,7 @@ export function ServiceCard({
   service_url,
   projectId,
 }: ServiceCardProps) {
-  const { toggleSidebar, state } = useSidebar()
+  const { toggleSidebar, state , isMobile} = useSidebar()
     const router = useRouter();
     const [isRunning, setIsRunning] = useState(status === "running");
     const {auth} = useApp();
@@ -56,10 +56,10 @@ export function ServiceCard({
       }
     }
     const handleCLick = ()=>{
-      if(state === 'expanded'){
+      if(state === 'expanded' && !isMobile ){
         toggleSidebar()
       }
-      router.push(`/service/dashboard`)
+      router.push(`/service/dashboard?service-id=${id}&service-name=${name}`)
     }
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 w-full hover:shadow-sm transition-shadow duration-200">

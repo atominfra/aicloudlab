@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { GitBranch, Eye, Loader2 } from "lucide-react"
+import { GitBranch, Eye, Loader2, Filter } from "lucide-react"
 import { LogViewer } from "@/components/log-viewer"
 
 interface Deployment {
@@ -35,7 +35,6 @@ const sampleLogs = [
   "8:51:58 PM: installing cpython-3.8.20+20241002-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz",
   "8:51:58 PM: python --version",
 ]
-
 
 export default function DeploymentsPage() {
   const [deployments, setDeployments] = useState<Deployment[]>([
@@ -82,78 +81,91 @@ export default function DeploymentsPage() {
   )
 
   return (
-    <Card className="space-y-4">
-      <CardHeader>
+    <Card className="">
+      <CardHeader className="">
         <CardTitle>Deployments</CardTitle>
       </CardHeader>
-      {/* <h2 className="text-2xl font-bold tracking-tight">Deployments</h2> */}
-     <CardContent className="space-y-4">
-     <div className="flex items-center gap-4">
-        <Input
-          placeholder="Search deploys using tags or commit hash"
-          className="max-w-2xl"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <Select defaultValue="all-time">
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select time range" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all-time">All Time</SelectItem>
-            <SelectItem value="last-hour">Last Hour</SelectItem>
-            <SelectItem value="last-day">Last 24 Hours</SelectItem>
-            <SelectItem value="last-week">Last Week</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <CardContent className="space-y-4 p-0 sm:p-6">
+        <div className="flex items-center gap-4 p-4 sm:p-0">
+          <div className="relative flex-1">
+            <Input
+              placeholder="Search deploys using tags or commit hash"
+              className="w-full pr-10 sm:max-w-2xl"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Select defaultValue="all-time" >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Select time range" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all-time">All Time</SelectItem>
+              <SelectItem value="last-hour">Last Hour</SelectItem>
+              <SelectItem value="last-day">Last 24 Hours</SelectItem>
+              <SelectItem value="last-week">Last Week</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
-      <div className="grid gap-4">
-        {filteredDeployments.map((deployment) => (
-          <Card key={deployment.id} className="p-6 b-">
-            <div className="flex items-start justify-between">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-sm">{deployment.commitHash}</span>
-                  <span className="text-sm text-muted-foreground">• {deployment.message}</span>
+        <div className="grid gap-4 px-4 sm:px-0">
+          {filteredDeployments.map((deployment) => (
+            <Card key={deployment.id} className="p-4 sm:p-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                <div className="space-y-2 sm:space-y-1">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-sm">{deployment.commitHash}</span>
+                      <span className="text-sm text-muted-foreground hidden sm:inline">•</span>
+                    </div>
+                    <span className="text-sm text-muted-foreground">{deployment.message}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <GitBranch className="size-4" />
+                      <span>{deployment.branch}</span>
+                    </div>
+                    {deployment.isCurrent && (
+                      <span className="rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-medium text-green-500">
+                        Current
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-sm text-muted-foreground sm:hidden">{deployment.timestamp}</div>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <GitBranch className="size-4" />
-                  <span>{deployment.branch}</span>
-                  {deployment.isCurrent && (
-                    <span className="rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-medium text-green-500">
-                      Current
-                    </span>
-                  )}
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <span className="hidden sm:block text-sm text-muted-foreground">{deployment.timestamp}</span>
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <Button
+                      onClick={() => handleDeploy(deployment.id)}
+                      disabled={deployingId === deployment.id}
+                      className="w-full sm:w-auto bg-blue-600"
+                    >
+                      {deployingId === deployment.id ? (
+                        <>
+                          <Loader2 className="mr-2 size-4 animate-spin" />
+                          Deploying...
+                        </>
+                      ) : (
+                        "Redeploy"
+                      )}
+                    </Button>
+                    <Button variant="outline" onClick={() => toggleLogs(deployment.id)} className="w-full sm:w-auto">
+                      <Eye className="mr-2 size-4" />
+                      View Logs
+                    </Button>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">{deployment.timestamp}</span>
-                <Button onClick={() => handleDeploy(deployment.id)} disabled={deployingId === deployment.id}>
-                  {deployingId === deployment.id ? (
-                    <>
-                      <Loader2 className="mr-2 size-4 animate-spin" />
-                      Deploying...
-                    </>
-                  ) : (
-                    "Redeploy"
-                  )}
-                </Button>
-                <Button variant="outline" onClick={() => toggleLogs(deployment.id)}>
-                  <Eye className="mr-2 size-4" />
-                  View Logs
-                </Button>
-              </div>
-            </div>
-            {expandedDeployment === deployment.id && (
-              <div className="mt-4">
-                <LogViewer logs={sampleLogs} />
-              </div>
-            )}
-          </Card>
-        ))}
-      </div>
-     </CardContent>
+              {expandedDeployment === deployment.id && (
+                // <div className="space-y-4">
+                  <LogViewer containerName={'nginx'} />
+                // </div>
+              )}
+            </Card>
+          ))}
+        </div>
+      </CardContent>
     </Card>
   )
 }
