@@ -105,7 +105,7 @@ export default function RootLayout({
       <div className="flex h-screen w-full overflow-hidden bg-neutral-100">
         <ServiceSidebar id={id} name={name}/>
         <SidebarInset className="flex-1 overflow-auto bg-neutral-100 pb-16 md:pb-0">
-          <div className="flex flex-col min-h-screen space-y-4 p-4 bg-neutral-100">
+          <div className="flex flex-col min-h-screen space-y-4 p-4 bg-neutral-100 ">
             <ServiceHeader
               name={service?.name || name || "Unknown"}
               status={service?.status || "Unknown"}
@@ -115,7 +115,7 @@ export default function RootLayout({
               nodeName={node?.name || ""}
               url="hiring-dev.atominfra.com"
             />
-            <main className="flex-1 space-y-4 bg-neutral-100">{children}</main>
+            <main className="flex-1 space-y-4 bg-neutral-100 pb-20">{children}</main>
           </div>
         </SidebarInset>
       </div>

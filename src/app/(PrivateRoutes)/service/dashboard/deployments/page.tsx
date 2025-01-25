@@ -17,25 +17,6 @@ interface Deployment {
   isCurrent?: boolean
 }
 
-const sampleLogs = [
-  "8:51:27 PM: Build ready to start",
-  "8:51:55 PM: build-image version: 17725b3539da87c8dbb63d1687d4cd85cb2769cd (focal)",
-  "8:51:55 PM: buildbot version: 1f603b5da77b398dad9b2852f8fd1e3683d8d9b",
-  "8:51:55 PM: Fetching cached dependencies",
-  "8:51:55 PM: Starting to download cache of 11.0MB",
-  "8:51:55 PM: Finished downloading cache in 141ms",
-  "8:51:55 PM: Starting to extract cache",
-  "8:51:55 PM: Finished extracting cache in 38ms",
-  "8:51:55 PM: Finished fetching cache in 223ms",
-  "8:51:55 PM: Starting to prepare the repo for build",
-  "8:51:56 PM: Preparing Git Reference refs/heads/main",
-  "8:51:57 PM: Starting to install dependencies",
-  "8:51:57 PM: Attempting Python version '3.8', read from environment",
-  "8:51:58 PM: downloading cpython-3.8.20+20241002-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz",
-  "8:51:58 PM: installing cpython-3.8.20+20241002-x86_64-unknown-linux-gnu-install_only_stripped.tar.gz",
-  "8:51:58 PM: python --version",
-]
-
 export default function DeploymentsPage() {
   const [deployments, setDeployments] = useState<Deployment[]>([
     {
