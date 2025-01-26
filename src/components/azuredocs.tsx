@@ -13,20 +13,20 @@ export function AzureAccountInstructions() {
               <h3 className="font-semibold mb-1">Create App (Client) ID and Tenant ID</h3>
               <ul className="list-disc pl-5 mt-1 space-y-1">
                 <li>
-                  Go to Azure Active Directory in the Azure portal or use the search bar at the top and type "App
-                  registrations".
+                  Go to Azure Active Directory in the Azure portal or use the search bar at the top and type &quot;App
+                  registrations&quot;.
                 </li>
                 <li>Click on App registrations.</li>
                 <li>
                   Select New registration and fill in the following details:
                   <ul className="list-disc pl-5 mt-1 space-y-1">
                     <li>Name: Provide a name for your app (e.g., MyApp).</li>
-                    <li>Supported account types: Choose the appropriate option (e.g., "Organizational directory").</li>
+                    <li>Supported account types: Choose the appropriate option (e.g., &quot;Organizational directory&quot;).</li>
                   </ul>
                 </li>
                 <li>Click Register.</li>
                 <li>
-                  Note down the following from the app's overview page:
+                  Note down the following from the app&apos;s overview page:
                   <ul className="list-disc pl-5 mt-1 space-y-1">
                     <li>App (Client) ID</li>
                     <li>Tenant ID</li>
@@ -57,7 +57,7 @@ export function AzureAccountInstructions() {
             <li>
               <h3 className="font-semibold mb-1">Find Your Subscription ID</h3>
               <ul className="list-disc pl-5 mt-1 space-y-1">
-                <li>In the Azure portal search bar, type "Subscriptions".</li>
+                <li>In the Azure portal search bar, type &quot;Subscriptions&quot;.</li>
                 <li>Select Subscriptions from the search results.</li>
                 <li>
                   On the Subscriptions page, you will see a list of all subscriptions associated with your account.

@@ -22,8 +22,8 @@ export function AWSAccountInstructions() {
               <ul className="list-disc pl-5 mt-1 space-y-1">
                 <li>Navigate to Users &gt; Add Users.</li>
                 <li>Enter a username (e.g., MyAppUser).</li>
-                <li>Enable "Provide user access to the AWS Management Console".</li>
-                <li>Select "I want to create an IAM user" and click Next.</li>
+                <li>Enable &quot;Provide user access to the AWS Management Console&quot;.</li>
+                <li>Select &quot;I want to create an IAM user&quot; and click Next.</li>
               </ul>
             </li>
             <li className="pb-2 border-b">
@@ -84,7 +84,7 @@ export function AWSAccountInstructions() {
               <ul className="list-disc pl-5 mt-1 space-y-1">
                 <li>Download the keys as a CSV file or copy them securely.</li>
                 <li className="font-bold text-red-600">
-                  Important: The Secret Access Key won't be shown again, so ensure it is saved securely.
+                  Important: The Secret Access Key won&apos;t be shown again, so ensure it is saved securely.
                 </li>
               </ul>
             </li>

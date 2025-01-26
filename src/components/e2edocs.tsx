@@ -17,7 +17,7 @@ export function E2ENetworksInstructions() {
               <h3 className="font-semibold mb-1">Navigate to the API Section</h3>
               <ul className="list-disc pl-5 mt-1 space-y-1">
                 <li>
-                  After logging in, locate the "API" sub-menu under the Products section on the left-hand side of the
+                  After logging in, locate the &quot;API&quot; sub-menu under the Products section on the left-hand side of the
                   MyAccount dashboard.
                 </li>
                 <li>Click on API to open the Manage API page.</li>
@@ -26,14 +26,14 @@ export function E2ENetworksInstructions() {
             <li className="pb-2 border-b">
               <h3 className="font-semibold mb-1">Create a New API Token</h3>
               <p>
-                On the Manage API page, click the "Create New Token" button, available at the top-right corner of the
+                On the Manage API page, click the &quot;Create New Token&quot; button, available at the top-right corner of the
                 API dashboard.
               </p>
             </li>
             <li className="pb-2 border-b">
               <h3 className="font-semibold mb-1">Configure Your API Token</h3>
               <ul className="list-disc pl-5 mt-1 space-y-1">
-                <li>A pop-up box labeled 'Add New Token' will appear.</li>
+                <li>A pop-up box labeled &quot;Add New Token&quot; will appear.</li>
                 <li>
                   Enter the following details:
                   <ul className="list-disc pl-5 mt-1 space-y-1">
@@ -49,9 +49,9 @@ export function E2ENetworksInstructions() {
               <h3 className="font-semibold mb-1">Generate and Save the Token</h3>
               <ul className="list-disc pl-5 mt-1 space-y-1">
                 <li>Click on the Generate button.</li>
-                <li>A message will appear: "Your token is successfully generated."</li>
+                <li>A message will appear: &quot;Your token is successfully generated.&quot;</li>
                 <li className="font-bold text-red-600">
-                  Important: Copy the generated token immediately and store it securely. You won't be able to view it
+                  Important: Copy the generated token immediately and store it securely. You won&quot;t be able to view it
                   again.
                 </li>
               </ul>
