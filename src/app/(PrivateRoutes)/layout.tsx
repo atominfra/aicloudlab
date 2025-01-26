@@ -1,41 +1,33 @@
 'use client';
+import { DashboardSidebar } from '@/components/dashboard-sidebar';
 import Loader from '@/components/loader';
 import MobileTopBar from '@/components/mobileTopBar';
 import { Sidebar } from '@/components/sidebar';
+import { SidebarInset, SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import withAuth from '@/components/withAuth';
 import { useApp } from '@/context/AppContext';
 import { usePathname } from 'next/navigation';
 import React from 'react'
 
-
-export default function RootLayout({children}) {
+const  Layout = ({children}) => {
     const pathname = usePathname();
     const {auth,setAuth} = useApp();
     console.log("auth",auth)
     const hideSidebar = pathname === "/login" || pathname === "/signup";
     const hideMobileNavs = pathname === "/login" || pathname === "/signup";
 
-    // if(auth){
       return (
         <div className="flex h-screen bg-neutral-100 text-foreground">
-        {!hideSidebar && (
-          <div className="lg:w-[15vw] bg-neutral-100">
-            <Sidebar />
-          </div>
-        )}
-        <div className={`${hideSidebar ? 'w-full' : 'lg:w-[85vw] w-[100vw]'} bg-neutral-100`}>
+          <SidebarProvider className=' flex-col md:flex-row'>
           { !hideMobileNavs && <MobileTopBar />}
-          <main
-            className={`flex-1 overflow-y-scroll bg-neutral-100 ${
-              hideMobileNavs ? 'h-[100vh]' : 'h-[92vh]'
-            } lg:h-auto`}
-          >
-          </main>
-            {children}
-          {/* {!hideMobileNavs && <MobileBottomBar/>} */}
-        </div>
+          <DashboardSidebar />
+          <SidebarInset>{children}</SidebarInset>
+        </SidebarProvider>
       </div>
       )
-    // }
 
 
 }
+
+
+export default withAuth(Layout)

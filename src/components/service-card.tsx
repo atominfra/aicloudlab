@@ -15,10 +15,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import { useRouter } from 'next/navigation';
-import { changeServiceStatus } from '@/app/(ProtectedRoutes)/api/services/api'
-import { useState } from 'react'
+import { changeServiceStatus } from '@/app/(PrivateRoutes)/api/services/api'
+import { useEffect, useState } from 'react'
 import { useApp } from '@/context/AppContext'
 import Link from 'next/link'
+import { useSidebar } from './ui/sidebar'
 interface ServiceCardProps {
   id: string
   name: string
@@ -41,6 +42,7 @@ export function ServiceCard({
   service_url,
   projectId,
 }: ServiceCardProps) {
+  const { toggleSidebar, state , isMobile} = useSidebar()
     const router = useRouter();
     const [isRunning, setIsRunning] = useState(status === "running");
     const {auth} = useApp();
@@ -53,11 +55,18 @@ export function ServiceCard({
         console.error("Failed to change service status:", error);
       }
     }
-
+    const handleCLick = ()=>{
+      if(process.env.NEXT_PUBLIC_SERVICE_MANAGEMENT_STATUS === "true"){
+        if(state === 'expanded' && !isMobile ){
+          toggleSidebar()
+        }
+        router.push(`/service/dashboard?service-id=${id}&service-name=${name}&project-id=${projectId}`)
+      }
+    }
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 w-full hover:shadow-sm transition-shadow duration-200">
-      <div className="flex flex-col space-y-4 sm:space-y-0">
-        <Link className="flex flex-col sm:flex-row sm:items-center sm:justify-between  w-full" href={`/service/${id}/settings?projectId=${projectId}&serviceName=${name}`}>
+      <div className="flex  space-y-4 sm:space-y-0 w-full">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between  w-full hover:cursor-pointer"  onClick={handleCLick}>
           <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:space-x-4 ">
             {/* Service Name with Icon */}
             <div className="flex items-center ">
@@ -131,7 +140,8 @@ export function ServiceCard({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center space-x-2 mt-4 sm:mt-0">
+        </div>
+        <div className="flex items-center space-x-2 mt-4 sm:mt-0">
               {/* <Button
               variant="ghost"
               size="icon"
@@ -158,8 +168,8 @@ export function ServiceCard({
             </Button> */}
 
           </div>
-        </Link>
       </div>
+      
     </div>
   )
 }

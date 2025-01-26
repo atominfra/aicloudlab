@@ -15,7 +15,7 @@ export function ToggleableInput({...props }) {
         autoComplete='new-password'
         {...props}
         type={showInput ? 'text' : 'password'}
-        className="pr-10"
+        className={`${props.className} "pr-10"`}
       />
       <Button
         type="button"

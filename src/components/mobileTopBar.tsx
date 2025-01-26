@@ -11,6 +11,7 @@ import hameMenu from "@/assets/hammenu.svg"
 import { useApp } from '@/context/AppContext'
 import { useAuth } from '@/context/AuthContext'
 import navItems from './navbar/navitems'
+import { SidebarTrigger } from './ui/sidebar'
 export default function MobileTopBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const router = useRouter()
@@ -33,7 +34,7 @@ export default function MobileTopBar() {
 
   return (
     <>
-      <Box className="lg:hidden w-full flex justify-between items-center select-none px-4 lg:px-10 py-4 shadow-lg bg-white h-[8dvh] ">
+      <Box className="md:hidden w-full flex justify-between items-center select-none px-4 lg:px-10 py-4 shadow-lg bg-white h-[8dvh] ">
         <Link className="flex items-center" href={`/dashboard`}>
             <div className='flex items-center'>
                 <Image
@@ -53,14 +54,15 @@ export default function MobileTopBar() {
               </div>
           
         </Link>
-        <Button variant="ghost" size="icon" onClick={toggleSidebar}>
+        <SidebarTrigger  />
+        {/* <Button variant="ghost" size="icon" onClick={toggleSidebar}>
         <Image 
             src={hameMenu}
             width={23}
             height={23}
             alt="hameMenu" 
           />
-        </Button>
+        </Button> */}
       </Box>
 
       {/* Sidebar */}
