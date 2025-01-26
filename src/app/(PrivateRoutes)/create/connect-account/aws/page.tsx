@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label"
 import { createCloudAccount } from "@/app/(PrivateRoutes)/api/cloud/api"
 import { useApp } from "@/context/AppContext"
 import { ToggleableInput } from "@/components/ToggleableInput"
-import { Documentation } from "@/components/documetation"
+import { AWSAccountInstructions } from "@/components/awsdocs"
 
 export default function CloudProviderForm() {
   const { auth } = useApp()
@@ -49,7 +49,7 @@ export default function CloudProviderForm() {
   }
 
   return (
-    <div className="lg:p-6 bg-neutral-100 lg:h-screen flex justify-center h-[92vh]">
+    <div className="lg:p-6 bg-neutral-100 h-screen flex justify-center ">
       <div className="max-w-2xl mx-auto p-4 lg:p-6 w-full ">
         <div className="text-center mb-8">
           <h1 className="lg:text-2xl text-lg font-semibold mb-2">Connect AWS Account</h1>
@@ -111,7 +111,7 @@ export default function CloudProviderForm() {
           </CardContent>
         </Card>
         <div className="py-4">
-        <Documentation  provider='aws'/>
+        <AWSAccountInstructions  />
         </div>
         
       </div>

@@ -10,7 +10,7 @@ import { Label } from '@/components/ui/label';
 import { createCloudAccount } from '@/app/(PrivateRoutes)/api/cloud/api';
 import { useApp } from '@/context/AppContext';
 import { ToggleableInput } from '@/components/ToggleableInput';
-import { Documentation } from '@/components/documetation';
+import { E2ENetworksInstructions } from '@/components/e2edocs';
 
 export default function CloudProviderForm() {
   const { auth } = useApp();
@@ -107,7 +107,7 @@ export default function CloudProviderForm() {
           </CardContent>
         </Card>
         <div className="py-4">
-          <Documentation  provider='e2e'/>
+          <E2ENetworksInstructions/>
           </div>
       </div>
         

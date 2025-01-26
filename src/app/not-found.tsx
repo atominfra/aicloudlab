@@ -11,7 +11,7 @@ export default function NotFound() {
     <div className="min-h-screen flex flex-col">
 
     {/* Main Content */}
-    <main className="flex-1 flex flex-col items-center justify-center gap-4 px-4">
+    <main className="flex-1 flex flex-col items-center justify-center gap-4 px-4 bg-neutral-100">
       <h1 className="text-[160px] font-bold text-primary leading-none text-blue-700">
         404
       </h1>
