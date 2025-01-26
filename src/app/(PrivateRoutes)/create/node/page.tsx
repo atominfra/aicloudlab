@@ -412,7 +412,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
   const formatPlanName = (plan: Plan) => {
     return (
-      <div className="items-center justify-start gap-2 w-[full] ">
+      <div className=" gap-2 w-[full] ">
         {/* <span className="inline-flex items-center min-w-[80px] px-2.5 py-0.5 rounded-full text-xs font-medium">
           ID: {plan.id}
         </span> */}
@@ -421,16 +421,17 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             {plan.cpu} {plan.cpu_type}
           </span>
         )}
+        {plan.ram && <span>•</span>}
         {plan.ram && (
           <span className="inline-flex items-center px-2.5 min-w-[140px] py-0.5 rounded-full text-xs font-medium">
-            {plan.ram} GB Memory
+             {plan.ram} GB Ram
           </span>
         )}
-        {plan.disk_space && (
+        {/* {plan.disk_space && (
           <span className="inline-flex items-center px-2.5 min-w-[70px] py-0.5 rounded-full text-xs font-medium">
             {plan.disk_space} GB
           </span>
-        )}
+        )} */}
         {/* {plan.plan && (
           <span className="inline-flex items-center min-w-[200px] px-2.5 py-0.5 rounded-full text-xs font-medium">
             {plan.plan}
@@ -879,7 +880,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     {plans.length > 0 ? (
                       plans.map((plan) => (
                         <SelectItem key={plan.id} value={plan.id} className="flex border-b">
-                          {plan.id} - {formatPlanName(plan)}
+                          {formatPlanName(plan)}
                         </SelectItem>
                       ))
                     ) : (

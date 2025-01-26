@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/tooltip"
 import { useRouter } from 'next/navigation';
 import { changeServiceStatus } from '@/app/(PrivateRoutes)/api/services/api'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useApp } from '@/context/AppContext'
 import Link from 'next/link'
 import { useSidebar } from './ui/sidebar'
@@ -56,10 +56,12 @@ export function ServiceCard({
       }
     }
     const handleCLick = ()=>{
-      if(state === 'expanded' && !isMobile ){
-        toggleSidebar()
+      if(process.env.NEXT_PUBLIC_SERVICE_MANAGEMENT_STATUS === "true"){
+        if(state === 'expanded' && !isMobile ){
+          toggleSidebar()
+        }
+        router.push(`/service/dashboard?service-id=${id}&service-name=${name}&project-id=${projectId}`)
       }
-      router.push(`/service/dashboard?service-id=${id}&service-name=${name}&project-id=${projectId}`)
     }
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 w-full hover:shadow-sm transition-shadow duration-200">

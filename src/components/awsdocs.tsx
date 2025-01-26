@@ -5,7 +5,7 @@ export function AWSAccountInstructions() {
     <Accordion type="single" collapsible className="w-full border rounded-lg bg-white">
       <AccordionItem value="item-1">
         <AccordionTrigger className="hover:bg-gray-100 px-4 py-4 text-lg rounded-t-lg">
-          How to Create an Access Key ID and Secret Access Key
+          Generate Credentials
         </AccordionTrigger>
         <AccordionContent className="p-4 pt-0 text-base">
           <ol className="list-decimal pl-5 space-y-4">

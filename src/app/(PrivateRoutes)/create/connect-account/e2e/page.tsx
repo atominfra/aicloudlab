@@ -53,7 +53,7 @@ export default function CloudProviderForm() {
   };
 
   return (
-    <div className="lg:p-6 bg-neutral-100 lg:h-screen flex justify-center h-[92vh]">
+    <div className="lg:p-6 bg-neutral-100 h-screen flex justify-center ">
       <div className="max-w-2xl mx-auto p-4 lg:p-6 w-full">
         <div className="text-center mb-8">
           <h1 className="lg:text-2xl text-lg font-semibold mb-2">E2E Networks</h1>
