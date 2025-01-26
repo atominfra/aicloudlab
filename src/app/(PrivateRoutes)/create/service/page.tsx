@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select"
 import { useRouter } from 'next/navigation'
 import { useApp } from '@/context/AppContext'
-import { Eye, EyeOff, Trash2, GalleryVerticalEnd, Router, RefreshCw, Plus, FolderOpen } from 'lucide-react'
+import { Eye, EyeOff, Trash2, GalleryVerticalEnd, Router, RefreshCw, Plus, FolderOpen, CircleAlert } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { CircularProgress } from '@mui/material'
@@ -309,12 +309,12 @@ const CreateService: React.FC<CreateServiceProps> = () => {
         },
         body: JSON.stringify(deploymentData)
       });
-  
-      if (response.ok) {
+      
+      const data = await response.json();
+      if (data.error === "false") {
         router.push(`/project/${projectId}?viewType=services`)
       } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Failed to create service');
+        setError(data.message || 'Failed to create service');
       }
     } catch (err) {
       setError('An error occurred while creating the service');
@@ -419,8 +419,11 @@ const CreateService: React.FC<CreateServiceProps> = () => {
           <h1 className="lg:text-2xl text-lg font-semibold mb-2">{serviceId ? 'Edit Service' : 'Create New Service'}</h1>
         </div>
       </div>
-
-      <form className="space-y-6 max-w-2xl md:mx-auto pb-6 mx-4" onSubmit={handleSubmit}>
+        {error && <div className="text-red-500 text-sm bg-red-50 border  max-w-2xl md:mx-auto border-red-100  p-4 rounded-lg flex gap-2 items-center">
+        <CircleAlert className='text-red-500  size-4 ' />
+        <div>{error}</div>
+        </div>}
+      <form className="space-y-6 max-w-2xl md:mx-auto pb-6 pt-4 mx-4" onSubmit={handleSubmit}>
       <div className="">
           <label htmlFor="service-name" className="text-sm pl-2 font-medium text-[#374151]">
              Project*
@@ -776,10 +779,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
           </>
         </div>
 
-        {error && isNameTouched && (
-          <p className="text-red-500 text-sm">{error}</p>
-        )}
-         <div className="flex justify-end space-x-4 pt-4 max-w-2xl md:mx-auto">
+        <div className="flex justify-end space-x-4 pt-4 max-w-2xl md:mx-auto">
           <Button variant="outline" className="text-[14px]" onClick={() => window.history.back()}>Cancel</Button>
           <Button type="submit" disabled={isLoading} className="bg-[#2563EB] text-[14px]">
             {isLoading ? 'Creating...' : serviceId ? 'Update Service' : 'Deploy Service'}

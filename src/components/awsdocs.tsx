@@ -62,7 +62,7 @@ export function AWSAccountInstructions() {
                 <li>Click Next, add an optional description, and click Create access key.</li>
                 <li className="font-bold text-red-600">
                   Important: Copy the Access Key ID and Secret Access Key immediately and store them securely. The
-                  Secret Access Key won't be shown again.
+                  Secret Access Key won&apos;t be shown again.
                 </li>
               </ul>
             </li>

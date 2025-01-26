@@ -29,7 +29,7 @@ export function E2ENetworksInstructions() {
             <li>
               <h3 className="font-semibold mb-1">Save the Token</h3>
               <p className="font-bold text-red-600">
-                Copy the generated API Key and Auth Token immediately and store it securely. It won't be visible again.
+                Copy the generated API Key and Auth Token immediately and store it securely. It won&apos;t be visible again.
               </p>
             </li>
           </ol>

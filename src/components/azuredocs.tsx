@@ -17,7 +17,7 @@ export function AzureAccountInstructions() {
                   Click New Registration and fill in:
                   <ul className="list-disc pl-5 mt-1 space-y-1">
                     <li>Name: Enter a name (e.g., MyApp).</li>
-                    <li>Supported account types: Select the appropriate option (e.g., "Organizational directory").</li>
+                    <li>Supported account types: Select the appropriate option (e.g., &quot;Organizational directory&quot;).</li>
                   </ul>
                 </li>
                 <li>Click Register.</li>
