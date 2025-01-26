@@ -59,7 +59,7 @@ export function ServiceCard({
       if(state === 'expanded' && !isMobile ){
         toggleSidebar()
       }
-      router.push(`/service/dashboard?service-id=${id}&service-name=${name}`)
+      router.push(`/service/dashboard?service-id=${id}&service-name=${name}&project-id=${projectId}`)
     }
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 w-full hover:shadow-sm transition-shadow duration-200">

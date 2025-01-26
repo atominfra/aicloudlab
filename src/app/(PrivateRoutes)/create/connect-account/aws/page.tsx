@@ -129,7 +129,7 @@ export default function CloudProviderForm() {
                       setSecret_key(e.target.value)
                       setFieldErrors((prev) => ({ ...prev, secret_key: false }))
                     }}
-                    className={fieldErrors.secret_key ? "border-red-500" : ""}
+                    className={fieldErrors.secret_key ? "border border-red-500" : ""}
                   />
                   {fieldErrors.secret_key && <p className="text-red-500 text-sm mt-1">Please enter a secret key</p>}
                 </div>
@@ -140,7 +140,6 @@ export default function CloudProviderForm() {
                 </div>
               </form>
 
-              <div className="mt-8"></div>
             </div>
           </CardContent>
         </Card>

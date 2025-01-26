@@ -95,7 +95,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     { id: "Delhi", name: "Delhi", provider: "e2e" },
     { id: "Mumbai", name: "Mumbai", provider: "e2e" },
     { id: "centralindia", name: "Central India", provider: "azure" },
-    { id: "us-east-1", name: "US East", provider: "aws" }
+    { id: "ap-south-1", name: "Mumbai", provider: "aws" }
   ])
   const searchParams = useSearchParams()
   const projectId = searchParams.get("projectId")

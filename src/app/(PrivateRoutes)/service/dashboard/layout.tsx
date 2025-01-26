@@ -6,7 +6,7 @@ import { ServiceHeader } from "@/components/service-header"
 import { useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react"
 import { useApp } from "@/context/AppContext"
-import { fetchServiceDetails } from "../../api/services/api"
+import { fetchServiceDetails, getAllProjectServices } from "../../api/services/api"
 import { fetchNode } from "../../api/nodes/api"
 import Loader from "@/components/loader"
 
@@ -43,6 +43,7 @@ export default function RootLayout({
   const searchParams = useSearchParams()
   const id = searchParams.get("service-id")
   const name = searchParams.get("service-name")
+  const projectId = searchParams.get("project-id")
   const { auth } = useApp()
 
   const fetchNodeDetails = async (nodeId: string) => {
@@ -67,7 +68,7 @@ export default function RootLayout({
     const fetchServices = async () => {
       setLoading(true)
       try {
-        const data = (await fetchServiceDetails(auth, id)) as ServiceResponse
+        const data = (await getAllProjectServices(auth, projectId)) as ServiceResponse
         console.log("Fetched Data:", data)
         console.log("ID to Match:", id, typeof id)
 

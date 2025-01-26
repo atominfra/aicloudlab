@@ -20,7 +20,7 @@ export default function CloudProviderForm() {
   const [error, setError] = useState('');
   const [name, setName] = useState('');
   const [apiKey, setApiKey] = useState('');
-  const [jwtToken, setJwtToken] = useState('');
+  const [authToken, setAuthToken] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +33,7 @@ export default function CloudProviderForm() {
         providerText: 'E2E Networks',
         credentials: {
           api_key: apiKey,
-          jwt_token: jwtToken,
+          jwt_token: authToken,
         },
       };
 
@@ -92,13 +92,13 @@ export default function CloudProviderForm() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="jwt_token">JWT Token</Label>
+                  <Label htmlFor="jwt_token">Auth Token</Label>
                   <ToggleableInput
-                    id="jwt_token"
-                    name="jwt_token"
-                    placeholder="Enter JWT token"
-                    value={jwtToken}
-                    onChange={(e) => setJwtToken(e.target.value)}
+                    id="auth_token"
+                    name="auth_token"
+                    placeholder="Enter Auth token"
+                    value={authToken}
+                    onChange={(e) => setAuthToken(e.target.value)}
                     required
                   />
                 </div>
