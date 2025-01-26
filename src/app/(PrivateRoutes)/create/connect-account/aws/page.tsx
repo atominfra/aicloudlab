@@ -11,6 +11,7 @@ import { createCloudAccount } from "@/app/(PrivateRoutes)/api/cloud/api"
 import { useApp } from "@/context/AppContext"
 import { ToggleableInput } from "@/components/ToggleableInput"
 import { AWSAccountInstructions } from "@/components/awsdocs"
+import { CircleAlert } from "lucide-react"
 
 export default function CloudProviderForm() {
   const { auth } = useApp()
@@ -20,10 +21,29 @@ export default function CloudProviderForm() {
   const [name, setName] = useState("")
   const [access_key, setAccess_key] = useState("")
   const [secret_key, setSecret_key] = useState("")
+  const [fieldErrors, setFieldErrors] = useState({
+    name: false,
+    access_key: false,
+    secret_key: false,
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
+
+    // Check for empty fields
+    const newFieldErrors = {
+      name: name.trim() === "",
+      access_key: access_key.trim() === "",
+      secret_key: secret_key.trim() === "",
+    }
+    setFieldErrors(newFieldErrors)
+
+    // If any field is empty, stop submission
+    if (Object.values(newFieldErrors).some(Boolean)) {
+      setIsLoading(false)
+      return
+    }
 
     try {
       const apiData = {
@@ -37,9 +57,12 @@ export default function CloudProviderForm() {
       }
 
       const res = await createCloudAccount(auth, apiData)
-      console.log("Aws Networks account connected:", res)
-
-      router.push("/dashboard/accounts")
+      if (res.error === "true") {
+        setError(res.message)
+      } else {
+        console.log("Aws Networks account connected:", res)
+        router.push("/dashboard/accounts")
+      }
     } catch (error) {
       console.error("Error connecting account:", error)
       setError("An error occurred while creating the cluster")
@@ -58,7 +81,11 @@ export default function CloudProviderForm() {
         <Card className="border-none shadow-none">
           <CardContent>
             <div className="pt-4">
-              <form onSubmit={handleSubmit} className="space-y-4">
+            {error && <div className="text-red-500 text-sm bg-red-50 border border-red-100  p-4 rounded-lg flex gap-2 items-center">
+              <CircleAlert className='text-red-500  size-4 ' />
+              <div>{error}</div>
+              </div>}
+              <form onSubmit={handleSubmit} className="space-y-4 py-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Name</Label>
                   <Input
@@ -66,9 +93,13 @@ export default function CloudProviderForm() {
                     name="name"
                     placeholder="Enter name"
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
+                    onChange={(e) => {
+                      setName(e.target.value)
+                      setFieldErrors((prev) => ({ ...prev, name: false }))
+                    }}
+                    className={fieldErrors.name ? "border-red-500" : ""}
                   />
+                  {fieldErrors.name && <p className="text-red-500 text-sm mt-1">Please enter a name</p>}
                 </div>
 
                 <div className="space-y-2">
@@ -78,9 +109,13 @@ export default function CloudProviderForm() {
                     name="access_key"
                     placeholder="Enter Access key"
                     value={access_key}
-                    onChange={(e) => setAccess_key(e.target.value)}
-                    required
+                    onChange={(e) => {
+                      setAccess_key(e.target.value)
+                      setFieldErrors((prev) => ({ ...prev, access_key: false }))
+                    }}
+                    className={fieldErrors.access_key ? " border border-red-500" : ""}
                   />
+                  {fieldErrors.access_key && <p className="text-red-500 text-sm mt-1">Please enter an access key</p>}
                 </div>
 
                 <div className="space-y-2">
@@ -90,13 +125,14 @@ export default function CloudProviderForm() {
                     name="secret_key"
                     placeholder="Enter Secret Key"
                     value={secret_key}
-                    onChange={(e) => setSecret_key(e.target.value)}
-                    required
+                    onChange={(e) => {
+                      setSecret_key(e.target.value)
+                      setFieldErrors((prev) => ({ ...prev, secret_key: false }))
+                    }}
+                    className={fieldErrors.secret_key ? "border-red-500" : ""}
                   />
+                  {fieldErrors.secret_key && <p className="text-red-500 text-sm mt-1">Please enter a secret key</p>}
                 </div>
-
-                {error && <p className="text-red-500 text-sm">{error}</p>}
-
                 <div className="w-full text-end">
                   <Button type="submit" className="bg-[#2563EB]" disabled={isLoading}>
                     {isLoading ? "Connecting..." : "Connect Account"}
@@ -104,18 +140,14 @@ export default function CloudProviderForm() {
                 </div>
               </form>
 
-              <div className="mt-8">
-              </div>
+              <div className="mt-8"></div>
             </div>
-            
           </CardContent>
         </Card>
         <div className="py-4">
-        <AWSAccountInstructions  />
+          <AWSAccountInstructions />
         </div>
-        
       </div>
-      
     </div>
   )
 }

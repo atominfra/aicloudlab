@@ -41,9 +41,12 @@ export default function AzurePage() {
       };
 
       const res = await createCloudAccount(auth, apiData);
-
-      console.log('Azure account connected:', res);
-      router.push('/dashboard/accounts');
+      if(res.error === 'true'){
+        setError(res.message)
+      }else{
+        console.log('Azure account connected:', res);
+        router.push('/dashboard/accounts');
+      }
     } catch (error) {
       console.error(error);
       setError('An error occurred while creating the cluster');
@@ -62,7 +65,10 @@ export default function AzurePage() {
         <Card className="border-none shadow-none">
           <CardContent>
             <div className="pt-4">
-              <form onSubmit={handleSubmit} className="space-y-4">
+            {error && <div className="text-red-500 text-sm bg-red-50 border border-red-100  p-4 rounded-lg">
+              {error}
+              </div>}
+              <form onSubmit={handleSubmit} className="space-y-4 py-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Name</Label>
                   <Input
@@ -122,9 +128,6 @@ export default function AzurePage() {
                     required
                   />
                 </div>
-
-                {error && <p className="text-red-500 text-sm">{error}</p>}
-
                 <div className='w-full text-end'>
                   <Button type="submit" className="bg-[#2563EB]" disabled={isLoading}>
                     {isLoading ? 'Connecting...' : 'Connect Account'}

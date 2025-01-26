@@ -11,6 +11,7 @@ import { createCloudAccount } from '@/app/(PrivateRoutes)/api/cloud/api';
 import { useApp } from '@/context/AppContext';
 import { ToggleableInput } from '@/components/ToggleableInput';
 import { E2ENetworksInstructions } from '@/components/e2edocs';
+import { CircleAlert } from 'lucide-react';
 
 export default function CloudProviderForm() {
   const { auth } = useApp();
@@ -37,9 +38,12 @@ export default function CloudProviderForm() {
       };
 
       const res = await createCloudAccount(auth, apiData);
-      console.log('E2E Networks account connected:', res);
-
-      router.push('/dashboard/accounts');
+      if(res.error === 'true'){
+        setError(res.message)
+      }else{
+        console.log('E2E Networks account connected:', res);
+        router.push('/dashboard/accounts');
+      }
     } catch (error) {
       console.error('Error connecting account:', error);
       setError('An error occurred while creating the cluster');
@@ -58,7 +62,11 @@ export default function CloudProviderForm() {
         <Card className="border-none shadow-none">
           <CardContent>
             <div className="pt-4">
-              <form onSubmit={handleSubmit} className="space-y-4">
+            {error && <div className="text-red-500 text-sm bg-red-50 border border-red-100  p-4 rounded-lg flex gap-2 items-center">
+              <CircleAlert className='text-red-500  size-4 ' />
+              <div>{error}</div>
+              </div>}
+              <form onSubmit={handleSubmit} className="space-y-4 py-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Name</Label>
                   <Input
@@ -94,8 +102,6 @@ export default function CloudProviderForm() {
                     required
                   />
                 </div>
-
-                {error && <p className="text-red-500 text-sm">{error}</p>}
 
                 <div className="w-full text-end">
                   <Button type="submit" className="bg-[#2563EB]" disabled={isLoading}>
