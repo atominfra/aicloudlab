@@ -66,7 +66,7 @@ export function ServiceCard({
   return (
     <div className="bg-white rounded-lg border border-gray-200 p-4 w-full hover:shadow-sm transition-shadow duration-200">
       <div className="flex  space-y-4 sm:space-y-0 w-full">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between  w-full hover:cursor-pointer"  onClick={handleCLick}>
+        <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between  w-full ${process.env.NEXT_PUBLIC_SERVICE_MANAGEMENT_STATUS === "true" && 'hover:cursor-pointer'}`}  onClick={handleCLick}>
           <div className="flex flex-col space-y-4 sm:flex-row sm:items-center sm:space-x-4 ">
             {/* Service Name with Icon */}
             <div className="flex items-center ">
