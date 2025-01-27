@@ -29,19 +29,19 @@ export function AWSAccountInstructions() {
               </ul>
               <pre className="bg-gray-100 p-3 rounded-md mt-2 text-xs overflow-x-auto">
                 {`{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "pricing:DescribeServices",
-        "pricing:GetAttributeValues",
-        "pricing:GetProducts"
-      ],
-      "Resource": "*"
-    }
-  ]
-}`}
+                  "Version": "2012-10-17",
+                  "Statement": [
+                    {
+                      "Effect": "Allow",
+                      "Action": [
+                        "pricing:DescribeServices",
+                        "pricing:GetAttributeValues",
+                        "pricing:GetProducts"
+                      ],
+                      "Resource": "*"
+                    }
+                  ]
+                }`}
               </pre>
               <ul className="list-disc pl-5 mt-2 space-y-1">
                 <li>Name it PricingAccessPolicy and click Create policy.</li>
@@ -51,7 +51,7 @@ export function AWSAccountInstructions() {
               <h3 className="font-semibold mb-1">Attach Policy to User</h3>
               <ul className="list-disc pl-5 mt-1 space-y-1">
                 <li>Return to the IAM user creation tab.</li>
-                <li>Attach the PricingAccessPolicy to the user.</li>
+                <li>Attach the PricingAccessPolicy and AmazonEC2FullAccess to the user in the IAM User Creation tab.</li>
                 <li>Review the user details and click Create User.</li>
               </ul>
             </li>
