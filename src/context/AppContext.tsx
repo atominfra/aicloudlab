@@ -99,6 +99,7 @@ export const AppProvider = ({ children }) => {
         setUser, 
         fetchUserDetails, 
         isloading, 
+        setIsloading,
         auth,
         setAuth,
       }

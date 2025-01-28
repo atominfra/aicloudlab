@@ -10,7 +10,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Typography } from '@mui/material';
-import CustomButton from '../button';
+import {CustomButton} from '../ui-components/custom-button';
 import { SiJupyter } from "react-icons/si";
 
 
@@ -32,11 +32,11 @@ export default function AnchorTemporaryDrawer() {
        <div className="h-full m-4 w-[150px]">
        <Box>
           <Typography>Deploy model</Typography>
-          <CustomButton text="Deploy" onclickhandler={()=>{}}  customCss={'text-[15px] lg:text-[16px]'}/>
+          <CustomButton text="Deploy" onClickHandler={()=>{}}  customCss={'text-[15px] lg:text-[16px]'}/>
         </Box>
         <Box>
           <Typography>Sync Model</Typography>
-          <CustomButton text="Sync" onclickhandler={()=>{}}  customCss={'text-[15px] lg:text-[16px]'}/>
+          <CustomButton text="Sync" onClickHandler={()=>{}}  customCss={'text-[15px] lg:text-[16px]'}/>
         </Box>
        </div>
       </Drawer>

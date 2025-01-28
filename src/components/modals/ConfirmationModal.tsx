@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, CircularProgress, Modal, Typography } from '@mui/material';
-import CustomButton from '../button';
+import {CustomButton} from '../ui-components/custom-button';
 
 interface ConfirmationModalProps {
   open: boolean;
@@ -34,15 +34,16 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({ open, account, on
         <Box className="flex w-full justify-between gap-4 pt-4">
           <CustomButton
             text="Cancel"
-            onclickhandler={onCancel}
+            onClickHandler={onCancel}
             customCss="w-[50%] bg-[#e3e3e3] text-black shadow-none text-[15px] lg:text-[18px]"
           />
           <CustomButton
+          // @ts-expect-error build
             text={isRevoking=== true ? <>
               <CircularProgress className="text-white" size={18}/> 
               </>:
               <>Confirm</>}  
-            onclickhandler={onConfirm}
+              onClickHandler={onConfirm}
             customCss="w-[50%] bg-[#2563EB] text-white text-[15px] lg:text-[16px]"
           />
         </Box>

@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { FaPlay } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import CircularProgress from '@mui/material/CircularProgress';
-import CustomButton from "../button";
+import {CustomButton} from "../ui-components/custom-button";
 import { useRouter } from "next/navigation";
 import Popper from '@mui/material/Popper';
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
