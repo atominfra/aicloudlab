@@ -3,25 +3,23 @@
 import type React from "react"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card"
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Eye, EyeOff, FolderOpen, Plus, RefreshCw, Trash2 } from "lucide-react"
+import { CircleAlert, Eye, EyeOff, FolderOpen, Plus, RefreshCw, Trash2 } from "lucide-react"
 import { fetchOSOptions, fetchPlans, createNode, fetchPrice } from "@/app/(PrivateRoutes)/api/nodes/api"
 import { getAllProjects, getOneProject } from "@/app/(PrivateRoutes)/api/projects/api"
 import { fetchAllCloudAccounts } from "@/app/(PrivateRoutes)/api/cloud/api"
 import { useApp } from "@/context/AppContext"
 import { CircularProgress } from "@mui/material"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Switch } from "@/components/ui/switch"
-import Link from "next/link"
+import Image from "next/image"
 import azureIcon from "@/assets/azure.svg"
 import gcpIcon from "@/assets/gcp.svg"
 import awsIcon from "@/assets/aws.svg"
-import Image from "next/image"
+
 // Types
 interface OSOption {
   name: string
@@ -95,7 +93,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     { id: "Delhi", name: "Delhi", provider: "e2e" },
     { id: "Mumbai", name: "Mumbai", provider: "e2e" },
     { id: "centralindia", name: "Central India", provider: "azure" },
-    { id: "ap-south-1", name: "Mumbai", provider: "aws" }
+    { id: "ap-south-1", name: "Mumbai", provider: "aws" },
   ])
   const searchParams = useSearchParams()
   const projectId = searchParams.get("projectId")
@@ -104,31 +102,16 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const { auth } = useApp()
   const router = useRouter()
   const [error, setError] = useState("")
-  const [fieldErrors, setFieldErrors] = useState<{ [key in keyof NodeData]: boolean }>({
-    projects_id: false,
-    location: false,
-    name: false,
-    cloud_account_id: false,
-    os: false,
-    osVersion: false,
-    plan: false,
-    image: false,
-    commitmment: false,
-    sshKeys: false,
-    volumes: false,
-    securityRules: false,
-  })
+  const [fieldErrors, setFieldErrors] = useState<{ [key in keyof NodeData]?: string }>({})
 
   const areAllRequiredFieldsFilled = () => {
     return (
       formState.name !== "" &&
-      // formState.projects_id !== '' &&
       formState.cloud_account_id !== "" &&
       formState.location !== "" &&
       formState.os !== "" &&
       formState.osVersion !== "" &&
       formState.plan !== "" &&
-      // formState.commitmment !== '' &&
       formState.sshKeys.length > 0 &&
       formState.sshKeys.every((key) => key.key.trim() !== "")
     )
@@ -176,7 +159,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       setLoadingOs(false)
     }
     fetchData()
-  }, [formState.location])
+  }, [formState.cloud_account_id, formState.location, auth]) // Added auth to dependencies
 
   useEffect(() => {
     console.log("plans", plans)
@@ -208,7 +191,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
   useEffect(() => {
     fetchAvailablePlans()
-  }, [formState.os, formState.osVersion, auth])
+  }, [formState.os, formState.osVersion, auth, formState.location, formState.cloud_account_id]) // Added auth to dependencies
 
   const fetchPriceData = async () => {
     if (!formState.os || !formState.osVersion || !formState.location || !formState.plan) return
@@ -232,7 +215,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
   useEffect(() => {
     fetchPriceData()
-  }, [formState.plan])
+  }, [formState.plan, auth]) // Added auth to dependencies
 
   useEffect(() => {
     console.log("Cloud Accounts:", accounts)
@@ -258,37 +241,31 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
   const updateFormState = (field: keyof NodeData, value) => {
     setFormState((prev) => ({ ...prev, [field]: value }))
-    setFieldErrors((prev) => ({ ...prev, [field]: false }))
+    setFieldErrors((prev) => ({ ...prev, [field]: undefined }))
+  }
+
+  const validateForm = () => {
+    const errors: { [key in keyof NodeData]?: string } = {}
+    if (!formState.name) errors.name = "Node name is required"
+    if (!formState.cloud_account_id) errors.cloud_account_id = "Cloud account is required"
+    if (!formState.location) errors.location = "Location is required"
+    if (!formState.os) errors.os = "Operating system is required"
+    if (!formState.osVersion) errors.osVersion = "OS version is required"
+    if (!formState.plan) errors.plan = "Plan is required"
+    if (!formState.commitmment) errors.commitmment = "Reservation is required"
+    if (formState.sshKeys.length === 0 || formState.sshKeys.some((key) => !key.key.trim())) {
+      errors.sshKeys = "At least one SSH key is required"
+    }
+
+    setFieldErrors(errors)
+    return Object.keys(errors).length === 0
   }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    // Validate all fields
-    const newFieldErrors = { ...fieldErrors }
-    let hasError = false
+    setError("")
 
-    Object.keys(formState).forEach((key) => {
-      const field = key as keyof NodeData
-      if (field === "sshKeys") {
-        newFieldErrors[field] = formState[field].length === 0 || formState[field].some((key) => key.key.trim() === "")
-      } else if (
-        field === "volumes" ||
-        field === "securityRules" ||
-        field === "commitmment" ||
-        field === "projects_id"
-      ) {
-        // These fields are optional, so we don't validate them
-        newFieldErrors[field] = false
-      } else {
-        newFieldErrors[field] = formState[field] === ""
-      }
-      if (newFieldErrors[field]) hasError = true
-    })
-
-    setFieldErrors(newFieldErrors)
-
-    if (hasError) {
-      setError("Please fill in all required fields.")
+    if (!validateForm()) {
       return
     }
 
@@ -319,7 +296,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     } finally {
       setLoading(false)
     }
-    // }
   }
 
   const findplan = (plans: Plan[], value: string) => {
@@ -340,7 +316,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       newSSHKeys[index] = { ...newSSHKeys[index], key: value }
       return { ...prev, sshKeys: newSSHKeys }
     })
-    setFieldErrors((prev) => ({ ...prev, sshKeys: false }))
+    setFieldErrors((prev) => ({ ...prev, sshKeys: undefined }))
   }
 
   const fethcProjectData = async () => {
@@ -357,7 +333,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
   useEffect(() => {
     if (projectId) fethcProjectData()
-  }, [auth])
+  }, [auth, projectId])
 
   const addVolume = () => {
     setFormState((prev) => ({
@@ -398,7 +374,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }))
   }
 
-  const updateSecurityRule = (index: number, field: keyof NodeData["securityRules"][0], value) => {
+  const updateSecurityRule = (index: number, field: keyof NodeData["securityRules"][0], value: any) => {
     setFormState((prev) => {
       const newRules = [...prev.securityRules]
       newRules[index] = { ...newRules[index], [field]: value }
@@ -412,10 +388,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
   const formatPlanName = (plan: Plan) => {
     return (
-      <div className=" gap-2 w-[full] ">
-        {/* <span className="inline-flex items-center min-w-[80px] px-2.5 py-0.5 rounded-full text-xs font-medium">
-          ID: {plan.id}
-        </span> */}
+      <div className="gap-2 w-[full]">
         {plan.cpu && plan.cpu_type && (
           <span className="inline-flex items-center min-w-[40px] px-2.5 py-0.5 rounded-full text-xs font-medium">
             {plan.cpu} {plan.cpu_type}
@@ -424,19 +397,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         {plan.ram && <span>•</span>}
         {plan.ram && (
           <span className="inline-flex items-center px-2.5 min-w-[140px] py-0.5 rounded-full text-xs font-medium">
-             {plan.ram} GB Ram
+            {plan.ram} GB Ram
           </span>
         )}
-        {/* {plan.disk_space && (
-          <span className="inline-flex items-center px-2.5 min-w-[70px] py-0.5 rounded-full text-xs font-medium">
-            {plan.disk_space} GB
-          </span>
-        )} */}
-        {/* {plan.plan && (
-          <span className="inline-flex items-center min-w-[200px] px-2.5 py-0.5 rounded-full text-xs font-medium">
-            {plan.plan}
-          </span>
-        )} */}
         {plan.gpu_card_details && Object.keys(plan.gpu_card_details).length > 0 && plan.gpu_card_details.name && (
           <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
             {plan.gpu_card_details.name}
@@ -478,7 +441,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         setFilteredLocations([])
       }
     }
-  }, [formState.cloud_account_id])
+  }, [formState.cloud_account_id, accounts]) // Added accounts to dependencies
 
   const handleAccountChange = (value: string) => {
     const accountId = accounts.find((p) => p.name === value)?.id || ""
@@ -495,7 +458,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     setPlans([])
     setOSVersions([])
     setPrice([])
-    setFieldErrors((prev) => ({ ...prev, cloud_account_id: false }))
+    setFieldErrors((prev) => ({ ...prev, cloud_account_id: undefined }))
   }
 
   const handleProjectChange = (value: string) => {
@@ -504,7 +467,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       ...prev,
       projects_id: projects_id,
     }))
-    setFieldErrors((prev) => ({ ...prev, projects_id: false }))
+    setFieldErrors((prev) => ({ ...prev, projects_id: undefined }))
   }
 
   const handleLocationChange = (value: string) => {
@@ -520,7 +483,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     setPlans([])
     setOSVersions([])
     setPrice([])
-    setFieldErrors((prev) => ({ ...prev, location: false }))
+    setFieldErrors((prev) => ({ ...prev, location: undefined }))
   }
 
   const handleOsOptionsChange = (value: string) => {
@@ -534,7 +497,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     setPlans([])
     setOSVersions([])
     setPrice([])
-    setFieldErrors((prev) => ({ ...prev, os: false }))
+    setFieldErrors((prev) => ({ ...prev, os: undefined }))
   }
 
   const handleOsVersionChange = (value: string) => {
@@ -546,7 +509,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }))
     setPlans([])
     setPrice([])
-    setFieldErrors((prev) => ({ ...prev, osVersion: false }))
+    setFieldErrors((prev) => ({ ...prev, osVersion: undefined }))
   }
 
   const handlePlanChange = (value: string) => {
@@ -554,13 +517,13 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     if (selectedPlan) {
       setFormState((prev) => ({
         ...prev,
-        plan: selectedPlan.id, // Store the plan ID instead of the plan name
+        plan: selectedPlan.id,
         image: selectedPlan.image,
         commitmment: "",
       }))
       setPrice([])
     }
-    setFieldErrors((prev) => ({ ...prev, plan: false }))
+    setFieldErrors((prev) => ({ ...prev, plan: undefined }))
   }
 
   const toggleVisibility = (index: number) => {
@@ -624,7 +587,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   useEffect(() => {
     router.prefetch("/dashboard/projects")
     router.prefetch(`/project/${projectId}?viewType=nodes`)
-  }, [router])
+  }, [router, projectId])
 
   return (
     <div className="bg-neutral-100 lg:min-h-screen min-h-[92dvh] flex justify-center">
@@ -636,6 +599,12 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-6">
+          {error && (
+            <div className="text-red-500 text-sm bg-red-50 border  max-w-2xl md:mx-auto border-red-100  p-4 rounded-lg flex gap-2 items-center">
+              <CircleAlert className="text-red-500  size-4 " />
+              <div>{error}</div>
+            </div>
+          )}
             {projectId && (
               <div className="">
                 <label htmlFor="service-name" className="text-sm pl-2 font-medium text-[#374151]">
@@ -649,7 +618,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                       name="name"
                       // @ts-expect-error build
                       value={projectData.name}
-                      // onChange={(e) => handleChange('name', e.target.value)}
                       placeholder="Enter service name"
                       className="max-w-full"
                     />
@@ -708,6 +676,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     <RefreshCw size={16} />
                   </Button>
                 </div>
+                {fieldErrors.projects_id && (
+                  <p className="text-red-500 text-sm mt-1">{fieldErrors.projects_id}</p>
+                )}
               </div>
             )}
 
@@ -716,11 +687,13 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               <Input
                 id="name"
                 placeholder="Enter node name"
-                required
                 value={formState.name}
                 onChange={(e) => updateFormState("name", e.target.value)}
                 className={`max-w-full placeholder:text-black text-sm ${fieldErrors.name ? "border-red-500" : ""}`}
               />
+              {fieldErrors.name && (
+                <p className="text-red-500 text-sm mt-1">{fieldErrors.name}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -775,6 +748,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   <RefreshCw size={16} />
                 </Button>
               </div>
+              {fieldErrors.cloud_account_id && (
+                <p className="text-red-500 text-sm mt-1">{fieldErrors.cloud_account_id}</p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -799,6 +775,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   </SelectContent>
                 </Select>
               </div>
+              {fieldErrors.location && (
+                <p className="text-red-500 text-sm mt-1">{fieldErrors.location}</p>
+              )}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -807,7 +786,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 <Select
                   onValueChange={handleOsOptionsChange}
                   value={formState.os}
-                  required
                   disabled={osOptions && osOptions.length === 0}
                 >
                   <SelectTrigger id="os" className={`max-w-full ${fieldErrors.os ? "border-red-500" : ""}`}>
@@ -832,6 +810,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     )}
                   </SelectContent>
                 </Select>
+                {fieldErrors.os && (
+                  <p className="text-red-500 text-sm mt-1">{fieldErrors.os}</p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -839,7 +820,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 <Select
                   onValueChange={handleOsVersionChange}
                   value={formState.osVersion}
-                  required
                   disabled={!formState.os}
                 >
                   <SelectTrigger
@@ -856,15 +836,17 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     ))}
                   </SelectContent>
                 </Select>
+                {fieldErrors.osVersion && (
+                  <p className="text-red-500 text-sm mt-1">{fieldErrors.osVersion}</p>
+                )}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="plan">Plan *</Label>
                 <Select
                   onValueChange={handlePlanChange}
-                  value={formState.plan} // This will now be the plan ID
+                  value={formState.plan}
                   disabled={plans && plans.length === 0}
-                  required
                 >
                   <SelectTrigger id="plan" className={`max-w-full ${fieldErrors.plan ? "border-red-500" : ""}`}>
                     {loadingPlans ? (
@@ -888,6 +870,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     )}
                   </SelectContent>
                 </Select>
+                {fieldErrors.plan && (
+                  <p className="text-red-500 text-sm mt-1">{fieldErrors.plan}</p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -895,7 +880,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 <Select
                   onValueChange={(value) => updateFormState("commitmment", value)}
                   value={formState.commitmment}
-                  required
                   disabled={price && price.length === 0}
                 >
                   <SelectTrigger
@@ -904,6 +888,8 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   >
                     {loadingPrice ? (
                       <div className="flex items-center">
+                        
+                      
                         <CircularProgress size={16} className="mr-2" />
                         Loading Price Options ...
                       </div>
@@ -923,10 +909,13 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     )}
                   </SelectContent>
                 </Select>
+                {fieldErrors.commitmment && (
+                  <p className="text-red-500 text-sm mt-1">{fieldErrors.commitmment}</p>
+                )}
               </div>
             </div>
 
-            <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
+            <Accordion type="single" collapsible className={`w-full border rounded-md bg-white ${fieldErrors.sshKeys ? "border-red-500" : ""}`}>
               <AccordionItem value="ssh-keys" className="border-b-0">
                 <AccordionTrigger className="px-4 py-2">SSH Keys* </AccordionTrigger>
                 <AccordionContent className="px-4 py-2">
@@ -939,7 +928,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                           placeholder="Paste your SSH public key here"
                           value={sshKey.key}
                           onChange={(e) => updateSSHKey(index, e.target.value)}
-                          className={`flex-grow mr-2 no-scrollbar ${fieldErrors.sshKeys ? "border-red-500" : ""}`}
+                          className={`flex-grow mr-2 no-scrollbar `}
                         />
                         <div className="flex gap-1 items-center">
                           <Button
@@ -969,6 +958,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
+            {fieldErrors.sshKeys && (
+              <p className="text-red-500 text-sm mt-1">{fieldErrors.sshKeys}</p>
+            )}
 
             {/* Volumes */}
             <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
@@ -1067,14 +1059,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                             onChange={(e) => updateSecurityRule(index, "ipAddresses", e.target.value)}
                             className="flex-grow"
                           />
-                          <div className="flex items-center space-x-2">
-                            <Switch
-                              checked={rule.allowed}
-                              onCheckedChange={(checked) => updateSecurityRule(index, "allowed", checked)}
-                              id={`allow-rule-${index}`}
-                            />
-                            <Label htmlFor={`allow-rule-${index}`}>Allow</Label>
-                          </div>
                         </div>
                       </div>
                     ))}
@@ -1085,7 +1069,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-            {error !== "" && <p className="text-red-500 text-sm">{error}</p>}
           </CardContent>
           <CardFooter className="flex justify-end space-x-4 pt-4">
             <Button variant="outline" onClick={() => router.push("/dashboard/projects")}>
@@ -1093,8 +1076,8 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             </Button>
             <Button
               type="submit"
-              disabled={loading || !areAllRequiredFieldsFilled()}
-              className={`bg-[#2563EB] text-white ${loading || !areAllRequiredFieldsFilled() ? "opacity-50" : ""}`}
+              disabled={loading}
+              className={`bg-[#2563EB] text-white ${loading ? "opacity-50" : ""}`}
             >
               {loading ? "Creating..." : "Create Node"}
             </Button>
