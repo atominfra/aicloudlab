@@ -226,12 +226,12 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
               <Box className="flex w-full justify-between gap-4 pt-4">
                 <CustomButton
                   text="No, cancel"
-                  onclickhandler={handleClose}
+                  onClickHandler={handleClose}
                   customCss="w-[50%] bg-[#e3e3e3] text-black shadow-none text-[15px] lg:text-[16px]"
                 />
                 <CustomButton
                   text="Delete Notebook"
-                  onclickhandler={handleSubmit}
+                  onClickHandler={handleSubmit}
                   customCss="w-[50%] bg-red-600 text-white text-[15px] lg:text-[16px]"
                 />
               </Box>

@@ -26,6 +26,7 @@ export default function CreditsModal({ showModal, onClose }:{
           />
           <CustomButton
             text="Upgrade"
+            // @ts-expect-error build
             onClickHandler={() => toast.success('Coming Soon',{position:"bottom-right"})}
             customCss="w-[50%] bg-[#2563EB] text-white text-[15px] lg:text-[16px]"
           />

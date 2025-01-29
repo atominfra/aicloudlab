@@ -3,7 +3,7 @@ import { useApp } from "@/context/AppContext"
 
 interface CustomButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text: string
-  onClickHandler: () => Promise<void> | void
+  onClickHandler: (e: React.MouseEvent<HTMLButtonElement>) => void | Promise<void>;
   customCss?: string
 }
 
@@ -19,7 +19,7 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
   const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
     try {
       setIsLoading(true)
-      await onClickHandler()
+      await onClickHandler(event)
     } catch (error) {
       console.error("Error in button click handler:", error)
     } finally {
