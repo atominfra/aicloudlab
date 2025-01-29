@@ -96,8 +96,11 @@ export default function CreateProject() {
       <div className="text-center mb-8 relative">
         <h1 className="lg:text-2xl text-lg font-semibold mb-2">Create New Project</h1>
       </div>
+        {error && (
+          <div className="text-red-500 text-sm bg-red-50 border border-red-100  p-4 rounded-lg">{error}</div>
+        )}
 
-      <form className="space-y-6" onSubmit={handleSubmit}>
+      <form className="space-y-6 pt-4" onSubmit={handleSubmit}>
         <div className="space-y-2">
           <label htmlFor="project-name" className="text-sm font-medium text-[#374151]">
             Project Name*
