@@ -1,28 +1,21 @@
-'use client'
+"use client"
 
-import React, { useState, useEffect } from 'react'
+import type React from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { useRouter } from 'next/navigation'
-import { useApp } from '@/context/AppContext'
-import { Eye, EyeOff, Trash2, GalleryVerticalEnd, Router, RefreshCw, Plus, FolderOpen, CircleAlert } from 'lucide-react'
-import { useSearchParams } from 'next/navigation'
-import Link from 'next/link'
-import { CircularProgress } from '@mui/material'
-import { useFormState } from 'react-dom'
-import { getOneProject } from '@/app/(PrivateRoutes)/api/projects/api'
-import { getAllProjectNodes } from '@/app/(PrivateRoutes)/api/projects/api'
-import azureIcon from "@/assets/azure.svg";
-import gcpIcon from "@/assets/gcp.svg";
-import awsIcon from "@/assets/aws.svg";
-import Image from 'next/image'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useRouter } from "next/navigation"
+import { useApp } from "@/context/AppContext"
+import { Eye, EyeOff, Trash2, GalleryVerticalEnd, Router, RefreshCw, Plus, FolderOpen, CircleAlert } from "lucide-react"
+import { useSearchParams } from "next/navigation"
+import { CircularProgress } from "@mui/material"
+import { getOneProject } from "@/app/(PrivateRoutes)/api/projects/api"
+import { getAllProjectNodes } from "@/app/(PrivateRoutes)/api/projects/api"
+import azureIcon from "@/assets/azure.svg"
+import gcpIcon from "@/assets/gcp.svg"
+import awsIcon from "@/assets/aws.svg"
+import Image from "next/image"
 
 interface EnvVariable {
   key: string
@@ -31,81 +24,79 @@ interface EnvVariable {
 }
 
 interface RegistryCredential {
-  id: number;
-  name: string;
+  id: number
+  name: string
 }
 
 interface CreateServiceProps {
-  serviceId?: string;
+  serviceId?: string
 }
 
 const CreateService: React.FC<CreateServiceProps> = () => {
   const router = useRouter()
   const searchParams = useSearchParams()
 
-  const serviceId = searchParams.get('id')
+  const serviceId = searchParams.get("id")
 
   const { auth } = useApp()
   const [formData, setFormData] = useState({
-    name: '',
-    image: '',
-    node_id:'',
-    target_port:'',
-    memoryLimit: '',
-    cluster: '',
-    cpuLimit: '',
-    registryCredential: '',
-    env_variables: [{ key: '', value: '', isVisible: false }] as EnvVariable[]
+    name: "",
+    image: "",
+    node_id: "",
+    target_port: "",
+    memoryLimit: "",
+    cluster: "",
+    cpuLimit: "",
+    registryCredential: "",
+    env_variables: [{ key: "", value: "", isVisible: false }] as EnvVariable[],
   })
-  const [registries, setRegistries] = useState<RegistryCredential[]>([]);
-  const [isRegistriesLoading, setIdRegistriesLoading] = useState(false);
+  const [registries, setRegistries] = useState<RegistryCredential[]>([])
+  const [isRegistriesLoading, setIdRegistriesLoading] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [isNameTouched, setIsNameTouched] = useState(false)  
-  const [customMemoryLimit, setCustomMemoryLimit] = useState('')
-  const [isNodeLoading,setIsNodeLoading] = useState(false)
-  const [customCpuLimit, setCustomCpuLimit] = useState('')
-  const [serviceType, setServiceType] =useState('docker-compose')
-  const [nodes,setNodes] = useState([])
+  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({})
+  const [customMemoryLimit, setCustomMemoryLimit] = useState("")
+  const [isNodeLoading, setIsNodeLoading] = useState(false)
+  const [customCpuLimit, setCustomCpuLimit] = useState("")
+  const [serviceType, setServiceType] = useState("docker-compose")
+  const [nodes, setNodes] = useState([])
   const [projectData, setProjectData] = useState([])
   const [loadingProject, setLoadingProject] = useState(true)
   const [loadingNodes, setLoadingNodes] = useState(false)
-  const projectId = searchParams.get('projectId')
+  const projectId = searchParams.get("projectId")
 
   const fethcProjectData = async () => {
     if (!auth) return
     try {
       setLoadingProject(true)
-      const data = await getOneProject(auth,projectId)
+      const data = await getOneProject(auth, projectId)
       setProjectData(data.data)
     } catch (error) {
-      console.error('Failed to fetch initial data:', error)
+      console.error("Failed to fetch initial data:", error)
     }
     setLoadingProject(false)
   }
 
   useEffect(() => {
-    if(projectId)
-      fethcProjectData()
-  }, [auth])
+    if (projectId) fethcProjectData()
+  }, [auth, projectId]) // Added projectId to dependencies
 
   useEffect(() => {
     if (serviceId) {
       // Fetch existing service details
       const fetchServiceDetails = async () => {
         try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/deployment/${serviceId}`,{
-            method:  'GET',
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/deployment/${serviceId}`, {
+            method: "GET",
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('access_token')}` // Assuming you have a token in auth
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`, // Assuming you have a token in auth
             },
-            // body: JSON.stringify(deploymentData)
-          });
-          const res =  await response.json();
+          })
+          const res = await response.json()
           const data = res.data.deployment
-          console.log("Data",data)
+          console.log("Data", data)
           setFormData({
             name: data.name,
             cluster: data.cluster,
@@ -113,83 +104,76 @@ const CreateService: React.FC<CreateServiceProps> = () => {
             target_port: data.target_port,
             memoryLimit: data.mem_limit,
             cpuLimit: data.cpu_limit,
-            node_id:data.node_id,
+            node_id: data.node_id,
             registryCredential: data.registry_credential_id,
-            env_variables: Object.keys(data.env_variables).map(key => ({
+            env_variables: Object.keys(data.env_variables).map((key) => ({
               key,
               value: data.env_variables[key],
               isVisible: false,
             })),
-          });
+          })
         } catch (error) {
-          setError('Failed to fetch service details');
+          setError("Failed to fetch service details")
         }
-      };
+      }
 
-      fetchServiceDetails();
+      fetchServiceDetails()
     }
-
-  }, [serviceId]);
+  }, [serviceId])
 
   const fetchNodeData = async () => {
     if (!auth) return
     try {
       setIsNodeLoading(true)
-      const data = await getAllProjectNodes(auth,projectId )
-      console.log("nodes",data)
+      const data = await getAllProjectNodes(auth, projectId)
+      console.log("nodes", data)
       setNodes(data.data.nodes)
     } catch (error) {
-      console.error('Failed to fetch initial data:', error)
+      console.error("Failed to fetch initial data:", error)
     }
     setIsNodeLoading(false)
   }
 
- useEffect(() => {
-    
+  useEffect(() => {
     fetchNodeData()
-  }, [auth])
+  }, [auth, projectId]) // Added projectId to dependencies
 
   useEffect(() => {
-     const fetchRegistries = async () => {
+    const fetchRegistries = async () => {
       try {
         setIdRegistriesLoading(true)
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/registry/credential`, {
-          method: 'GET',
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
           },
-        });
+        })
 
         if (response.ok) {
-          const responseData = await response.json();
-          setRegistries(responseData.data.credentials);
+          const responseData = await response.json()
+          setRegistries(responseData.data.credentials)
         } else {
-          const errorData = await response.json();
-          setError(errorData.message || 'Failed to fetch registries');
+          const errorData = await response.json()
+          setError(errorData.message || "Failed to fetch registries")
         }
       } catch (err) {
-        setError('An error occurred while fetching registries');
-      } finally{
+        setError("An error occurred while fetching registries")
+      } finally {
         setIdRegistriesLoading(false)
       }
-    };
-
-    fetchRegistries();
-  },[])
-
-  
-  const handleChange = (name: string, value: string) => {
-    const finalValue = name === 'node_id' ? parseInt(value) : value;
-    setFormData(prev => ({ ...prev, [name]: finalValue }))
-    if (name === 'name' && value.trim() !== '') {
-      setIsNameTouched(true)
-      setError(null) 
     }
+
+    fetchRegistries()
+  }, [])
+
+  const handleChange = (name: string, value: string) => {
+    const finalValue = name === "node_id" ? Number.parseInt(value) : value
+    setFormData((prev) => ({ ...prev, [name]: finalValue }))
+    setFieldErrors((prev) => ({ ...prev, [name]: "" }))
   }
 
-  const handleEnvVariableChange = (index: number, field: 'key' | 'value', value: string) => {
-    setFormData(prev => {
+  const handleEnvVariableChange = (index: number, field: "key" | "value", value: string) => {
+    setFormData((prev) => {
       const newEnvVariables = [...prev.env_variables]
       newEnvVariables[index][field] = value
       return { ...prev, env_variables: newEnvVariables }
@@ -197,257 +181,241 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   }
 
   const addEnvVariable = () => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      env_variables: [...prev.env_variables, { key: '', value: '', isVisible: false }]
+      env_variables: [...prev.env_variables, { key: "", value: "", isVisible: false }],
     }))
   }
 
   const removeEnvVariable = (index: number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      env_variables: prev.env_variables.filter((_, i) => i !== index)
+      env_variables: prev.env_variables.filter((_, i) => i !== index),
     }))
   }
 
-  const handleCustomInputChange = (setter: React.Dispatch<React.SetStateAction<string>>) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value === '' || /^\d+$/.test(value)) {
-      setter(value);
+  const handleCustomInputChange =
+    (setter: React.Dispatch<React.SetStateAction<string>>) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value
+      if (value === "" || /^\d+$/.test(value)) {
+        setter(value)
+      }
     }
-  };
 
   const handleCustomMemoryLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    const regex = /^\d+(m|g)?$/; 
-    if (value === '' || regex.test(value)) {
-      setCustomMemoryLimit(value);
+    const value = e.target.value
+    const regex = /^\d+(m|g)?$/
+    if (value === "" || regex.test(value)) {
+      setCustomMemoryLimit(value)
     }
-  };
+  }
+
+  const validateForm = () => {
+    const errors: { [key: string]: string } = {}
+    if (!formData.name.trim()) errors.name = "Service name is required"
+    if (!formData.image.trim()) errors.image = "Image is required"
+    if (!formData.target_port.trim()) errors.target_port = "Port is required"
+    if (!formData.memoryLimit) errors.memoryLimit = "Memory limit is required"
+    if (formData.memoryLimit === "custom" && !customMemoryLimit.trim())
+      errors.customMemoryLimit = "Custom memory limit is required"
+    if (!formData.cpuLimit) errors.cpuLimit = "CPU limit is required"
+    if (formData.cpuLimit === "custom" && !customCpuLimit.trim()) errors.customCpuLimit = "Custom CPU limit is required"
+    if (serviceType === "docker-compose" && !formData.node_id) errors.node_id = "Node selection is required"
+    if (serviceType === "kubernetes" && !formData.cluster) errors.cluster = "Cluster selection is required"
+
+    setFieldErrors(errors)
+    return Object.keys(errors).length === 0
+  }
 
   const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    setIsNameTouched(true);
-    setError(null);
-    setIsLoading(true);
-  
-    if (formData.name === '') {
-      setError('Please enter a name');
-      setIsLoading(false);
-      return;
+    event.preventDefault()
+    setError(null)
+    setIsLoading(true)
+
+    if (!validateForm()) {
+      setIsLoading(false)
+      return
     }
 
-    if (formData.image === '') {
-      setError('Please enter a Image');
-      setIsLoading(false);
-      return;
-    }
+    const memoryLimit = formData.memoryLimit === "custom" ? customMemoryLimit : formData.memoryLimit
+    const memoryLimitRegex = /^\d+(m|g)$/
 
-    if (formData.target_port === '') {
-      setError('Please enter a Port');
-      setIsLoading(false);
-      return;
-    }
-
-    if (formData.memoryLimit === '') {
-      setError('Please enter Memory Limit');
-      setIsLoading(false);
-      return;
-    }
-
-    if (formData.cpuLimit === '') {
-      setError('Please enter Cpu Limit');
-      setIsLoading(false);
-      return;
-    }  
-  
-  
-    const memoryLimit = formData.memoryLimit === 'custom' ? customMemoryLimit : formData.memoryLimit;
-    const memoryLimitRegex = /^\d+(m|g)$/;
-  
     if (!memoryLimitRegex.test(memoryLimit)) {
-      setError('Memory limit must be an integer followed by "m" or "g"');
-      setIsLoading(false);
-      return;
+      setFieldErrors((prev) => ({ ...prev, memoryLimit: 'Memory limit must be an integer followed by "m" or "g"' }))
+      setIsLoading(false)
+      return
     }
-  
+
     const deploymentData = {
       name: formData.name,
       image_url: formData.image,
       target_port: formData.target_port,
       mem_limit: memoryLimit,
       node_id: formData.node_id,
-      cpu_limit: formData.cpuLimit === 'custom' ? customCpuLimit : formData.cpuLimit,
+      cpu_limit: formData.cpuLimit === "custom" ? customCpuLimit : formData.cpuLimit,
       env_variables: {},
-      replicas: 1
-    };
-
+      replicas: 1,
+    }
 
     function removeEmptyStringKeys(obj) {
-      if(typeof obj !== 'string') return {};
-      return Object.fromEntries(
-          Object.entries(obj).filter(([key]) => key !== "")
+      if (typeof obj !== "string") return {}
+      return Object.fromEntries(Object.entries(obj).filter(([key]) => key !== ""))
+    }
 
-      );
-  }
-  
     if (formData.registryCredential) {
       // @ts-expect-error build error
-      deploymentData.registry_credential_id = formData.registryCredential; 
+      deploymentData.registry_credential_id = formData.registryCredential
     }
-      if (formData.env_variables) {
-         const newob = removeEmptyStringKeys(formData.env_variables)
-        deploymentData.env_variables = newob
-       }
+    if (formData.env_variables) {
+      const newob = removeEmptyStringKeys(formData.env_variables)
+      deploymentData.env_variables = newob
+    }
+    console.log("deploymentData", deploymentData)
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/v2/`, {
-        method: serviceId ? 'PUT' : 'POST',
+        method: serviceId ? "PUT" : "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}` 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-        body: JSON.stringify(deploymentData)
-      });
-      
-      const data = await response.json();
+        body: JSON.stringify(deploymentData),
+      })
+
+      const data = await response.json()
       if (data.error === "false") {
         router.push(`/project/${projectId}?viewType=services`)
       } else {
-        setError(data.message || 'Failed to create service');
+        setError(data.message || "Failed to create service")
       }
     } catch (err) {
-      setError('An error occurred while creating the service');
+      setError("An error occurred while creating the service")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const toggleVisibility = (index: number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      env_variables: prev.env_variables.map((variable, i) => 
-        i === index ? { ...variable, isVisible: !variable.isVisible } : variable
-      )
-    }));
-  };
-
-  const handleAddNewCluster = () =>{
-    // localStorage.setItem('createServiceFormData', JSON.stringify(formData));
-    window.open ('/create/cluster', '_ blank');
-  }
-  
-  const handleAddNewNode = () =>{
-    // localStorage.setItem('createServiceFormData', JSON.stringify(formData));
-    window.open (`/create/node?projectId=${projectId}`, '_ blank');
+      env_variables: prev.env_variables.map((variable, i) =>
+        i === index ? { ...variable, isVisible: !variable.isVisible } : variable,
+      ),
+    }))
   }
 
+  const handleAddNewCluster = () => {
+    window.open("/create/cluster", "_ blank")
+  }
 
-  
+  const handleAddNewNode = () => {
+    window.open(`/create/node?projectId=${projectId}`, "_ blank")
+  }
+
   const handleAddNewRegistry = () => {
-    window.open ('/create/registry', '_ blank');
+    window.open("/create/registry", "_ blank")
   }
 
   const refreshRegistries = async () => {
-    setIsRefreshing(true);
+    setIsRefreshing(true)
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/registry/credential`, {
-        method: 'GET',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
         },
-      });
+      })
 
       if (response.ok) {
-        const responseData = await response.json();
-        setRegistries(responseData.data.credentials);
+        const responseData = await response.json()
+        setRegistries(responseData.data.credentials)
       } else {
-        const errorData = await response.json();
-        setError(errorData.message || 'Failed to fetch registries');
+        const errorData = await response.json()
+        setError(errorData.message || "Failed to fetch registries")
       }
     } catch (err) {
-      setError('An error occurred while fetching registries');
+      setError("An error occurred while fetching registries")
     } finally {
-      setIsRefreshing(false);
+      setIsRefreshing(false)
     }
-  };
+  }
 
-
-
-    const refreshNodes = async () => {
-      try {
-        setLoadingNodes(true)
-        const data = await fetchNodeData()
-      } catch (error) {
-        console.error('Failed to fetch nodes:', error)
-      } finally {
-        setLoadingNodes(false)
-      }
+  const refreshNodes = async () => {
+    try {
+      setLoadingNodes(true)
+      await fetchNodeData()
+    } catch (error) {
+      console.error("Failed to fetch nodes:", error)
+    } finally {
+      setLoadingNodes(false)
     }
+  }
 
-    const getProviderIcon = (provider) => {
-      switch (provider.toLowerCase()) {
-        case 'azure':
-          return azureIcon;
-        case 'gcp':
-          return gcpIcon;
-        case 'aws':
-          return awsIcon;
-        case 'e2e':
-          return 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1736699109/e2eicon_oulyzm.png';
-        default:
-          return null;
-      }
-    };
-
-  useEffect(()=>{
-    console.log("form",formData)
-  },[formData])
+  const getProviderIcon = (provider) => {
+    switch (provider.toLowerCase()) {
+      case "azure":
+        return azureIcon
+      case "gcp":
+        return gcpIcon
+      case "aws":
+        return awsIcon
+      case "e2e":
+        return "https://res.cloudinary.com/dy8hx2xrj/image/upload/v1736699109/e2eicon_oulyzm.png"
+      default:
+        return null
+    }
+  }
 
   useEffect(() => {
-    router.prefetch('/create/node');
+    console.log("form", formData)
+  }, [formData])
+
+  useEffect(() => {
+    router.prefetch("/create/node")
     router.prefetch(`/project/${projectId}?viewType=services`)
-
-  }, [router]);
-
+  }, [router, projectId]) // Added projectId to dependencies
 
   return (
-    <div className='bg-neutral-100  py-12 sm:px-6 lg:px-8  '>
+    <div className="bg-neutral-100  py-12 sm:px-6 lg:px-8  ">
       <div className="max-w-2xl mx-auto p-4 lg:p-6 w-full mt-4">
         <div className="text-center mb-8 relative">
-          <h1 className="lg:text-2xl text-lg font-semibold mb-2">{serviceId ? 'Edit Service' : 'Create New Service'}</h1>
+          <h1 className="lg:text-2xl text-lg font-semibold mb-2">
+            {serviceId ? "Edit Service" : "Create New Service"}
+          </h1>
         </div>
       </div>
-        {error && <div className="text-red-500 text-sm bg-red-50 border  max-w-2xl md:mx-auto border-red-100  p-4 rounded-lg flex gap-2 items-center">
-        <CircleAlert className='text-red-500  size-4 ' />
-        <div>{error}</div>
-        </div>}
+      {error && (
+        <div className="text-red-500 text-sm bg-red-50 border  max-w-2xl md:mx-auto border-red-100  p-4 rounded-lg flex gap-2 items-center">
+          <CircleAlert className="text-red-500  size-4 " />
+          <div>{error}</div>
+        </div>
+      )}
       <form className="space-y-6 max-w-2xl md:mx-auto pb-6 pt-4 mx-4" onSubmit={handleSubmit}>
-      <div className="">
+        <div className="">
           <label htmlFor="service-name" className="text-sm pl-2 font-medium text-[#374151]">
-             Project*
+            Project*
           </label>
-          {!loadingProject ? 
-          <div className="relative">
-            <Input
-              disabled={true}
-              id="service-name"
-              name="name"
-              // @ts-expect-error build
-              value={projectData.name}
-              // onChange={(e) => handleChange('name', e.target.value)}
-              placeholder="Enter service name"
-              className="max-w-full"
-            />
-            <div className='flex justify-center items-center bg-white w-[30px] h-[22px] absolute right-3 top-2.5'>
-              <FolderOpen size={18} />
+          {!loadingProject ? (
+            <div className="relative">
+              <Input
+                disabled={true}
+                id="service-name"
+                name="name"
+                // @ts-expect-error build
+                value={projectData.name}
+                placeholder="Enter service name"
+                className="max-w-full"
+              />
+              <div className="flex justify-center items-center bg-white w-[30px] h-[22px] absolute right-3 top-2.5">
+                <FolderOpen size={18} />
+              </div>
             </div>
-          </div>
-          : <div className="flex items-center border bg-white p-2 rounded-md text-sm text-gray-500">
+          ) : (
+            <div className="flex items-center border bg-white p-2 rounded-md text-sm text-gray-500">
               <CircularProgress size={16} className="mr-2 " />
               Loading Project Details..
-            </div> }
+            </div>
+          )}
         </div>
 
         <div className="">
@@ -459,37 +427,35 @@ const CreateService: React.FC<CreateServiceProps> = () => {
               id="service-name"
               name="name"
               value={formData.name}
-              onChange={(e) => handleChange('name', e.target.value)}
+              onChange={(e) => handleChange("name", e.target.value)}
               placeholder="Enter service name"
-              className="max-w-full"
+              className={`max-w-full ${fieldErrors.name ? "border-red-500" : ""}`}
             />
-            <div className='flex justify-center items-center bg-white w-[30px] h-[22px] absolute right-3 top-2.5'>
+            <div className="flex justify-center items-center bg-white w-[30px] h-[22px] absolute right-3 top-2.5">
               <Router size={18} />
             </div>
           </div>
-          {isNameTouched && (formData.name.includes(' ')) && (
-            <p className="text-red-500 text-sm">Name cannot contain an underscore (_) or spaces.</p>
-          )}
+          {fieldErrors.name && <p className="text-red-500 text-sm mt-1">{fieldErrors.name}</p>}
         </div>
-        
-        {serviceType === 'docker-compose' && (
-        <div>
-          <label htmlFor="node" className="pl-2 text-sm font-medium text-[#374151]">
-            Select Node*
-          </label>
-          <div className='flex gap-2'>
-            <Select 
-              value={formData.node_id?.toString()}
-              onValueChange={(value) => {
-                if (value === 'create_node') {
-                  handleAddNewNode();
-                } else {
-                  handleChange('node_id', value)
-                }
-              }}
-            >
-              <SelectTrigger>
-              {isNodeLoading ? (
+
+        {serviceType === "docker-compose" && (
+          <div>
+            <label htmlFor="node" className="pl-2 text-sm font-medium text-[#374151]">
+              Select Node*
+            </label>
+            <div className="flex gap-2">
+              <Select
+                value={formData.node_id?.toString()}
+                onValueChange={(value) => {
+                  if (value === "create_node") {
+                    handleAddNewNode()
+                  } else {
+                    handleChange("node_id", value)
+                  }
+                }}
+              >
+                <SelectTrigger className={fieldErrors.node_id ? "border-red-500" : ""}>
+                  {isNodeLoading ? (
                     <div className="flex items-center">
                       <CircularProgress size={16} className="mr-2" />
                       Loading Nodes...
@@ -497,90 +463,73 @@ const CreateService: React.FC<CreateServiceProps> = () => {
                   ) : (
                     <SelectValue placeholder="Select Node" />
                   )}
-              </SelectTrigger>
-              <SelectContent >
-                {nodes.length > 0 ? (
-                  nodes.map((node) => (
-                    <SelectItem
-                      key={node.id}
-                      value={node.id.toString()}
-                      disabled={node.status !== 'running'} 
-                    >
-                     <div className='flex gap-3 items-center'>
-                     {getProviderIcon(node.provider) && (
-                          <Image
-                            src={getProviderIcon(node.provider)}
-                            alt={node.provider}
-                            width={40}
-                            height={40}
-                            className="w-6 h-6 object-contain"
-                          />
-                        )} {node.name}  {node.status !=="running" && <span className='capitalize'>{node.status}</span>   } 
-                     </div>
-                    </SelectItem>
-                  ))
-                ) : (
-                  <SelectItem value="create_node">No node Available</SelectItem>
-                )}
-              </SelectContent>
-            </Select>
-            <Button 
-              variant="outline" 
-              size="icon" 
-              onClick={handleAddNewNode}
-              className="flex-shrink-0"
-            >
-              <Plus className="h-4 w-4" />
-              <span className="sr-only">Add New Node</span>
-            </Button>
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={refreshNodes} 
-              disabled={loadingNodes}
-              className="p-2"
-            >
-              <RefreshCw size={16} />
-            </Button>
+                </SelectTrigger>
+                <SelectContent>
+                  {nodes.length > 0 ? (
+                    nodes.map((node) => (
+                      <SelectItem key={node.id} value={node.id.toString()} disabled={node.status !== "running"}>
+                        <div className="flex gap-3 items-center">
+                          {getProviderIcon(node.provider) && (
+                            <Image
+                              src={getProviderIcon(node.provider) || "/placeholder.svg"}
+                              alt={node.provider}
+                              width={40}
+                              height={40}
+                              className="w-6 h-6 object-contain"
+                            />
+                          )}{" "}
+                          {node.name} {node.status !== "running" && <span className="capitalize">{node.status}</span>}
+                        </div>
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <SelectItem value="create_node">No node Available</SelectItem>
+                  )}
+                </SelectContent>
+              </Select>
+              <Button variant="outline" size="icon" onClick={handleAddNewNode} className="flex-shrink-0">
+                <Plus className="h-4 w-4" />
+                <span className="sr-only">Add New Node</span>
+              </Button>
+              <Button type="button" variant="outline" onClick={refreshNodes} disabled={loadingNodes} className="p-2">
+                <RefreshCw size={16} />
+              </Button>
+            </div>
+            {fieldErrors.node_id && <p className="text-red-500 text-sm mt-1">{fieldErrors.node_id}</p>}
           </div>
-        </div>
-      )}
+        )}
 
-      {serviceType === 'kubernetes' && (
-        <div>
-          <label htmlFor="cluster" className="pl-2 text-sm font-medium text-[#374151]">
-            Select Cluster*
-          </label>
-          <div className='flex gap-2'>
-            <Select 
-              value={formData.cluster}
-              onValueChange={(value) => {
-                if (value === 'create_cluster') {
-                  handleAddNewCluster();
-                } else {
-                  handleChange('cluster', value)
-                }
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a Cluster" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="no-cluster">No cluster Available</SelectItem>
-              </SelectContent>
-            </Select>
-            <Button 
-              variant="outline" 
-              size="icon" 
-              onClick={handleAddNewCluster}
-              className="flex-shrink-0"
-            >
-              <Plus className="h-4 w-4" />
-              <span className="sr-only">Add New Cluster</span>
-            </Button>
+        {serviceType === "kubernetes" && (
+          <div>
+            <label htmlFor="cluster" className="pl-2 text-sm font-medium text-[#374151]">
+              Select Cluster*
+            </label>
+            <div className="flex gap-2">
+              <Select
+                value={formData.cluster}
+                onValueChange={(value) => {
+                  if (value === "create_cluster") {
+                    handleAddNewCluster()
+                  } else {
+                    handleChange("cluster", value)
+                  }
+                }}
+              >
+                <SelectTrigger className={fieldErrors.cluster ? "border-red-500" : ""}>
+                  <SelectValue placeholder="Select a Cluster" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="no-cluster">No cluster Available</SelectItem>
+                </SelectContent>
+              </Select>
+              <Button variant="outline" size="icon" onClick={handleAddNewCluster} className="flex-shrink-0">
+                <Plus className="h-4 w-4" />
+                <span className="sr-only">Add New Cluster</span>
+              </Button>
+            </div>
+            {fieldErrors.cluster && <p className="text-red-500 text-sm mt-1">{fieldErrors.cluster}</p>}
           </div>
-        </div>
-      )}
+        )}
 
         <div>
           <label htmlFor="image" className="pl-2 text-sm font-medium text-[#374151]">
@@ -591,14 +540,15 @@ const CreateService: React.FC<CreateServiceProps> = () => {
               id="image"
               name="image"
               value={formData.image}
-              onChange={(e) => handleChange('image', e.target.value)}
+              onChange={(e) => handleChange("image", e.target.value)}
               placeholder="Enter image link"
-              className=""
+              className={fieldErrors.image ? "border-red-500" : ""}
             />
-            <div className='flex justify-center items-center bg-white w-[30px] h-[22px] absolute right-3 top-2.5'>
+            <div className="flex justify-center items-center bg-white w-[30px] h-[22px] absolute right-3 top-2.5">
               <GalleryVerticalEnd size={18} className="bg-muted" />
             </div>
           </div>
+          {fieldErrors.image && <p className="text-red-500 text-sm mt-1">{fieldErrors.image}</p>}
         </div>
 
         <div className="">
@@ -609,23 +559,24 @@ const CreateService: React.FC<CreateServiceProps> = () => {
             id="target_port"
             name="target_port"
             value={formData.target_port}
-            onChange={(e) => handleChange('target_port', e.target.value)}
+            onChange={(e) => handleChange("target_port", e.target.value)}
             placeholder="Enter port"
-            className=""
+            className={fieldErrors.target_port ? "border-red-500" : ""}
           />
+          {fieldErrors.target_port && <p className="text-red-500 text-sm mt-1">{fieldErrors.target_port}</p>}
         </div>
 
         <div className="">
           <label htmlFor="memory-limit" className="pl-2 text-sm font-medium text-[#374151]">
             Memory Limit (m/g)*
           </label>
-          <Select 
-            value={formData.memoryLimit} 
+          <Select
+            value={formData.memoryLimit}
             onValueChange={(value) => {
-                handleChange('memoryLimit', value)
+              handleChange("memoryLimit", value)
             }}
           >
-            <SelectTrigger>
+            <SelectTrigger className={fieldErrors.memoryLimit ? "border-red-500" : ""}>
               <SelectValue placeholder="Select memory limit" />
             </SelectTrigger>
             <SelectContent>
@@ -636,14 +587,18 @@ const CreateService: React.FC<CreateServiceProps> = () => {
               <SelectItem value="custom">Custom</SelectItem>
             </SelectContent>
           </Select>
-          {formData.memoryLimit === 'custom' && (
+          {formData.memoryLimit === "custom" && (
             <Input
               type="text"
               placeholder="Enter Custom Memory Limit (e.g., 128m, 1g)"
               value={customMemoryLimit}
               onChange={handleCustomMemoryLimitChange}
-              className="mt-2"
+              className={`mt-2 ${fieldErrors.customMemoryLimit ? "border-red-500" : ""}`}
             />
+          )}
+          {fieldErrors.memoryLimit && <p className="text-red-500 text-sm mt-1">{fieldErrors.memoryLimit}</p>}
+          {fieldErrors.customMemoryLimit && (
+            <p className="text-red-500 text-sm mt-1">{fieldErrors.customMemoryLimit}</p>
           )}
         </div>
 
@@ -651,13 +606,13 @@ const CreateService: React.FC<CreateServiceProps> = () => {
           <label htmlFor="cpu-limit" className="pl-2 text-sm font-medium text-[#374151]">
             CPU Limit*
           </label>
-          <Select 
-            value={formData.cpuLimit} 
+          <Select
+            value={formData.cpuLimit}
             onValueChange={(value) => {
-                handleChange('cpuLimit', value)
+              handleChange("cpuLimit", value)
             }}
           >
-            <SelectTrigger>
+            <SelectTrigger className={fieldErrors.cpuLimit ? "border-red-500" : ""}>
               <SelectValue placeholder="Select CPU limit" />
             </SelectTrigger>
             <SelectContent>
@@ -668,15 +623,17 @@ const CreateService: React.FC<CreateServiceProps> = () => {
               <SelectItem value="custom">Custom</SelectItem>
             </SelectContent>
           </Select>
-          {formData.cpuLimit === 'custom' && (
+          {formData.cpuLimit === "custom" && (
             <Input
               type="text"
               placeholder="Enter Custom CPU Limit (e.g., 1, 2)"
               value={customCpuLimit}
               onChange={handleCustomInputChange(setCustomCpuLimit)}
-              className="mt-2"
+              className={`mt-2 ${fieldErrors.customCpuLimit ? "border-red-500" : ""}`}
             />
           )}
+          {fieldErrors.cpuLimit && <p className="text-red-500 text-sm mt-1">{fieldErrors.cpuLimit}</p>}
+          {fieldErrors.customCpuLimit && <p className="text-red-500 text-sm mt-1">{fieldErrors.customCpuLimit}</p>}
         </div>
 
         <div className="">
@@ -684,51 +641,44 @@ const CreateService: React.FC<CreateServiceProps> = () => {
             Registry Credential
           </label>
           <div className="flex items-center gap-2">
-            <Select 
-              value={formData.registryCredential} 
+            <Select
+              value={formData.registryCredential}
               onValueChange={(value) => {
-                if (value === 'add_new') {
-                  handleAddNewRegistry();
+                if (value === "add_new") {
+                  handleAddNewRegistry()
                 } else {
-                  handleChange('registryCredential', value);
+                  handleChange("registryCredential", value)
                 }
               }}
               disabled={isRefreshing}
             >
               <SelectTrigger>
-              {isRegistriesLoading ? (
-                    <div className="flex items-center">
-                      <CircularProgress size={16} className="mr-2" />
-                      Loading Registries...
-                    </div>
-                  ) : (
-                    <SelectValue placeholder="Select registry" />
-                  )}
+                {isRegistriesLoading ? (
+                  <div className="flex items-center">
+                    <CircularProgress size={16} className="mr-2" />
+                    Loading Registries...
+                  </div>
+                ) : (
+                  <SelectValue placeholder="Select registry" />
+                )}
               </SelectTrigger>
               <SelectContent>
-              {registries.length > 0 ? registries.map((registry) =>         
-                  <SelectItem key={registry.id} value={registry.id.toString()}>
-                  {registry.name}
-                </SelectItem>
-                ): <SelectItem value="create_node">No Registry Available</SelectItem>}
+                {registries.length > 0 ? (
+                  registries.map((registry) => (
+                    <SelectItem key={registry.id} value={registry.id.toString()}>
+                      {registry.name}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value="create_node">No Registry Available</SelectItem>
+                )}
               </SelectContent>
             </Select>
-            <Button 
-              variant="outline" 
-              size="icon" 
-              onClick={handleAddNewRegistry}
-              className="flex-shrink-0"
-            >
+            <Button variant="outline" size="icon" onClick={handleAddNewRegistry} className="flex-shrink-0">
               <Plus className="h-4 w-4" />
               <span className="sr-only">Add New Node</span>
             </Button>
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={refreshRegistries} 
-              disabled={isRefreshing}
-              className="p-2"
-            >
+            <Button type="button" variant="outline" onClick={refreshRegistries} disabled={isRefreshing} className="p-2">
               <RefreshCw size={16} />
             </Button>
           </div>
@@ -736,9 +686,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
 
         <div>
           <div className="flex justify-between items-center">
-            <label className="pl-2 text-sm font-medium text-[#374151]">
-              Environment Variables
-            </label>
+            <label className="pl-2 text-sm font-medium text-[#374151]">Environment Variables</label>
           </div>
           <>
             {formData.env_variables.map((variable, index) => (
@@ -746,29 +694,19 @@ const CreateService: React.FC<CreateServiceProps> = () => {
                 <Input
                   placeholder="Key"
                   value={variable.key}
-                  onChange={(e) => handleEnvVariableChange(index, 'key', e.target.value)}
+                  onChange={(e) => handleEnvVariableChange(index, "key", e.target.value)}
                 />
                 <Input
                   type={variable.isVisible ? "text" : "password"}
-                  autoComplete='new-password'
+                  autoComplete="new-password"
                   placeholder="Value"
                   value={variable.value}
-                  onChange={(e) => handleEnvVariableChange(index, 'value', e.target.value)}
+                  onChange={(e) => handleEnvVariableChange(index, "value", e.target.value)}
                 />
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={() => toggleVisibility(index)}
-                  className="p-2"
-                >
+                <Button type="button" variant="outline" onClick={() => toggleVisibility(index)} className="p-2">
                   {variable.isVisible ? <EyeOff size={16} /> : <Eye size={16} />}
                 </Button>
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  onClick={() => removeEnvVariable(index)}
-                  className="p-2"
-                >
+                <Button type="button" variant="outline" onClick={() => removeEnvVariable(index)} className="p-2">
                   <Trash2 size={16} />
                 </Button>
               </div>
@@ -780,9 +718,11 @@ const CreateService: React.FC<CreateServiceProps> = () => {
         </div>
 
         <div className="flex justify-end space-x-4 pt-4 max-w-2xl md:mx-auto">
-          <Button variant="outline" className="text-[14px]" onClick={() => window.history.back()}>Cancel</Button>
+          <Button variant="outline" className="text-[14px]" onClick={() => window.history.back()}>
+            Cancel
+          </Button>
           <Button type="submit" disabled={isLoading} className="bg-[#2563EB] text-[14px]">
-            {isLoading ? 'Creating...' : serviceId ? 'Update Service' : 'Deploy Service'}
+            {isLoading ? "Creating..." : serviceId ? "Update Service" : "Deploy Service"}
           </Button>
         </div>
       </form>
@@ -790,5 +730,5 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   )
 }
 
-export default CreateService;
+export default CreateService
 
