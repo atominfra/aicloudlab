@@ -374,7 +374,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }))
   }
 
-  const updateSecurityRule = (index: number, field: keyof NodeData["securityRules"][0], value: any) => {
+  const updateSecurityRule = (index: number, field: keyof NodeData["securityRules"][0], value) => {
     setFormState((prev) => {
       const newRules = [...prev.securityRules]
       newRules[index] = { ...newRules[index], [field]: value }
