@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-hot-toast'
+import logo from "@/assets/logo.webp"
 
 interface FormData {
   full_name: string
@@ -161,7 +162,7 @@ export default function Signup() {
                         /> */}
                           <div className='flex items-center justify-center '>
                         <Image
-                          src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
+                          src={logo}
                           width={30}
                           height={30}
                           alt="Atom Infra Logo"
@@ -189,7 +190,7 @@ export default function Signup() {
            <div className='flex md:hidden justify-center pt-12'> 
                         <div className='flex items-center'>
                             <Image
-                              src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
+                              src={logo}
                               width={30}
                               height={30}
                               alt="Atom Infra Logo"

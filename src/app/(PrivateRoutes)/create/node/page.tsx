@@ -19,6 +19,7 @@ import Image from "next/image"
 import azureIcon from "@/assets/azure.svg"
 import gcpIcon from "@/assets/gcp.svg"
 import awsIcon from "@/assets/aws.svg"
+import e2eIcon from "@/assets/e2elogo.webp"
 
 // Types
 interface OSOption {
@@ -583,7 +584,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       case "aws":
         return awsIcon
       case "e2e":
-        return "https://res.cloudinary.com/dy8hx2xrj/image/upload/v1736699109/e2eicon_oulyzm.png"
+        return e2e
       default:
         return null
     }

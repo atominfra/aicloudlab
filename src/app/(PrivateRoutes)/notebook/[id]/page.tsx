@@ -66,50 +66,6 @@ const NotebookPage = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      {/* <Box className="w-full bg-white flex items-center justify-between px-10   py-4 shadow-lg z-[10]">
-        <Box className="flex items-end"> 
-          <Link className="flex items-center" href={`/dashboard`}>
-            <Image 
-              src='https://res.cloudinary.com/dsfu8suwl/image/upload/v1729192530/cloud-lab-high-resolution-logo-grayscale-transparent_1_-_Edited_a4pbfi.webp'
-              width={1000}  
-              height={1000}
-              className=' w-[63px] h-[38px] '
-              alt="AI Cloud Lab Logo" 
-            />
-          </Link>          
-          <Box>
-            <Typography className='pl-4 text-2xl text-black'>
-              {notebook?.name}
-            </Typography>
-          </Box>
-        </Box>
-        <Box className="flex gap-8 items-center">
-          <button
-            className={`bg-white hover:bg-[#2563EB] h-[38px]  hover:text-white text-black shadow-none text-[16px] font-semibold rounded-[10px] border px-4 py-1 border-gray-300 flex gap-2 items-center justify-center`}
-            onClick={() => toast.success('Coming Soon',{position: 'bottom-right'})}
-            style={{ textTransform: 'none' }}
-          >
-            <AiOutlineSync />
-            Sync
-          </button>
-          <button
-            className={`bg-white   text-black shadow-none text-[16px] font-semibold rounded-[10px] ${open ? "border border-black":"border border-gray-300 hover:bg-[#2563EB] hover:text-white"} px-4 py-1 h-[38px]   flex gap-2 items-center justify-center `}
-            onClick={() => toast.success('Coming Soon',{position: 'bottom-right'})}
-            style={{ textTransform: 'none' }}
-          >
-            <FaRocket className='pt-[2px]' />
-            Deploy
-          </button>
-          <button
-            className={` bg-[#2563EB] h-[38px] w-[142px] text-white  shadow-none text-[16px] font-semibold rounded-[10px] border px-2 py-1 border-gray-300 flex gap-2 items-center justify-center ml-6`}
-            onClick={()=> router.push('/dashboard')}
-            style={{ textTransform: 'none' }}
-          >
-            <IoIosArrowBack />
-            Dashboard
-          </button>
-        </Box>
-      </Box> */}
       <Box className="w-full h-full relative">
         {isLoading && (
           <Box className="absolute inset-0 flex items-center justify-center bg-white">

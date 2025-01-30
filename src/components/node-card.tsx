@@ -16,6 +16,7 @@ import Link from 'next/link'
 import azureIcon from "@/assets/azure.svg";
 import gcpIcon from "@/assets/gcp.svg";
 import awsIcon from "@/assets/aws.svg";
+import e2eIcon from "@/assets/e2elogo.webp";
 
 interface NodeCardProps {
   id: number
@@ -58,7 +59,7 @@ export function NodeCard({
       case 'aws':
         return awsIcon;
       case 'e2e':
-        return 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1736699109/e2eicon_oulyzm.png';
+        return e2eIcon;
       default:
         return null;
     }

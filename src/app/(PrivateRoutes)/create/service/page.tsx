@@ -16,6 +16,7 @@ import azureIcon from "@/assets/azure.svg"
 import gcpIcon from "@/assets/gcp.svg"
 import awsIcon from "@/assets/aws.svg"
 import Image from "next/image"
+import e2eIcon from "@/assets/e2elogo.webp"
 
 interface EnvVariable {
   key: string
@@ -360,7 +361,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       case "aws":
         return awsIcon
       case "e2e":
-        return "https://res.cloudinary.com/dy8hx2xrj/image/upload/v1736699109/e2eicon_oulyzm.png"
+        return e2eIcon;
       default:
         return null
     }
