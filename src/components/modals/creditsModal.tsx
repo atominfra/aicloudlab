@@ -1,5 +1,5 @@
 import { Box, Modal, Typography } from "@mui/material";
-import CustomButton from "../button";
+import {CustomButton} from "../ui-components/custom-button";
 import toast, { Toaster } from "react-hot-toast";
 export default function CreditsModal({ showModal, onClose }:{
   showModal: boolean;
@@ -21,12 +21,13 @@ export default function CreditsModal({ showModal, onClose }:{
         <Box className="flex w-full justify-between gap-4 pt-4">
           <CustomButton
             text="Maybe later"
-            onclickhandler={onClose}
+            onClickHandler={onClose}
             customCss="w-[50%] bg-[#e3e3e3] text-black shadow-none text-[15px] lg:text-[18px]"
           />
           <CustomButton
             text="Upgrade"
-            onclickhandler={() => toast.success('Coming Soon',{position:"bottom-right"})}
+            // @ts-expect-error build
+            onClickHandler={() => toast.success('Coming Soon',{position:"bottom-right"})}
             customCss="w-[50%] bg-[#2563EB] text-white text-[15px] lg:text-[16px]"
           />
         </Box>

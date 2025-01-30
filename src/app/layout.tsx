@@ -39,7 +39,7 @@ export default function Layout({
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', 'G-6R85ZEG6WD');
-          `}
+        `}
         </Script>
       </head>
       <body className={`${poppins.className}  antialiased bg-white`}>
