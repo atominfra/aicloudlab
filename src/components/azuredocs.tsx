@@ -26,7 +26,7 @@ export function AzureAccountInstructions() {
                 </li>
                 <li>Click New Registration and fill in:</li>
                 <li>Name: Enter a name (e.g., MyApp).</li>
-                <li>Supported account types: Select the appropriate option (e.g., "Organizational directory").</li>
+                <li>Supported account types: Select the appropriate option (e.g., &quot;Organizational directory&quot;).</li>
                 <li>Click Register.</li>
                 <li>Note down the App (Client) ID and Tenant ID from the overview page.</li>
               </ul>
