@@ -15,7 +15,7 @@ import Link from 'next/link';
 import { FaPlay } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import CircularProgress from '@mui/material/CircularProgress';
-import CustomButton from "../button";
+import {CustomButton} from "../ui-components/custom-button";
 import { useRouter } from "next/navigation";
 import Popper from '@mui/material/Popper';
 import { PiDotsThreeOutlineVerticalFill } from "react-icons/pi";
@@ -226,12 +226,12 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
               <Box className="flex w-full justify-between gap-4 pt-4">
                 <CustomButton
                   text="No, cancel"
-                  onclickhandler={handleClose}
+                  onClickHandler={handleClose}
                   customCss="w-[50%] bg-[#e3e3e3] text-black shadow-none text-[15px] lg:text-[16px]"
                 />
                 <CustomButton
                   text="Delete Notebook"
-                  onclickhandler={handleSubmit}
+                  onClickHandler={handleSubmit}
                   customCss="w-[50%] bg-red-600 text-white text-[15px] lg:text-[16px]"
                 />
               </Box>

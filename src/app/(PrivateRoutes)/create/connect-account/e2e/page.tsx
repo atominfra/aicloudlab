@@ -1,56 +1,75 @@
-'use client';
+"use client"
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { createCloudAccount } from '@/app/(PrivateRoutes)/api/cloud/api';
-import { useApp } from '@/context/AppContext';
-import { ToggleableInput } from '@/components/ToggleableInput';
-import { E2ENetworksInstructions } from '@/components/e2edocs';
-import { CircleAlert } from 'lucide-react';
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { createCloudAccount } from "@/app/(PrivateRoutes)/api/cloud/api"
+import { useApp } from "@/context/AppContext"
+import { ToggleableInput } from "@/components/ToggleableInput"
+import { E2ENetworksInstructions } from "@/components/e2edocs"
+import { CircleAlert } from "lucide-react"
 
 export default function CloudProviderForm() {
-  const { auth } = useApp();
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [name, setName] = useState('');
-  const [apiKey, setApiKey] = useState('');
-  const [authToken, setAuthToken] = useState('');
+  const { auth } = useApp()
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
+  const [name, setName] = useState("")
+  const [apiKey, setApiKey] = useState("")
+  const [authToken, setAuthToken] = useState("")
+  const [fieldErrors, setFieldErrors] = useState({
+    name: false,
+    apiKey: false,
+    authToken: false,
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+    e.preventDefault()
+    setIsLoading(true)
+
+    // Check for empty fields
+    const newFieldErrors = {
+      name: name.trim() === "",
+      apiKey: apiKey.trim() === "",
+      authToken: authToken.trim() === "",
+    }
+    setFieldErrors(newFieldErrors)
+
+    // If any field is empty, stop submission
+    if (Object.values(newFieldErrors).some(Boolean)) {
+      setIsLoading(false)
+      return
+    }
 
     try {
       const apiData = {
         name,
-        provider: 'e2e',
-        providerText: 'E2E Networks',
+        provider: "e2e",
+        providerText: "E2E Networks",
         credentials: {
           api_key: apiKey,
           jwt_token: authToken,
         },
-      };
+      }
 
-      const res = await createCloudAccount(auth, apiData);
-      if(res.error === 'true'){
+      const res = await createCloudAccount(auth, apiData)
+      if (res.error === "true") {
         setError(res.message)
-      }else{
-        console.log('E2E Networks account connected:', res);
-        router.push('/dashboard/accounts');
+      } else {
+        console.log("E2E Networks account connected:", res)
+        router.push("/dashboard/accounts")
       }
     } catch (error) {
-      console.error('Error connecting account:', error);
-      setError('An error occurred while creating the cluster');
+      console.error("Error connecting account:", error)
+      setError("An error occurred while creating the cluster")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <div className="lg:p-6 bg-neutral-100 h-screen flex justify-center ">
@@ -62,10 +81,12 @@ export default function CloudProviderForm() {
         <Card className="border-none shadow-none">
           <CardContent>
             <div className="pt-4">
-            {error && <div className="text-red-500 text-sm bg-red-50 border border-red-100  p-4 rounded-lg flex gap-2 items-center">
-              <CircleAlert className='text-red-500  size-4 ' />
-              <div>{error}</div>
-              </div>}
+              {error && (
+                <div className="text-red-500 text-sm bg-red-50 border border-red-100  p-4 rounded-lg flex gap-2 items-center">
+                  <CircleAlert className="text-red-500  size-4 " />
+                  <div>{error}</div>
+                </div>
+              )}
               <form onSubmit={handleSubmit} className="space-y-4 py-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Name</Label>
@@ -74,9 +95,13 @@ export default function CloudProviderForm() {
                     name="name"
                     placeholder="Enter name"
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
+                    onChange={(e) => {
+                      setName(e.target.value)
+                      setFieldErrors((prev) => ({ ...prev, name: false }))
+                    }}
+                    className={fieldErrors.name ? "border-red-500" : ""}
                   />
+                  {fieldErrors.name && <p className="text-red-500 text-sm mt-1">Please enter a name</p>}
                 </div>
 
                 <div className="space-y-2">
@@ -86,26 +111,34 @@ export default function CloudProviderForm() {
                     name="api_key"
                     placeholder="Enter API key"
                     value={apiKey}
-                    onChange={(e) => setApiKey(e.target.value)}
-                    required
+                    onChange={(e) => {
+                      setApiKey(e.target.value)
+                      setFieldErrors((prev) => ({ ...prev, apiKey: false }))
+                    }}
+                    className={fieldErrors.apiKey ? "border-red-500" : ""}
                   />
+                  {fieldErrors.apiKey && <p className="text-red-500 text-sm mt-1">Please enter an API key</p>}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="jwt_token">Auth Token</Label>
+                  <Label htmlFor="auth_token">Auth Token</Label>
                   <ToggleableInput
                     id="auth_token"
                     name="auth_token"
                     placeholder="Enter Auth token"
                     value={authToken}
-                    onChange={(e) => setAuthToken(e.target.value)}
-                    required
+                    onChange={(e) => {
+                      setAuthToken(e.target.value)
+                      setFieldErrors((prev) => ({ ...prev, authToken: false }))
+                    }}
+                    className={fieldErrors.authToken ? "border-red-500" : ""}
                   />
+                  {fieldErrors.authToken && <p className="text-red-500 text-sm mt-1">Please enter an Auth token</p>}
                 </div>
 
                 <div className="w-full text-end">
                   <Button type="submit" className="bg-[#2563EB]" disabled={isLoading}>
-                    {isLoading ? 'Connecting...' : 'Connect Account'}
+                    {isLoading ? "Connecting..." : "Connect Account"}
                   </Button>
                 </div>
               </form>
@@ -113,10 +146,10 @@ export default function CloudProviderForm() {
           </CardContent>
         </Card>
         <div className="py-4">
-          <E2ENetworksInstructions/>
-          </div>
+          <E2ENetworksInstructions />
+        </div>
       </div>
-        
     </div>
-  );
+  )
 }
+
