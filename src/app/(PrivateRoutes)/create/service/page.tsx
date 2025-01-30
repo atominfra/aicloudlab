@@ -286,10 +286,10 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       if (data.error === "false") {
         router.push(`/project/${projectId}?viewType=services`)
       } else {
-        setError(data.message || "Failed to create service")
+        setError(data.message)
       }
     } catch (err) {
-      setError("An error occurred while creating the service")
+      setError("Something Went Wrong")
     } finally {
       setIsLoading(false)
     }

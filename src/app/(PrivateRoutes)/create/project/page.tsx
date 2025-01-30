@@ -78,13 +78,15 @@ export default function CreateProject() {
 
     try {
       const response = await createProject(auth, payload)
-      if (response) {
-        router.push('/dashboard/projects')
+      if (response.error === "true") {
+        setError(response.message)
       } else {
-        setError('Failed to create project')
+        console.log("Project created successfully:", response)
+        router.push('/dashboard/projects')
       }
     } catch (err) {
-      setError('An error occurred while creating the project')
+      console.error("Failed to create Project:", error)
+      setError('Something Went Wrong')
     } finally {
       setIsLoading(false)
     }

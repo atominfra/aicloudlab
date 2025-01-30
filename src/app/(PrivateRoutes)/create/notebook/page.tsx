@@ -78,13 +78,13 @@ export default function CreateNotebook() {
 
     try {
       const response = await createNotebook(auth, payload)
-      if (response) {
+      if (response.error === 'false') {
         router.push('/dashboard/notebooks')
       } else {
-        setError('Failed to create notebook')
+        setError(response.message)
       }
     } catch (err) {
-      setError('An error occurred while creating the notebook')
+      setError('Something Went Wrong')
     } finally {
       setIsLoading(false)
     }

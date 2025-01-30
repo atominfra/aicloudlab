@@ -300,7 +300,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       }
     } catch (error) {
       console.error("Failed to create node:", error)
-      setError("Failed to create node. Please try again.")
+      setError("Something Went Wrong")
     } finally {
       setLoading(false)
     }
