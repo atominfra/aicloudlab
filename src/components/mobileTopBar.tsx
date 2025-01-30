@@ -12,6 +12,7 @@ import { useApp } from '@/context/AppContext'
 import { useAuth } from '@/context/AuthContext'
 import navItems from './navbar/navitems'
 import { SidebarTrigger } from './ui/sidebar'
+import logo from "@/assets/logo.webp"
 export default function MobileTopBar() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const router = useRouter()
@@ -38,7 +39,7 @@ export default function MobileTopBar() {
         <Link className="flex items-center" href={`/dashboard`}>
             <div className='flex items-center'>
                 <Image
-                  src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
+                  src={logo}
                   width={30}
                   height={30}
                   alt="Atom Infra Logo"
@@ -84,7 +85,7 @@ export default function MobileTopBar() {
           <div className="flex items-center justify-between p-4 border-b">
             <Link href="/dashboard" className="flex items-center gap-2" onClick={toggleSidebar}>
               <Image 
-                src={'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png'}
+                src={logo}
                 width={24}
                 height={24}
                 alt="AI Cloud Lab Logo" 

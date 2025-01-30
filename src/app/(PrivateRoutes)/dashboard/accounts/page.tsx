@@ -21,7 +21,7 @@ import { useApp } from '@/context/AppContext';
 import { CircularProgress, Modal, Typography } from '@mui/material';
 import Link from 'next/link';
 import Loader from "@/components/loader"
-
+import e2eIcon from "@/assets/e2elogo.webp"
 const CloudAccounts = () => {
   const [selectedProvider, setSelectedProvider] = useState('all');
   const router = useRouter();
@@ -67,7 +67,7 @@ const CloudAccounts = () => {
       case 'aws':
         return awsIcon;
       case 'e2e':
-        return 'https://res.cloudinary.com/dy8hx2xrj/image/upload/v1736699109/e2eicon_oulyzm.png';
+        return e2eIcon;
       default:
         return null;
     }

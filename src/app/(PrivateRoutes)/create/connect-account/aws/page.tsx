@@ -65,7 +65,7 @@ export default function CloudProviderForm() {
       }
     } catch (error) {
       console.error("Error connecting account:", error)
-      setError("An error occurred while creating the cluster")
+      setError("Something Went Wrong")
     } finally {
       setIsLoading(false)
     }

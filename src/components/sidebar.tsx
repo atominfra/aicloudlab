@@ -9,6 +9,7 @@ import { useEffect } from "react"
 import nodeIcon from "@/assets/node.webp"
 import atomInfra from "@/assets/atom-infra.png"
 import { useAuth } from "@/context/AuthContext"
+import logo from "@/assets/logo.webp"
 // import { ThemeToggle } from "./theme-toggle"
 import { BarChart, Box, Bell, Users, Globe, GitBranch, Settings, User2, ChevronUp } from "lucide-react"
 
@@ -39,7 +40,7 @@ export function Sidebar() {
         <Link href="/" className="flex items-center gap-2 px-4 py-2 rounded-lg text-foreground">
         <div className='flex items-center'>
           <Image
-            src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png" 
+            src={logo} 
             width={30}
             height={30}
             alt="Atom Infra Logo"

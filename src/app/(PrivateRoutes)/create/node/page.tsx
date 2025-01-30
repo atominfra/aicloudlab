@@ -19,6 +19,7 @@ import Image from "next/image"
 import azureIcon from "@/assets/azure.svg"
 import gcpIcon from "@/assets/gcp.svg"
 import awsIcon from "@/assets/aws.svg"
+import e2eIcon from "@/assets/e2elogo.webp"
 
 // Types
 interface OSOption {
@@ -46,6 +47,7 @@ interface NodeData {
   name: string
   cloud_account_id: string
   os: string
+  os_disk_size: string
   osVersion: string
   plan: string
   image: string
@@ -64,6 +66,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const [formState, setFormState] = useState<NodeData>({
     projects_id: initialData?.projects_id || "",
     location: initialData?.location || "",
+    os_disk_size:initialData?.os_disk_size|| '',
     cloud_account_id: initialData?.cloud_account_id || "",
     name: initialData?.name || "",
     os: initialData?.os || "",
@@ -252,7 +255,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     if (!formState.os) errors.os = "Operating system is required"
     if (!formState.osVersion) errors.osVersion = "OS version is required"
     if (!formState.plan) errors.plan = "Plan is required"
-    if (!formState.commitmment) errors.commitmment = "Reservation is required"
+    // if (!formState.commitmment) errors.commitmment = "Reservation is required"
     if (formState.sshKeys.length === 0 || formState.sshKeys.some((key) => !key.key.trim())) {
       errors.sshKeys = "At least one SSH key is required"
     }
@@ -276,6 +279,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       plan: formState.plan,
       image: formState.image,
       volumes: formState.volumes,
+      os_disk_size:formState.os_disk_size,
       security_rules: formState.securityRules,
       location: formState.location,
       cloud_account_id: formState.cloud_account_id,
@@ -288,11 +292,16 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     try {
       setLoading(true)
       const result = await createNode(auth, apiData)
-      console.log("Node created successfully:", result)
-      router.push(`/project/${projectId}?viewType=nodes`)
+      if(result.error === "true"){
+        setError(result.message)
+        return
+      }else{
+        console.log("Node created successfully:", result)
+        router.push(`/project/${projectId}?viewType=nodes`)
+      }
     } catch (error) {
       console.error("Failed to create node:", error)
-      setError("Failed to create node. Please try again.")
+      setError("Something Went Wrong")
     } finally {
       setLoading(false)
     }
@@ -349,10 +358,11 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }))
   }
 
-  const updateVolume = (index: number, field: "name" | "size", value: string) => {
+  const updateVolume = (index: number, value: string) => {
     setFormState((prev) => {
       const newVolumes = [...prev.volumes]
-      newVolumes[index] = { ...newVolumes[index], [field]: value }
+      // @ts-expect-error build
+      newVolumes[index] = { size: parseInt(value) || 10 } 
       return { ...prev, volumes: newVolumes }
     })
   }
@@ -574,7 +584,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       case "aws":
         return awsIcon
       case "e2e":
-        return "https://res.cloudinary.com/dy8hx2xrj/image/upload/v1736699109/e2eicon_oulyzm.png"
+        return e2eIcon
       default:
         return null
     }
@@ -782,7 +792,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="os">Operating System *</Label>
+                <Label htmlFor="os" className="pl-2 ">Operating System *</Label>
                 <Select
                   onValueChange={handleOsOptionsChange}
                   value={formState.os}
@@ -842,7 +852,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="plan">Plan *</Label>
+                <Label htmlFor="plan" className="pl-2 ">Plan *</Label>
                 <Select
                   onValueChange={handlePlanChange}
                   value={formState.plan}
@@ -855,7 +865,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                         Loading plans...
                       </div>
                     ) : (
-                      <SelectValue placeholder="Select plan" />
+                      <SelectValue placeholder="Select Plan" />
                     )}
                   </SelectTrigger>
                   <SelectContent>
@@ -876,14 +886,14 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="plan-commitment">Reservation *</Label>
+                <Label htmlFor="plan-reservation">Reservation *</Label>
                 <Select
                   onValueChange={(value) => updateFormState("commitmment", value)}
                   value={formState.commitmment}
                   disabled={price && price.length === 0}
                 >
                   <SelectTrigger
-                    id="plan-commitment"
+                    id="plan-reservation"
                     className={`max-w-full ${fieldErrors.commitmment ? "border-red-500" : ""}`}
                   >
                     {loadingPrice ? (
@@ -894,7 +904,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                         Loading Price Options ...
                       </div>
                     ) : (
-                      <SelectValue placeholder="Select commitment" />
+                      <SelectValue placeholder="Select Reservation" />
                     )}
                   </SelectTrigger>
                   <SelectContent>
@@ -915,9 +925,55 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               </div>
             </div>
 
+            {/* <div className="">
+                <label htmlFor="service-name" className="text-sm pl-2 font-medium ">
+                  OS Disk Size
+                </label>
+              <Input
+                id="os_disk_size"
+                name="os_disk_size"
+                value={formState.os_disk_size}
+                onChange={(e) => updateFormState("os_disk_size", e.target.value)}
+                placeholder="Enter OS Disk Size (Gib)"
+                className={fieldErrors.os_disk_size ? "border-red-500" : ""}
+              />
+              {fieldErrors.os_disk_size && <p className="text-red-500 text-sm mt-1">{fieldErrors.os_disk_size}</p>}
+            </div> */}
+
+            {/* Volumes */}
+            {/* <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
+              <AccordionItem value="volumes">
+                <AccordionTrigger className="px-4 py-2">
+                  Add Volumes
+                </AccordionTrigger>
+                <AccordionContent className="px-4 py-2">
+                  <div className="space-y-4">
+                    {formState.volumes.map((volume, index) => (
+                      <div key={index} className="flex items-center space-x-2">
+                        <Input
+                          type="number"
+                          min="10"
+                          placeholder="Size (GB)"
+                          value={volume.size}
+                          onChange={(e) => updateVolume(index, e.target.value)}
+                          className="flex-grow"
+                        />
+                        <Button type="button" variant="ghost" size="icon" onClick={() => removeVolume(index)}>
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                    <Button type="button" variant="outline" onClick={addVolume} className="mt-2">
+                      Add Volume
+                    </Button>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion> */}
+
             <Accordion type="single" collapsible className={`w-full border rounded-md bg-white ${fieldErrors.sshKeys ? "border-red-500" : ""}`}>
               <AccordionItem value="ssh-keys" className="border-b-0">
-                <AccordionTrigger className="px-4 py-2">SSH Keys* </AccordionTrigger>
+                <AccordionTrigger className="px-4 py-2">Add SSH Keys* </AccordionTrigger>
                 <AccordionContent className="px-4 py-2">
                   <div className="space-y-4">
                     {formState.sshKeys.map((sshKey, index) => (
@@ -962,48 +1018,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               <p className="text-red-500 text-sm mt-1">{fieldErrors.sshKeys}</p>
             )}
 
-            {/* Volumes */}
-            <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
-              <AccordionItem value="volumes" disabled>
-                <AccordionTrigger className="px-4 py-2 text-[#b5b5b5] font-normal hover:cursor-not-allowed">
-                  Volumes (Coming Soon)
-                </AccordionTrigger>
-                <AccordionContent className="px-4 py-2">
-                  <div className="space-y-4">
-                    {formState.volumes.map((volume, index) => (
-                      <div key={index} className="space-y-2 p-4 border rounded-md">
-                        <div className="flex justify-between items-center mb-2">
-                          <Input
-                            placeholder="Volume Name"
-                            value={volume.name}
-                            onChange={(e) => updateVolume(index, "name", e.target.value)}
-                            className="flex-grow mr-2"
-                          />
-                          <Button type="button" variant="ghost" size="icon" onClick={() => removeVolume(index)}>
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                        <Input
-                          type="number"
-                          min="1"
-                          placeholder="Size (GB)"
-                          value={volume.size}
-                          onChange={(e) => updateVolume(index, "size", e.target.value)}
-                        />
-                        {volume.size && (
-                          <p className="text-sm text-muted-foreground">
-                            Estimated cost: ${calculateVolumeCost(Number(volume.size)).toFixed(2)}/month
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                    <Button type="button" variant="outline" onClick={addVolume} className="mt-2">
-                      Add Volume
-                    </Button>
-                  </div>
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
 
             {/* Security Rules */}
             <Accordion type="single" collapsible className="w-full border rounded-md bg-white">

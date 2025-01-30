@@ -74,7 +74,7 @@ export default function AzurePage() {
       }
     } catch (error) {
       console.error(error)
-      setError("An error occurred while creating the cluster")
+      setError("Something Went Wrong")
     } finally {
       setIsLoading(false)
     }

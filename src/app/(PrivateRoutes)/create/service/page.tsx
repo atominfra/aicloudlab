@@ -16,6 +16,7 @@ import azureIcon from "@/assets/azure.svg"
 import gcpIcon from "@/assets/gcp.svg"
 import awsIcon from "@/assets/aws.svg"
 import Image from "next/image"
+import e2eIcon from "@/assets/e2elogo.webp"
 
 interface EnvVariable {
   key: string
@@ -286,10 +287,10 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       if (data.error === "false") {
         router.push(`/project/${projectId}?viewType=services`)
       } else {
-        setError(data.message || "Failed to create service")
+        setError(data.message)
       }
     } catch (err) {
-      setError("An error occurred while creating the service")
+      setError("Something Went Wrong")
     } finally {
       setIsLoading(false)
     }
@@ -360,7 +361,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       case "aws":
         return awsIcon
       case "e2e":
-        return "https://res.cloudinary.com/dy8hx2xrj/image/upload/v1736699109/e2eicon_oulyzm.png"
+        return e2eIcon;
       default:
         return null
     }

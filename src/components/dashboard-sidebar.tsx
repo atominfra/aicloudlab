@@ -16,7 +16,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { useAuth } from "@/context/AuthContext"
-
+import logo from "@/assets/logo.webp"
 const navItems = [
   { href: "/dashboard/projects", label: "Projects", icon: FolderOpen },
   { href: "/dashboard/accounts", label: "Accounts", icon: Cloud },
@@ -51,7 +51,7 @@ export function DashboardSidebar({ ...props }) {
               <Link href="/">
                 <div className="flex items-center">
                   <Image
-                    src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png"
+                    src={logo}
                     width={30}
                     height={30}
                     alt="Atom Infra Logo"
@@ -65,7 +65,7 @@ export function DashboardSidebar({ ...props }) {
               </Link>
             ) : (
               <Image
-                src="https://res.cloudinary.com/dy8hx2xrj/image/upload/v1734099746/atominfra-logo_pmfxxq.png"
+                src={logo}
                 width={30}
                 height={30}
                 alt="Atom Infra Logo"
