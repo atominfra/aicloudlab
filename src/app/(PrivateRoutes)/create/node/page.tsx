@@ -584,7 +584,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       case "aws":
         return awsIcon
       case "e2e":
-        return e2e
+        return e2eIcon
       default:
         return null
     }
