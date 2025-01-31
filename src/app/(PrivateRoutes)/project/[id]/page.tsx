@@ -164,6 +164,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
                 <span className="hidden sm:inline">
                   {viewType === 'services' ? 'View by Services' : 'View by Nodes'}
                 </span>
+                <span><ChevronDown/></span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[200px]">
