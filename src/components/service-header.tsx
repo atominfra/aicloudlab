@@ -1,10 +1,17 @@
+"use client"
 import { Button } from "@/components/ui/button"
-import { Clipboard, Trash2 } from "lucide-react"
+import { Clipboard, RefreshCw, Trash2 } from "lucide-react"
 import Link from "next/link"
 import copyIcon from "@/assets/copy.webp"
 import Image from "next/image"
 import { StatusBadge } from "./status-badge"
+import RedeployModal from "./modals/redeploy-modal"
+import { useState } from "react"
+import { redeployService } from "@/app/(PrivateRoutes)/api/services/api"
+import { useApp } from "@/context/AppContext"
+
 interface ServiceHeaderProps {
+  id: number | null
   name: string
   status: string
   memory: string
@@ -14,8 +21,35 @@ interface ServiceHeaderProps {
   url: string
 }
 
-export function ServiceHeader({ name, status, memory, cpu, replicas, nodeName, url }: ServiceHeaderProps) {
-  
+export function ServiceHeader({ id, name, status, memory, cpu, replicas, nodeName, url }: ServiceHeaderProps) {
+    const [isRedeployModalOpen, setIsRedeployModalOpen] = useState(false)
+    const [isRedeploying, setIsRedeploying] = useState(false)
+    const [error, setError] = useState("")
+    const { auth } = useApp()
+
+      const handleRedeploy = async (tag: string) => {
+        setIsRedeploying(true)
+        setError("")
+        try {
+          const response = await redeployService(auth, String(id), tag)
+          if(response.error==="true"){
+            console.error("Failed to redeploy service:", error)
+            setError(response.message)
+            setIsRedeploying(false)
+          }else{
+            console.log("Service redeployed successfully")
+            setIsRedeploying(false)
+            setIsRedeployModalOpen(false)
+          }
+        } catch (error) {
+          console.error("Failed to redeploy service:", error)
+          setIsRedeploying(false)
+          setError("Something went wrong")
+        } 
+      }
+    
+
+
   return (
     <div className="rounded-lg border bg-white p-6">
       <div className="flex flex-col gap-3">
@@ -51,11 +85,27 @@ export function ServiceHeader({ name, status, memory, cpu, replicas, nodeName, u
               </Button>
             </div> */}
           </div>
-          <Button variant="destructive" size="icon" className="h-9 w-9">
-            <Trash2 className="size-4" />
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="ghost"  onClick={() => setIsRedeployModalOpen(true)} className="h-9 bg-blue-600 text-white">
+              <RefreshCw className="h-4 w-4" /><span>Redeploy</span>
+            </Button>
+            <Button variant="destructive" size="icon" className="h-9 w-9">
+              <Trash2 className="size-4" />
+            </Button>
+          </div>
         </div>
       </div>
+      <RedeployModal
+        open={isRedeployModalOpen}
+        serviceName={name}
+        onCancel={() => {
+          setIsRedeployModalOpen(false)
+          setError("")
+        }}
+        onConfirm={handleRedeploy}
+        isRedeploying={isRedeploying}
+        error={error}
+      />
     </div>
   )
 }

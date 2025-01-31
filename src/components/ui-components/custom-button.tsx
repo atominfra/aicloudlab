@@ -1,5 +1,6 @@
 import type React from "react"
 import { useApp } from "@/context/AppContext"
+import { Button } from "../ui/button";
 
 interface CustomButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text: string
@@ -14,29 +15,22 @@ export const CustomButton: React.FC<CustomButtonProps> = ({
   disabled = false,
   ...props
 }) => {
-  const { setIsLoading } = useApp()
 
   const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    try {
-      setIsLoading(true)
-      await onClickHandler(event)
-    } catch (error) {
-      console.error("Error in button click handler:", error)
-    } finally {
-      setIsLoading(false)
-    }
+    onClickHandler(event)
   }
 
   return (
-    <button
+    <Button
+      variant="outline"
       disabled={disabled}
-      className={`font-semibold font-poppins p-3 rounded-[15px] ${customCss}`}
+      className={` font-poppins  ${customCss}`}
       onClick={handleClick}
       style={{ textTransform: "none" }}
       {...props}
     >
       {text}
-    </button>
+    </Button>
   )
 }
 

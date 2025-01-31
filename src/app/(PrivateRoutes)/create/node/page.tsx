@@ -969,7 +969,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   </div>
                 </AccordionContent>
               </AccordionItem>
-            </Accordion> */}
+            </Accordion>
 
             <Accordion type="single" collapsible className={`w-full border rounded-md bg-white ${fieldErrors.sshKeys ? "border-red-500" : ""}`}>
               <AccordionItem value="ssh-keys" className="border-b-0">
@@ -1021,7 +1021,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
             {/* Security Rules */}
             <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
-              <AccordionItem value="security-rules" disabled>
+              <AccordionItem value="security-rules" >
                 <AccordionTrigger className="px-4 py-2 text-[#b5b5b5] font-normal hover:cursor-not-allowed">
                   Security Rules (Coming Soon)
                 </AccordionTrigger>
