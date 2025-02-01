@@ -194,7 +194,11 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }, [formState.os, formState.osVersion, auth, formState.location, formState.cloud_account_id]) // Added auth to dependencies
 
   const fetchPriceData = async () => {
-    if (!formState.os || !formState.osVersion || !formState.location || !formState.plan) return
+    const selectedPlan = findplan(plans, formState.plan)
+    const provider = (accounts && accounts.find((p) => p.id === formState.cloud_account_id)?.provider) || ""
+    const plan = provider === "e2e" ? selectedPlan?.plan : selectedPlan?.id 
+    console.log("plan", plan, provider)
+    if (!formState.os || !formState.osVersion || !formState.location || !plan) return
     setLoadingPrice(true)
     try {
       const plansData = await fetchPrice(
@@ -203,7 +207,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         formState.osVersion,
         formState.location,
         formState.cloud_account_id,
-        formState.plan,
+        plan,
       )
       setPrice(plansData.data.price)
     } catch (error) {
@@ -214,7 +218,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }
 
   useEffect(() => {
-    fetchPriceData()
+    if(auth){
+      fetchPriceData()
+    }
   }, [formState.plan, auth]) // Added auth to dependencies
 
 
@@ -273,15 +279,25 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       plan: formState.plan,
       image: formState.image,
       volumes: formState.volumes,
-      os_disk_size:formState.os_disk_size,
+      os_disk_size: formState.os_disk_size,
       security_rules: formState.securityRules,
       location: formState.location,
       cloud_account_id: formState.cloud_account_id,
-    }
-
+    };
+    
+    const selectedPlan = findplan(plans, formState.plan)
     const provider = (accounts && accounts.find((p) => p.id === formState.cloud_account_id)?.provider) || ""
+    console.log("provider", provider,selectedPlan)
+    // Conditionally update plan.id
+    if (provider === "e2e" && selectedPlan) {
+      apiData.plan = selectedPlan.plan; // Replace plan.id with plan.name if provider is "e2e"
+    }
+    
+    
+    
     apiData.image = provider === "azure" || provider === "aws" ? formState.osVersion : formState.image
-
+    
+    console.log("apidata", {apiData: apiData}); // You can check the modified apiData here
     try {
       setLoading(true)
       const result = await createNode(auth, apiData)
@@ -519,7 +535,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     if (selectedPlan) {
       setFormState((prev) => ({
         ...prev,
-        plan: provider === "e2e" ? selectedPlan.plan : selectedPlan.id,
+        plan: selectedPlan.id,
         image: selectedPlan.image,
         commitmment: "",
       }))
