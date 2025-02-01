@@ -523,11 +523,14 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }
 
   const handlePlanChange = (value: string) => {
+    console.log("Plan Value", value)
     const selectedPlan = findplan(plans, value)
+    const provider = (accounts && accounts.find((p) => p.id === formState.cloud_account_id)?.provider) || ""
+    console.log("Plan Value", selectedPlan, provider)
     if (selectedPlan) {
       setFormState((prev) => ({
         ...prev,
-        plan: selectedPlan.id,
+        plan: provider === "e2e" ? selectedPlan.plan : selectedPlan.id,
         image: selectedPlan.image,
         commitmment: "",
       }))
