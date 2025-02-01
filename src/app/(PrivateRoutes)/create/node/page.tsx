@@ -623,7 +623,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             {projectId && (
               <div className="">
                 <label htmlFor="service-name" className="text-sm pl-2 font-medium text-[#374151]">
-                  Project*
+                  Project *
                 </label>
                 {!loadingProject ? (
                   <div className="relative">
@@ -930,7 +930,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               </div>
             </div>
 
-            {/* <div className="">
+            <div className="">
                 <label htmlFor="service-name" className="text-sm pl-2 font-medium ">
                   OS Disk Size
                 </label>
@@ -943,10 +943,10 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 className={fieldErrors.os_disk_size ? "border-red-500" : ""}
               />
               {fieldErrors.os_disk_size && <p className="text-red-500 text-sm mt-1">{fieldErrors.os_disk_size}</p>}
-            </div> */}
+            </div>
 
             {/* Volumes */}
-            {/* <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
+            <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
               <AccordionItem value="volumes">
                 <AccordionTrigger className="px-4 py-2">
                   Add Volumes
@@ -974,7 +974,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   </div>
                 </AccordionContent>
               </AccordionItem>
-            </Accordion> */}
+            </Accordion>
 
             <Accordion type="single" collapsible className={`w-full border rounded-md bg-white ${fieldErrors.sshKeys ? "border-red-500" : ""}`}>
               <AccordionItem value="ssh-keys" className="border-b-0">
@@ -1026,9 +1026,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
             {/* Security Rules */}
             <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
-              <AccordionItem value="security-rules" disabled>
-                <AccordionTrigger className="px-4 py-2 text-[#b5b5b5] font-normal hover:cursor-not-allowed">
-                  Security Rules (Coming Soon)
+              <AccordionItem value="security-rules" >
+                <AccordionTrigger className="px-4 py-2">
+                  Security Rules 
                 </AccordionTrigger>
                 <AccordionContent className="px-4 py-2">
                   <div className="space-y-4">
