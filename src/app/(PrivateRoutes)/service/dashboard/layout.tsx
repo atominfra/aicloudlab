@@ -69,8 +69,6 @@ export default function Layout({
       setLoading(true)
       try {
         const data = (await getAllProjectServices(auth, projectId)) as ServiceResponse
-        console.log("Fetched Data:", data)
-        console.log("ID to Match:", id, typeof id)
 
         if (!data?.data?.services) {
           console.error("Services array is undefined.")
@@ -79,7 +77,6 @@ export default function Layout({
 
         const filteredService = data.data.services.find((service) => service.id === Number(id))
 
-        console.log("Filtered Service:", filteredService)
         setService(filteredService || null)
       } catch (error) {
         console.error("Error fetching services:", error)
@@ -93,9 +90,6 @@ export default function Layout({
     }
   }, [auth, id])
 
-  useEffect(() => {
-    console.log("service", service)
-  }, [service])
 
   if (loading) {
     return <Loader />

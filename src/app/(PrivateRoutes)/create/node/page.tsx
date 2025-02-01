@@ -130,9 +130,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       .join("")
   }
 
-  useEffect(() => {
-    console.log("formState", formState)
-  }, [formState])
+  // useEffect(() => {
+  //   console.log("formState", formState)
+  // }, [formState])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -151,7 +151,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!auth) return
+      if (!auth || !formState.cloud_account_id || !formState.location) return
       try {
         setLoadingOs(true)
         const data = await fetchOSOptions(auth, formState.cloud_account_id, formState.location)
@@ -164,9 +164,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     fetchData()
   }, [formState.cloud_account_id, formState.location, auth]) // Added auth to dependencies
 
-  useEffect(() => {
-    console.log("plans", plans)
-  }, [plans])
 
   useEffect(() => {
     const selectedOSOption = osOptions.find((os) => os.name === formState.os)
@@ -220,9 +217,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     fetchPriceData()
   }, [formState.plan, auth]) // Added auth to dependencies
 
-  useEffect(() => {
-    console.log("Cloud Accounts:", accounts)
-  }, [accounts])
+
 
   useEffect(() => {
     async function loadCloudAccounts() {
@@ -236,7 +231,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         setLoadingAccounts(false)
       }
     }
-    console.log("auth", auth)
     if (auth) {
       loadCloudAccounts()
     }
@@ -288,7 +282,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     const provider = (accounts && accounts.find((p) => p.id === formState.cloud_account_id)?.provider) || ""
     apiData.image = provider === "azure" || provider === "aws" ? formState.osVersion : formState.image
 
-    console.log("API Data:", JSON.stringify(apiData, null, 2))
     try {
       setLoading(true)
       const result = await createNode(auth, apiData)
@@ -439,11 +432,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }
 
   useEffect(() => {
-    console.log("accountsssss", formState.cloud_account_id)
     if (formState.cloud_account_id) {
       const selectedAccount =
         accounts && accounts.find((cloud_account) => cloud_account.id === formState.cloud_account_id)
-      console.log("selectedAccount", selectedAccount)
       if (selectedAccount) {
         const filtered = locations.filter((location) => location.provider === selectedAccount.provider)
         setFilteredLocations(filtered)
@@ -523,10 +514,8 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }
 
   const handlePlanChange = (value: string) => {
-    console.log("Plan Value", value)
     const selectedPlan = findplan(plans, value)
     const provider = (accounts && accounts.find((p) => p.id === formState.cloud_account_id)?.provider) || ""
-    console.log("Plan Value", selectedPlan, provider)
     if (selectedPlan) {
       setFormState((prev) => ({
         ...prev,
@@ -593,9 +582,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }
   }
 
-  useEffect(() => {
-    console.log("accounts", accounts)
-  }, [accounts])
 
   useEffect(() => {
     router.prefetch("/dashboard/projects")

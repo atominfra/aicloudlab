@@ -77,7 +77,6 @@ export function CloudProviderForm({ provider }: CloudProviderFormProps) {
 
       const res = await createCloudAccount(auth, apiData)
 
-      console.log('Azure account connected:', res)
       router.push('/dashboard/accounts')
     } catch (error) {
       console.error(error)

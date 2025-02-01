@@ -27,7 +27,6 @@ const navItems = [
 ];
 export function Sidebar() {
   const pathname = usePathname()
-  console.log("pathname",pathname)
   const { user } = useAuth()
   const router = useRouter()
   useEffect(()=>{

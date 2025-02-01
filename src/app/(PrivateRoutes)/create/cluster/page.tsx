@@ -58,7 +58,6 @@ export default function CreateClusterPage() {
     try {
       setIsLoadingCloudAccounts(true);
       const plansData = await fetchAllCloudAccounts(auth)
-      console.log('plansData',plansData)
       setCloudAccounts(plansData)
       setIsLoadingCloudAccounts(false);
 

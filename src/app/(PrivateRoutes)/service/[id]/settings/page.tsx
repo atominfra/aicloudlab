@@ -62,7 +62,6 @@ export default function ServiceSettings({ params }: { params: { id: string } }) 
   const handleDeleteDomain = async (domainId: number) => {
     try {
       const data = await deleteDomain(auth, params.id , domainId)
-      console.log("data",data)
       if(data.error === "false"){
         toast.success('Domain deleted successfully')
         await fetchDomains()

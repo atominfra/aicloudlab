@@ -68,7 +68,6 @@ const CheckoutPage = () => {
         order_id,
         handler: async function (paymentResponse) {
           toast.success('Transaction successful!')
-          console.log("paymentResponse", paymentResponse)
           await fetchUserDetails()
           router.push('/dashboard')
         },

@@ -1,7 +1,6 @@
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || '/api/dashboard/node';
 
 export async function fetchOSOptions(auth:string, cloudAccountId:string, location:string) {
-  console.log("auth",auth)
   try {
     const url = `${API_BASE_URL}/cloud/os?cloud_account_id=${cloudAccountId}&location=${location}`;
     const response = await fetch(url,{
