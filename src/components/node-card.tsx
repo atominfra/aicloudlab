@@ -170,10 +170,10 @@ export function NodeCard({
               <h3 className="font-medium">{name}</h3>
               <div className="flex items-center gap-4  text-sm text-gray-500">
                 <StatusBadge status={status.toLowerCase()} />
-                <span className='lg:w-[120px]'>IP: {public_ip_address}</span>
-                {/* <button
+                <span className='lg:w-[120px] flex gap-1'>IP: {public_ip_address}
+                <span
                   onClick={handleCopy}
-                  className="h-full w-4 focus:outline-none"
+                  className="h-full w-4 focus:outline-none "
                   aria-label="Copy IP address"
                 >
                   <Image
@@ -182,7 +182,9 @@ export function NodeCard({
                     width={16}
                     height={16}
                   />
-                </button> */}
+                </span>
+                </span>
+                
                 {/* <span>•</span> */}
                 <div className='flex gap-2'>
                   {/* {specs} */}
@@ -221,12 +223,15 @@ export function NodeCard({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 bg-gray-100 rounded flex items-center justify-center">
+              {getProviderIcon(provider) && (
                 <Image
-                  alt='nodeIcon'
-                  src={nodeIcon || "/placeholder.svg"}
-                  width={16}
-                  height={16}
+                  src={getProviderIcon(provider) || "/placeholder.svg"}
+                  alt={provider}
+                  width={40}
+                  height={40}
+                  className="w-6 h-6 object-contain"
                 />
+              )}
               </div>
               <h3 className="font-medium text-sm">{name}</h3>
             </div>
@@ -250,7 +255,10 @@ export function NodeCard({
           </div>
           
           <div className="text-sm text-gray-500">
-            {specs}
+            <div className='lg:w-[100px] font-medium'>{vcpus && `CPU: ${vcpus} vCPU`}</div>
+            <div className='lg:w-[100px] font-medium'>{memory && `Memory: ${memory}g`}</div>
+            <div className='lg:w-[100px] font-medium'>{disk && `Disk: ${disk}`}</div>
+            <div className='lg:w-[100px] font-medium'>{gpu && `GPU: ${gpu}`}</div>
           </div>
         </Link>
         <div className="flex items-center justify-between mt-2">
