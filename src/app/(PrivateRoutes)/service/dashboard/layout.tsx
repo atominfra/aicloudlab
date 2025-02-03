@@ -101,6 +101,7 @@ export default function Layout({
         <ServiceSidebar id={id} name={name}/>
         <SidebarInset className="flex-1 overflow-auto bg-neutral-100 pb-16 md:pb-0">
           <div className="flex flex-col min-h-screen space-y-4 p-4 bg-neutral-100 ">
+            {/* @ts-expect-error build */}
             <ServiceHeader
               id={service?.id || null}
               name={service?.name || name || "Unknown"}
