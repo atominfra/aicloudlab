@@ -19,6 +19,7 @@ interface ServiceCardProps {
   replicas: number
   service_url: string
   projectId: string
+  image_url:string
 }
 
 export function ServiceCard({
@@ -28,6 +29,7 @@ export function ServiceCard({
   mem_limit,
   cpu_limit,
   replicas,
+  image_url,
   service_url,
   projectId,
 }: ServiceCardProps) {
@@ -159,6 +161,7 @@ export function ServiceCard({
       <RedeployModal
         open={isRedeployModalOpen}
         serviceName={name}
+        image_url={image_url}
         onCancel={() => {
           setIsRedeployModalOpen(false)
           setError("")
