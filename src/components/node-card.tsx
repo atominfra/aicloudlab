@@ -168,10 +168,10 @@ export function NodeCard({
             </div>
             <div>
               <h3 className="font-medium">{name}</h3>
-              <div className="flex items-center gap-4 text-sm text-gray-500">
+              <div className="flex items-center gap-4  text-sm text-gray-500">
                 <StatusBadge status={status.toLowerCase()} />
-                <span>IP: {public_ip_address}</span>
-                <button
+                <span className='lg:w-[120px]'>IP: {public_ip_address}</span>
+                {/* <button
                   onClick={handleCopy}
                   className="h-full w-4 focus:outline-none"
                   aria-label="Copy IP address"
@@ -182,9 +182,15 @@ export function NodeCard({
                     width={16}
                     height={16}
                   />
-                </button>
+                </button> */}
+                {/* <span>•</span> */}
                 <div className='flex gap-2'>
-                  {specs}
+                  {/* {specs} */}
+                  
+                  <span className='lg:w-[100px] font-medium'>{vcpus && `CPU: ${vcpus} vCPU`}</span>
+                  <span className='lg:w-[100px] font-medium'>{memory && `Memory: ${memory}g`}</span>
+                  <span className='lg:w-[100px] font-medium'>{disk && `Disk: ${disk}`}</span>
+                  <span className='lg:w-[100px] font-medium'>{gpu && `GPU: ${gpu}`}</span>
                 </div>
               </div>
             </div>

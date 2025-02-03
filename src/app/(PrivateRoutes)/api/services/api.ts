@@ -163,7 +163,6 @@ export const fetchServiceDetails = async (auth: string, serviceId: string) => {
   return response.json();
 };
 
-
 export const changeServiceStatus = async (auth: string, serviceId: string, action:string) => {
   const response = await fetch(`${API_BASE_URL}/service/v2/${serviceId}/${action}`, {
     method: 'GET',
@@ -179,3 +178,29 @@ export const changeServiceStatus = async (auth: string, serviceId: string, actio
   }
   return response.json();
 };
+
+export async function redeployService(auth: string, serviceId: string, tag: string) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/v2/redeploy`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${auth}`,
+      },
+      body: JSON.stringify({ 
+        "service_id": String(serviceId),
+        "tag": tag
+      } ),
+    })
+
+    if (!response.ok) {
+      throw new Error("Failed to redeploy service")
+    }
+
+    return await response.json()
+  } catch (error) {
+    console.error("Error redeploying service:", error)
+    throw error
+  }
+}
+
