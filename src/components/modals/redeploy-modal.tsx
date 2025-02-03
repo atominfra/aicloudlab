@@ -1,19 +1,17 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
 import { CustomButton } from "../ui-components/custom-button"
-import { AlertCircle, CircleAlert } from "lucide-react"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Label } from "@/components/ui/label"
+import { AlertCircle } from "lucide-react"
 
 interface RedeployModalProps {
   open: boolean
   onConfirm: (tag: string) => void
   onCancel: () => void
   serviceName: string
+  image_url: string
   isRedeploying: boolean
   error: string
 }
@@ -21,18 +19,29 @@ interface RedeployModalProps {
 const RedeployModal: React.FC<RedeployModalProps> = ({
   open,
   serviceName,
+  image_url,
   onConfirm,
   onCancel,
   isRedeploying,
   error,
 }) => {
-  const [deploymentType, setDeploymentType] = useState("latest")
-  const [tag, setTag] = useState("")
+  const [imageUrl, setImageUrl] = useState("")
+  const [tag, setTag] = useState("latest")
+  const [isTagEmpty, setIsTagEmpty] = useState(false)
+
+  useEffect(() => {
+    setImageUrl(image_url)
+    setTag("latest")
+    setIsTagEmpty(false)
+  }, [image_url])
 
   const handleSubmit = () => {
-    const tagToSend = deploymentType === "tag" && tag.trim() ? tag.trim() : "latest"
-    onConfirm(tagToSend)
-    setTag("")
+    if (tag.trim() === "") {
+      setIsTagEmpty(true)
+    } else {
+      setIsTagEmpty(false)
+      onConfirm(tag.trim())
+    }
   }
 
   return (
@@ -42,41 +51,29 @@ const RedeployModal: React.FC<RedeployModalProps> = ({
           <DialogTitle className="text-xl font-semibold">Redeploy Service</DialogTitle>
         </DialogHeader>
         {error && (
-          <div className="text-red-500 text-sm bg-red-50 border border-red-100 p-4 rounded-lg flex gap-2 items-center mb-4">
-            <CircleAlert className="text-red-500 size-4" />
+          <div className="text-red-500 text-sm bg-red-50 border border-red-100 p-4 rounded-lg flex gap-2 items-center ">
+            <AlertCircle className="text-red-500 size-4" />
             <div>{error}</div>
           </div>
         )}
         <div className="py-4 space-y-6">
-          <RadioGroup
-            defaultValue="latest"
-            value={deploymentType}
-            onValueChange={setDeploymentType}
-            className="space-y-4 text-gray-700"
+          <div
+            className={`flex items-center space-x-2 font-medium border rounded-lg p-3 ${isTagEmpty ? "border-red-500" : ""}`}
           >
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="latest" id="latest" />
-              <Label htmlFor="latest" className="text-gray-700">
-                Redeploy the latest image
-              </Label>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <RadioGroupItem value="tag" id="tag" />
-              <Label htmlFor="tag" className="text-gray-700">
-                Redeploy with tag
-              </Label>
-            </div>
-          </RadioGroup>
-
-          {deploymentType === "tag" && (
-            <Input
-              placeholder="Enter tag"
+            <span className="text-gray-700 text-lg">
+              {imageUrl} <span className="">:</span>
+            </span>
+            <input
               value={tag}
-              onChange={(e) => setTag(e.target.value)}
-              className="w-full mt-2"
+              onChange={(e) => {
+                setTag(e.target.value)
+                setIsTagEmpty(false)
+              }}
+              className="w-40 outline-none border-none"
+              placeholder="Enter tag"
             />
-          )}
+          </div>
+          {isTagEmpty && <p className="text-red-500 text-sm mt-1">Tag cannot be empty</p>}
 
           <div className="flex items-start gap-2 text-gray-600 text-sm">
             <AlertCircle className="h-5 w-5 flex-shrink-0 text-white" fill="#FACC15" />

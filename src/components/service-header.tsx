@@ -19,9 +19,10 @@ interface ServiceHeaderProps {
   replicas: number
   nodeName: string
   url: string
+  image_url: string
 }
 
-export function ServiceHeader({ id, name, status, memory, cpu, replicas, nodeName, url }: ServiceHeaderProps) {
+export function ServiceHeader({ id, name, image_url, status, memory, cpu, replicas, nodeName, url }: ServiceHeaderProps) {
     const [isRedeployModalOpen, setIsRedeployModalOpen] = useState(false)
     const [isRedeploying, setIsRedeploying] = useState(false)
     const [error, setError] = useState("")
@@ -98,6 +99,7 @@ export function ServiceHeader({ id, name, status, memory, cpu, replicas, nodeNam
       <RedeployModal
         open={isRedeployModalOpen}
         serviceName={name}
+        image_url={image_url}
         onCancel={() => {
           setIsRedeployModalOpen(false)
           setError("")
