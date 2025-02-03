@@ -969,7 +969,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   </div>
                 </AccordionContent>
               </AccordionItem>
-            </Accordion>
+            </Accordion> */}
 
             <Accordion type="single" collapsible className={`w-full border rounded-md bg-white ${fieldErrors.sshKeys ? "border-red-500" : ""}`}>
               <AccordionItem value="ssh-keys" className="border-b-0">

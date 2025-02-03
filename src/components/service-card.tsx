@@ -62,6 +62,7 @@ export function ServiceCard({
       }
     } catch (error) {
       console.error("Failed to redeploy service:", error)
+      setIsRedeploying(false)
       setError("Something went wrong")
     } 
   }
@@ -144,7 +145,7 @@ export function ServiceCard({
           </div>
         </div>
         <div className="flex items-center space-x-2 mt-4 sm:mt-0">
-          <Button variant="ghost" size="icon" onClick={() => setIsRedeployModalOpen(true)} className="ml-2">
+          <Button variant="ghost"  onClick={() => setIsRedeployModalOpen(true)} className="ml-2 ">
             <RefreshCw className="h-4 w-4" />
           </Button>
           <div

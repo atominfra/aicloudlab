@@ -15,15 +15,23 @@ interface RedeployModalProps {
   onCancel: () => void
   serviceName: string
   isRedeploying: boolean
-  error:string
+  error: string
 }
 
-const RedeployModal: React.FC<RedeployModalProps> = ({ open, serviceName, onConfirm, onCancel, isRedeploying, error }) => {
+const RedeployModal: React.FC<RedeployModalProps> = ({
+  open,
+  serviceName,
+  onConfirm,
+  onCancel,
+  isRedeploying,
+  error,
+}) => {
   const [deploymentType, setDeploymentType] = useState("latest")
   const [tag, setTag] = useState("")
 
   const handleSubmit = () => {
-    onConfirm(tag)
+    const tagToSend = deploymentType === "tag" && tag.trim() ? tag.trim() : "latest"
+    onConfirm(tagToSend)
     setTag("")
   }
 
@@ -44,7 +52,7 @@ const RedeployModal: React.FC<RedeployModalProps> = ({ open, serviceName, onConf
             defaultValue="latest"
             value={deploymentType}
             onValueChange={setDeploymentType}
-            className="space-y-4 text-gray-700" 
+            className="space-y-4 text-gray-700"
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="latest" id="latest" />
@@ -71,22 +79,19 @@ const RedeployModal: React.FC<RedeployModalProps> = ({ open, serviceName, onConf
           )}
 
           <div className="flex items-start gap-2 text-gray-600 text-sm">
-            <AlertCircle className="h-5 w-5  flex-shrink-0 text-white " fill="#FACC15"   />
+            <AlertCircle className="h-5 w-5 flex-shrink-0 text-white" fill="#FACC15" />
             <p>This action will trigger a new deployment of the selected build</p>
           </div>
         </div>
 
         <div className="flex justify-end gap-3">
-          <CustomButton onClickHandler={onCancel}  
-          customCss=""
-          text={'Cancel'}
-          />
-            
+          <CustomButton onClickHandler={onCancel} customCss="" text="Cancel" />
+
           <CustomButton
             onClickHandler={handleSubmit}
-            disabled={deploymentType === "tag" && !tag.trim()}
-            customCss="bg-[#2563EB] text-white "
-            text= {isRedeploying ? "Redeploying..." : "Redeploy"}
+            disabled={isRedeploying}
+            customCss="bg-[#2563EB] text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            text={isRedeploying ? "Redeploying..." : "Redeploy"}
           />
         </div>
       </DialogContent>

@@ -96,11 +96,11 @@ export function LogViewer({ containerName }: LogViewerProps) {
         className="relative rounded-md bg-zinc-950 overflow-hidden"
         style={{ height: "calc(100vh - 500px)", minHeight: "400px" }}
       >
-        {isLoading && (
+        {/* {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center bg-zinc-900 bg-opacity-50 z-10">
             <Loader />
           </div>
-        )}
+        )} */}
         <iframe
           src={grafanaUrl}
           width="100%"

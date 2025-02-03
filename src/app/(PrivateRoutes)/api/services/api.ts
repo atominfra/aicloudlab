@@ -181,13 +181,16 @@ export const changeServiceStatus = async (auth: string, serviceId: string, actio
 
 export async function redeployService(auth: string, serviceId: string, tag: string) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/v2/redeploy/${serviceId}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/v2/redeploy`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${auth}`,
       },
-      body: JSON.stringify({ tag }),
+      body: JSON.stringify({ 
+        "service_id": String(serviceId),
+        "tag": tag
+      } ),
     })
 
     if (!response.ok) {
