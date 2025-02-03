@@ -97,7 +97,6 @@ const CreateService: React.FC<CreateServiceProps> = () => {
           })
           const res = await response.json()
           const data = res.data.deployment
-          console.log("Data", data)
           setFormData({
             name: data.name,
             cluster: data.cluster,
@@ -127,7 +126,6 @@ const CreateService: React.FC<CreateServiceProps> = () => {
     try {
       setIsNodeLoading(true)
       const data = await getAllProjectNodes(auth, projectId)
-      console.log("nodes", data)
       setNodes(data.data.nodes)
     } catch (error) {
       console.error("Failed to fetch initial data:", error)
@@ -271,7 +269,6 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       const newob = removeEmptyStringKeys(formData.env_variables)
       deploymentData.env_variables = newob
     }
-    console.log("deploymentData", deploymentData)
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/v2/`, {
@@ -367,9 +364,9 @@ const CreateService: React.FC<CreateServiceProps> = () => {
     }
   }
 
-  useEffect(() => {
-    console.log("form", formData)
-  }, [formData])
+  // useEffect(() => {
+  //   console.log("form", formData)
+  // }, [formData])
 
   useEffect(() => {
     router.prefetch("/create/node")

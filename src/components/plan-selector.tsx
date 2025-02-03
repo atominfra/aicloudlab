@@ -14,7 +14,6 @@ export default function PlanSelector({planData, setPlan}) {
 
   useEffect(()=>{
     if(filteredPlans[0]){
-      console.log("filteredPlans",filteredPlans,filteredPlans[0])
       setPlan(filteredPlans[0])
     }
     },[filteredPlans])

@@ -71,7 +71,6 @@ export default function NotebookItem({ id, name, version, status, notebook_url, 
     setLoading(true);
 
     try {
-      console.log("operationName in notebook",operationName)
       await onOperation(id, operationName); 
     } catch (error) {
       console.error("Operation failed:", error);

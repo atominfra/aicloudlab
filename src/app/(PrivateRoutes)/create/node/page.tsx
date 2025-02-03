@@ -130,9 +130,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       .join("")
   }
 
-  useEffect(() => {
-    console.log("formState", formState)
-  }, [formState])
+  // useEffect(() => {
+  //   console.log("formState", formState)
+  // }, [formState])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -151,7 +151,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!auth) return
+      if (!auth || !formState.cloud_account_id || !formState.location) return
       try {
         setLoadingOs(true)
         const data = await fetchOSOptions(auth, formState.cloud_account_id, formState.location)
@@ -164,9 +164,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     fetchData()
   }, [formState.cloud_account_id, formState.location, auth]) // Added auth to dependencies
 
-  useEffect(() => {
-    console.log("plans", plans)
-  }, [plans])
 
   useEffect(() => {
     const selectedOSOption = osOptions.find((os) => os.name === formState.os)
@@ -197,7 +194,11 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }, [formState.os, formState.osVersion, auth, formState.location, formState.cloud_account_id]) // Added auth to dependencies
 
   const fetchPriceData = async () => {
-    if (!formState.os || !formState.osVersion || !formState.location || !formState.plan) return
+    const selectedPlan = findplan(plans, formState.plan)
+    const provider = (accounts && accounts.find((p) => p.id === formState.cloud_account_id)?.provider) || ""
+    const plan = provider === "e2e" ? selectedPlan?.plan : selectedPlan?.id 
+    console.log("plan", plan, provider)
+    if (!formState.os || !formState.osVersion || !formState.location || !plan) return
     setLoadingPrice(true)
     try {
       const plansData = await fetchPrice(
@@ -206,7 +207,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         formState.osVersion,
         formState.location,
         formState.cloud_account_id,
-        formState.plan,
+        plan,
       )
       setPrice(plansData.data.price)
     } catch (error) {
@@ -217,12 +218,12 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }
 
   useEffect(() => {
-    fetchPriceData()
+    if(auth){
+      fetchPriceData()
+    }
   }, [formState.plan, auth]) // Added auth to dependencies
 
-  useEffect(() => {
-    console.log("Cloud Accounts:", accounts)
-  }, [accounts])
+
 
   useEffect(() => {
     async function loadCloudAccounts() {
@@ -236,7 +237,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         setLoadingAccounts(false)
       }
     }
-    console.log("auth", auth)
     if (auth) {
       loadCloudAccounts()
     }
@@ -279,16 +279,25 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       plan: formState.plan,
       image: formState.image,
       volumes: formState.volumes,
-      os_disk_size:formState.os_disk_size,
+      os_disk_size: formState.os_disk_size,
       security_rules: formState.securityRules,
       location: formState.location,
       cloud_account_id: formState.cloud_account_id,
-    }
-
+    };
+    
+    const selectedPlan = findplan(plans, formState.plan)
     const provider = (accounts && accounts.find((p) => p.id === formState.cloud_account_id)?.provider) || ""
+    console.log("provider", provider,selectedPlan)
+    // Conditionally update plan.id
+    if (provider === "e2e" && selectedPlan) {
+      apiData.plan = selectedPlan.plan; // Replace plan.id with plan.name if provider is "e2e"
+    }
+    
+    
+    
     apiData.image = provider === "azure" || provider === "aws" ? formState.osVersion : formState.image
-
-    console.log("API Data:", JSON.stringify(apiData, null, 2))
+    
+    console.log("apidata", {apiData: apiData}); // You can check the modified apiData here
     try {
       setLoading(true)
       const result = await createNode(auth, apiData)
@@ -439,11 +448,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }
 
   useEffect(() => {
-    console.log("accountsssss", formState.cloud_account_id)
     if (formState.cloud_account_id) {
       const selectedAccount =
         accounts && accounts.find((cloud_account) => cloud_account.id === formState.cloud_account_id)
-      console.log("selectedAccount", selectedAccount)
       if (selectedAccount) {
         const filtered = locations.filter((location) => location.provider === selectedAccount.provider)
         setFilteredLocations(filtered)
@@ -524,6 +531,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
   const handlePlanChange = (value: string) => {
     const selectedPlan = findplan(plans, value)
+    const provider = (accounts && accounts.find((p) => p.id === formState.cloud_account_id)?.provider) || ""
     if (selectedPlan) {
       setFormState((prev) => ({
         ...prev,
@@ -590,9 +598,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }
   }
 
-  useEffect(() => {
-    console.log("accounts", accounts)
-  }, [accounts])
 
   useEffect(() => {
     router.prefetch("/dashboard/projects")
@@ -618,7 +623,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             {projectId && (
               <div className="">
                 <label htmlFor="service-name" className="text-sm pl-2 font-medium text-[#374151]">
-                  Project*
+                  Project *
                 </label>
                 {!loadingProject ? (
                   <div className="relative">
@@ -925,7 +930,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               </div>
             </div>
 
-            {/* <div className="">
+            <div className="">
                 <label htmlFor="service-name" className="text-sm pl-2 font-medium ">
                   OS Disk Size
                 </label>
@@ -938,10 +943,10 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 className={fieldErrors.os_disk_size ? "border-red-500" : ""}
               />
               {fieldErrors.os_disk_size && <p className="text-red-500 text-sm mt-1">{fieldErrors.os_disk_size}</p>}
-            </div> */}
+            </div>
 
             {/* Volumes */}
-            {/* <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
+            <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
               <AccordionItem value="volumes">
                 <AccordionTrigger className="px-4 py-2">
                   Add Volumes
@@ -969,7 +974,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   </div>
                 </AccordionContent>
               </AccordionItem>
-            </Accordion> */}
+            </Accordion>
 
             <Accordion type="single" collapsible className={`w-full border rounded-md bg-white ${fieldErrors.sshKeys ? "border-red-500" : ""}`}>
               <AccordionItem value="ssh-keys" className="border-b-0">
@@ -1022,8 +1027,8 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             {/* Security Rules */}
             <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
               <AccordionItem value="security-rules" >
-                <AccordionTrigger className="px-4 py-2 text-[#b5b5b5] font-normal hover:cursor-not-allowed">
-                  Security Rules (Coming Soon)
+                <AccordionTrigger className="px-4 py-2">
+                  Security Rules 
                 </AccordionTrigger>
                 <AccordionContent className="px-4 py-2">
                   <div className="space-y-4">

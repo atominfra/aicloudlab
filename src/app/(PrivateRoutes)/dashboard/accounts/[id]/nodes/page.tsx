@@ -40,7 +40,6 @@ export default function NodesPage({ params }: { params: { id: string } }) {
   const accountProvider = searchParams.get('accountProvider')
   const router = useRouter()
   const { auth } = useApp()
-    console.log("id",params.id)
 
   
       useEffect(()=>{

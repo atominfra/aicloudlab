@@ -54,7 +54,6 @@ const  NotebooksPage= () => {
   };
   const handleOperationRequest = async (notebookId, operationName) => {
     try {
-      console.log("operationName in dashboard",operationName)
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/notebook/operation`, {
         method: 'POST',
         headers: {
@@ -77,7 +76,6 @@ const  NotebooksPage= () => {
         fetchUserDetails()
       }
       const result = await response.json();
-      console.log('Operation successful:', result);
     } catch (error) {
       setError(error?.message);
     }

@@ -25,7 +25,6 @@ export default function NodesPage() {
 
       if (response.ok) {
         const responseData = await response.json();
-        console.log("responseData.data.nodes", responseData.data.nodes);
         setNodes(responseData.data.nodes); 
       } else {
         const errorData = await response.json();
@@ -47,9 +46,6 @@ export default function NodesPage() {
     fetchNodes();
   }, []);
 
-  useEffect(() => {
-    console.log("nodes", nodes);
-  }, [nodes]);
 
     // prefetch routes for faster navigation
     useEffect(() => {

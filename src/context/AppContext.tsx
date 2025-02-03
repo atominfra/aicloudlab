@@ -17,7 +17,6 @@ export const AppProvider = ({ children }) => {
   
       const storedToken = localStorage.getItem('access_token');
       if (storedToken) {
-        console.log("atuh")
         setAuth(storedToken);
       }
     
@@ -27,10 +26,6 @@ export const AppProvider = ({ children }) => {
       }
     }
     }, []); 
-
-    useEffect(() => {
-      console.log("auth2",auth)
-    }, [auth]);
   
 
     const fetchUserDetails = async () => {
@@ -51,7 +46,6 @@ export const AppProvider = ({ children }) => {
           }
       
           const responseData = await response.json();
-          console.log('responseData', responseData);
           // @ts-expect-error error         
            setUser((prevUser: User) => ({...prevUser, ...responseData.data}));        
           } catch (error) {
@@ -74,9 +68,7 @@ export const AppProvider = ({ children }) => {
         }
       },[auth])
 
-      useEffect(()=>{
-        console.log("user",user)
-      },[user])
+
 
       useEffect(() => {
         const getNodePageStatus = async () => {
