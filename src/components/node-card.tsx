@@ -170,7 +170,7 @@ export function NodeCard({
               <h3 className="font-medium">{name}</h3>
               <div className="flex items-center gap-4  text-sm text-gray-500">
                 <StatusBadge status={status.toLowerCase()} />
-                <span className='lg:w-[120px] flex gap-1'>IP: {public_ip_address}
+                <span className='lg:w-[170px] flex gap-1'>IP: {public_ip_address}
                 <span
                   onClick={handleCopy}
                   className="h-full w-4 focus:outline-none "
