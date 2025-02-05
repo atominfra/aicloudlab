@@ -1,4 +1,4 @@
-import { Settings, Pause, Trash2, Cpu } from 'lucide-react'
+import { Settings, Pause, Trash2, Cpu, Copy, ChevronRight } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { StatusBadge } from './status-badge'
 import { useState } from 'react'
@@ -170,20 +170,21 @@ export function NodeCard({
               <h3 className="font-medium">{name}</h3>
               <div className="flex items-center gap-4  text-sm text-gray-500">
                 <StatusBadge status={status.toLowerCase()} />
-                <span className='lg:w-[170px] flex gap-1'>IP: {public_ip_address}
+                <div className='lg:w-[160px] flex gap-1'>IP: {public_ip_address}
                 <span
                   onClick={handleCopy}
                   className="h-full w-4 focus:outline-none "
                   aria-label="Copy IP address"
                 >
-                  <Image
+                  {/* <Image
                     alt='copyIcon'
                     src={copyIcon || "/placeholder.svg"}
                     width={16}
                     height={16}
-                  />
+                  /> */}
+                  <Copy className= ' text-gray-700 hover:text-gray-400 hover:shadow-sm' size={16}/>
                 </span>
-                </span>
+                </div>
                 
                 {/* <span>•</span> */}
                 <div className='flex gap-2'>
@@ -203,17 +204,13 @@ export function NodeCard({
             className='w-[200px] rounded-full bg-gray-200 py-1 px-2 flex gap-2 items-center justify-center hover:bg-gray-300 hover:cursor-pointer'
             onClick={handleSSHCopy}
           >
-            <Image
-              alt='copyIcon'
-              src={copyIcon || "/placeholder.svg"}
-              width={16}
-              height={16}
-            />
+            <Copy className='' size={16}/>
             <span className='text-sm text-gray-700'>Copy SSH Command</span>
           </button>
           <button onClick={handleOpen} className='p-2 hover:cursor-pointer'>
             <MdDelete className="w-[20px] h-[30px] text-red-600" />
           </button>
+          {/* <Button  className='bg-inherit text-gray-700 hover:bg-inherit rounded-md '><ChevronRight /></Button> */}
         </div>
       </div>
 
@@ -245,12 +242,7 @@ export function NodeCard({
               className="focus:outline-none"
               aria-label="Copy IP address"
             >
-              <Image
-                alt='copyIcon'
-                src={copyIcon || "/placeholder.svg"}
-                width={16}
-                height={16}
-              />
+              <Copy className= ' text-gray-700 hover:text-gray-400 hover:shadow-sm' size={16}/>
             </button>
           </div>
           
