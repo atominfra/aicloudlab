@@ -62,6 +62,8 @@ interface NodeCreationFormProps {
   isEditMode?: boolean
 }
 
+const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
+
 export default function NodeCreationForm({ initialData, isEditMode = false }: NodeCreationFormProps) {
   const [formState, setFormState] = useState<NodeData>({
     projects_id: initialData?.projects_id || "",
@@ -262,17 +264,32 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
 
     // Validate OS disk size
     const osDiskSize = Number(formState.os_disk_size)
-    if (isNaN(osDiskSize) || osDiskSize < 1 || osDiskSize > 1000) {
-      errors.os_disk_size = "OS disk size must be between 1 and 1,000 GB"
+    if (isNaN(osDiskSize) || osDiskSize < 1 || osDiskSize > 10000) {
+      errors.os_disk_size = "OS disk size must be between 10 and 10,000 GB"
     }
 
     // Validate volumes
-    formState.volumes.forEach((volume, index) => {
-      const volumeSize = Number(volume.size)
-      if (isNaN(volumeSize) || volumeSize < 10 || volumeSize > 1000) {
-        errors[`volumes.${index}`] = `Volume ${index + 1} size must be between 10 and 1,000 GB`
-      }
-    })
+    if (
+      formState.volumes.some((volume) => {
+        const volumeSize = Number(volume.size)
+        return isNaN(volumeSize) || volumeSize < 10 || volumeSize > 10000
+      })
+    ) {
+      errors.volumes = "All volumes must have a size between 10 and 10,000 GB"
+    }
+
+    // Validate security rules
+    const invalidRules = formState.securityRules.filter(
+      (rule) =>
+        (rule.ipType === "ip" && !ipRegex.test(rule.ipAddresses.replace("/32", ""))) ||
+        rule.port === "" ||
+        isNaN(Number(rule.port)) ||
+        Number(rule.port) < 1 ||
+        Number(rule.port) > 65535,
+    )
+    if (invalidRules.length > 0) {
+      errors.securityRules = "One or more security rules are invalid. Check IP addresses and port numbers."
+    }
 
     setFieldErrors(errors)
     return Object.keys(errors).length === 0
@@ -384,6 +401,17 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     setFormState((prev) => {
       const newVolumes = [...prev.volumes]
       newVolumes[index] = { ...newVolumes[index], size: value }
+
+      // Clear the volume error if all volumes are valid
+      if (
+        newVolumes.every((volume) => {
+          const volumeSize = Number(volume.size)
+          return !isNaN(volumeSize) && volumeSize >= 10 && volumeSize <= 10000
+        })
+      ) {
+        setFieldErrors((prev) => ({ ...prev, volumes: undefined }))
+      }
+
       return { ...prev, volumes: newVolumes }
     })
   }
@@ -413,9 +441,26 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       if (field === "ipType") {
         newRules[index].ipAddresses = value === "any" ? "0.0.0.0/0" : ""
       } else if (field === "ipAddresses" && newRules[index].ipType === "ip") {
-        // Remove any "/" characters from the input
-        const cleanedValue = value.replace("/", "")
-        newRules[index].ipAddresses = cleanedValue.endsWith("/32") ? cleanedValue : `${cleanedValue}/32`
+        const cleanedValue = value.replace(/[^0-9.]/g, "")
+        if (ipRegex.test(cleanedValue)) {
+          newRules[index].ipAddresses = `${cleanedValue}/32`
+        } else {
+          newRules[index].ipAddresses = cleanedValue
+        }
+      }
+
+      // Clear the error if all rules are valid
+      if (
+        newRules.every(
+          (rule) =>
+            (rule.ipType === "any" || ipRegex.test(rule.ipAddresses.replace("/32", ""))) &&
+            rule.port !== "" &&
+            !isNaN(Number(rule.port)) &&
+            Number(rule.port) >= 1 &&
+            Number(rule.port) <= 65535,
+        )
+      ) {
+        setFieldErrors((prev) => ({ ...prev, securityRules: undefined }))
       }
 
       return { ...prev, securityRules: newRules }
@@ -947,7 +992,11 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             </div>
 
             {/* Volumes */}
-            <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
+            <Accordion
+              type="single"
+              collapsible
+              className={`w-full border rounded-md bg-white ${fieldErrors.volumes ? "border-red-500" : ""}`}
+            >
               <AccordionItem value="volumes">
                 <AccordionTrigger className="px-4 py-2">Add Volumes</AccordionTrigger>
                 <AccordionContent className="px-4 py-2">
@@ -956,19 +1005,18 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                       <div key={index} className="flex items-center space-x-2">
                         <Input
                           type="number"
-                          min="10"
-                          max="1000000"
                           step="1"
                           placeholder="Size (GB)"
                           value={volume.size}
                           onChange={(e) => updateVolume(index, e.target.value)}
-                          className="flex-grow"
+                          className={`flex-grow ${fieldErrors.volumes ? "border-red-500" : ""}`}
                         />
                         <Button type="button" variant="ghost" size="icon" onClick={() => removeVolume(index)}>
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </div>
                     ))}
+                    {fieldErrors.volumes && <p className="text-red-500 text-sm mt-1">{fieldErrors.volumes}</p>}
                     <Button type="button" variant="outline" onClick={addVolume} className="mt-2">
                       Add Volume
                     </Button>
@@ -982,7 +1030,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               collapsible
               className={`w-full border rounded-md bg-white ${fieldErrors.sshKeys ? "border-red-500" : ""}`}
             >
-              <AccordionItem value="ssh-keys" className="border-b-0">
+              <AccordionItem value="security-rules" className="border-b-0">
                 <AccordionTrigger className="px-4 py-2">Add SSH Keys* </AccordionTrigger>
                 <AccordionContent className="px-4 py-2">
                   <div className="space-y-4">
@@ -1027,7 +1075,11 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             {fieldErrors.sshKeys && <p className="text-red-500 text-sm mt-1">{fieldErrors.sshKeys}</p>}
 
             {/* Security Rules */}
-            <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
+            <Accordion
+              type="single"
+              collapsible
+              className={`w-full border rounded-md bg-white ${fieldErrors.securityRules ? "border-red-500" : ""}`}
+            >
               <AccordionItem value="security-rules">
                 <AccordionTrigger className="px-4 py-2">Security Rules</AccordionTrigger>
                 <AccordionContent className="px-4 py-2">
@@ -1048,12 +1100,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                                 <SelectItem value="outbound">Outbound</SelectItem>
                               </SelectContent>
                             </Select>
-                            <Input
-                              placeholder="Port"
-                              value={rule.port}
-                              onChange={(e) => updateSecurityRule(index, "port", e.target.value)}
-                              className="w-20"
-                            />
                             <Select
                               value={rule.protocol}
                               onValueChange={(value) => updateSecurityRule(index, "protocol", value)}
@@ -1089,17 +1135,26 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                               placeholder="IP Address"
                               value={rule.ipAddresses.replace("/32", "")}
                               onChange={(e) => {
-                                const value = e.target.value.replace("/", "")
+                                const value = e.target.value.replace(/[^0-9.]/g, "")
                                 updateSecurityRule(index, "ipAddresses", value)
                               }}
-                              className="flex-grow"
+                              className={`flex-grow ${fieldErrors.securityRules ? "border-red-500" : ""}`}
                             />
                           ) : (
                             <Input value={rule.ipAddresses} disabled className="flex-grow" />
                           )}
+                          <Input
+                            placeholder="Port"
+                            value={rule.port}
+                            onChange={(e) => updateSecurityRule(index, "port", e.target.value)}
+                            className={`w-20 ${fieldErrors.securityRules ? "border-red-500" : ""}`}
+                          />
                         </div>
                       </div>
                     ))}
+                    {fieldErrors.securityRules && (
+                      <p className="text-red-500 text-sm mt-1">{fieldErrors.securityRules}</p>
+                    )}
                     <Button type="button" variant="outline" onClick={addSecurityRule}>
                       Add Rule
                     </Button>
