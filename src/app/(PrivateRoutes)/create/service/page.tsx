@@ -295,7 +295,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
 
     if (formData.registryCredential) {
       // @ts-expect-error build error
-      deploymentData.registry_credential_id = formData.registryCredential
+      deploymentData.registry_credential_id = Number(formData.registryCredential)
     }
     if (formData.env_variables) {
       const newob = removeEmptyStringKeys(formData.env_variables)
