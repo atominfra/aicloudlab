@@ -263,7 +263,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     // Validate OS disk size
     const osDiskSize = Number(formState.os_disk_size)
     if (isNaN(osDiskSize) || osDiskSize < 1 || osDiskSize > 1000) {
-      errors.os_disk_size = "OS disk size must be between 1 and 1,000, GB"
+      errors.os_disk_size = "OS disk size must be between 1 and 1,000 GB"
     }
 
     // Validate volumes
