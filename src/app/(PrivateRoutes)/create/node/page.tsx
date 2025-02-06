@@ -195,7 +195,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const fetchPriceData = async () => {
     const selectedPlan = findplan(plans, formState.plan)
     const provider = (accounts && accounts.find((p) => p.id === formState.cloud_account_id)?.provider) || ""
-    const plan = provider === "e2e" ? selectedPlan?.plan : selectedPlan?.id 
+    const plan = provider === "e2e" ? selectedPlan?.plan : selectedPlan?.id
     console.log("plan", plan, provider)
     if (!formState.os || !formState.osVersion || !formState.location || !plan) return
     setLoadingPrice(true)
@@ -240,6 +240,10 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }, [auth])
 
   const updateFormState = (field: keyof NodeData, value) => {
+    if (field === "os_disk_size") {
+      const intValue = Math.floor(Number(value))
+      value = intValue > 1000000 ? 1000000  : intValue
+    }
     setFormState((prev) => ({ ...prev, [field]: value }))
     setFieldErrors((prev) => ({ ...prev, [field]: undefined }))
   }
@@ -369,8 +373,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const updateVolume = (index: number, value: string) => {
     setFormState((prev) => {
       const newVolumes = [...prev.volumes]
+      const intValue = Math.floor(Number(value))
       // @ts-expect-error build
-      newVolumes[index] = { size: Number.parseInt(value) || 10 } 
+      newVolumes[index] = { size: intValue > 1000000 ? `1000000`  : intValue }
       return { ...prev, volumes: newVolumes }
     })
   }
@@ -922,9 +927,13 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               <Input
                 id="os_disk_size"
                 name="os_disk_size"
+                type="number"
+                min="1"
+                max="1000000"
+                step="1"
                 value={formState.os_disk_size}
-                onChange={(e) => updateFormState("os_disk_size", e.target.value)}
-                placeholder="Enter OS Disk Size (Gib)"
+                onChange={(e) => updateFormState("os_disk_size", Math.floor(Number(e.target.value)))}
+                placeholder="Enter OS Disk Size (GB)"
                 className={fieldErrors.os_disk_size ? "border-red-500" : ""}
               />
               {fieldErrors.os_disk_size && <p className="text-red-500 text-sm mt-1">{fieldErrors.os_disk_size}</p>}
@@ -941,6 +950,8 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                         <Input
                           type="number"
                           min="10"
+                          max="1000000"
+                          step="1"
                           placeholder="Size (GB)"
                           value={volume.size}
                           onChange={(e) => updateVolume(index, e.target.value)}
