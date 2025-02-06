@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
-import { Loader2, Users, ArrowLeftRight, PiggyBank, Eye, EyeOff } from 'lucide-react'
+import { Loader2, Users, ArrowLeftRight, PiggyBank, Eye, EyeOff, CircleAlert } from 'lucide-react'
 import { MdEmail, MdLock, MdPerson, MdPhone } from "react-icons/md"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -343,8 +343,11 @@ export default function Signup() {
                 </div>
 
                 {signupError && (
-                  <p className="text-sm text-red-500 text-center">{signupError}</p>
-                )}
+                    <div className="text-red-500 text-sm bg-red-50 border  max-w-2xl md:mx-auto border-red-100  p-4 rounded-lg flex gap-2 items-center w-full">
+                      <CircleAlert className="text-red-500  size-4 " />
+                      <div>{signupError}</div>
+                    </div>
+                  )}
 
                 <Button 
                   type="submit" 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
-import { Loader2, Users, ArrowLeftRight, PiggyBank, Eye, EyeOff } from 'lucide-react'
+import { Loader2, Users, ArrowLeftRight, PiggyBank, Eye, EyeOff, CircleAlert } from 'lucide-react'
 import { MdEmail, MdLock } from "react-icons/md"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -157,6 +157,7 @@ export default function Login() {
           {/* Right side - Login form */}
           <div className="w-full max-w-xl mx-auto  h-[80vh] md:h-[100vh] overflow-y-scroll no-scrollbar flex justify-center items-center">
             <div className="bg-white lg:p-12 p-6 rounded-[16px] lg:shadow-xl w-full">
+             
               <div className="text-[24px] md:text-[28px] font-semibold text-gray-900 h-[10%]">Log In</div>
               <h1 className="text-[15px] font-normal tracking-tight pb-4 text-gray-500">
                 Don&apos;t have an account?
@@ -218,11 +219,12 @@ export default function Login() {
                       <p className="text-sm text-red-500">{errors.password}</p>
                     )}
                   </div>
-
                   {loginError && (
-                    <p className="text-sm text-red-500 text-center">{loginError}</p>
+                    <div className="text-red-500 text-sm bg-red-50 border  max-w-2xl md:mx-auto border-red-100  p-4 rounded-lg flex gap-2 items-center w-full">
+                      <CircleAlert className="text-red-500  size-4 " />
+                      <div>{loginError}</div>
+                    </div>
                   )}
-
                   <Button 
                     type="submit" 
                     className="w-full h-11 bg-[#2563EB] hover:bg-[#2563EB]/90 text-[14px]" 
