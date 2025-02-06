@@ -54,7 +54,7 @@ interface NodeData {
   commitmment: string
   sshKeys: { key: string; isVisible: boolean }[]
   volumes: Array<{ name: string; size: string }>
-  securityRules: Array<{ type: string; port: string; protocol: string; ipAddresses: string; allowed: boolean }>
+  securityRules: Array<{ type: string; port: string; protocol: string; ipType: "any" | "ip"; ipAddresses: string }>
 }
 
 interface NodeCreationFormProps {
@@ -66,7 +66,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const [formState, setFormState] = useState<NodeData>({
     projects_id: initialData?.projects_id || "",
     location: initialData?.location || "",
-    os_disk_size:initialData?.os_disk_size|| '',
+    os_disk_size: initialData?.os_disk_size || "",
     cloud_account_id: initialData?.cloud_account_id || "",
     name: initialData?.name || "",
     os: initialData?.os || "",
@@ -76,7 +76,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     commitmment: initialData?.commitmment || "",
     sshKeys: initialData?.sshKeys || [{ key: "", isVisible: false }],
     volumes: initialData?.volumes || [],
-    securityRules: initialData?.securityRules || [],
+    securityRules: [],
   })
   const [projectData, setProjectData] = useState([])
   const [loadingProject, setLoadingProject] = useState(true)
@@ -164,7 +164,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     fetchData()
   }, [formState.cloud_account_id, formState.location, auth]) // Added auth to dependencies
 
-
   useEffect(() => {
     const selectedOSOption = osOptions.find((os) => os.name === formState.os)
     setOSVersions(selectedOSOption?.version || [])
@@ -218,12 +217,10 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }
 
   useEffect(() => {
-    if(auth){
+    if (auth) {
       fetchPriceData()
     }
   }, [formState.plan, auth]) // Added auth to dependencies
-
-
 
   useEffect(() => {
     async function loadCloudAccounts() {
@@ -250,6 +247,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const validateForm = () => {
     const errors: { [key in keyof NodeData]?: string } = {}
     if (!formState.name) errors.name = "Node name is required"
+    else if (formState.name.includes("_") || formState.name.includes(" ")) {
+      errors.name = "Name cannot contain an underscore (_) or spaces."
+    }
     if (!formState.cloud_account_id) errors.cloud_account_id = "Cloud account is required"
     if (!formState.location) errors.location = "Location is required"
     if (!formState.os) errors.os = "Operating system is required"
@@ -283,28 +283,27 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       security_rules: formState.securityRules,
       location: formState.location,
       cloud_account_id: formState.cloud_account_id,
-    };
-    
+    }
+
     const selectedPlan = findplan(plans, formState.plan)
     const provider = (accounts && accounts.find((p) => p.id === formState.cloud_account_id)?.provider) || ""
-    console.log("provider", provider,selectedPlan)
+    console.log("provider", provider, selectedPlan)
     // Conditionally update plan.id
     if (provider === "e2e" && selectedPlan) {
-      apiData.plan = selectedPlan.plan; // Replace plan.id with plan.name if provider is "e2e"
+      apiData.plan = selectedPlan.plan // Replace plan.id with plan.name if provider is "e2e"
     }
-    
-    
-    
+
     apiData.image = provider === "azure" || provider === "aws" ? formState.osVersion : formState.image
-    
-    console.log("apidata", {apiData: apiData}); // You can check the modified apiData here
+
+    console.log("apidata", { apiData: apiData }) // You can check the modified apiData here
     try {
       setLoading(true)
       const result = await createNode(auth, apiData)
-      if(result.error === "true"){
+      console.log("Result:", result)
+      if (result.error === "true") {
         setError(result.message)
         return
-      }else{
+      } else {
         console.log("Node created successfully:", result)
         router.push(`/project/${projectId}?viewType=nodes`)
       }
@@ -371,7 +370,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     setFormState((prev) => {
       const newVolumes = [...prev.volumes]
       // @ts-expect-error build
-      newVolumes[index] = { size: parseInt(value) || 10 } 
+      newVolumes[index] = { size: Number.parseInt(value) || 10 } 
       return { ...prev, volumes: newVolumes }
     })
   }
@@ -381,7 +380,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       ...prev,
       securityRules: [
         ...prev.securityRules,
-        { type: "inbound", port: "", protocol: "tcp", ipAddresses: "", allowed: true },
+        { type: "inbound", port: "", protocol: "tcp", ipType: "any", ipAddresses: "0.0.0.0/0" },
       ],
     }))
   }
@@ -393,10 +392,17 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }))
   }
 
-  const updateSecurityRule = (index: number, field: keyof NodeData["securityRules"][0], value) => {
+  const updateSecurityRule = (index: number, field: keyof NodeData["securityRules"][0], value: string) => {
     setFormState((prev) => {
       const newRules = [...prev.securityRules]
       newRules[index] = { ...newRules[index], [field]: value }
+
+      if (field === "ipType") {
+        newRules[index].ipAddresses = value === "any" ? "0.0.0.0/0" : ""
+      } else if (field === "ipAddresses" && newRules[index].ipType === "ip") {
+        newRules[index].ipAddresses = value.endsWith("/32") ? value : `${value}/32`
+      }
+
       return { ...prev, securityRules: newRules }
     })
   }
@@ -598,7 +604,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }
   }
 
-
   useEffect(() => {
     router.prefetch("/dashboard/projects")
     router.prefetch(`/project/${projectId}?viewType=nodes`)
@@ -614,12 +619,12 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6 p-6">
-          {error && (
-            <div className="text-red-500 text-sm bg-red-50 border  max-w-2xl md:mx-auto border-red-100  p-4 rounded-lg flex gap-2 items-center">
-              <CircleAlert className="text-red-500  size-4 " />
-              <div>{error}</div>
-            </div>
-          )}
+            {error && (
+              <div className="text-red-500 text-sm bg-red-50 border  max-w-2xl md:mx-auto border-red-100  p-4 rounded-lg flex gap-2 items-center">
+                <CircleAlert className="text-red-500  size-4 " />
+                <div>{error}</div>
+              </div>
+            )}
             {projectId && (
               <div className="">
                 <label htmlFor="service-name" className="text-sm pl-2 font-medium text-[#374151]">
@@ -691,9 +696,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     <RefreshCw size={16} />
                   </Button>
                 </div>
-                {fieldErrors.projects_id && (
-                  <p className="text-red-500 text-sm mt-1">{fieldErrors.projects_id}</p>
-                )}
+                {fieldErrors.projects_id && <p className="text-red-500 text-sm mt-1">{fieldErrors.projects_id}</p>}
               </div>
             )}
 
@@ -706,9 +709,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 onChange={(e) => updateFormState("name", e.target.value)}
                 className={`max-w-full placeholder:text-black text-sm ${fieldErrors.name ? "border-red-500" : ""}`}
               />
-              {fieldErrors.name && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.name}</p>
-              )}
+              {fieldErrors.name && <p className="text-red-500 text-sm mt-1">{fieldErrors.name}</p>}
             </div>
 
             <div className="space-y-2">
@@ -790,14 +791,14 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   </SelectContent>
                 </Select>
               </div>
-              {fieldErrors.location && (
-                <p className="text-red-500 text-sm mt-1">{fieldErrors.location}</p>
-              )}
+              {fieldErrors.location && <p className="text-red-500 text-sm mt-1">{fieldErrors.location}</p>}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="os" className="pl-2 ">Operating System *</Label>
+                <Label htmlFor="os" className="pl-2 ">
+                  Operating System *
+                </Label>
                 <Select
                   onValueChange={handleOsOptionsChange}
                   value={formState.os}
@@ -825,18 +826,12 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     )}
                   </SelectContent>
                 </Select>
-                {fieldErrors.os && (
-                  <p className="text-red-500 text-sm mt-1">{fieldErrors.os}</p>
-                )}
+                {fieldErrors.os && <p className="text-red-500 text-sm mt-1">{fieldErrors.os}</p>}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="os-version">OS Version *</Label>
-                <Select
-                  onValueChange={handleOsVersionChange}
-                  value={formState.osVersion}
-                  disabled={!formState.os}
-                >
+                <Select onValueChange={handleOsVersionChange} value={formState.osVersion} disabled={!formState.os}>
                   <SelectTrigger
                     id="os-version"
                     className={`max-w-full ${fieldErrors.osVersion ? "border-red-500" : ""}`}
@@ -851,18 +846,14 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     ))}
                   </SelectContent>
                 </Select>
-                {fieldErrors.osVersion && (
-                  <p className="text-red-500 text-sm mt-1">{fieldErrors.osVersion}</p>
-                )}
+                {fieldErrors.osVersion && <p className="text-red-500 text-sm mt-1">{fieldErrors.osVersion}</p>}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="plan" className="pl-2 ">Plan *</Label>
-                <Select
-                  onValueChange={handlePlanChange}
-                  value={formState.plan}
-                  disabled={plans && plans.length === 0}
-                >
+                <Label htmlFor="plan" className="pl-2 ">
+                  Plan *
+                </Label>
+                <Select onValueChange={handlePlanChange} value={formState.plan} disabled={plans && plans.length === 0}>
                   <SelectTrigger id="plan" className={`max-w-full ${fieldErrors.plan ? "border-red-500" : ""}`}>
                     {loadingPlans ? (
                       <div className="flex items-center">
@@ -885,9 +876,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     )}
                   </SelectContent>
                 </Select>
-                {fieldErrors.plan && (
-                  <p className="text-red-500 text-sm mt-1">{fieldErrors.plan}</p>
-                )}
+                {fieldErrors.plan && <p className="text-red-500 text-sm mt-1">{fieldErrors.plan}</p>}
               </div>
 
               <div className="space-y-2">
@@ -903,8 +892,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   >
                     {loadingPrice ? (
                       <div className="flex items-center">
-                        
-                      
                         <CircularProgress size={16} className="mr-2" />
                         Loading Price Options ...
                       </div>
@@ -924,16 +911,14 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                     )}
                   </SelectContent>
                 </Select>
-                {fieldErrors.commitmment && (
-                  <p className="text-red-500 text-sm mt-1">{fieldErrors.commitmment}</p>
-                )}
+                {fieldErrors.commitmment && <p className="text-red-500 text-sm mt-1">{fieldErrors.commitmment}</p>}
               </div>
             </div>
 
             <div className="">
-                <label htmlFor="service-name" className="text-sm pl-2 font-medium ">
-                  OS Disk Size
-                </label>
+              <label htmlFor="service-name" className="text-sm pl-2 font-medium ">
+                OS Disk Size
+              </label>
               <Input
                 id="os_disk_size"
                 name="os_disk_size"
@@ -948,9 +933,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
             {/* Volumes */}
             <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
               <AccordionItem value="volumes">
-                <AccordionTrigger className="px-4 py-2">
-                  Add Volumes
-                </AccordionTrigger>
+                <AccordionTrigger className="px-4 py-2">Add Volumes</AccordionTrigger>
                 <AccordionContent className="px-4 py-2">
                   <div className="space-y-4">
                     {formState.volumes.map((volume, index) => (
@@ -976,7 +959,11 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
               </AccordionItem>
             </Accordion>
 
-            <Accordion type="single" collapsible className={`w-full border rounded-md bg-white ${fieldErrors.sshKeys ? "border-red-500" : ""}`}>
+            <Accordion
+              type="single"
+              collapsible
+              className={`w-full border rounded-md bg-white ${fieldErrors.sshKeys ? "border-red-500" : ""}`}
+            >
               <AccordionItem value="ssh-keys" className="border-b-0">
                 <AccordionTrigger className="px-4 py-2">Add SSH Keys* </AccordionTrigger>
                 <AccordionContent className="px-4 py-2">
@@ -1019,17 +1006,12 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
-            {fieldErrors.sshKeys && (
-              <p className="text-red-500 text-sm mt-1">{fieldErrors.sshKeys}</p>
-            )}
-
+            {fieldErrors.sshKeys && <p className="text-red-500 text-sm mt-1">{fieldErrors.sshKeys}</p>}
 
             {/* Security Rules */}
             <Accordion type="single" collapsible className="w-full border rounded-md bg-white">
-              <AccordionItem value="security-rules" >
-                <AccordionTrigger className="px-4 py-2">
-                  Security Rules 
-                </AccordionTrigger>
+              <AccordionItem value="security-rules">
+                <AccordionTrigger className="px-4 py-2">Security Rules</AccordionTrigger>
                 <AccordionContent className="px-4 py-2">
                   <div className="space-y-4">
                     {formState.securityRules.map((rule, index) => (
@@ -1072,12 +1054,28 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                           </Button>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <Input
-                            placeholder="IP Addresses (comma-separated)"
-                            value={rule.ipAddresses}
-                            onChange={(e) => updateSecurityRule(index, "ipAddresses", e.target.value)}
-                            className="flex-grow"
-                          />
+                          <Select
+                            value={rule.ipType}
+                            onValueChange={(value) => updateSecurityRule(index, "ipType", value as "any" | "ip")}
+                          >
+                            <SelectTrigger className="w-28">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="any">Any</SelectItem>
+                              <SelectItem value="ip">IP</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          {rule.ipType === "ip" ? (
+                            <Input
+                              placeholder="IP Address"
+                              value={rule.ipAddresses.replace("/32", "")}
+                              onChange={(e) => updateSecurityRule(index, "ipAddresses", e.target.value)}
+                              className="flex-grow"
+                            />
+                          ) : (
+                            <Input value={rule.ipAddresses} disabled className="flex-grow" />
+                          )}
                         </div>
                       </div>
                     ))}
