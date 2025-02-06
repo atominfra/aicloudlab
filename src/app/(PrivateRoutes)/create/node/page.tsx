@@ -240,10 +240,6 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }, [auth])
 
   const updateFormState = (field: keyof NodeData, value) => {
-    if (field === "os_disk_size") {
-      const intValue = Math.floor(Number(value))
-      value = intValue > 1000000 ? 1000000  : intValue
-    }
     setFormState((prev) => ({ ...prev, [field]: value }))
     setFieldErrors((prev) => ({ ...prev, [field]: undefined }))
   }
@@ -263,6 +259,20 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     if (formState.sshKeys.length === 0 || formState.sshKeys.some((key) => !key.key.trim())) {
       errors.sshKeys = "At least one SSH key is required"
     }
+
+    // Validate OS disk size
+    const osDiskSize = Number(formState.os_disk_size)
+    if (isNaN(osDiskSize) || osDiskSize < 1 || osDiskSize > 1000) {
+      errors.os_disk_size = "OS disk size must be between 1 and 1,000, GB"
+    }
+
+    // Validate volumes
+    formState.volumes.forEach((volume, index) => {
+      const volumeSize = Number(volume.size)
+      if (isNaN(volumeSize) || volumeSize < 10 || volumeSize > 1000) {
+        errors[`volumes.${index}`] = `Volume ${index + 1} size must be between 10 and 1,000 GB`
+      }
+    })
 
     setFieldErrors(errors)
     return Object.keys(errors).length === 0
@@ -373,9 +383,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   const updateVolume = (index: number, value: string) => {
     setFormState((prev) => {
       const newVolumes = [...prev.volumes]
-      const intValue = Math.floor(Number(value))
-      // @ts-expect-error build
-      newVolumes[index] = { size: intValue > 1000000 ? `1000000`  : intValue }
+      newVolumes[index] = { ...newVolumes[index], size: value }
       return { ...prev, volumes: newVolumes }
     })
   }
@@ -405,7 +413,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       if (field === "ipType") {
         newRules[index].ipAddresses = value === "any" ? "0.0.0.0/0" : ""
       } else if (field === "ipAddresses" && newRules[index].ipType === "ip") {
-        newRules[index].ipAddresses = value.endsWith("/32") ? value : `${value}/32`
+        // Remove any "/" characters from the input
+        const cleanedValue = value.replace("/", "")
+        newRules[index].ipAddresses = cleanedValue.endsWith("/32") ? cleanedValue : `${cleanedValue}/32`
       }
 
       return { ...prev, securityRules: newRules }
@@ -928,11 +938,8 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                 id="os_disk_size"
                 name="os_disk_size"
                 type="number"
-                min="1"
-                max="1000000"
-                step="1"
                 value={formState.os_disk_size}
-                onChange={(e) => updateFormState("os_disk_size", Math.floor(Number(e.target.value)))}
+                onChange={(e) => updateFormState("os_disk_size", e.target.value)}
                 placeholder="Enter OS Disk Size (GB)"
                 className={fieldErrors.os_disk_size ? "border-red-500" : ""}
               />
@@ -1081,7 +1088,10 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                             <Input
                               placeholder="IP Address"
                               value={rule.ipAddresses.replace("/32", "")}
-                              onChange={(e) => updateSecurityRule(index, "ipAddresses", e.target.value)}
+                              onChange={(e) => {
+                                const value = e.target.value.replace("/", "")
+                                updateSecurityRule(index, "ipAddresses", value)
+                              }}
                               className="flex-grow"
                             />
                           ) : (

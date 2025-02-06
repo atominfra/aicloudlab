@@ -196,15 +196,14 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   const handleCustomInputChange =
     (setter: React.Dispatch<React.SetStateAction<string>>) => (e: React.ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value
-      if (value === "" || /^\d+$/.test(value)) {
+      if (value === "" || /^\d*\.?\d*$/.test(value)) {
         setter(value)
       }
     }
 
   const handleCustomMemoryLimitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
-    const regex = /^\d+(m|g)?$/
-    if (value === "" || regex.test(value)) {
+    if (value === "" || /^\d+$/.test(value)) {
       setCustomMemoryLimit(value)
     }
   }
@@ -212,13 +211,46 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   const validateForm = () => {
     const errors: { [key: string]: string } = {}
     if (!formData.name.trim()) errors.name = "Service name is required"
+    else if (formData.name.includes("_") || formData.name.includes(" ")) {
+      errors.name = "Name cannot contain an underscore (_) or spaces."
+    }
     if (!formData.image.trim()) errors.image = "Image is required"
+
+    // New port validation
     if (!formData.target_port.trim()) errors.target_port = "Port is required"
+    else {
+      const port = Number.parseInt(formData.target_port)
+      if (isNaN(port) || port < 0 || port > 65535) {
+        errors.target_port = "Port must be a numeric value between 0-65,535"
+      }
+    }
+
+    // New memory limit validation
     if (!formData.memoryLimit) errors.memoryLimit = "Memory limit is required"
-    if (formData.memoryLimit === "custom" && !customMemoryLimit.trim())
-      errors.customMemoryLimit = "Custom memory limit is required"
+    else if (formData.memoryLimit === "custom") {
+      if (!customMemoryLimit.trim()) {
+        errors.customMemoryLimit = "Custom memory limit is required"
+      } else {
+        const memoryValue = Number.parseInt(customMemoryLimit)
+        if (isNaN(memoryValue) || memoryValue < 0 || memoryValue > 10000) {
+          errors.customMemoryLimit = "Memory limit must be a numeric value between 0-10000"
+        }
+      }
+    }
+
+    // New CPU limit validation
     if (!formData.cpuLimit) errors.cpuLimit = "CPU limit is required"
-    if (formData.cpuLimit === "custom" && !customCpuLimit.trim()) errors.customCpuLimit = "Custom CPU limit is required"
+    else if (formData.cpuLimit === "custom") {
+      if (!customCpuLimit.trim()) {
+        errors.customCpuLimit = "Custom CPU limit is required"
+      } else {
+        const cpuValue = Number.parseFloat(customCpuLimit)
+        if (isNaN(cpuValue) || cpuValue < 0 || cpuValue > 1000) {
+          errors.customCpuLimit = "CPU limit must be a numeric value between 0-1000"
+        }
+      }
+    }
+
     if (serviceType === "docker-compose" && !formData.node_id) errors.node_id = "Node selection is required"
     if (serviceType === "kubernetes" && !formData.cluster) errors.cluster = "Cluster selection is required"
 
@@ -358,7 +390,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       case "aws":
         return awsIcon
       case "e2e":
-        return e2eIcon;
+        return e2eIcon
       default:
         return null
     }
@@ -557,7 +589,12 @@ const CreateService: React.FC<CreateServiceProps> = () => {
             id="target_port"
             name="target_port"
             value={formData.target_port}
-            onChange={(e) => handleChange("target_port", e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value
+              if (value === "" || /^\d+$/.test(value)) {
+                handleChange("target_port", value)
+              }
+            }}
             placeholder="Enter port"
             className={fieldErrors.target_port ? "border-red-500" : ""}
           />
