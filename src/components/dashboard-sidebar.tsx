@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
-import { FolderOpen, Cloud, User2 } from "lucide-react"
+import { FolderOpen, Cloud } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
   Sidebar,
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/sidebar"
 import { useAuth } from "@/context/AuthContext"
 import logo from "@/assets/logo.webp"
+
 const navItems = [
   { href: "/dashboard/projects", label: "Projects", icon: FolderOpen },
   { href: "/dashboard/accounts", label: "Accounts", icon: Cloud },
@@ -33,25 +34,36 @@ export function DashboardSidebar({ ...props }) {
 
   const handleNavigation = (href: string) => {
     router.push(href)
-    // if (isMobile) {
-      setOpenMobile(false)
-    // }
+    setOpenMobile(false)
   }
 
   return (
     <Sidebar
-      collapsible={"icon"}
+      side={isMobile ? "right" : "left"}
+      collapsible={isMobile ? "offcanvas" : "icon"}
       {...props}
-      className={cn("bg-white border-r border-border flex-col fixed h-screen hidden lg:flex", !showExpanded && "w-16")}
+      className={cn(
+        "bg-white border-border flex-col fixed h-screen",
+        isMobile ? "border-l" : "border-r",
+        isMobile ? "lg:hidden" : "hidden lg:flex",
+        !showExpanded && !isMobile && "w-16",
+      )}
     >
-      <SidebarHeader className="flex items-center justify-center py-4 bg-white border-b">
+      <SidebarHeader
+        className={cn("flex items-center py-4 bg-white border-b", isMobile ? "justify-between px-4" : "justify-center")}
+      >
         <SidebarMenu>
-          <SidebarMenuItem className={`flex ${showExpanded ? "justify-between" : "justify-center"} items-center`}>
+          <SidebarMenuItem
+            className={cn(
+              "flex items-center",
+              isMobile ? "justify-between" : showExpanded ? "justify-between" : "justify-center",
+            )}
+          >
             {showExpanded ? (
               <Link href="/">
                 <div className="flex items-center">
                   <Image
-                    src={logo}
+                    src={logo || "/placeholder.svg"}
                     width={30}
                     height={30}
                     alt="Atom Infra Logo"
@@ -65,7 +77,7 @@ export function DashboardSidebar({ ...props }) {
               </Link>
             ) : (
               <Image
-                src={logo}
+                src={logo || "/placeholder.svg"}
                 width={30}
                 height={30}
                 alt="Atom Infra Logo"
@@ -77,7 +89,7 @@ export function DashboardSidebar({ ...props }) {
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent className={cn("flex-1", showExpanded ? "p-4" : "p-2")}>
+      <SidebarContent className={cn("flex-1", isMobile ? "p-4" : showExpanded ? "p-4" : "p-2")}>
         <nav>
           <ul className="space-y-2">
             {navItems.map((item) => {
@@ -101,8 +113,8 @@ export function DashboardSidebar({ ...props }) {
           </ul>
         </nav>
       </SidebarContent>
-      <SidebarFooter className={cn("border-t border-border", showExpanded ? "p-4" : "p-2")}>
-        {!showExpanded && <SidebarTrigger className="w-full" />}
+      <SidebarFooter className={cn("border-t border-border", isMobile ? "p-4" : showExpanded ? "p-4" : "p-2")}>
+        {!showExpanded && !isMobile && <SidebarTrigger className="w-full" />}
         {showExpanded ? (
           <div className="flex items-center gap-3">
             <button
