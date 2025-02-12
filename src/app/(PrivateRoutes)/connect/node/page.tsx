@@ -104,7 +104,10 @@ export default function ConnectNode() {
         setLoadingSSHKey(false)
       }
     }
-    if (auth) fetchSSHKey()
+    if (auth) 
+      {
+        fetchSSHKey()
+      }
   }, [auth])
 
   const handleChange = (name: string, value: string) => {
