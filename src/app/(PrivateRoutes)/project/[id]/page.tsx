@@ -148,7 +148,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
                 <span className="hidden sm:inline">
                   {viewType === "services" ? "View by Services" : "View by Nodes"}
                 </span>
-                <ChevronDown className="h-4 w-4 ml-2" />
+                <ChevronDown className="h-4 w-4 ml-2 hidden md:block" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[200px]">
@@ -187,10 +187,10 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
                 >
                   <Plus className="h-4 w-4" />
                   <span className="hidden sm:inline">Add Node</span>
-                  <ChevronDown className="h-4 w-4 ml-2" />
+                  <ChevronDown className="h-4 w-4 ml-2 hidden md:block" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-[200px]">
+              <DropdownMenuContent align="end" className="w-[228px]">
                 <DropdownMenuItem onClick={() => router.push(`/create/node?projectId=${params.id}`)}>
                   <Plus className="h-4 w-4 mr-2" />
                   Create new node

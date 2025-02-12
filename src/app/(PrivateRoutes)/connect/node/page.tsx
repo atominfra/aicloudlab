@@ -202,7 +202,7 @@ export default function ConnectNode() {
     console.log("sshKey", sshKey)
   }, [sshKey])
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
+    <div className="min-h-screen bg-neutral-100 py-12 px-4">
       <div className="max-w-2xl mx-auto space-y-8">
         <h1 className="text-xl font-semibold text-center">Connect Node</h1>
 
