@@ -33,13 +33,14 @@ export default function ConnectNode() {
     sshUsername: "",
     sshPort: "",
     password: "",
-    projects_id: undefined,
+    projects_id: "",
   })
   const [projects, setProjects] = useState([])
   const [loadingProjects, setLoadingProjects] = useState(true)
   const [projectData, setProjectData] = useState(null)
   const [loadingProject, setLoadingProject] = useState(false)
   const [sshKey, setSshKey] = useState(null)
+  const [loadingSSHKey, setLoadingSSHKey] = useState(true)
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -75,6 +76,7 @@ export default function ConnectNode() {
 
   useEffect(() => {
     const fetchSSHKey = async () => {
+      setLoadingSSHKey(true)
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/cloud_connect/connect`, {
           method: "POST",
@@ -83,7 +85,7 @@ export default function ConnectNode() {
             Authorization: `Bearer ${auth}`,
           },
         })
-        console.log("response",response)
+        console.log("response", response)
         const data = await response.json()
         if (data.error === "true") {
           // @ts-expect-error build
@@ -93,16 +95,17 @@ export default function ConnectNode() {
         if (!response.ok) {
           return
         }
-        console.log("data",data)
+        console.log("data", data)
         setSshKey(data?.data)
       } catch (error) {
         console.error("Error fetching SSH key:", error)
         setConnectError("Failed to fetch SSH key. Please try again.")
+      } finally {
+        setLoadingSSHKey(false)
       }
     }
-    if(auth)
-      fetchSSHKey()
-  }, [auth.token])
+    if (auth) fetchSSHKey()
+  }, [auth])
 
   const handleChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }))
@@ -116,13 +119,43 @@ export default function ConnectNode() {
       ...prev,
       projects_id: projects_id,
     }))
-    setFieldErrors((prev) => ({ ...prev, projects_id: undefined }))
+    setFieldErrors((prev) => ({ ...prev, projects_id: "" }))
   }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     setIsLoading(true)
     setVerifyError(null)
+
+    // Validate all fields
+    const newFieldErrors = {
+      ipAddress: "",
+      sshUsername: "",
+      sshPort: "",
+      password: "",
+      projects_id: "",
+    }
+
+    if (formData.ipAddress.trim() === "") {
+      newFieldErrors.ipAddress = "IP Address is required"
+    }
+    if (formData.sshUsername.trim() === "") {
+      newFieldErrors.sshUsername = "SSH Username is required"
+    }
+    if (formData.sshPort.trim() === "") {
+      newFieldErrors.sshPort = "SSH Port is required"
+    }
+    if (!projectId && !formData.projects_id) {
+      newFieldErrors.projects_id = "Project selection is required"
+    }
+
+    setFieldErrors(newFieldErrors)
+
+    // If any field has an error, stop submission
+    if (Object.values(newFieldErrors).some((error) => error !== "")) {
+      setIsLoading(false)
+      return
+    }
 
     try {
       const verifyResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/cloud_connect/verify`, {
@@ -165,9 +198,9 @@ export default function ConnectNode() {
     }
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log("sshKey", sshKey)
-  },[sshKey])
+  }, [sshKey])
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-2xl mx-auto space-y-8">
@@ -184,20 +217,27 @@ export default function ConnectNode() {
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">Public SSH Key</label>
             <p className="text-sm text-gray-500">Add this key to authorized_keys in your VM</p>
-            <div className="relative flex items-center">
-              <Input value={sshKey?.public_key} readOnly className="bg-gray-50 pr-12 font-mono text-sm" />
-              <div className="absolute right-0 h-full px-3 flex items-center justify-center">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="sm"
-                  className="hover:bg-gray-100 h-8 w-8 p-0"
-                  onClick={() => copyToClipboard(sshKey?.public_key)}
-                >
-                  <Copy className="h-4 w-4" />
-                </Button>
+            {loadingSSHKey ? (
+              <div className="flex items-center border bg-white p-2 rounded-md text-sm text-gray-500">
+                <CircularProgress size={16} className="mr-2" />
+                Loading SSH Key...
               </div>
-            </div>
+            ) : (
+              <div className="relative flex items-center">
+                <Input value={sshKey?.public_key} readOnly className="bg-gray-50 pr-12 font-mono text-sm" />
+                <div className="absolute right-0 h-full px-3 flex items-center justify-center">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="hover:bg-gray-100 h-8 w-8 p-0"
+                    onClick={() => copyToClipboard(sshKey?.public_key)}
+                  >
+                    <Copy className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -292,7 +332,7 @@ export default function ConnectNode() {
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">SSH Username*</label>
               <Input
-              autoComplete="new-password"
+                autoComplete="new-password"
                 name="sshUsername"
                 value={formData.sshUsername}
                 onChange={(e) => handleChange("sshUsername", e.target.value)}
@@ -324,13 +364,13 @@ export default function ConnectNode() {
                   value={formData.password}
                   onChange={(e) => handleChange("password", e.target.value)}
                   placeholder="Enter Password"
-                  className={fieldErrors.password ? "border-red-500" : ""}
+                  className={`pr-10 ${fieldErrors.password ? "border-red-500" : ""}`}
                 />
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute right-2 top-2 hover:bg-transparent"
+                  className="absolute right-0 top-0 h-full px-3 flex items-center justify-center"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
