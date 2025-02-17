@@ -162,6 +162,7 @@ export function ServiceCard({
         open={isRedeployModalOpen}
         serviceName={name}
         image_url={image_url}
+        serviceId={id}
         onCancel={() => {
           setIsRedeployModalOpen(false)
           setError("")

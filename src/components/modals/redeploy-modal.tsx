@@ -10,6 +10,7 @@ interface RedeployModalProps {
   open: boolean
   onConfirm: (tag: string) => void
   onCancel: () => void
+  serviceId: string
   serviceName: string
   image_url: string
   isRedeploying: boolean
@@ -20,18 +21,20 @@ const RedeployModal: React.FC<RedeployModalProps> = ({
   open,
   serviceName,
   image_url,
+  serviceId,
   onConfirm,
   onCancel,
   isRedeploying,
   error,
 }) => {
-  const [imageUrl, setImageUrl] = useState("")
-  const [tag, setTag] = useState("latest")
+  const [imageName, setImageName] = useState("")
+  const [tag, setTag] = useState("")
   const [isTagEmpty, setIsTagEmpty] = useState(false)
 
   useEffect(() => {
-    setImageUrl(image_url)
-    setTag("latest")
+    const [name, existingTag] = image_url.split(":")
+    setImageName(name)
+    setTag(existingTag || "latest")
     setIsTagEmpty(false)
   }, [image_url])
 
@@ -61,7 +64,7 @@ const RedeployModal: React.FC<RedeployModalProps> = ({
             className={`flex items-center space-x-2 font-medium border rounded-lg p-3 ${isTagEmpty ? "border-red-500" : ""}`}
           >
             <span className="text-gray-700 text-lg">
-              {imageUrl} <span className="">:</span>
+              {imageName} <span className="">:</span>
             </span>
             <input
               value={tag}

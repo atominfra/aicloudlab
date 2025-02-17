@@ -163,6 +163,22 @@ export const fetchServiceDetails = async (auth: string, serviceId: string) => {
   return response.json();
 };
 
+export const fetchServiceById = async (auth: string, serviceId: string) => {
+  const response = await fetch(`${API_BASE_URL}/service/v2/id/${serviceId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${auth}`,
+    },
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || 'Failed to add domain to service');
+  }
+  return response.json();
+};
+
 export const changeServiceStatus = async (auth: string, serviceId: string, action:string) => {
   const response = await fetch(`${API_BASE_URL}/service/v2/${serviceId}/${action}`, {
     method: 'GET',
