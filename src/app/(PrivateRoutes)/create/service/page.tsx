@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -66,6 +66,9 @@ const CreateService: React.FC<CreateServiceProps> = () => {
   const [loadingProject, setLoadingProject] = useState(true)
   const [loadingNodes, setLoadingNodes] = useState(false)
   const projectId = searchParams.get("projectId")
+  // Add these state variables after the existing state declarations
+  const [clusters, setClusters] = useState([])
+  const [loadingClusters, setLoadingClusters] = useState(false)
 
   const fethcProjectData = async () => {
     if (!auth) return
@@ -81,7 +84,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
 
   useEffect(() => {
     if (projectId) fethcProjectData()
-  }, [auth, projectId]) // Added projectId to dependencies
+  }, [projectId]) // Added projectId to dependencies
 
   useEffect(() => {
     if (serviceId) {
@@ -133,9 +136,41 @@ const CreateService: React.FC<CreateServiceProps> = () => {
     setIsNodeLoading(false)
   }
 
+  // Add this function after fetchNodeData
+  const fetchClusterData = useCallback(async () => {
+    if (!auth) return
+    try {
+      setLoadingClusters(true)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/cluster/project/${projectId}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        setClusters(data.data.clusters || [])
+      } else {
+        console.error("Failed to fetch clusters")
+      }
+    } catch (error) {
+      console.error("Failed to fetch cluster data:", error)
+    } finally {
+      setLoadingClusters(false)
+    }
+  }, [auth, projectId])
+
   useEffect(() => {
     fetchNodeData()
-  }, [auth, projectId]) // Added projectId to dependencies
+  }, [projectId]) // Added projectId to dependencies
+
+  // Add this useEffect after the fetchNodeData useEffect
+  useEffect(() => {
+    if (serviceType === "kubernetes") {
+      fetchClusterData()
+    }
+  }, [serviceType, fetchClusterData])
 
   useEffect(() => {
     const fetchRegistries = async () => {
@@ -258,6 +293,7 @@ const CreateService: React.FC<CreateServiceProps> = () => {
     return Object.keys(errors).length === 0
   }
 
+  // Update the handleSubmit function to use different API endpoints and data structures based on serviceType
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     setError(null)
@@ -276,41 +312,81 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       setIsLoading(false)
       return
     }
-
-    const deploymentData = {
-      name: formData.name,
-      image_url: formData.image,
-      target_port: formData.target_port,
-      mem_limit: memoryLimit,
-      node_id: formData.node_id,
-      cpu_limit: formData.cpuLimit === "custom" ? customCpuLimit : formData.cpuLimit,
-      env_variables: {},
-      replicas: 1,
-    }
-
     function removeEmptyStringKeys(obj) {
       if (typeof obj !== "string") return {}
       return Object.fromEntries(Object.entries(obj).filter(([key]) => key !== ""))
     }
-
-    if (formData.registryCredential) {
-      // @ts-expect-error build error
-      deploymentData.registry_credential_id = Number(formData.registryCredential)
-    }
-    if (formData.env_variables) {
-      const newob = removeEmptyStringKeys(formData.env_variables)
-      deploymentData.env_variables = newob
-    }
-
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/v2/`, {
-        method: serviceId ? "PUT" : "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-        },
-        body: JSON.stringify(deploymentData),
-      })
+      let response
+
+      if (serviceType === "kubernetes") {
+        // For Kubernetes (cluster) deployments
+        const clusterDeploymentData = {
+          name: formData.name,
+          image_url: formData.image,
+          target_port: Number.parseInt(formData.target_port, 10),
+          mem_limit: memoryLimit,
+          cpu_limit: formData.cpuLimit === "custom" ? customCpuLimit : formData.cpuLimit,
+          env_variables: {},
+          cluster_id: Number.parseInt(formData.cluster, 10),
+          replicas: 1,
+        }
+
+        if (formData.registryCredential) {
+          // @ts-expect-error build error
+          clusterDeploymentData.registry_credential_id = Number.parseInt(formData.registryCredential, 10)
+        }
+
+        if (formData.env_variables) {
+          const envVars = {}
+          formData.env_variables.forEach((variable) => {
+            if (variable.key.trim()) {
+              envVars[variable.key] = variable.value
+            }
+          })
+          clusterDeploymentData.env_variables = envVars
+        }
+
+        response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/deployment`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+          body: JSON.stringify(clusterDeploymentData),
+        })
+      } else {
+        // For Docker Compose (node) deployments
+        const nodeDeploymentData = {
+          name: formData.name,
+          image_url: formData.image,
+          target_port: formData.target_port,
+          mem_limit: memoryLimit,
+          node_id: formData.node_id,
+          cpu_limit: formData.cpuLimit === "custom" ? customCpuLimit : formData.cpuLimit,
+          env_variables: {},
+          replicas: 1,
+        }
+
+        if (formData.registryCredential) {
+          // @ts-expect-error build error
+          nodeDeploymentData.registry_credential_id = Number(formData.registryCredential)
+        }
+
+        if (formData.env_variables) {
+          const newob = removeEmptyStringKeys(formData.env_variables)
+          nodeDeploymentData.env_variables = newob
+        }
+
+        response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/service/v2/`, {
+          method: serviceId ? "PUT" : "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+          },
+          body: JSON.stringify(nodeDeploymentData),
+        })
+      }
 
       const data = await response.json()
       if (data.error === "false") {
@@ -378,6 +454,18 @@ const CreateService: React.FC<CreateServiceProps> = () => {
       console.error("Failed to fetch nodes:", error)
     } finally {
       setLoadingNodes(false)
+    }
+  }
+
+  // Add this function after refreshNodes
+  const refreshClusters = async () => {
+    try {
+      setLoadingClusters(true)
+      await fetchClusterData()
+    } catch (error) {
+      console.error("Failed to fetch clusters:", error)
+    } finally {
+      setLoadingClusters(false)
     }
   }
 
@@ -468,6 +556,21 @@ const CreateService: React.FC<CreateServiceProps> = () => {
           {fieldErrors.name && <p className="text-red-500 text-sm mt-1">{fieldErrors.name}</p>}
         </div>
 
+        <div className="">
+          <label htmlFor="deployment-type" className="text-sm pl-2 font-medium text-[#374151]">
+            Deployment Type*
+          </label>
+          <Select value={serviceType} onValueChange={(value) => setServiceType(value)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select deployment type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="docker-compose">Node (Docker Compose)</SelectItem>
+              <SelectItem value="kubernetes">Cluster (Kubernetes)</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
         {serviceType === "docker-compose" && (
           <div>
             <label htmlFor="node" className="pl-2 text-sm font-medium text-[#374151]">
@@ -546,15 +649,39 @@ const CreateService: React.FC<CreateServiceProps> = () => {
                 }}
               >
                 <SelectTrigger className={fieldErrors.cluster ? "border-red-500" : ""}>
-                  <SelectValue placeholder="Select a Cluster" />
+                  {loadingClusters ? (
+                    <div className="flex items-center">
+                      <CircularProgress size={16} className="mr-2" />
+                      Loading Clusters...
+                    </div>
+                  ) : (
+                    <SelectValue placeholder="Select a Cluster" />
+                  )}
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="no-cluster">No cluster Available</SelectItem>
+                  {clusters.length > 0 ? (
+                    clusters.map((cluster) => (
+                      <SelectItem key={cluster.cluster_id} value={cluster.cluster_id.toString()}>
+                        {cluster.cluster_name} ({cluster.cluster_type})
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <SelectItem value="create_cluster">No clusters available</SelectItem>
+                  )}
                 </SelectContent>
               </Select>
               <Button variant="outline" size="icon" onClick={handleAddNewCluster} className="flex-shrink-0">
                 <Plus className="h-4 w-4" />
                 <span className="sr-only">Add New Cluster</span>
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={refreshClusters}
+                disabled={loadingClusters}
+                className="p-2"
+              >
+                <RefreshCw size={16} />
               </Button>
             </div>
             {fieldErrors.cluster && <p className="text-red-500 text-sm mt-1">{fieldErrors.cluster}</p>}

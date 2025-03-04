@@ -98,6 +98,7 @@ export function ServiceHeader({ id, name, image_url, status, memory, cpu, replic
       </div>
       <RedeployModal
         open={isRedeployModalOpen}
+        serviceId={String(id)}
         serviceName={name}
         image_url={image_url}
         onCancel={() => {

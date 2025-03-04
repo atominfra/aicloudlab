@@ -25,7 +25,8 @@ export function DeleteModal({ isOpen, onClose, onDelete, name, isLoading, type }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (inputValue === name) {
+    console.log("inputValue", inputValue,name)
+    if (String(inputValue) === String(name)) {
       onDelete()
     }{
       console.log("name does not match")

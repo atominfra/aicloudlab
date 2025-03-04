@@ -63,65 +63,6 @@ interface NodeCreationFormProps {
 
 const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
 
-// const fakeApi = {
-//   fetchOSOptions: async () => {
-//     return [
-//       { name: "Ubuntu", version: ["20.04", "22.04"] },
-//       { name: "CentOS", version: ["7", "8"] },
-//     ]
-//   },
-//   fetchPlans: async () => {
-//     return {
-//       data: {
-//         plans: [
-//           { id: "plan1", name: "Basic", plan: "t1.micro", image: "ubuntu-20.04" },
-//           { id: "plan2", name: "Standard", plan: "t2.small", image: "ubuntu-20.04" },
-//         ],
-//       },
-//     }
-//   },
-//   createNode: async () => {
-//     return { message: "Node created successfully" }
-//   },
-//   fetchPrice: async () => {
-//     return {
-//       data: {
-//         price: [
-//           { unit: "hour", price: "0.05", currency: "USD" },
-//           { unit: "month", price: "30", currency: "USD" },
-//         ],
-//       },
-//     }
-//   },
-//   getAllProjects: async () => {
-//     return {
-//       data: {
-//         projects: [
-//           { id: "proj1", name: "Project 1" },
-//           { id: "proj2", name: "Project 2" },
-//         ],
-//       },
-//     }
-//   },
-//   getOneProject: async () => {
-//     return {
-//       data: {
-//         name: "Sample Project",
-//       },
-//     }
-//   },
-//   fetchAllCloudAccounts: async () => {
-//     return {
-//       data: {
-//         cloud_accounts: [
-//           { id: "acc1", name: "AWS Account", provider: "aws" },
-//           { id: "acc2", name: "Azure Account", provider: "azure" },
-//         ],
-//       },
-//     }
-//   },
-// }
-
 export default function NodeCreationForm({ initialData, isEditMode = false }: NodeCreationFormProps) {
   const [formState, setFormState] = useState<NodeData>({
     projects_id: initialData?.projects_id || "",
@@ -379,35 +320,70 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       return
     }
 
+    // Format the data according to the expected API format from the curl command
     const clusterData = {
-      name: formState.cluster_name,
-      image_url: "nginx", // You might want to make this dynamic
-      mem_limit: "30Mi", // You might want to make this dynamic
-      cpu_limit: "1", // You might want to make this dynamic
-      replicas: 1, // You might want to make this dynamic
-      env_variables: {}, // You might want to make this dynamic
-      cluster_id: Number.parseInt(formState.projects_id), // Assuming projects_id is the cluster_id
-      registry_credential_id: 1, // You might want to make this dynamic
-      target_port: 80, // You might want to make this dynamic
+      cluster_name: formState.cluster_name,
+      cluster_type: formState.cluster_type === "on_prem" ? "onprem" : "oncloud",
+      cloud: String(formState.cloud_account_id),
+      version: formState.osVersion,
+      machine_configurations: formState.machine_configurations.map((config) => ({
+        number_of_machines: config.number_of_machines,
+        plan: config.plan,
+        type: config.type,
+      })),
+      location: formState.location,
+      project_id: String(formState.projects_id),
     }
 
+    // try {
+    //   setLoading(true)
+    //   console.log("clusterData",clusterData)
+    //   // Use fetch directly instead of imported function
+    //   const response = await fetch("http://127.0.0.1:8000/cluster/", {
+    //     method: "POST",
+    //     headers: {
+    //       accept: "application/json",
+    //       Authorization: `Bearer ${auth}`,
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(clusterData),
+    //   })
+
+    //   const result = await response.json()
+    //   console.log("Result:", result)
+
+    //   if (result.error === "true") {
+    //     setError(result.message)
+    //     return
+    //   } else {
+    //     console.log("Cluster created successfully:", result)
+    //     router.push(`/project/${projectId}?viewType=clusters`)
+    //   }
+    // } catch (error) {
+    //   console.error("Failed to create cluster:", error)
+    //   setError("Something Went Wrong")
+    // } finally {
+    //   setLoading(false)
+    // }
+
     try {
-      setLoading(true)
-      const result = await createCluster(auth, clusterData)
-      console.log("Result:", result)
-      if (result.error === "true") {
-        setError(result.message)
-        return
-      } else {
-        console.log("Cluster created successfully:", result)
-        router.push(`/project/${projectId}?viewType=clusters`)
+        setLoading(true)
+        console.log("clusterData",clusterData)
+        const result = await createCluster(auth, clusterData)
+        console.log("Result:", result)
+        if (result.error === "true") {
+          setError(result.message)
+          return
+        } else {
+          console.log("Cluster created successfully:", result)
+          // router.push(`/project/${projectId}?viewType=nodes`)
+        }
+      } catch (error) {
+        console.error("Failed to create Cluster:", error)
+        setError("Something Went Wrong")
+      } finally {
+        setLoading(false)
       }
-    } catch (error) {
-      console.error("Failed to create cluster:", error)
-      setError("Something Went Wrong")
-    } finally {
-      setLoading(false)
-    }
   }
 
   const findplan = (plans: Plan[], value: string) => {
@@ -527,6 +503,9 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     return `/placeholder.svg?text=${provider.toUpperCase()}`
   }
 
+  // const formatPlanName = (plan: Plan) => {
+  //   return `${plan.name} (${plan.plan})`
+  // }
   const formatPlanName = (plan: Plan) => {
     return (
       <div className="gap-2 w-[full]">
