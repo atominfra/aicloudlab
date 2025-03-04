@@ -10,7 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { CircleAlert, FolderOpen, Plus, RefreshCw, Trash2 } from "lucide-react"
 import { useRouter, useSearchParams } from "next/navigation"
 import Image from "next/image"
-import { fetchOSOptions, fetchPlans, createNode, fetchPrice } from "@/app/(PrivateRoutes)/api/nodes/api"
+import { fetchOSOptions, fetchPlans, fetchPrice } from "@/app/(PrivateRoutes)/api/nodes/api"
 import { getAllProjects, getOneProject } from "@/app/(PrivateRoutes)/api/projects/api"
 import { fetchAllCloudAccounts } from "@/app/(PrivateRoutes)/api/cloud/api"
 import { CircularProgress } from "@mui/material"
@@ -128,7 +128,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
       if (!auth || !formState.cloud_account_id || !formState.location) return
       try {
         setLoadingOs(true)
-        const data = await fetchOSOptions(auth,formState.cloud_account_id, formState.location)
+        const data = await fetchOSOptions(auth, formState.cloud_account_id, formState.location)
         setOSOptions(data)
       } catch (error) {
         console.error("Failed to fetch initial data:", error)
@@ -147,10 +147,13 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     if (!formState.os || !formState.osVersion || !formState.location || !formState.cloud_account_id) return
     setLoadingPlans(true)
     try {
-      const plansData = await fetchPlans(auth,formState.os,
+      const plansData = await fetchPlans(
+        auth,
+        formState.os,
         formState.osVersion,
         formState.location,
-        formState.cloud_account_id,)
+        formState.cloud_account_id,
+      )
       setPlans(plansData.data.plans)
     } catch (error) {
       console.error("Failed to fetch plans:", error)
@@ -171,12 +174,14 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     if (!formState.os || !formState.osVersion || !formState.location || !plan) return
     setLoadingPrice(true)
     try {
-      const plansData = await fetchPrice(auth,
+      const plansData = await fetchPrice(
+        auth,
         formState.os,
         formState.osVersion,
         formState.location,
         formState.cloud_account_id,
-        plan,)
+        plan,
+      )
       setPrice(plansData.data.price)
     } catch (error) {
       console.error("Failed to fetch plans:", error)
@@ -332,7 +337,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         type: config.type,
       })),
       location: formState.location,
-      project_id: String(formState.projects_id),
+      project_id: projectId || String(formState.projects_id), // Use projectId from URL params if available
     }
 
     // try {
@@ -367,23 +372,23 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     // }
 
     try {
-        setLoading(true)
-        console.log("clusterData",clusterData)
-        const result = await createCluster(auth, clusterData)
-        console.log("Result:", result)
-        if (result.error === "true") {
-          setError(result.message)
-          return
-        } else {
-          console.log("Cluster created successfully:", result)
-          // router.push(`/project/${projectId}?viewType=nodes`)
-        }
-      } catch (error) {
-        console.error("Failed to create Cluster:", error)
-        setError("Something Went Wrong")
-      } finally {
-        setLoading(false)
+      setLoading(true)
+      console.log("clusterData", clusterData)
+      const result = await createCluster(auth, clusterData)
+      console.log("Result:", result)
+      if (result.error === "true") {
+        setError(result.message)
+        return
+      } else {
+        console.log("Cluster created successfully:", result)
+        // router.push(`/project/${projectId}?viewType=nodes`)
       }
+    } catch (error) {
+      console.error("Failed to create Cluster:", error)
+      setError("Something Went Wrong")
+    } finally {
+      setLoading(false)
+    }
   }
 
   const findplan = (plans: Plan[], value: string) => {
@@ -394,7 +399,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     if (!projectId) return
     try {
       setLoadingProject(true)
-      const data = await getOneProject(auth,projectId)
+      const data = await getOneProject(auth, projectId)
       setProjectData(data.data)
     } catch (error) {
       console.error("Failed to fetch initial data:", error)
@@ -403,7 +408,14 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
   }, [projectId])
 
   useEffect(() => {
-    if (projectId) fethcProjectData()
+    if (projectId) {
+      fethcProjectData()
+      // Set the project ID in the form state when component initializes
+      setFormState((prev) => ({
+        ...prev,
+        projects_id: projectId,
+      }))
+    }
   }, [projectId, fethcProjectData])
 
   const handleAccountChange = (value: string) => {
