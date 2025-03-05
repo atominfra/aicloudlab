@@ -325,6 +325,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
                       isClusterService={true}
                       onOperation={() => {}}
                       projectId={params?.id}
+                      type_cluster={true}
                     />
                   ))}
                 </>

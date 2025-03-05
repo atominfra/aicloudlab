@@ -17,6 +17,11 @@ import { CircularProgress } from "@mui/material"
 import { useApp } from "@/context/AppContext"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { createCluster } from "../../api/cluster/api"
+import azureIcon from "@/assets/azure.svg"
+import gcpIcon from "@/assets/gcp.svg"
+import awsIcon from "@/assets/aws.svg"
+import e2eIcon from "@/assets/e2elogo.webp"
+
 // Types
 interface NodeData {
   projects_id: string
@@ -381,7 +386,7 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
         return
       } else {
         console.log("Cluster created successfully:", result)
-        // router.push(`/project/${projectId}?viewType=nodes`)
+        router.push(`/project/${projectId}?viewType=clusters`)
       }
     } catch (error) {
       console.error("Failed to create Cluster:", error)
@@ -511,8 +516,19 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
     }
   }
 
-  const getProviderIcon = (provider: string) => {
-    return `/placeholder.svg?text=${provider.toUpperCase()}`
+  const getProviderIcon = (provider) => {
+    switch (provider.toLowerCase()) {
+      case "azure":
+        return azureIcon
+      case "gcp":
+        return gcpIcon
+      case "aws":
+        return awsIcon
+      case "e2e":
+        return e2eIcon
+      default:
+        return null
+    }
   }
 
   // const formatPlanName = (plan: Plan) => {
@@ -664,8 +680,8 @@ export default function NodeCreationForm({ initialData, isEditMode = false }: No
                   <SelectValue placeholder="Select Cluster Type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="on_prem">On-Premises</SelectItem>
-                  <SelectItem value="on_cloud">On Cloud</SelectItem>
+                  <SelectItem value="on_prem" disabled={true}>On-Premises</SelectItem>
+                  <SelectItem value="on_cloud" >On Cloud</SelectItem>
                 </SelectContent>
               </Select>
               {fieldErrors.cluster_type && <p className="text-red-500 text-sm mt-1">{fieldErrors.cluster_type}</p>}

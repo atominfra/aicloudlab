@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useRouter } from 'next/navigation'
-import { toast } from 'react-hot-toast'
 import logo from "@/assets/logo.webp"
 
 interface FormData {
@@ -134,7 +133,7 @@ export default function Signup() {
         ).toUTCString()}; path=/; domain=.${window.location.hostname}`
         window.location.href = '/dashboard/projects'
       } else {
-        toast.error(responseData.message || 'Signup failed')
+        console.log(responseData.message || 'Signup failed')
         setSignupError(responseData.message || 'An unexpected error occurred. Please try again.')
       }
     } catch (error) {
