@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useRouter } from "next/navigation"
 import { useApp } from "@/context/AppContext"
-import { deleteCluster } from "@/app/(PrivateRoutes)/api/cluster/api"
+import { deleteCluster, fetchPrivateKey } from "@/app/(PrivateRoutes)/api/cluster/api"
 // import { toast } from "sonner"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -52,6 +52,7 @@ export function ClusterCard({ cluster_id, cluster_name, cluster_type, status, no
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
   const [isExpanded, setIsExpanded] = useState(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
   const handleDelete = async () => {
     if (!auth) return
@@ -69,8 +70,33 @@ export function ClusterCard({ cluster_id, cluster_name, cluster_type, status, no
       setIsDeleteDialogOpen(false)
     }
   }
+  const handleDownloadPrivateKey = async () => {
+    setIsRefreshing(true)
+    try {
+      const blob = await fetchPrivateKey(auth, cluster_id)
+  
+      // Create a URL for the blob and trigger the download
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = "private_key.pem" // Set file name
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      
+      // Cleanup the object URL
+      window.URL.revokeObjectURL(url)
+  
+    } catch (error) {
+      console.error("Something went wrong:", error)
+    } finally {
+      setIsRefreshing(false)
+    }
+  }
+  
+  
 
-  const getStatusColor = (status: string) => {
+    const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "active":
       case "running":
@@ -123,8 +149,8 @@ export function ClusterCard({ cluster_id, cluster_name, cluster_type, status, no
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => router.push(`/clusters/${cluster_id}?projectId=${projectId}`)}>
-                    View Details
+                  <DropdownMenuItem onClick={handleDownloadPrivateKey}>
+                    Download Private Key
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)} className="text-red-600">
                     <Trash2 className="h-4 w-4 mr-2" />

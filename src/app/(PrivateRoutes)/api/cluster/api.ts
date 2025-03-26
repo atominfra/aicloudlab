@@ -47,6 +47,28 @@ export async function fetchClusterbyId(auth: string, clusterId: number) {
   }
 }
 
+export async function fetchPrivateKey(auth: string, clusterId: number) {
+  try {
+    const url = `${API_BASE_URL}/cluster/private-key/${clusterId}`
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${auth}`,
+      },
+    })
+
+    if (!response.ok) {
+      const errorDetails = await response.text()
+      throw new Error(`HTTP Error ${response.status}: ${response.statusText}. Details: ${errorDetails}`)
+    }
+
+    return await response.blob() // Convert response to a Blob for file handling
+  } catch (error) {
+    console.error(`API Request Failed: `, error)
+    throw new Error(error.message || "An unexpected error occurred")
+  }
+}
+
 export async function fetchClustersByProject(auth: string, projectId: number) {
   try {
     const url = `${API_BASE_URL.replace("/dashboard/node", "")}/cluster/project/${projectId}`
