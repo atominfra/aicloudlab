@@ -79,7 +79,7 @@ export function ClusterCard({ cluster_id, cluster_name, cluster_type, status, no
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = "config.txt" // Set file name for kube config
+      a.download = `${cluster_name}_config_key.pem` // Set file name for kube config
       document.body.appendChild(a)
       a.click()
       a.remove()
@@ -103,7 +103,7 @@ export function ClusterCard({ cluster_id, cluster_name, cluster_type, status, no
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = "private_key.pem" // Set file name
+      a.download = `${cluster_name}_private_key.pem` // Set file name
       document.body.appendChild(a)
       a.click()
       a.remove()
