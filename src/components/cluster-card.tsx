@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Layers, MoreVertical, Trash2, Server, ChevronDown, ChevronUp } from "lucide-react"
+import { Layers, MoreVertical, Trash2, Server, ChevronDown, ChevronUp, ShipWheel, Key, MonitorCog } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import {
   AlertDialog,
@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { useRouter } from "next/navigation"
 import { useApp } from "@/context/AppContext"
-import { deleteCluster, fetchPrivateKey } from "@/app/(PrivateRoutes)/api/cluster/api"
+import { deleteCluster, fetchKubeConfig, fetchPrivateKey } from "@/app/(PrivateRoutes)/api/cluster/api"
 // import { toast } from "sonner"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -70,6 +70,30 @@ export function ClusterCard({ cluster_id, cluster_name, cluster_type, status, no
       setIsDeleteDialogOpen(false)
     }
   }
+  const handleDownloadKubeConfig = async () => {
+    setIsRefreshing(true)
+    try {
+      const blob = await fetchKubeConfig(auth, cluster_id)
+  
+      // Create a URL for the blob and trigger the download
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = "config.txt" // Set file name for kube config
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+  
+      // Cleanup the object URL
+      window.URL.revokeObjectURL(url)
+  
+    } catch (error) {
+      console.error("Something went wrong:", error)
+    } finally {
+      setIsRefreshing(false)
+    }
+  }
+  
   const handleDownloadPrivateKey = async () => {
     setIsRefreshing(true)
     try {
@@ -119,7 +143,7 @@ export function ClusterCard({ cluster_id, cluster_name, cluster_type, status, no
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-3">
               <div className="bg-blue-100 p-2 rounded-md">
-                <Layers className="h-5 w-5 text-blue-600" />
+                <ShipWheel className="h-5 w-5 text-blue-600" />
               </div>
               <div>
                 <h3 className="font-medium text-gray-900">{cluster_name}</h3>
@@ -150,8 +174,14 @@ export function ClusterCard({ cluster_id, cluster_name, cluster_type, status, no
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem onClick={handleDownloadPrivateKey}>
+                  <Key className="h-4 w-4 mr-2" />
                     Download Private Key
                   </DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleDownloadKubeConfig}>
+                  <MonitorCog className="h-4 w-4 mr-2" />
+                    Download Kube Config 
+                  </DropdownMenuItem>
+                  
                   <DropdownMenuItem onClick={() => setIsDeleteDialogOpen(true)} className="text-red-600">
                     <Trash2 className="h-4 w-4 mr-2" />
                     Delete
