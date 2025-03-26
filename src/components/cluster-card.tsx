@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Layers, MoreVertical, Trash2, Server, ChevronDown, ChevronUp, ShipWheel, Key, MonitorCog } from "lucide-react"
+import { Layers, MoreVertical, Trash2, Server, ChevronDown, ChevronUp, ShipWheel, Key, MonitorCog, Settings } from "lucide-react"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import {
   AlertDialog,
@@ -161,15 +161,10 @@ export function ClusterCard({ cluster_id, cluster_name, cluster_type, status, no
               <Badge variant="outline" className="text-xs">
                 {nodes.length} {nodes.length === 1 ? "Node" : "Nodes"}
               </Badge>
-              <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                </Button>
-              </CollapsibleTrigger>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <MoreVertical className="h-4 w-4" />
+                    <Settings className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
@@ -188,6 +183,11 @@ export function ClusterCard({ cluster_id, cluster_name, cluster_type, status, no
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+              <CollapsibleTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                </Button>
+              </CollapsibleTrigger>
             </div>
           </div>
 
