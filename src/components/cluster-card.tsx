@@ -44,9 +44,10 @@ interface ClusterCardProps {
   nodes: ClusterNode[]
   fetchClusters: () => void
   projectId: string
+  projectName: string
 }
 
-export function ClusterCard({ cluster_id, cluster_name, cluster_type, status, nodes = [], fetchClusters, projectId }: ClusterCardProps) {
+export function ClusterCard({ cluster_id, cluster_name, cluster_type, status, nodes = [], fetchClusters, projectId, projectName }: ClusterCardProps) {
   const router = useRouter()
   const { auth } = useApp()
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -79,7 +80,7 @@ export function ClusterCard({ cluster_id, cluster_name, cluster_type, status, no
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = `${cluster_name}_config_key.yaml` // Set file name for kube config
+      a.download = `${projectName}-${cluster_name}-kubeconfig.yaml` // Set file name for kube config
       document.body.appendChild(a)
       a.click()
       a.remove()
@@ -103,7 +104,7 @@ export function ClusterCard({ cluster_id, cluster_name, cluster_type, status, no
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = `${cluster_name}_private_key.pem` // Set file name
+      a.download = `${projectName}-${cluster_name}-private-key.pem` // Set file name
       document.body.appendChild(a)
       a.click()
       a.remove()

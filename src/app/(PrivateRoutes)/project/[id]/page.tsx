@@ -369,7 +369,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
           </div>
         ) : clusters && clusters.length > 0 ? (
           clusters.map((cluster) => (
-            <ClusterCard key={cluster.cluster_id} {...cluster} fetchClusters={fetchClusters} projectId={params.id} />
+            <ClusterCard key={cluster.cluster_id} {...cluster} fetchClusters={fetchClusters} projectId={params.id} projectName={projectData?.name}/>
           ))
         ) : (
           <div className="flex flex-col justify-center items-center h-full w-full">
