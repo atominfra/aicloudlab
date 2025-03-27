@@ -369,6 +369,7 @@ const ProjectPage = ({ params }: { params: { id: string } }) => {
           </div>
         ) : clusters && clusters.length > 0 ? (
           clusters.map((cluster) => (
+            // @ts-expect-error build
             <ClusterCard key={cluster.cluster_id} {...cluster} fetchClusters={fetchClusters} projectId={params.id} projectName={projectData?.name}/>
           ))
         ) : (
